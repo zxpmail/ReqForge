@@ -1,0 +1,25 @@
+{
+  "name": "reqforge",
+  "version": "1.0.0",
+  "description": "Open-source product development framework for AI coding assistants (Claude Code/Cursor/OpenCode)",
+  "main": "index.js",
+  "scripts": {
+    "sync": "ts-node scripts/sync.ts",
+    "build": "tsc"
+  },
+  "keywords": [
+    "ai",
+    "product-development",
+    "claude-code",
+    "cursor",
+    "opencode",
+    "framework"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "ts-node": "^10.9.2"
+  }
+}

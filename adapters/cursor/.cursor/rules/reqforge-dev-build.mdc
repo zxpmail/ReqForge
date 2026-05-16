@@ -1,0 +1,31 @@
+---
+description: "Implementation execution. Build code phase by phase following DEV-PLAN, each Task goes through review -> fix loop."
+globs: "*.{ts,tsx,js,jsx,css,json}"
+alwaysApply: true
+---
+
+## Dev Builder
+
+Build phase by phase following DEV-PLAN.md:
+
+### Development Discipline
+- Plan + TaskList before each Phase
+- Assess impact scope: list affected features before changing code
+- Single file under 300 lines, split if exceeded
+- TypeScript strict mode, no `any`
+- Naming: PascalCase for components, camelCase for functions/variables, kebab-case for files
+- Tailwind preferred for styling
+- YAGNI: don't write code for hypothetical requirements
+
+### per-Task Loop
+1. Code
+2. Verify feature completeness against Spec
+3. Code quality self-check
+4. Compile verification
+5. Commit
+
+### Phase Completion Verification (Four Steps)
+1. Code Review — check against delivery checklist item by item
+2. Test Completeness — all features implemented
+3. Compile Check — `tsc --noEmit` zero errors
+4. Functional Test — start dev server and verify

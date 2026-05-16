@@ -1,0 +1,27 @@
+---
+description: "Product Spec requirements gathering. Triggered when user wants to build a product, app, or tool."
+globs: "*.md"
+alwaysApply: false
+---
+
+## Product Spec Builder
+
+When the user describes a product idea, clarify through questioning:
+
+### Must Collect
+- Product positioning: what is it? What problem does it solve?
+- Target users: who will use it? Why?
+- Core features: what must it do?
+- User flow: complete path from opening to completing a task
+- AI capability needs: what requires AI?
+- Product type: Web / Desktop / CLI / Mobile
+
+### Questioning Strategy
+- Don't accept vague answers
+- Call out logical contradictions directly
+- WebSearch competitors before suggesting
+- Proactively suggest AI enhancement options
+
+### Output
+- Product-Spec.md — structured requirements document
+- Product-Spec-CHANGELOG.md — change log (if iteration occurs)

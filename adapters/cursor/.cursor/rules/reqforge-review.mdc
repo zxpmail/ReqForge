@@ -1,0 +1,26 @@
+---
+description: "Code review. Check feature completeness and code quality against Product Spec."
+globs: "*.{ts,tsx,js,jsx}"
+alwaysApply: false
+---
+
+## Code Review
+
+Two-stage review:
+
+### Stage 1: Spec Compliance
+- Check each Product-Spec.md requirement item by item
+- Every feature must have corresponding code implementation
+- UI consistency check (if design mockups exist)
+
+### Stage 2: Code Quality
+- Naming conventions, type safety, no `any`
+- No hardcoded secrets, no dangerous functions
+- Files under 300 lines, single responsibility
+- No Spec drift (code features not in Spec)
+
+### Output
+- ✅ Fully implemented (with code location)
+- ⚠️ Partially implemented (with missing details)
+- ❌ Not implemented (with Spec reference)
+- 🔴 Security issue (with file + line number)

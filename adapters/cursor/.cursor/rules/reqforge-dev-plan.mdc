@@ -1,0 +1,25 @@
+---
+description: "Development plan generation. Analyze dependency relationships and split into development phases once Product-Spec.md is ready."
+globs: "*.md"
+alwaysApply: false
+---
+
+## Dev Planner
+
+Read Product-Spec.md, analyze and generate phased development plan:
+
+### Core Principles
+- Verifiable: each Phase must compile and run
+- Dependency order: dependencies first
+- Right granularity: 1-3 core deliverables per Phase
+- Clear paths: each Phase lists specific files to create or modify
+- No placeholders: no TBD, TODO allowed
+
+### Phase Splitting
+1. Infrastructure (project skeleton, database, routing) -> first
+2. Core features -> middle
+3. Supporting features -> later
+4. Polishing (packaging, deployment) -> last
+
+### Output
+- DEV-PLAN.md — phased development plan, each phase with delivery checklist, key files, acceptance criteria

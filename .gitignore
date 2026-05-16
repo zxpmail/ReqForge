@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.env
+.env.local
+*.log
+
+# Change artifact directories (track except .gitkeep)
+changes/*
+!changes/.gitkeep
+changes/archive/*
+!changes/archive/.gitkeep
