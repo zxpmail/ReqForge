@@ -9,8 +9,17 @@ const DEFAULT_STORE: TodoStore = { todos: [] };
 function readStore(): TodoStore {
   try {
     const data = fs.readFileSync(STORAGE_FILE, 'utf-8');
-    return JSON.parse(data) as TodoStore;
-  } catch {
+    const parsed = JSON.parse(data) as TodoStore;
+    if (!Array.isArray(parsed.todos)) {
+      console.warn('todo.json is corrupted. Starting with an empty list.');
+      return { ...DEFAULT_STORE, todos: [] };
+    }
+    return parsed;
+  } catch (err) {
+    if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
+      return { ...DEFAULT_STORE, todos: [] };
+    }
+    console.warn('todo.json is corrupted. Starting with an empty list.');
     return { ...DEFAULT_STORE, todos: [] };
   }
 }
