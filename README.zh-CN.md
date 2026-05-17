@@ -36,6 +36,26 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 
 复制 `adapters/opencode/.opencode/` 到你项目根目录。
 
+### 按平台配置 Hook
+
+Hook 在关键事件（提交、消息、编辑、启动）时自动触发，需要根据平台选择正确的 `settings.json`：
+
+| 平台 | 使用的文件 | Hook 脚本 | 依赖 |
+|------|-----------|-----------|------|
+| Linux/Mac | `settings.json`（默认） | `.sh` | `sh`（系统自带） |
+| Windows | `settings.windows.json` | `.bat` | 无需额外依赖 |
+
+复制适配器目录后，根据平台重命名配置文件：
+
+```
+# Windows — 使用 .bat 钩子（无需 Git Bash）
+copy settings.windows.json settings.json
+
+# Linux/Mac — .sh 钩子开箱即用，无需额外操作
+```
+
+**OpenCode** 不使用 `settings.json` — 它自带的 `.sh`（Linux/Mac）和 `.bat`/`.ps1`（Windows）钩子在各平台原生工作。
+
 ---
 
 ## 核心架构
@@ -150,7 +170,7 @@ Forge/
 │   ├── skills/                # 11 个技能定义，每个独立目录
 │   ├── agents/                # 4 个 Sub-agent 定义
 │   ├── templates/             # 文档模板
-│   ├── hooks/                 # Hook 脚本（.bat + .sh + .ps1）
+│   ├── hooks/                 # Hook 脚本（.sh）
 │   └── feedback/              # feedback 模板
 ├── adapters/
 │   ├── claude-code/           # Claude Code 适配（.claude/）
