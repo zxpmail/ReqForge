@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Stop hook: block stop when code files are modified but not reviewed
 # State file .needs-review: needs_review = block, clean = allow and delete file, absent = allow
 

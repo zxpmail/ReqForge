@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Hook: PreToolUse (Bash) if git commit*
 # Auto-compile check before commit, block commit on failure
 # Generic: auto-find project code directory containing tsconfig.json
