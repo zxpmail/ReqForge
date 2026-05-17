@@ -28,13 +28,21 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 
 Copy `adapters/claude-code/.claude/` to your project root and open Claude Code.
 
+> **Platform note**: On Windows, use `.claude/settings.windows.json` as `settings.json` (uses `.bat` hooks).  
+> On Linux/Mac, the default `settings.json` works as-is (uses `sh` + `.sh` hooks).
+
 ### Cursor
 
 Copy `adapters/cursor/.cursor/` to your project root.
 
+> **Platform note**: On Windows, use `.cursor/settings.windows.json` as `settings.json`.  
+> On Linux/Mac, the default `settings.json` works as-is.
+
 ### OpenCode
 
 Copy `adapters/opencode/.opencode/` to your project root.
+
+> OpenCode hooks run on both platforms — `.sh` for Linux/Mac, `.bat`/`.ps1` for Windows.
 
 ---
 
@@ -150,7 +158,7 @@ Forge/
 │   ├── skills/                # 11 skill definitions, each in its own directory
 │   ├── agents/                # 4 Sub-agent definitions
 │   ├── templates/             # Document templates
-│   ├── hooks/                 # Hook scripts (.bat + .sh + .ps1)
+│   ├── hooks/                 # Hook scripts (.sh)
 │   └── feedback/              # Feedback templates
 ├── adapters/
 │   ├── claude-code/           # Claude Code adapter (.claude/)

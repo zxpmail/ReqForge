@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreCommit": {
+      "run": ".cursor\\rules\\hooks\\pre-commit-check.bat"
+    },
+    "BeforeCommand": {
+      "run": ".cursor\\rules\\hooks\\stop-gate.bat && .cursor\\rules\\hooks\\detect-feedback-signal.bat"
+    },
+    "AfterCommand": {
+      "run": ".cursor\\rules\\hooks\\mark-review-needed.bat"
+    },
+    "OnInit": {
+      "run": ".cursor\\rules\\hooks\\check-evolution.bat"
+    }
+  }
+}

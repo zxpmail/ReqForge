@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreCommit": {
+      "run": ".claude\\hooks\\pre-commit-check.bat"
+    },
+    "BeforeCommand": {
+      "run": ".claude\\hooks\\stop-gate.bat && .claude\\hooks\\detect-feedback-signal.bat"
+    },
+    "AfterCommand": {
+      "run": ".claude\\hooks\\mark-review-needed.bat"
+    },
+    "OnInit": {
+      "run": ".claude\\hooks\\check-evolution.bat"
+    }
+  }
+}
