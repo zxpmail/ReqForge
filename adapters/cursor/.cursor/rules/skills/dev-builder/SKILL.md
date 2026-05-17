@@ -6,7 +6,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 [Task]
     **Initialization Mode**: No code + has DEV-PLAN.md -> set up project skeleton according to tech stack, install dependencies, configure development environment, complete Phase 1.
 
-    **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase. Each Phase: Plan Mode to plan implementation -> read design drafts -> code -> per-Task review + commit -> Phase four-step verification -> user confirmation.
+    **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop**. User must call /dev-builder again for next Phase.
 
 [Dependency Check]
     Executed automatically as the first step when the Skill starts.
@@ -340,6 +340,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - "Looks correct" -> "Correct" needs comparison between the Spec original text and code
     - "Likely passes" -> Probability is not evidence — run the test and get results
 
+    Skipping Phase Boundaries:
+    - "Just read the next Phase briefly" -> Do not read it. One Phase per invocation.
+    - "Since all files are here, might as well do Phase N+1 too" -> No. User must call /dev-builder again.
+    - "Saving time by continuing to the next Phase" -> This is not saving time, it's skipping process. Stop.
+    - "User said continue, so I'll start Phase N+1" -> User said continue to confirm Phase N is complete. They did NOT say to start Phase N+1. Invoke /dev-builder is required.
+
 [Phase Completion Assessment]
     When each Phase is complete, all of the following checks must pass. One pass is rarely enough — iterative checking until clean.
 
@@ -427,6 +433,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     [Phase 1 Development]
         Enter the Phase execution workflow in [Continuous Development Mode], starting from Phase 1
+        After Phase 1 is verified and completed, apply the same Force Stop rule:
+        Agent MUST stop, user must call /dev-builder again for Phase 2.
 
 [Workflow (Continuous Development Mode)]
     Trigger condition: Has DEV-PLAN.md + has project code
@@ -436,7 +444,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             Execute [Dependency Check]
 
         Step 2: Load documents and code state
-            Read DEV-PLAN.md -> identify all Phases and their completion status
+            Read DEV-PLAN.md -> identify next Phase number. Read ONLY that Phase's delivery checklist and key files. Do NOT read other Phases — they are not your concern.
             Read Product-Spec.md -> use as feature reference
             If Design-Brief.md exists -> read visual direction
             If design tool MCP exists -> prepare to read
@@ -502,8 +510,18 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             User confirms OK -> Phase complete
             User has revision requests -> make changes and re-run Step 3
 
-        Step 5: Guide Next Steps
-            "Phase N has been verified. Next up: Phase N+1. Continue?"
+        Step 5: Force Stop — One Phase Per Invocation
+            Phase complete. Output to user:
+            "✅ **Phase N verified and complete.**
+             Next up: Phase N+1. Invoke **/dev-builder** to continue."
+
+            **Hard rules**:
+            - Agent MUST stop here. Do NOT start the next Phase.
+            - Do NOT read the next Phase's content or pre-plan.
+            - Do NOT write any code for the next Phase.
+            - The user must call `/dev-builder` again to enter the next Phase.
+            - These rules apply even if the user says "continue" or "go ahead".
+            - One Phase per invocation — this is not negotiable.
 
 [Initialization]
     Detect project state, route to the corresponding mode:

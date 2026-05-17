@@ -44,7 +44,13 @@
       "Bash(git push *)",
       "Bash(git config *)",
       "Bash(cp E:/work/ReqForge/adapters/claude-code/.claude/feedback/dev-builder-single-pass-verification-insufficient.md E:/work/ReqForge/.claude/feedback/)",
-      "Bash(cp E:/work/ReqForge/adapters/claude-code/.claude/feedback/FEEDBACK-INDEX.md E:/work/ReqForge/.claude/feedback/)"
+      "Bash(cp E:/work/ReqForge/adapters/claude-code/.claude/feedback/FEEDBACK-INDEX.md E:/work/ReqForge/.claude/feedback/)",
+      "Skill(product-spec-builder)",
+      "Skill(dev-planner)",
+      "Skill(dev-builder)",
+      "Bash(chmod +x bin/todo)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm run *)"
     ]
   }
 }
