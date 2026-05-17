@@ -28,21 +28,33 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 
 Copy `adapters/claude-code/.claude/` to your project root and open Claude Code.
 
-> **Platform note**: On Windows, use `.claude/settings.windows.json` as `settings.json` (uses `.bat` hooks).  
-> On Linux/Mac, the default `settings.json` works as-is (uses `sh` + `.sh` hooks).
-
 ### Cursor
 
 Copy `adapters/cursor/.cursor/` to your project root.
-
-> **Platform note**: On Windows, use `.cursor/settings.windows.json` as `settings.json`.  
-> On Linux/Mac, the default `settings.json` works as-is.
 
 ### OpenCode
 
 Copy `adapters/opencode/.opencode/` to your project root.
 
-> OpenCode hooks run on both platforms — `.sh` for Linux/Mac, `.bat`/`.ps1` for Windows.
+### Hook Configuration by Platform
+
+Hooks fire automatically at key events (commit, message, edit, startup). They require platform-specific settings:
+
+| Platform | File to use as `settings.json` | Hook scripts | Requirement |
+|----------|-------------------------------|--------------|-------------|
+| Linux/Mac | `settings.json` (default) | `.sh` | `sh` (built-in) |
+| Windows | `settings.windows.json` | `.bat` | None (cmd native) |
+
+After copying the adapter directory, rename or copy the platform file:
+
+```
+# Windows — use .bat hooks (no Git Bash needed)
+copy settings.windows.json settings.json
+
+# Linux/Mac — .sh hooks work out of the box, no action needed
+```
+
+**OpenCode** doesn't use `settings.json` — its `.sh` (Linux/Mac) and `.bat`/`.ps1` (Windows) hooks work on each platform natively.
 
 ---
 
