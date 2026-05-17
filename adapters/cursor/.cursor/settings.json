@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreCommit": {
+      "run": "bash .cursor/rules/hooks/pre-commit-check.sh"
+    },
+    "BeforeCommand": {
+      "run": "bash .cursor/rules/hooks/stop-gate.sh && bash .cursor/rules/hooks/detect-feedback-signal.sh"
+    },
+    "AfterCommand": {
+      "run": "bash .cursor/rules/hooks/mark-review-needed.sh"
+    },
+    "OnInit": {
+      "run": "bash .cursor/rules/hooks/check-evolution.sh"
+    }
+  }
+}

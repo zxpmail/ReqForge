@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreCommit": {
+      "run": "bash .claude/hooks/pre-commit-check.sh"
+    },
+    "BeforeCommand": {
+      "run": "bash .claude/hooks/stop-gate.sh && bash .claude/hooks/detect-feedback-signal.sh"
+    },
+    "AfterCommand": {
+      "run": "bash .claude/hooks/mark-review-needed.sh"
+    },
+    "OnInit": {
+      "run": "bash .claude/hooks/check-evolution.sh"
+    }
+  }
+}
