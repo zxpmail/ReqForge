@@ -25,6 +25,8 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 ## Quick Start
 
 > **YOLO mode is not recommended with Forge.** Forge's value is in its gating — every phase, review, and evolution proposal asks for your confirmation. YOLO mode auto-approves all of these, rendering the harness pointless. Run without YOLO to get the full benefit.
+>
+> If you do run YOLO, all gates switch to **async write mode** — review reports, fix logs, evolution proposals, and phase checkpoints are written to files instead of blocking execution. This preserves the data flow for the evolution engine and lets you review the full output after the run. Gates don't skip, they just don't block.
 
 ### Claude Code
 
