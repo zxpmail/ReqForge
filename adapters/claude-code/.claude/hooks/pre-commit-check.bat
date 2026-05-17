@@ -1,9 +1,12 @@
 @echo off
 REM Hook: PreToolUse before git commit
 REM Run tsc --noEmit before commit, block if compilation fails
-REM YOLO mode (FORGE_MODE=yolo): write build error log instead of blocking
+REM YOLO mode: write build error log instead of blocking
+REM   Priority: project .forge/config > global ~/.forge/config > env var FORGE_MODE
 
 setlocal enabledelayedexpansion
+
+call :check_yolo
 
 if "%CLAUDE_PROJECT_DIR%"=="" exit /b 0
 
@@ -27,7 +30,7 @@ set TSC_PASS=1
 for /f "usebackq delims=" %%o in (`npx tsc --noEmit 2^>^&1`) do set TSC_PASS=0
 
 if !TSC_PASS! equ 0 (
-    if /i "%FORGE_MODE%"=="yolo" (
+    if !YOLO_ACTIVE! equ 1 (
         if not exist "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending" mkdir "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending"
         npx tsc --noEmit > "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending\build-error.log" 2>&1
         echo [yolo] Build errors logged to .claude\.yolo-pending\build-error.log >&2
@@ -39,3 +42,16 @@ if !TSC_PASS! equ 0 (
 )
 
 exit /b 0
+
+:check_yolo
+set YOLO_ACTIVE=0
+if /i "%FORGE_MODE%"=="yolo" set YOLO_ACTIVE=1 & goto :eof
+if exist "%CLAUDE_PROJECT_DIR%\.forge\config" (
+    findstr /i "^FORGE_MODE=yolo" "%CLAUDE_PROJECT_DIR%\.forge\config" >nul 2>&1
+    if !errorlevel! equ 0 set YOLO_ACTIVE=1 & goto :eof
+)
+if exist "%USERPROFILE%\.forge\config" (
+    findstr /i "^FORGE_MODE=yolo" "%USERPROFILE%\.forge\config" >nul 2>&1
+    if !errorlevel! equ 0 set YOLO_ACTIVE=1 & goto :eof
+)
+goto :eof

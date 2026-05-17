@@ -1,0 +1,5 @@
+# Forge configuration
+# Priority: project .forge/config > global ~/.forge/config > env var FORGE_MODE
+
+# Uncomment to enable YOLO async write mode:
+# FORGE_MODE=yolo

@@ -20,3 +20,6 @@ changes/*
 !changes/.gitkeep
 changes/archive/*
 !changes/archive/.gitkeep
+
+# Forge local config
+.forge/config

@@ -28,7 +28,10 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 >
 > 如果确实要用 YOLO，所有 Gate 会自动切换到**异步写文件模式** — review 报告、fix 日志、evolution 提案、phase 检查点都会写入 `changes/` 和 `.claude/.yolo-pending/`，不阻塞执行。这样保留了进化引擎所需的数据流，跑完后你可以一次性查看全部产出。Gate 没有跳过，只是不拦着你了。
 >
-> 启用方式：启动 Claude 前执行 `export FORGE_MODE=yolo`（Linux/Mac）或 `set FORGE_MODE=yolo`（Windows）。
+> **启用方式**（优先级：项目配置 > 全局配置 > 环境变量）：
+> 1. **项目配置**：复制 `.forge/config.example` 到 `.forge/config`，取消注释 `FORGE_MODE=yolo`
+> 2. **全局配置**：创建 `~/.forge/config`（Linux/Mac）或 `%USERPROFILE%\.forge\config`（Windows），写入 `FORGE_MODE=yolo`
+> 3. **环境变量**：`export FORGE_MODE=yolo`（Linux/Mac）或 `set FORGE_MODE=yolo`（Windows）
 
 ### Claude Code
 

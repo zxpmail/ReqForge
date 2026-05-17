@@ -28,7 +28,10 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 >
 > If you do run YOLO, all gates switch to **async write mode** — review reports, fix logs, evolution proposals, and phase checkpoints are written to `changes/` and `.claude/.yolo-pending/` instead of blocking execution. This preserves the data flow for the evolution engine and lets you review the full output after the run. Gates don't skip, they just don't block.
 >
-> To enable: `export FORGE_MODE=yolo` (or `set FORGE_MODE=yolo` on Windows) before starting Claude.
+> **Enable via config files** (priority: project > global > env var):
+> 1. **Project**: copy `.forge/config.example` to `.forge/config`, uncomment `FORGE_MODE=yolo`
+> 2. **Global**: create `~/.forge/config` (Linux/Mac) or `%USERPROFILE%\.forge\config` (Windows) with `FORGE_MODE=yolo`
+> 3. **Env var**: `export FORGE_MODE=yolo` (Linux/Mac) or `set FORGE_MODE=yolo` (Windows)
 
 ### Claude Code
 
