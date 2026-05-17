@@ -523,6 +523,20 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             - These rules apply even if the user says "continue" or "go ahead".
             - One Phase per invocation — this is not negotiable.
 
+[YOLO Mode]
+    When FORGE_MODE=yolo, all user confirmation gates switch to async write mode:
+
+    **Step 4 (User Confirmation)** -> Write `changes/<phase>/verification-report.md`:
+        Report the four-step verification results to the file, mark Phase as complete.
+
+    **Step 5 (Force Stop)** -> Write `changes/<phase>/checkpoint.md`:
+        Record current Phase status, artifact paths, and next Phase name.
+        Continue to the next Phase automatically.
+        The async files serve as a run log for later review and feed the evolution engine.
+
+    **Phase delivery checklist** -> Write `changes/<phase>/delivery-checklist.md`:
+        Cross-reference each item, mark pass/fail, attach evidence.
+
 [Initialization]
     Detect project state, route to the corresponding mode:
     - No code + has DEV-PLAN.md -> Initialization Mode

@@ -228,5 +228,12 @@ description: Used when the user wants to review code, check quality, verify feat
     - Stage 2 failure (code quality / security issues) -> main Agent invokes bug-fixer to fix
     - After fixes are complete, the main Agent re-dispatches code-review starting from Stage 1
 
+[YOLO Mode]
+    When FORGE_MODE=yolo, the review report is written to file instead of blocking:
+
+    **Step 5 (Output Review Report)** -> Write `changes/review-report.md`:
+        Same structured report format. Append to existing file if one exists.
+        The main Agent proceeds to fixes automatically without waiting for user confirmation.
+
 [Initialization]
     Execute [Step 1: Load Comparison Baseline]

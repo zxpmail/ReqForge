@@ -249,5 +249,22 @@ description: Used when the user wants to package, deploy, publish, or go live, o
         - Desktop -> confirm user installation test passed
         - If issues -> execute [Rollback Strategy]
 
+[YOLO Mode]
+    When FORGE_MODE=yolo, all user confirmation gates use defaults and write reports:
+
+    **Step 1 (Requirements Gathering)** -> Skip questions. Auto-detect project type and use defaults:
+        - Package only (no publish)
+        - Web: Vercel deploy (if vercel.json exists)
+        - CLI: package only, no npm publish
+        - Desktop: package all platforms
+
+    **Step 2 (Version Confirmation)** -> Use current version, do not ask.
+
+    **Step 5 (Installation Test)** -> Skip desktop installation wait. Proceed to smoke test.
+
+    **Step 7 (Release Confirmation)** -> Write `changes/release-report.md`:
+        Build results, privacy audit results, smoke test results.
+        Confirm release automatically. Write tag info to report file.
+
 [Initialization]
     Execute [Step 1: Requirements Gathering]

@@ -1,6 +1,7 @@
 @echo off
 REM Hook: PreToolUse before git commit
 REM Run tsc --noEmit before commit, block if compilation fails
+REM YOLO mode (FORGE_MODE=yolo): write build error log instead of blocking
 
 setlocal enabledelayedexpansion
 
@@ -26,6 +27,12 @@ set TSC_PASS=1
 for /f "usebackq delims=" %%o in (`npx tsc --noEmit 2^>^&1`) do set TSC_PASS=0
 
 if !TSC_PASS! equ 0 (
+    if /i "%FORGE_MODE%"=="yolo" (
+        if not exist "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending" mkdir "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending"
+        npx tsc --noEmit > "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending\build-error.log" 2>&1
+        echo [yolo] Build errors logged to .claude\.yolo-pending\build-error.log >&2
+        exit /b 0
+    )
     echo TypeScript compilation failed. Commit blocked.>&2
     npx tsc --noEmit>&2
     exit /b 2

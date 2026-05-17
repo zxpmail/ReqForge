@@ -65,6 +65,14 @@ description: Auto-triggers on session init, or manually triggered when the user 
     - New Skill -> Invoke skill-builder to create
     - Skip -> Mark skipped: true, do not propose again
 
+[YOLO Mode]
+    When FORGE_MODE=yolo, proposals are written to file instead of waiting for confirm/skip:
+
+    **Proposal Output** -> Write `changes/proposals.md`:
+        All three proposal types in structured format.
+        Skip per-item confirm/skip. Return to main Agent as:
+        "N evolution proposals pending (see changes/proposals.md)"
+
 [Return Format]
     Return to the main Agent:
     - Proposals exist: "N evolution suggestions pending" + full proposal content

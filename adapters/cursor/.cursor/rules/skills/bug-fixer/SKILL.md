@@ -219,5 +219,12 @@ description: Used when the user says "this feature is broken", "getting an error
          Shall I commit? (commit message: fix: [problem description])
          Or are there other issues to fix?"
 
+[YOLO Mode]
+    When FORGE_MODE=yolo, auto-commit and write fix report instead of asking:
+
+    **Completion Phase** -> Auto-commit with `fix:` prefix, write `changes/fix-report.md`:
+        Root cause, fix description, verification evidence, and regression test results.
+        Do not wait for user confirmation. Proceed to the next task.
+
 [Initialization]
     Execute [Startup Phase]
