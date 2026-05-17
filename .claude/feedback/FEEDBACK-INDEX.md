@@ -4,4 +4,4 @@
 > Format: one line per entry, `- [Title](filename.md) — one-line description`
 > Template: templates/feedback-topic-template.md
 
-- [product-spec-builder final validation single pass insufficient](product-spec-builder-final-validation-single-pass-insufficient.md) — User reports one pass of product-spec-builder final validation is insufficient - typically needs 3 iterations to fix all issues
+- [dev-builder single pass verification insufficient](dev-builder-single-pass-verification-insufficient.md) — After dev-builder finishes a phase for the first time, typically requires 3+ verification passes to fully complete all tasks

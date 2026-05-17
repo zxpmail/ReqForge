@@ -341,7 +341,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - "Likely passes" -> Probability is not evidence — run the test and get results
 
 [Phase Completion Assessment]
-    When each Phase is complete, all of the following checks must pass:
+    When each Phase is complete, all of the following checks must pass. One pass is rarely enough — iterative checking until clean.
 
     **Four-Step Verification** (all must pass to confirm Phase completion):
 
@@ -373,6 +373,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - Security scan: npm audit has no critical vulnerabilities
     - No exposed keys: grep to check for hardcoded API Keys, Tokens in code
     - Process health: only 1 dev server instance running
+
+    **Iterative Check Loop**:
+    - If any step finds issues (missing tasks, compilation errors, test failures), fix the issues
+    - After fixing any issue, **restart the entire four-step verification from Step 1**
+    - Fixing one issue can reveal other missed issues — one pass is never enough
+    - Repeat until all four steps pass clean with no issues found
 
     **Verification Timeliness Rule**:
     Each verification command in the four steps must be executed in the same message as the report. "Already verified earlier" is not accepted. If any code modification occurs in between, all four steps must be re-run.
@@ -488,7 +494,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             After all Tasks are complete, execute the four-step verification in [Phase Completion Assessment]
             This is the final confirmation, ensuring all Task code together compiles, runs, and functions completely
             Attach evidence for each step
-            If not passed, fix and re-verify
+            If not passed, fix the issues found → **restart the entire four-step verification from Step 1**
+            One pass is rarely enough — repeat until all four steps pass clean with no issues found
 
         Step 4: User Confirmation
             Report Phase completion status to the user, with evidence

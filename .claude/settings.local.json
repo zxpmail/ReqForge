@@ -40,7 +40,11 @@
       "Bash(dir E:\\\\work\\\\ReqForge\\\\.claude)",
       "Skill(feedback-writer)",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(git config *)",
+      "Bash(cp E:/work/ReqForge/adapters/claude-code/.claude/feedback/dev-builder-single-pass-verification-insufficient.md E:/work/ReqForge/.claude/feedback/)",
+      "Bash(cp E:/work/ReqForge/adapters/claude-code/.claude/feedback/FEEDBACK-INDEX.md E:/work/ReqForge/.claude/feedback/)"
     ]
   }
 }
