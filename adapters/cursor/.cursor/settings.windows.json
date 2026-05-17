@@ -9,6 +9,9 @@
     "AfterCommand": {
       "run": ".cursor\\rules\\hooks\\mark-review-needed.bat"
     },
+    "PostCommit": {
+      "run": ".cursor\\rules\\hooks\\auto-push.bat"
+    },
     "OnInit": {
       "run": ".cursor\\rules\\hooks\\check-evolution.bat"
     }

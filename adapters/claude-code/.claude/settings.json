@@ -9,6 +9,9 @@
     "AfterCommand": {
       "run": "sh .claude/hooks/mark-review-needed.sh"
     },
+    "PostCommit": {
+      "run": "sh .claude/hooks/auto-push.sh"
+    },
     "OnInit": {
       "run": "sh .claude/hooks/check-evolution.sh"
     }

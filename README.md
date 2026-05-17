@@ -175,7 +175,7 @@ Forge/
 │   ├── skills/                # 11 skill definitions, each in its own directory
 │   ├── agents/                # 4 Sub-agent definitions
 │   ├── templates/             # Document templates
-│   ├── hooks/                 # Hook scripts (.sh)
+│   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)
 │   └── feedback/              # Feedback templates
 ├── adapters/
 │   ├── claude-code/           # Claude Code adapter (.claude/)

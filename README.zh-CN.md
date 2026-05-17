@@ -175,7 +175,7 @@ Forge/
 │   ├── skills/                # 11 个技能定义，每个独立目录
 │   ├── agents/                # 4 个 Sub-agent 定义
 │   ├── templates/             # 文档模板
-│   ├── hooks/                 # Hook 脚本（.sh）
+│   ├── hooks/                 # Hook 脚本（.sh/.bat/.ps1）
 │   └── feedback/              # feedback 模板
 ├── adapters/
 │   ├── claude-code/           # Claude Code 适配（.claude/）

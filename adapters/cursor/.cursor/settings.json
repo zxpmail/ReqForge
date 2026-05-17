@@ -9,6 +9,9 @@
     "AfterCommand": {
       "run": "sh .cursor/rules/hooks/mark-review-needed.sh"
     },
+    "PostCommit": {
+      "run": "sh .cursor/rules/hooks/auto-push.sh"
+    },
     "OnInit": {
       "run": "sh .cursor/rules/hooks/check-evolution.sh"
     }

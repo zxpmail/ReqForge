@@ -5,6 +5,16 @@ dist/
 *.log
 *.zip
 
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
 # Change artifact directories (track except .gitkeep)
 changes/*
 !changes/.gitkeep
