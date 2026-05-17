@@ -71,7 +71,7 @@ copy settings.windows.json settings.json
 │  ├─ feedback-observer  Capture user corrections             │
 │  └─ evolution-runner   Scan feedback accumulation           │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 8 (Guides / Feedforward Control)                  │ ← Guidance Layer
+│  Skills × 11 (Guides / Feedforward Control)                 │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
 ├─────────────────────────────────────────────────────────────┤
 │  Hooks + Review Loop (Sensors / Feedback Control)           │ ← Inspection Layer
@@ -82,7 +82,7 @@ copy settings.windows.json settings.json
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Guidance Layer — 8 Skills
+### Guidance Layer — 11 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable:
 
@@ -96,6 +96,9 @@ Each Skill is an independent methodology module — composable, extensensible, p
 | **bug-fixer**            | Four-stage systematic debugging. Don't guess, don't try blindly: gather evidence → analyze patterns → hypothesize → fix.                               |
 | **code-review**          | Two-stage review. Stage 1 checks Spec compliance, Stage 2 checks code quality. Stage 1 must pass before Stage 2.                                       |
 | **release-builder**      | Build & deploy. Built-in privacy audit and smoke testing.                                                                                              |
+| **feedback-writer**      | Records user corrections and feedback as structured files. Feeds the evolution engine with data.                                                       |
+| **evolution-engine**     | Scans accumulated feedback, identifies patterns (3+ occurrences), generates proposals to upgrade rules or optimize skills.                             |
+| **skill-builder**        | Creates new Skill definitions from scratch using project templates. Triggered by evolution proposals or manual invocation.                             |
 
 ### Execution Layer — Sub-Agent Isolation (Context Firewall)
 

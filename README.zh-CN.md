@@ -71,7 +71,7 @@ copy settings.windows.json settings.json
 │  ├─ feedback-observer  捕捉用户反馈                          │
 │  └─ evolution-runner   扫描 feedback 积累                    │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 8（Guides / 前馈控制）                             │ ← 引导层
+│  Skills × 11（Guides / 前馈控制）                            │ ← 引导层
 │  行动之前注入方法论和验收标准，提高一次做对的概率              │
 ├─────────────────────────────────────────────────────────────┤
 │  Hooks + Review 闭环（Sensors / 反馈控制）                    │ ← 检查层
@@ -82,7 +82,7 @@ copy settings.windows.json settings.json
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 引导层 — 八项 Skill
+### 引导层 — 十一项 Skill
 
 每个 Skill 是独立的方法论模块，可组合、可扩展、可插拔：
 
@@ -96,6 +96,9 @@ copy settings.windows.json settings.json
 | **bug-fixer**            | 四阶段系统性调试。不猜不试：收集证据 → 分析模式 → 假设验证 → 实施修复                     |
 | **code-review**          | 两阶段审查。Stage 1 查 Spec 合规，Stage 2 查代码质量，Stage 1 未通过不进 Stage 2 |
 | **release-builder**      | 构建发布。内置隐私审计和冒烟测试                                            |
+| **feedback-writer**      | 将用户的修正和反馈记录为结构化文件。为进化引擎提供数据积累                                     |
+| **evolution-engine**     | 扫描积累的 feedback，识别模式（出现 3 次以上），提议升级规则或优化技能                     |
+| **skill-builder**        | 从零创建新的 Skill 定义。由进化引擎提议或手动触发                                     |
 
 ### 执行层 — Sub-Agent 隔离
 
