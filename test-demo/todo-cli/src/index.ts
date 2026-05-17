@@ -11,13 +11,15 @@ const program = new Command();
 program
   .name('todo')
   .description('A simple CLI todo list tool with AI categorization')
-  .version('1.0.0');
+  .version('1.0.0')
+  .option('--ai-key <key>', 'AI API key for categorization');
 
 program
   .command('add <description>')
   .description('Add a new todo (AI categorizes automatically)')
   .action(async (description: string) => {
-    await handleAdd(description);
+    const options = program.opts();
+    await handleAdd(description, options.aiKey);
   });
 
 program

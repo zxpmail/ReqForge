@@ -1,7 +1,6 @@
 import { TodoCategory } from './types';
 
 const API_ENDPOINT = process.env.AI_API_ENDPOINT || 'https://api.openai.com/v1/chat/completions';
-const API_KEY = process.env.AI_API_KEY || '';
 
 const VALID_CATEGORIES: TodoCategory[] = ['feature', 'bug', 'refactor', 'chore', 'docs', 'test'];
 
@@ -13,8 +12,9 @@ function parseCategory(raw: string): TodoCategory | null {
   return null;
 }
 
-export async function categorizeTodo(description: string): Promise<TodoCategory> {
-  if (!API_KEY) {
+export async function categorizeTodo(description: string, apiKey?: string): Promise<TodoCategory> {
+  const key = apiKey || process.env.AI_API_KEY || '';
+  if (!key) {
     console.warn('AI_API_KEY not set. Defaulting to "feature" category.');
     return 'feature';
   }
@@ -24,7 +24,7 @@ export async function categorizeTodo(description: string): Promise<TodoCategory>
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${API_KEY}`,
+        'Authorization': `Bearer ${key}`,
       },
       body: JSON.stringify({
         model: 'gpt-4o-mini',
