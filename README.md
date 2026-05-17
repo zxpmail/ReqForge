@@ -24,6 +24,8 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 
 ## Quick Start
 
+> **YOLO mode is not recommended with Forge.** Forge's value is in its gating — every phase, review, and evolution proposal asks for your confirmation. YOLO mode auto-approves all of these, rendering the harness pointless. Run without YOLO to get the full benefit.
+
 ### Claude Code
 
 Copy `adapters/claude-code/.claude/` to your project root and open Claude Code.

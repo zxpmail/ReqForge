@@ -24,6 +24,8 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 
 ## 快速开始
 
+> **不建议在 YOLO 模式下使用 Forge。** Forge 的核心是 Gate — 每个 Phase、每次 review、每个 evolution 提案都需要你确认。YOLO 模式会全部自动批准，让这套 Harness 形同虚设。关掉 YOLO 才能发挥 Forge 的全部价值。
+
 ### Claude Code
 
 复制 `adapters/claude-code/.claude/` 到你项目根目录，打开 Claude Code 即可使用。
