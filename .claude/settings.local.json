@@ -35,7 +35,12 @@
       "Bash(echo \"- [Test]\\(test.md\\) - test entry\")",
       "Read(//c/hooktest/**)",
       "Bash(cmd \"/c test_hooks.bat\")",
-      "Bash(xxd core/hooks/stop-gate.bat)"
+      "Bash(xxd core/hooks/stop-gate.bat)",
+      "Bash(pnpm sync *)",
+      "Bash(dir E:\\\\work\\\\ReqForge\\\\.claude)",
+      "Skill(feedback-writer)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }

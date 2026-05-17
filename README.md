@@ -66,16 +66,16 @@ Copy `adapters/opencode/.opencode/` to your project root.
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable:
 
-| Skill | Responsibility |
-|-------|---------------|
-| **product-spec-builder** | Requirements gathering. AI interviews you through multi-round questioning to turn vague ideas into structured specs. Supports iterative mode. |
+| Skill                    | Responsibility                                                                                                                                         |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **product-spec-builder** | Requirements gathering. AI interviews you through multi-round questioning to turn vague ideas into structured specs. Supports iterative mode.          |
 | **design-brief-builder** | Design language. Quantifies vague descriptions ("dark theme, minimal") into concrete direction: color palette, interaction style, information density. |
-| **design-maker** | Design prototyping. Generates full page mockups through Pencil or Figma MCP. |
-| **dev-planner** | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan. |
-| **dev-builder** | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop. |
-| **bug-fixer** | Four-stage systematic debugging. Don't guess, don't try blindly: gather evidence → analyze patterns → hypothesize → fix. |
-| **code-review** | Two-stage review. Stage 1 checks Spec compliance, Stage 2 checks code quality. Stage 1 must pass before Stage 2. |
-| **release-builder** | Build & deploy. Built-in privacy audit and smoke testing. |
+| **design-maker**         | Design prototyping. Generates full page mockups through Pencil or Figma MCP.                                                                           |
+| **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
+| **dev-builder**          | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop.                                                   |
+| **bug-fixer**            | Four-stage systematic debugging. Don't guess, don't try blindly: gather evidence → analyze patterns → hypothesize → fix.                               |
+| **code-review**          | Two-stage review. Stage 1 checks Spec compliance, Stage 2 checks code quality. Stage 1 must pass before Stage 2.                                       |
+| **release-builder**      | Build & deploy. Built-in privacy audit and smoke testing.                                                                                              |
 
 ### Execution Layer — Sub-Agent Isolation (Context Firewall)
 
@@ -95,14 +95,14 @@ Feature complete → code-reviewer two-stage review
 
 Six hook scripts fire automatically at critical nodes:
 
-| Hook | Trigger | Action |
-|------|---------|--------|
-| pre-commit-check | Before commit | Block commit if compilation fails |
-| auto-push | After commit | Auto-push to remote |
-| stop-gate | Before agent stops | Block stop if code hasn't been reviewed |
-| detect-feedback-signal | On user message | Auto-detect correction signals |
-| mark-review-needed | After file edit | Mark changes as needing review |
-| check-evolution | On session start | Check feedback accumulation |
+| Hook                   | Trigger            | Action                                  |
+| ---------------------- | ------------------ | --------------------------------------- |
+| pre-commit-check       | Before commit      | Block commit if compilation fails       |
+| auto-push              | After commit       | Auto-push to remote                     |
+| stop-gate              | Before agent stops | Block stop if code hasn't been reviewed |
+| detect-feedback-signal | On user message    | Auto-detect correction signals          |
+| mark-review-needed     | After file edit    | Mark changes as needing review          |
+| check-evolution        | On session start   | Check feedback accumulation             |
 
 ### Evolution Layer — Steering Loop
 
@@ -142,21 +142,6 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 11. **Iterate** — Request changes in conversation; auto-update Spec → Plan → code → review
 12. **Release** — Invoke /release-builder
 
----
-
-## Design References
-
-| Project | Patterns Adopted |
-|---------|-----------------|
-| **FeiCai (废才)** | Full product development workflow + evolution engine |
-| **oh-my-openagent** | Open multi-client architecture, no platform lock-in |
-| **superpowers** | Pluggable skill architecture, enforced TDD |
-| **OpenSpec** | Incremental change artifact management |
-| **awesome-chatgpt-prompts** | Each skill is a finely-tuned prompt, community-contributed |
-| **OpenAI Symphony** | Multi-role Sub-Agent division of labor, each with clear responsibility |
-
----
-
 ## Repository Structure
 
 ```
@@ -189,3 +174,5 @@ Forge covers the full product development pipeline, which demands more from the 
 ## License
 
 MIT
+
+

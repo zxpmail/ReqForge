@@ -66,16 +66,16 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 
 每个 Skill 是独立的方法论模块，可组合、可扩展、可插拔：
 
-| Skill | 职责 |
-|-------|------|
-| **product-spec-builder** | 需求收集。不是让你写一份需求文档扔给 AI，而是 AI 通过多轮追问帮你把模糊想法变成结构化需求。支持迭代模式 |
-| **design-brief-builder** | 设计规范。通过追问把"深色主题、极简风格"这类模糊描述量化为配色方案、交互风格、信息密度等具体方向 |
-| **design-maker** | 设计图制作。通过 Pencil 或 Figma MCP 在设计工具中生成完整页面原型图 |
-| **dev-planner** | 开发计划。分析功能依赖关系，拆分为多个 Phase，输出分阶段开发计划 |
-| **dev-builder** | 项目开发。拆分为 Task 逐个完成，每个 Task 走「编码 → review → fix → commit」闭环 |
-| **bug-fixer** | 四阶段系统性调试。不猜不试：收集证据 → 分析模式 → 假设验证 → 实施修复 |
-| **code-review** | 两阶段审查。Stage 1 查 Spec 合规，Stage 2 查代码质量，Stage 1 未通过不进 Stage 2 |
-| **release-builder** | 构建发布。内置隐私审计和冒烟测试 |
+| Skill                    | 职责                                                          |
+| ------------------------ | ----------------------------------------------------------- |
+| **product-spec-builder** | 需求收集。不是让你写一份需求文档扔给 AI，而是 AI 通过多轮追问帮你把模糊想法变成结构化需求。支持迭代模式     |
+| **design-brief-builder** | 设计规范。通过追问把"深色主题、极简风格"这类模糊描述量化为配色方案、交互风格、信息密度等具体方向           |
+| **design-maker**         | 设计图制作。通过 Pencil 或 Figma MCP 在设计工具中生成完整页面原型图                 |
+| **dev-planner**          | 开发计划。分析功能依赖关系，拆分为多个 Phase，输出分阶段开发计划                         |
+| **dev-builder**          | 项目开发。拆分为 Task 逐个完成，每个 Task 走「编码 → review → fix → commit」闭环  |
+| **bug-fixer**            | 四阶段系统性调试。不猜不试：收集证据 → 分析模式 → 假设验证 → 实施修复                     |
+| **code-review**          | 两阶段审查。Stage 1 查 Spec 合规，Stage 2 查代码质量，Stage 1 未通过不进 Stage 2 |
+| **release-builder**      | 构建发布。内置隐私审计和冒烟测试                                            |
 
 ### 执行层 — Sub-Agent 隔离
 
@@ -95,14 +95,14 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 
 六个 Hook 脚本在关键节点自动触发，作为确定性的传感器：
 
-| Hook | 触发时机 | 作用 |
-|------|---------|------|
-| pre-commit-check | commit 前 | 编译不过阻止提交 |
-| auto-push | commit 后 | 自动推送到远程 |
-| stop-gate | Agent 停止前 | 代码未审查不让停 |
-| detect-feedback-signal | 用户提交消息 | 自动捕捉修正信号 |
-| mark-review-needed | 文件编辑后 | 标记代码变更待审查 |
-| check-evolution | session 启动 | 检查 feedback 积累 |
+| Hook                   | 触发时机       | 作用             |
+| ---------------------- | ---------- | -------------- |
+| pre-commit-check       | commit 前   | 编译不过阻止提交       |
+| auto-push              | commit 后   | 自动推送到远程        |
+| stop-gate              | Agent 停止前  | 代码未审查不让停       |
+| detect-feedback-signal | 用户提交消息     | 自动捕捉修正信号       |
+| mark-review-needed     | 文件编辑后      | 标记代码变更待审查      |
+| check-evolution        | session 启动 | 检查 feedback 积累 |
 
 ### 进化层 — Steering Loop
 
@@ -141,21 +141,6 @@ Harness 不是搭完就不动了。每次出问题，你去改 Harness，让同�
 10. **Phase 验证** — 跨 Task 集成检查 + 编译验证 + 功能测试
 11. **迭代修改** — 直接对话提需求，自动更新 Spec → Plan → 开发 → 审查
 12. **构建发布** — 调用 /release-builder
-
----
-
-## 设计思想
-
-| 参考项目 | 借鉴点 |
-|---------|--------|
-| **废才** | 完整产品开发全流程 + evolution 进化引擎 |
-| **oh-my-openagent** | 开放多客户端架构，不绑定单一平台 |
-| **superpowers** | 技能独立可插拔，强制 TDD 纪律 |
-| **OpenSpec** | 增量变更 artifact 管理，支持已有项目 |
-| **awesome-chatgpt-prompts** | 每个技能是精心调校的提示词 |
-| **OpenAI Symphony** | 多角色 Sub-Agent 分工，各尽其职 |
-
----
 
 ## 仓库结构
 

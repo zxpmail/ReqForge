@@ -289,6 +289,38 @@ description: Used when the user says they want to build a product, application, 
         Step 5: Output file
             Save the Product Spec as Product-Spec.md
 
+        Step 6: Final Validation
+            Goal: Remove redundancy, resolve contradictions, eliminate vague language before delivering
+
+            Iterative cleanup loop:
+            1. **Scan**: Perform a complete self-review of the current Product Spec
+               - **Redundancy check**: Find duplicate descriptions of the same requirement or feature
+               - **Contradiction check**: Find conflicting statements between sections
+               - **Vagueness check**: Identify remaining vague language ("good UX", "modern design", "etc.")
+               - **Scope check**: Flag features mentioned in passing that aren't actually needed
+
+            2. **Auto-fix**:
+               - Redundancy: Automatically remove duplicates, merge descriptions
+               - Contradictions: If resolution is obvious, auto-resolve; if not, flag for user
+               - Do not auto-fix vagueness or scope issues — these require user input
+
+            3. **Repeat**: If any auto-fix was applied, go back to Step 1 and re-scan
+               One pass is rarely enough — keep cleaning until no more issues can be fixed automatically
+
+            4. **Present**: When done with auto-cleanup, present remaining issues to user:
+               ```
+               📋 Final validation complete:
+               - Auto-fixed: N issues (list briefly)
+               - Remaining need your attention:
+               - [ ] Vagueness: ... (ask clarification)
+               - [ ] Contradiction: ... (propose options)
+               - [ ] Scope: ... (confirm keep/remove)
+
+               Please review and confirm.
+               ```
+
+            Only after user confirms all issues are resolved can the workflow end. Do not deliver an unclean spec.
+
 [Workflow (Iteration Mode)]
     **Trigger Condition**: User proposes new features, requirement changes, or iterative ideas during development
 
@@ -369,7 +401,29 @@ description: Used when the user says they want to build a product, application, 
             When recording Product Spec iteration changes, load templates/changelog-template.md for the complete changelog format and examples
             Automatically generate change descriptions based on conversation content
 
-        Step 6: Archive (triggered by other skills)
+        Step 6: Final Validation
+            Goal: Verify the updated spec is clean and consistent
+
+            Iterative cleanup loop:
+            1. **Scan**: Perform a focused review of the updated Product Spec
+               - Check that new requirements don't conflict with existing requirements
+               - Find redundant descriptions carried over from original
+               - Verify all new changes are clearly articulated without vagueness
+               - Confirm the overall structure remains coherent
+
+            2. **Auto-fix**:
+               - Redundancy: Automatically remove duplicates
+               - Simple contradictions: Auto-resolve if obvious
+               - Structural issues: Auto-adjust to maintain coherence
+               - Do not auto-fix vagueness or scope changes — these require user input
+
+            3. **Repeat**: If any auto-fix was applied, re-scan to catch any new issues introduced by the fix
+               Keep cleaning until no more automatic fixes are possible
+
+            4. **Present**: When done with auto-cleanup, present remaining issues to user
+               Only after user confirms all issues are resolved can you conclude.
+
+        Step 7: Archive (triggered by other skills)
             Change artifacts are not permanent baggage. When the entire change (spec -> design -> plan -> dev -> review) is fully completed, dev-builder moves the changes/<change-name>/ directory to changes/archive/<change-name>/.
             This skill does not archive on its own.
 

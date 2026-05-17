@@ -3,6 +3,7 @@ dist/
 .env
 .env.local
 *.log
+*.zip
 
 # Change artifact directories (track except .gitkeep)
 changes/*
