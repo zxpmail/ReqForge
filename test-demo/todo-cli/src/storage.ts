@@ -28,8 +28,6 @@ function writeStore(store: TodoStore): void {
   fs.writeFileSync(STORAGE_FILE, JSON.stringify(store, null, 2), 'utf-8');
 }
 
-let nextId = 0;
-
 function calculateNextId(todos: Todo[]): number {
   if (todos.length === 0) return 1;
   return Math.max(...todos.map(t => t.id)) + 1;

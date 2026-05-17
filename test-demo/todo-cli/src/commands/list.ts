@@ -20,11 +20,13 @@ export function handleList(): void {
     return;
   }
 
+  const sorted = [...todos].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+
   const grouped: Partial<Record<TodoCategory, typeof todos>> = {};
   for (const cat of CATEGORY_ORDER) {
     grouped[cat] = [];
   }
-  for (const todo of todos) {
+  for (const todo of sorted) {
     grouped[todo.category]?.push(todo);
   }
 
