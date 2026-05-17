@@ -183,8 +183,15 @@ Forge/
 │   └── opencode/              # OpenCode 适配（.opencode/）
 ├── scripts/
 │   └── sync.ts                # core → 适配器同步脚本
+├── changes/                   # 变更产物（proposal/specs/design/tasks）
+│   └── archive/               # 已实现的变更归档
+├── EVOLUTION.md               # 进化引擎定义
 ├── Product-Spec.md            # Forge 自身 Product Spec
+├── Product-Spec-CHANGELOG.md  # Spec 变更记录
 ├── DEV-PLAN.md                # Forge 自身开发计划
+├── package.json               # Forge 开发依赖
+├── tsconfig.json
+├── LICENSE                    # MIT 许可证
 └── README.md                  # 本文件
 ```
 

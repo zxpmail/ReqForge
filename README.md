@@ -183,8 +183,15 @@ Forge/
 │   └── opencode/              # OpenCode adapter (.opencode/)
 ├── scripts/
 │   └── sync.ts                # core → adapter sync script
+├── changes/                   # Change artifacts (proposal/specs/design/tasks)
+│   └── archive/               # Archived implemented changes
+├── EVOLUTION.md               # Evolution engine definition
 ├── Product-Spec.md            # Forge's own Product Spec
+├── Product-Spec-CHANGELOG.md  # Spec change log
 ├── DEV-PLAN.md                # Forge's own development plan
+├── package.json               # Forge dev dependencies
+├── tsconfig.json
+├── LICENSE                    # MIT license
 └── README.md                  # This file
 ```
 
