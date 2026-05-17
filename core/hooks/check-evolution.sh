@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Hook: SessionStart (startup)
 # Check FEEDBACK-INDEX.md for unprocessed feedback
 # If entries exist → remind to dispatch evolution-runner
@@ -9,9 +9,12 @@ if [ ! -f "$FEEDBACK_INDEX" ]; then
   exit 0
 fi
 
-COUNT=$(grep -c "^- \[" "$FEEDBACK_INDEX" 2>/dev/null)
-COUNT=${COUNT:-0}
-COUNT=$(echo "$COUNT" | tr -d '[:space:]')
+COUNT=0
+while IFS= read -r line; do
+  case "$line" in
+    "- ["*) COUNT=$((COUNT + 1)) ;;
+  esac
+done < "$FEEDBACK_INDEX"
 
 if [ "$COUNT" -gt 0 ] 2>/dev/null; then
   echo "📋 Project has ${COUNT} feedback entries. Consider dispatching evolution-runner for evolution proposals."

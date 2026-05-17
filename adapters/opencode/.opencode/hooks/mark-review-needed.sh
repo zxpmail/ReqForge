@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/sh
 # PostToolUse hook: mark changed code files as needing review
 # Exclude known non-code file types, trigger on everything else
 
 INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty' 2>/dev/null)
+FILE_PATH=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.file_path||'')}catch(e){console.log('')}})" 2>/dev/null)
 
 if [ -z "$FILE_PATH" ]; then
   exit 0
