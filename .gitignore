@@ -23,3 +23,6 @@ changes/archive/*
 
 # Forge local config
 .forge/config
+
+# Build artifact
+*.zip

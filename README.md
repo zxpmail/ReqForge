@@ -26,7 +26,7 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 
 > **YOLO mode is not recommended with Forge.** Forge's value is in its gating — every phase, review, and evolution proposal asks for your confirmation. YOLO mode auto-approves all of these, rendering the harness pointless. Run without YOLO to get the full benefit.
 >
-> If you do run YOLO, all gates switch to **async write mode** — review reports, fix logs, evolution proposals, and phase checkpoints are written to `changes/` and `.claude/.yolo-pending/` instead of blocking execution. This preserves the data flow for the evolution engine and lets you review the full output after the run. Gates don't skip, they just don't block.
+> If you do run YOLO, all gates switch to **async write mode** — review reports, fix logs, evolution proposals, and phase checkpoints are written to `changes/` and `.claude/.yolo-pending/` instead of blocking execution. The dev-builder also auto-advances to the next Phase without waiting for `/dev-builder` re-invocation. This preserves the data flow for the evolution engine and lets you review the full output after the run. Gates don't skip, they just don't block.
 >
 > **Enable via config files** (priority: project > global > env var):
 > 1. **Project**: copy `.forge/config.example` to `.forge/config`, uncomment `FORGE_MODE=yolo`
@@ -188,6 +188,10 @@ Forge/
 │   ├── claude-code/           # Claude Code adapter (.claude/)
 │   ├── cursor/                # Cursor adapter (.cursor/rules/)
 │   └── opencode/              # OpenCode adapter (.opencode/)
+├── .forge/                    # Forge project config
+│   └── config.example         #     config template (copy to config to activate)
+├── .claude/                   # Forge's own control files
+├── CLAUDE.md                  # Main control file
 ├── scripts/
 │   └── sync.ts                # core → adapter sync script
 ├── changes/                   # Change artifacts (proposal/specs/design/tasks)

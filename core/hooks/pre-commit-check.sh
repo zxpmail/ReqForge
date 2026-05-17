@@ -6,9 +6,9 @@
 #   Priority: project .forge/config > global ~/.forge/config > env var FORGE_MODE
 
 is_yolo_mode() {
-  [ "$FORGE_MODE" = "yolo" ] && return 0
   [ -f "$CLAUDE_PROJECT_DIR/.forge/config" ] && grep -qi "^FORGE_MODE=yolo" "$CLAUDE_PROJECT_DIR/.forge/config" 2>/dev/null && return 0
   [ -f "$HOME/.forge/config" ] && grep -qi "^FORGE_MODE=yolo" "$HOME/.forge/config" 2>/dev/null && return 0
+  [ "$FORGE_MODE" = "yolo" ] && return 0
   return 1
 }
 

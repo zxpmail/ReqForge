@@ -26,7 +26,7 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 
 > **不建议在 YOLO 模式下使用 Forge。** Forge 的核心是 Gate — 每个 Phase、每次 review、每个 evolution 提案都需要你确认。YOLO 模式会全部自动批准，让这套 Harness 形同虚设。关掉 YOLO 才能发挥 Forge 的全部价值。
 >
-> 如果确实要用 YOLO，所有 Gate 会自动切换到**异步写文件模式** — review 报告、fix 日志、evolution 提案、phase 检查点都会写入 `changes/` 和 `.claude/.yolo-pending/`，不阻塞执行。这样保留了进化引擎所需的数据流，跑完后你可以一次性查看全部产出。Gate 没有跳过，只是不拦着你了。
+> 如果确实要用 YOLO，所有 Gate 会自动切换到**异步写文件模式** — review 报告、fix 日志、evolution 提案、phase 检查点都会写入 `changes/` 和 `.claude/.yolo-pending/`，不阻塞执行。dev-builder 还会自动进入下一 Phase，无需重新调用 `/dev-builder`。这样保留了进化引擎所需的数据流，跑完后你可以一次性查看全部产出。Gate 没有跳过，只是不拦着你了。
 >
 > **启用方式**（优先级：项目配置 > 全局配置 > 环境变量）：
 > 1. **项目配置**：复制 `.forge/config.example` 到 `.forge/config`，取消注释 `FORGE_MODE=yolo`
@@ -188,6 +188,10 @@ Forge/
 │   ├── claude-code/           # Claude Code 适配（.claude/）
 │   ├── cursor/                # Cursor 适配（.cursor/rules/）
 │   └── opencode/              # OpenCode 适配（.opencode/）
+├── .forge/                    # Forge 项目配置
+│   └── config.example         #     配置模板（复制到 config 以激活）
+├── .claude/                   # Forge 自身控制文件
+├── CLAUDE.md                  # 主控文件
 ├── scripts/
 │   └── sync.ts                # core → 适配器同步脚本
 ├── changes/                   # 变更产物（proposal/specs/design/tasks）

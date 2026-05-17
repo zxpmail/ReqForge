@@ -45,7 +45,6 @@ exit /b 0
 
 :check_yolo
 set YOLO_ACTIVE=0
-if /i "%FORGE_MODE%"=="yolo" set YOLO_ACTIVE=1 & goto :eof
 if exist "%CLAUDE_PROJECT_DIR%\.forge\config" (
     findstr /i "^FORGE_MODE=yolo" "%CLAUDE_PROJECT_DIR%\.forge\config" >nul 2>&1
     if !errorlevel! equ 0 set YOLO_ACTIVE=1 & goto :eof
@@ -54,4 +53,5 @@ if exist "%USERPROFILE%\.forge\config" (
     findstr /i "^FORGE_MODE=yolo" "%USERPROFILE%\.forge\config" >nul 2>&1
     if !errorlevel! equ 0 set YOLO_ACTIVE=1 & goto :eof
 )
+if /i "%FORGE_MODE%"=="yolo" set YOLO_ACTIVE=1 & goto :eof
 goto :eof
