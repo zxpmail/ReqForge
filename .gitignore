@@ -24,5 +24,8 @@ changes/archive/*
 # Forge local config
 .forge/config
 
+# Worktrees (ephemeral test environments)
+.claude/worktrees/
+
 # Build artifact
 *.zip
