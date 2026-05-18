@@ -1,3 +1,4 @@
+<!-- forge: evolution-runner v1.0 -->
 ---
 name: evolution-runner
 description: Dispatched automatically on session initialization, or triggered manually by the user. Uses the evolution-engine skill to scan feedback and generate evolution proposals.

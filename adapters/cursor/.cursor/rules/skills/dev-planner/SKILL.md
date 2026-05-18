@@ -1,3 +1,4 @@
+<!-- forge: dev-planner v1.0 -->
 ---
 name: dev-planner
 description: Used when Product-Spec.md is complete and needs to be planned into development phases. Also used to update existing development plans after Spec changes. Outputs DEV-PLAN.md.
@@ -187,6 +188,10 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             If the project directory already has code -> scan directory structure, identify tech stack and implemented features
             Mark as existing code constraints to avoid Plan conflicting with existing structure
 
+        Step 6: Load memory (if present)
+            If memory/ exists -> read project-memory.md (architecture constraints, known pitfalls), decisions-log.md (past decisions to respect), task-history.md (what has been implemented)
+            Use memory constraints when planning Phase dependencies and file paths
+
     [Technical Validation Phase]
         Goal: Determine and validate the tech stack
 
@@ -277,6 +282,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             If Product-Spec-CHANGELOG.md exists -> read the most recent changelog entries to quickly locate the change scope
             If Design-Brief.md exists -> read it, check if visual direction has also changed
             If design tool MCP is connected -> read the latest design drafts, compare pages affected by the change
+            If memory/ exists -> read project-memory.md (constraints to respect), decisions-log.md (past decisions), task-history.md (recent work context)
 
         Step 2: Identify change impact
             Compare Spec changes against the existing Plan:

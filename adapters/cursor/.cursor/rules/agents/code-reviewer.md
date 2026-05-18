@@ -1,3 +1,4 @@
+<!-- forge: code-reviewer v1.0 -->
 ---
 name: code-reviewer
 description: Dispatched by the main Agent when code review is needed. Uses the code-review skill to review code against Spec and design mockups, outputting a structured report back to the main Agent.
@@ -35,6 +36,7 @@ color: red
     - **design_assets** (optional): Design mockup values (if design tool MCP is available)
     - **code_location**: Project code path
     - **phase_deliverables** (optional): Current Phase delivery checklist from DEV-PLAN.md
+    - **memory_context** (optional): Relevant entries from project-memory.md (constraints, pitfalls) and decisions-log.md (past decisions)
 
 [Output]
     **Structured review report** containing the following fields:
@@ -54,6 +56,7 @@ color: red
     - design_assets (string | null) -- Design mockup values (optional)
     - code_location (string) -- Project code path
     - phase_deliverables (string[] | null) -- Phase delivery checklist (optional)
+    - memory_context (string | null) -- Relevant memory entries: constraints, pitfalls, past decisions (optional)
 
     **Data returned by Sub-Agent**:
     - stage (number) -- Completed review stage

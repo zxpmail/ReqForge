@@ -45,6 +45,8 @@ Forge 是一套 **Agent Harness**——不是优化你怎么跟 AI 说话，而�
 
 复制 `adapters/opencode/.opencode/` 到你项目根目录。
 
+**注意**：OpenCode 使用 `AGENTS.md` 作为主规则文件（`CLAUDE.md` 为 fallback）。适配器同时包含两者。
+
 ### 按平台配置 Hook
 
 Hook 在关键事件（提交、消息、编辑、启动）时自动触发，需要根据平台选择正确的 `settings.json`：
@@ -73,6 +75,12 @@ copy settings.windows.json settings.json
 ┌─────────────────────────────────────────────────────────────┐
 │  主控文件（CLAUDE.md / .cursor/rules/reqforge.mdc）           │ ← 调度层
 │  项目状态检测、流程路由、Skill 调度、Sub-Agent 派发           │
+│  行为边界（🟢🟡🔴）、记忆系统路由                           │
+├─────────────────────────────────────────────────────────────┤
+│  三层记忆（Context Preservation）                            │ ← 记忆层
+│  ├─ project-memory.md   长期：架构、约束、已知陷阱           │
+│  ├─ decisions-log.md    中期：ADR 架构决策记录               │
+│  └─ task-history.md     短期：近期任务摘要（最多30条）        │
 ├─────────────────────────────────────────────────────────────┤
 │  Sub-Agents × 4（Context Firewall）                          │ ← 执行层
 │  ├─ implementer        编码实现 + 编译验证 + 自检             │
@@ -90,6 +98,46 @@ copy settings.windows.json settings.json
 │  每次修正改进 Harness，同样的错不犯第二次                    │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+### 记忆层 — 三层项目记忆
+
+AI 失忆是真实存在的问题。每次新 session，AI 都会忘记项目长什么样、做过什么决策、上周开发了什么功能。Forge 用三层版本控制记忆来解决：
+
+| 层级 | 文件 | 保留期 | 内容 |
+|------|------|--------|------|
+| 长期 | `memory/project-memory.md` | 永久 | 架构、技术栈、约束、已知陷阱、开发环境 |
+| 中期 | `memory/decisions-log.md` | 永久 | ADR 格式决策记录（背景 → 方案 → 决策 → 影响） |
+| 短期 | `memory/task-history.md` | 最近30条 | 任务摘要（日期、阶段、类型、变更文件、备注） |
+
+**工作方式**：
+- **Session 启动**：AI 在开始任何任务之前先读取全部三个记忆文件——强制的上下文加载
+- **Task 完成**：AI 追加写入 `task-history.md`（必须）、`decisions-log.md`（如果有决策）、`project-memory.md`（如果架构事实变化）
+- **初始化**：`memory/` 目录在首次调用 `/dev-builder` 时自动创建，根据 Product-Spec.md 和 DEV-PLAN.md 信息填充模板
+
+记忆文件是可提交到项目仓库的纯文本 Markdown——跨 session、跨团队成员、跨 AI 工具共享。
+
+### 行为边界 — 红绿灯系统
+
+不是所有 AI 操作都应该有相同的自主权。Forge 将所有操作分为三级：
+
+| 级别 | 规则 | 示例 |
+|------|------|------|
+| 🟢 绿灯 | 自主执行，无需确认 | 变量命名、代码风格、测试、明显 bug 修复、文档、开发依赖 |
+| 🟡 黄灯 | 必须确认后执行 | 外部依赖、数据库 schema、核心业务逻辑、项目配置、新路由 |
+| 🔴 红灯 | 每次必须明确批准 | 删除数据、生产配置、force push、发布、认证逻辑变更 |
+
+**YOLO 模式**：YOLO 模式下 🟢 和 🟡 操作自动执行。🔴 操作**始终**需要确认，即使在 YOLO 模式下也无法绕过。红线边界不可覆盖。
+
+### 快速开始模式
+
+不想经历完整的追问流程？一句话描述你的项目：
+
+```
+你: "一个带 AI 教练的打卡追踪应用"
+Forge: ⚡ 快速 Speck 已生成！标记为 [待确认] 的项是我的最佳猜测。
+```
+
+AI 推断一切——产品类型、目标用户、核心功能、技术栈、布局。不确定项默认选择更简单的方案并标记为待确认。随时可以通过 `/product-spec-builder` 切换到深度追问模式。
 
 ### 引导层 — 十一项 Skill
 
@@ -125,7 +173,7 @@ copy settings.windows.json settings.json
   └─ Stage 2 失败 → bug-fixer 修复 → 重新 review
 ```
 
-六个 Hook 脚本在关键节点自动触发，作为确定性的传感器：
+七个 Hook 脚本在关键节点自动触发，作为确定性的传感器：
 
 | Hook                   | 触发时机       | 作用             |
 | ---------------------- | ---------- | -------------- |
@@ -135,6 +183,7 @@ copy settings.windows.json settings.json
 | detect-feedback-signal | 用户提交消息     | 自动捕捉修正信号       |
 | mark-review-needed     | 文件编辑后      | 标记代码变更待审查      |
 | check-evolution        | session 启动 | 检查 feedback 积累 |
+| memory-check           | 文件编辑后      | 代码变更但记忆未更新时提醒 |
 
 ### 进化层 — Steering Loop
 
@@ -161,18 +210,19 @@ Harness 不是搭完就不动了。每次出问题，你去改 Harness，让同�
 
 ## 使用流程
 
-1. **描述想法** — 告诉 AI 你想做什么，product-spec-builder 通过追问帮你想清楚
+1. **描述想法** — 告诉 AI 你想做什么，product-spec-builder 通过追问帮你想清楚（或用一句话快速开始）
 2. **生成需求文档** — 输出 Product-Spec.md
 3. **设计规范（可选）** — 调用 /design-brief-builder
 4. **设计图制作（可选）** — 调用 /design-maker
 5. **开发计划** — 调用 /dev-planner，输出 DEV-PLAN.md
 6. **项目开发** — 调用 /dev-builder，按 Phase 逐 Task 开发
-7. **自动审查** — code-reviewer 两阶段审查
-8. **自动修复** — 审查失败自动调用 bug-fixer
-9. **提交推送** — 审查通过后自动 commit + push
-10. **Phase 验证** — 跨 Task 集成检查 + 编译验证 + 功能测试
-11. **迭代修改** — 直接对话提需求，自动更新 Spec → Plan → 开发 → 审查
-12. **构建发布** — 调用 /release-builder
+7. **记忆自动更新** — 每个 Task 完成后自动更新项目记忆
+8. **自动审查** — code-reviewer 两阶段审查
+9. **自动修复** — 审查失败自动调用 bug-fixer
+10. **提交推送** — 审查通过后自动 commit + push
+11. **Phase 验证** — 跨 Task 集成检查 + 编译验证 + 功能测试
+12. **迭代修改** — 直接对话提需求，自动更新 Spec → Plan → 开发 → 审查
+13. **构建发布** — 调用 /release-builder
 
 ## 仓库结构
 
@@ -182,6 +232,7 @@ Forge/
 │   ├── skills/                # 11 个技能定义，每个独立目录
 │   ├── agents/                # 4 个 Sub-agent 定义
 │   ├── templates/             # 文档模板
+│   │   └── memory/            # 三层记忆模板
 │   ├── hooks/                 # Hook 脚本（.sh/.bat/.ps1）
 │   └── feedback/              # feedback 模板
 ├── adapters/

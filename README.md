@@ -45,6 +45,8 @@ Copy `adapters/cursor/.cursor/` to your project root.
 
 Copy `adapters/opencode/.opencode/` to your project root.
 
+**Note**: OpenCode uses `AGENTS.md` as its primary rules file (with `CLAUDE.md` as fallback). The adapter includes both.
+
 ### Hook Configuration by Platform
 
 Hooks fire automatically at key events (commit, message, edit, startup). They require platform-specific settings:
@@ -73,6 +75,12 @@ copy settings.windows.json settings.json
 ┌─────────────────────────────────────────────────────────────┐
 │  Control File (CLAUDE.md / .cursor/rules/reqforge.mdc)      │ ← Orchestration Layer
 │  Project state detection, flow routing, Skill dispatch       │
+│  Behavior Boundaries (🟢🟡🔴), Memory system routing        │
+├─────────────────────────────────────────────────────────────┤
+│  Three-Tier Memory (Context Preservation)                    │ ← Memory Layer
+│  ├─ project-memory.md  Long-term: architecture, constraints │
+│  ├─ decisions-log.md   Mid-term: ADRs, technical decisions  │
+│  └─ task-history.md    Short-term: recent task summaries     │
 ├─────────────────────────────────────────────────────────────┤
 │  Sub-Agents × 4 (Context Firewall)                          │ ← Execution Layer
 │  ├─ implementer        Code + compile verify + self-check   │
@@ -90,6 +98,46 @@ copy settings.windows.json settings.json
 │  Each correction improves the harness. Never repeat errors  │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+### Memory Layer — Three-Tier Project Memory
+
+AI amnesia is real. Every new session, the AI forgets what your project looks like, what decisions were made, and what was built last week. Forge solves this with three tiers of version-controlled memory:
+
+| Tier | File | Retention | Content |
+|------|------|-----------|---------|
+| Long-term | `memory/project-memory.md` | Permanent | Architecture, tech stack, constraints, known pitfalls, dev environment |
+| Mid-term | `memory/decisions-log.md` | Permanent | ADR-format decision records (context → options → decision → impact) |
+| Short-term | `memory/task-history.md` | Last 30 entries | Task summaries (date, phase, type, changed files, notes) |
+
+**How it works**:
+- **Session start**: AI reads all three memory files before any task — mandatory context loading
+- **Task completion**: AI appends to `task-history.md` (always), `decisions-log.md` (if a decision was made), `project-memory.md` (if architecture facts changed)
+- **Initialization**: `memory/` directory is created automatically on first `/dev-builder` invocation, populated from templates using Product-Spec.md and DEV-PLAN.md info
+
+Memory files are plain markdown committed to your project repo — shared across sessions, across team members, and across AI tools.
+
+### Behavior Boundaries — Traffic Light System
+
+Not all AI actions should have the same level of autonomy. Forge classifies every action into three levels:
+
+| Level | Rule | Examples |
+|-------|------|---------|
+| 🟢 Green | Execute without confirmation | Variable naming, code style, tests, bug fixes (obvious), docs, dev deps |
+| 🟡 Yellow | Confirm before proceeding | External deps, DB schema, core business logic, project config, new routes |
+| 🔴 Red | Always require explicit approval | Deleting data, production config, force push, releases, auth changes |
+
+**YOLO mode**: In YOLO mode, 🟢 and 🟡 actions proceed automatically. 🔴 Red actions **always** require confirmation, even in YOLO mode. There is no override for red boundaries.
+
+### Quick Start Mode
+
+Don't want the full interview? Just describe your project in one sentence:
+
+```
+You: "A habit tracker app with AI coaching"
+Forge: ⚡ Quick Spec generated! Items marked [待确认] are my best guesses.
+```
+
+AI infers everything — product type, target users, core features, tech stack, layout. Uncertain items default to the simpler option and are marked for your review. Switch to deep-dive mode anytime with `/product-spec-builder`.
 
 ### Guidance Layer — 11 Skills
 
@@ -125,7 +173,7 @@ Feature complete → code-reviewer two-stage review
   └─ Stage 2 fail → bug-fixer fix → re-review
 ```
 
-Six hook scripts fire automatically at critical nodes:
+Seven hook scripts fire automatically at critical nodes:
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -135,6 +183,7 @@ Six hook scripts fire automatically at critical nodes:
 | detect-feedback-signal | On user message    | Auto-detect correction signals          |
 | mark-review-needed     | After file edit    | Mark changes as needing review          |
 | check-evolution        | On session start   | Check feedback accumulation             |
+| memory-check           | After file edit    | Remind to update memory if code changed |
 
 ### Evolution Layer — Steering Loop
 
@@ -161,18 +210,19 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 
 ## Workflow
 
-1. **Describe your idea** — Tell AI what you want to build; product-spec-builder interviews you to clarify
+1. **Describe your idea** — Tell AI what you want to build; product-spec-builder interviews you to clarify (or use Quick Mode for one-sentence start)
 2. **Generate spec** — Outputs Product-Spec.md
 3. **Design brief (optional)** — Invoke /design-brief-builder
 4. **Design mockups (optional)** — Invoke /design-maker
 5. **Development plan** — Invoke /dev-planner, outputs DEV-PLAN.md
 6. **Build** — Invoke /dev-builder, works through each Task in each Phase
-7. **Auto-review** — code-reviewer two-stage review
-8. **Auto-fix** — Failed review triggers bug-fixer automatically
-9. **Commit & push** — Review passes → auto commit + push
-10. **Phase verification** — Cross-Task integration check + compile + functional test
-11. **Iterate** — Request changes in conversation; auto-update Spec → Plan → code → review
-12. **Release** — Invoke /release-builder
+7. **Memory auto-update** — After each Task, project memory is updated automatically
+8. **Auto-review** — code-reviewer two-stage review
+9. **Auto-fix** — Failed review triggers bug-fixer automatically
+10. **Commit & push** — Review passes → auto commit + push
+11. **Phase verification** — Cross-Task integration check + compile + functional test
+12. **Iterate** — Request changes in conversation; auto-update Spec → Plan → code → review
+13. **Release** — Invoke /release-builder
 
 ## Repository Structure
 
@@ -182,6 +232,7 @@ Forge/
 │   ├── skills/                # 11 skill definitions, each in its own directory
 │   ├── agents/                # 4 Sub-agent definitions
 │   ├── templates/             # Document templates
+│   │   └── memory/            # Three-tier memory templates
 │   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)
 │   └── feedback/              # Feedback templates
 ├── adapters/

@@ -1,3 +1,4 @@
+<!-- forge: product-spec-builder v1.0 -->
 ---
 name: product-spec-builder
 description: Used when the user says they want to build a product, application, or tool, or when they want to add features, change requirements, or adjust UI. Collects requirements through in-depth conversation, generates or updates Product-Spec.md.
@@ -208,11 +209,59 @@ description: Used when the user says they want to build a product, application, 
 
     Step 3: Determine Mode
         - Product requirements document found → enter **Iteration Mode**
-        - Not found → enter **0-to-1 Mode**
+        - Not found → ask user: "Full deep-dive or quick start?"
+            - User says "quick" / "fast" / "just get going" / or gives a one-sentence description → enter **Quick Mode**
+            - Otherwise → enter **0-to-1 Mode**
 
     Step 4: Execute corresponding workflow
+        - Quick Mode: Execute [Workflow (Quick Mode)]
         - 0-to-1 Mode: Execute [Workflow (0-to-1 Mode)]
         - Iteration Mode: Execute [Workflow (Iteration Mode)]
+
+[Workflow (Quick Mode)]
+    **Trigger**: User gives a one-sentence description or says they want to start fast.
+    **Goal**: Generate a minimal usable Product Spec in one round, with uncertain items marked [待确认] / [TBD].
+
+    Step 1: Capture
+        User provides a one-sentence project description (e.g., "A habit tracker app with AI coaching").
+        If the sentence is too vague to infer anything, ask ONE clarifying question. No more.
+
+    Step 2: Infer everything
+        From the single sentence, infer:
+        - Product type (Web / Desktop / CLI / Mobile)
+        - Target users
+        - Core features (3-5 max, based on the description)
+        - User flow (one primary path)
+        - AI capability needs (if any)
+        - Recommended tech stack
+
+        WebSearch for similar products and typical tech stacks before inferring.
+        For anything uncertain, choose the simpler option and mark it [待确认].
+
+    Step 3: Generate minimal Spec
+        Load templates/product-spec-template.md for format.
+        Fill every section. Mark inferred items as [待确认] with a brief note on why it's uncertain.
+        Uncertain items default to the simpler option:
+        - Platform: default to Web
+        - Tech stack: default to Next.js + TypeScript + Tailwind
+        - AI: default to text generation (most common)
+        - Layout: provide a simple recommended layout
+
+    Step 4: Present and confirm
+        Present the Spec to the user with:
+        ```
+        ⚡ **Quick Spec generated!**
+
+        Items marked [待确认] are my best guesses — confirm or correct them.
+        You can invoke /product-spec-builder anytime to refine details through deep-dive questioning.
+        ```
+
+        User confirms → save as Product-Spec.md.
+        User wants changes → switch to 0-to-1 Mode questioning for the specific areas, not the whole thing.
+
+    Step 5: Record decision
+        Create `memory/` directory if not exists. Create `memory/decisions-log.md` from template. Record ADR-000: "Quick mode — tech stack and architecture inferred from one-sentence description, defaults chosen for uncertain items."
+        Note: This creates only the decisions log. Full memory initialization (including project-memory.md and task-history.md) happens during the first /dev-builder invocation, when tech stack details are confirmed.
 
 [Workflow (0-to-1 Mode)]
     [Requirements Exploration Phase]

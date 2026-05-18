@@ -1,3 +1,4 @@
+<!-- forge: feedback-writer v1.0 -->
 ---
 name: feedback-writer
 description: Called by the feedback-observer sub-agent when the user corrects AI behavior, provides improvement feedback, or a Skill execution needs capability assessment recording.

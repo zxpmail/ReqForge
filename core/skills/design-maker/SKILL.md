@@ -1,3 +1,4 @@
+<!-- forge: design-maker v1.0 -->
 ---
 name: design-maker
 description: Used when the Design Brief is complete and the user needs to generate mockups. Reads Product-Spec.md and Design-Brief.md, then generates a complete set of design deliverables through a design tool MCP, including all pages, state variants, component specifications, and design tokens.

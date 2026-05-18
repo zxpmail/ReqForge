@@ -1,3 +1,4 @@
+<!-- forge: dev-builder v1.0 -->
 ---
 name: dev-builder
 description: Used when DEV-PLAN.md is ready and the user says to start coding or continue developing the next Phase. Sets up the skeleton for new projects, implements features by Phase for existing projects.
@@ -71,6 +72,9 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - **Project code** — Complete project code under the \<project-name\>/ directory
     - **Git commits** — Atomic commits (phase-N: / fix: / feat: / refactor: / chore:)
     - **../../.needs-review** — Review status indicator (clear or needs_review)
+    - **memory/task-history.md** — Always append after Task completion (mandatory)
+    - **memory/decisions-log.md** — Append when a technical decision was made during the Task
+    - **memory/project-memory.md** — Update when architecture facts or constraints change
 
 [Development Rules Checklist]
     All rules that must be followed during coding, organized by category.
@@ -417,6 +421,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     [Project Setup Phase]
         Initialize the project in the <project-name>/ subfolder, not in the root directory.
+
+        Memory initialization (before project setup):
+        1. Create `memory/` directory at project root
+        2. Create `memory/project-memory.md` from template, fill with tech stack info from DEV-PLAN.md
+        3. Create `memory/decisions-log.md` from template, record ADR-000 for tech stack choice
+        4. Create `memory/task-history.md` from template (empty table)
         Naming: lowercase letters + numbers + hyphens.
         Execute initialization based on tech stack:
         - TypeScript project -> configure strict mode, install dependencies, configure Tailwind, configure environment variables
@@ -448,6 +458,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             Read Product-Spec.md -> use as feature reference
             If Design-Brief.md exists -> read visual direction
             If design tool MCP exists -> prepare to read
+            Read memory/ files -> project-memory.md (architecture context), decisions-log.md (past decisions), task-history.md (recent work)
             Scan existing code structure -> understand current project state
 
         Step 3: Determine current Phase
@@ -484,13 +495,18 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             After development — cross-reference validation + Review loop:
             9. **REFACTOR**: Refactor and optimize code, run tests to confirm still green
             10. Read actual code values, verify item by item against design values, correct any deviations
-            8. Read actual code values, verify item by item against design values, correct any deviations
-            9. Cross-reference Product-Spec.md to confirm functional behavior matches description
-            10. Dispatch code-reviewer to perform two-stage review. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts
-            11. Stage 1 fails (missing functionality) -> fill in the implementation -> re-dispatch code-reviewer
-            12. Stage 2 fails (code quality) -> call bug-fixer to fix -> re-dispatch code-reviewer
-            13. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> commit
-            14. Proceed to the next Task
+            11. Cross-reference Product-Spec.md to confirm functional behavior matches description
+            12. Dispatch code-reviewer to perform two-stage review. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts
+            13. Stage 1 fails (missing functionality) -> fill in the implementation -> re-dispatch code-reviewer
+            14. Stage 2 fails (code quality) -> call bug-fixer to fix -> re-dispatch code-reviewer
+            15. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
+            16. Proceed to the next Task
+
+            **Memory Update Step** (mandatory after every Task completion):
+            - Append to `memory/task-history.md`: date, phase, type (feat/fix/refactor), description, changed files, notes
+            - If a technical decision was made: append ADR-N to `memory/decisions-log.md`
+            - If architecture facts or constraints changed: update `memory/project-memory.md`
+            - This step is NOT optional. A Task is not complete until memory is updated.
 
             Always follow during coding:
             - All rules in [Development Rules Checklist]
@@ -524,9 +540,9 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             - One Phase per invocation — this is not negotiable.
 
 [YOLO Mode]
-    When FORGE_MODE=yolo, all user confirmation gates switch to async write mode:
+    When FORGE_MODE=yolo, 🟢 Green and 🟡 Yellow actions proceed automatically. 🔴 Red actions ALWAYS require user confirmation, even in YOLO mode.
 
-    **Step 4 (User Confirmation)** -> Write `changes/<phase>/verification-report.md`:
+    All user confirmation gates switch to async write mode for 🟢/🟡 actions:
         Report the four-step verification results to the file, mark Phase as complete.
 
     **Step 5 (Force Stop)** -> Write `changes/<phase>/checkpoint.md`:

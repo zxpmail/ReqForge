@@ -1,3 +1,4 @@
+<!-- forge: skill-builder v1.0 -->
 ---
 name: skill-builder
 description: Used when the user wants to create a new Skill, or when an EVOLUTION.md proposal auto-generates a new Skill. Creates a structurally consistent new Skill following the framework's modular conventions.

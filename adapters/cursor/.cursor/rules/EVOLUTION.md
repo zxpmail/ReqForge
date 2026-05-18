@@ -4,6 +4,17 @@
     - **feedback-observer**：记录用户反馈和经验教训（使用 feedback-writer skill）
     - **evolution-runner**：扫描 feedback 积累，生成进化建议（使用 evolution-engine skill）
 
+[与记忆系统的关系]
+    进化引擎和三层记忆系统是互补的：
+
+    - **feedback** (`.claude/feedback/`) = "出了什么问题、怎么改进" → 进化引擎的燃料，驱动规则改进
+    - **memory** (`memory/`) = "我们知道什么、决定了什么" → 跨 session 上下文保持，不直接触发进化
+
+    进化引擎主要扫描 feedback，但 evolution-runner 可以交叉参考 memory：
+    - `memory/project-memory.md` 中的 Known Pitfalls 如果反复出现，可能触发第二层规则毕业
+    - `memory/decisions-log.md` 中被 Superseded 的决策可能暗示 Skill 需要调整（第三层）
+    - 这种交叉参考是可选的增强，不是必须的扫描路径
+
 [进化层级]
     四层进化路径，逐层递进：
 

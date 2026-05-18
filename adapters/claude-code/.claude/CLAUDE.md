@@ -19,6 +19,10 @@
     ├── Product-Spec-CHANGELOG.md          # Requirements change log
     ├── Design-Brief.md                    # Design brief document (optional)
     ├── DEV-PLAN.md                        # Phased development plan
+    ├── memory/                            # Three-tier project memory
+    │   ├── project-memory.md             # Long-term: architecture, constraints, pitfalls
+    │   ├── decisions-log.md              # Mid-term: Architecture Decision Records
+    │   └── task-history.md               # Short-term: recent task summaries (max 30)
     ├── changes/                           # Change artifacts (proposal/specs/design/tasks per iteration)
     │   └── archive/                       # Archived implemented changes
     ├── <project-name>/                    # Project code (subfolder named after project)
@@ -54,6 +58,54 @@
     - **Continuous observation**: When the user gives corrections, feedback, or improvement suggestions, dispatch feedback-observer sub-agent to record it. Don't rely on the main Agent's self-awareness.
     - When receiving additionalContext injected by the detect-feedback-signal hook, must dispatch feedback-observer after handling the user's request. Do not ignore.
     - **Design priority order** (when mockups exist): design tool mockups (highest) → Design-Brief.md → Product-Spec.md (functional logic). When mockups exist, all UI must match the design. Conflicts resolve in favor of the mockup. See each Skill's design reference strategy for details.
+
+[Three-Tier Memory System]
+    Project memory is version-controlled markdown in the `memory/` directory, shared across sessions and team members.
+
+    **Loading**: Read all three memory files at session start (before any task). This is mandatory context loading.
+    - `memory/project-memory.md` — Architecture facts, constraints, known pitfalls (permanent)
+    - `memory/decisions-log.md` — ADR-format decision records (permanent)
+    - `memory/task-history.md` — Recent task summaries, max 30 entries (rolling)
+
+    **Writing**: After every completed Task, update the appropriate memory files. This is not optional.
+    - `task-history.md` — ALWAYS append after Task completion (date, phase, type, description, changed files, notes)
+    - `decisions-log.md` — Append when a significant technical decision was made during the Task
+    - `project-memory.md` — Update when architecture facts, constraints, or pitfalls change
+
+    **Initialization**: When `memory/` directory does not exist, create it from templates during first `/dev-builder` invocation. Fill `project-memory.md` from Product-Spec.md and DEV-PLAN.md tech stack info. Record initial setup as ADR-000 in `decisions-log.md`.
+
+    **⚠️ Memory vs feedback** — these are complementary, not redundant:
+    - Memory (`memory/`) = "what we know and decided" — context preservation across sessions
+    - Feedback (`.claude/feedback/`) = "what went wrong and how to improve" — evolution fuel for Skills
+
+[Behavior Boundaries]
+    All actions are classified into three levels. This applies regardless of YOLO mode.
+
+    🟢 **Green (Autonomous)** — Execute without confirmation:
+    - Variable naming, code style, type annotations
+    - Bug fixes where the fix is obvious
+    - Adding/updating tests
+    - Refactoring within the same module (no API change)
+    - Updating memory files and documentation
+    - Installing dev dependencies
+
+    🟡 **Yellow (Confirm First)** — Must get user approval before proceeding:
+    - Adding or removing external dependencies
+    - Changing database schema or migration
+    - Modifying core business logic or data flow
+    - Changing project configuration (tsconfig, build config, env structure)
+    - Adding new pages or routes not in DEV-PLAN.md
+    - Changing component API (props, interface) used by other modules
+
+    🔴 **Red (Forbidden Without Explicit Approval)** — Must get explicit approval every time:
+    - Deleting data or database tables
+    - Modifying production configuration or secrets
+    - Force pushing or destructive git operations
+    - Releasing or deploying to production
+    - Removing features that exist in Product-Spec.md
+    - Changing authentication or authorization logic
+
+    **YOLO mode behavior**: In YOLO mode, 🟢 and 🟡 actions proceed automatically. 🔴 Red actions ALWAYS require confirmation, even in YOLO mode. There is no override for red boundaries.
 
 [Skill Dispatch Rules]
     When trigger conditions match, invoke the Skill before responding. Do not reply first and then invoke.
@@ -156,14 +208,20 @@
         - Has Product-Spec.md + code, no DEV-PLAN.md → suggest invoking /dev-planner
         - Has Product-Spec.md + DEV-PLAN.md + code → project in development → can continue developing, reviewing, fixing, or releasing
 
+    Memory initialization check:
+        - If `memory/` directory exists → read all three files at session start (project-memory.md, decisions-log.md, task-history.md)
+        - If `memory/` directory does not exist but code exists → flag: memory will be initialized on next /dev-builder invocation
+        - If `memory/` directory does not exist and no code → not needed yet, will be created during project setup
+
     Display format:
         "📊 **Project State**
-        
+
         - Product Spec：[Done / Not done]
         - Design Brief：[Generated / Not generated / Not created]
         - DEV-PLAN：[Generated / Not generated]
         - Project Code：[Created / Not created]
-        
+        - Memory：[Initialized / Pending / Not needed yet]
+
         **Current Phase**：[phase name]
         **Next Step**：[specific instruction]"
 

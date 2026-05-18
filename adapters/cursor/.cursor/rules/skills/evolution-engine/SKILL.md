@@ -1,3 +1,4 @@
+<!-- forge: evolution-engine v1.0 -->
 ---
 name: evolution-engine
 description: Auto-triggers on session init, or manually triggered when the user says "check if there are any rules to upgrade" or "check evolution suggestions". Called by the evolution-runner sub-agent.

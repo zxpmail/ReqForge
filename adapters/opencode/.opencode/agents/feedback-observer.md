@@ -1,3 +1,4 @@
+<!-- forge: feedback-observer v1.0 -->
 ---
 name: feedback-observer
 description: Dispatched by the main Agent after the user provides corrections or feedback. Uses the feedback-writer skill to analyze and record feedback.

@@ -1,3 +1,4 @@
+<!-- forge: release-builder v1.0 -->
 ---
 name: release-builder
 description: Used when the user wants to package, deploy, publish, or go live, or when project development is complete and ready for delivery. Supports Web deployment, Desktop packaging, and CLI publishing, with built-in privacy audit and smoke testing.

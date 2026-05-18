@@ -67,17 +67,47 @@ function syncDir(srcDir: string, destDir: string): void {
   console.log(`  ✅ ${destDir}`);
 }
 
+function copyFile(src: string, dest: string): void {
+  if (!fs.existsSync(src)) {
+    console.warn(`  ⚠️  Source not found: ${src}`);
+    return;
+  }
+  fs.mkdirSync(path.dirname(dest), { recursive: true });
+  fs.copyFileSync(src, dest);
+  console.log(`  ✅ ${dest}`);
+}
+
+const ADAPTER_CONFIGS: Record<string, { controlFile: string; evolutionFile: string }> = {
+  "claude-code": { controlFile: ".claude/CLAUDE.md", evolutionFile: ".claude/EVOLUTION.md" },
+  "cursor": { controlFile: ".cursor/rules/reqforge.mdc", evolutionFile: ".cursor/rules/EVOLUTION.md" },
+  "opencode": { controlFile: ".opencode/AGENTS.md", evolutionFile: ".opencode/EVOLUTION.md" },
+};
+
 function main(): void {
   console.log("🔄 Syncing core -> adapters...\n");
 
   for (const [adapter, syncMap] of Object.entries(ADAPTERS)) {
     console.log(`📦 ${adapter}:`);
+    const adapterDir = path.join(ROOT, "adapters", adapter);
+    const cfg = ADAPTER_CONFIGS[adapter];
 
+    // Sync directory mappings
     for (const [src, dest] of Object.entries(syncMap)) {
       const srcPath = path.join(ROOT, src);
-      const destPath = path.join(ROOT, "adapters", adapter, dest);
+      const destPath = path.join(adapterDir, dest);
       syncDir(srcPath, destPath);
     }
+
+    // Sync root CLAUDE.md -> adapter's primary control file
+    copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, cfg.controlFile));
+
+    // OpenCode also keeps CLAUDE.md as fallback (OpenCode reads CLAUDE.md if no AGENTS.md)
+    if (adapter === "opencode") {
+      copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, ".opencode", "CLAUDE.md"));
+    }
+
+    // Sync EVOLUTION.md
+    copyFile(path.join(ROOT, "EVOLUTION.md"), path.join(adapterDir, cfg.evolutionFile));
 
     console.log("");
   }

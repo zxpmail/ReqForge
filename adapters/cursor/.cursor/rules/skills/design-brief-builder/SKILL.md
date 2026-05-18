@@ -1,3 +1,4 @@
+<!-- forge: design-brief-builder v1.0 -->
 ---
 name: design-brief-builder
 description: Used when the user wants to define a design style or visual direction, or says something vague like 'I want a premium/sleek/modern look'. Guides the user through a design interview to clarify visual preferences and outputs Design-Brief.md.

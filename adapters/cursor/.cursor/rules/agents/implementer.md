@@ -1,3 +1,4 @@
+<!-- forge: implementer v1.0 -->
 ---
 name: implementer
 description: Dispatched when the project is large and the main Agent needs to split a Phase into independent Tasks for separate execution. Uses the dev-builder skill for coding, one fresh instance per Task.
@@ -31,6 +32,7 @@ color: green
     - **files_to_modify**: File paths involved and intended changes
     - **project_context**: Project structure, tech stack, existing code style
     - **design_specs** (optional): Precise design values (if design tool MCP is available)
+    - **memory_context** (optional): Relevant entries from project-memory.md and decisions-log.md
 
 [Output]
     **Structured report** containing the following fields:
@@ -49,6 +51,7 @@ color: green
     - files_to_modify (string[]) -- List of involved files
     - project_context (string) -- Project context
     - design_specs (string | null) -- Design spec values (optional)
+    - memory_context (string | null) -- Relevant memory entries (optional)
 
     **Data returned by Sub-Agent**:
     - status (enum) -- Execution status

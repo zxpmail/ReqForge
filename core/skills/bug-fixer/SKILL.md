@@ -1,3 +1,4 @@
+<!-- forge: bug-fixer v1.0 -->
 ---
 name: bug-fixer
 description: Used when the user says "this feature is broken", "getting an error", "something's not right", or reports a bug, compilation error, or runtime exception. Locates root cause through a four-stage systematic debugging process and fixes it.
@@ -60,6 +61,9 @@ description: Used when the user says "this feature is broken", "getting an error
 [Output Artifacts]
     - **Code fix** — modified source files
     - **Fix report** (screen output) — root cause, changes made, verification results
+    - **memory/task-history.md** — Append entry (date, phase, type=fix, description, changed files, notes)
+    - **memory/project-memory.md** — Update if bug reveals a new pitfall or constraint
+    - **memory/decisions-log.md** — Append if the fix involved a significant technical decision
 
 [Debugging Rule Checklist]
     Rules that must be followed during the debugging process.
@@ -186,6 +190,7 @@ description: Used when the user says "this feature is broken", "getting an error
             If Product-Spec.md exists -> read expected behavior of the relevant feature
             If DEV-PLAN.md exists -> locate relevant Phase and files
             If design tool MCP exists -> cross-reference UI expectations
+            If memory/ exists -> read project-memory.md (known pitfalls), decisions-log.md (past decisions), task-history.md (recent changes that may have introduced the bug)
             Scan project code -> understand relevant module structure
 
     [Debugging Phase]
@@ -206,6 +211,11 @@ description: Used when the user says "this feature is broken", "getting an error
         Output evidence (compilation output, verification screenshots/results)
 
     [Completion Phase]
+        Update memory files:
+        - Append to memory/task-history.md: date, phase, type=fix, description, changed files, root cause as notes
+        - If bug reveals a new pitfall -> add to memory/project-memory.md Known Pitfalls section
+        - If fix involved a significant decision -> append ADR to memory/decisions-log.md
+
         Report to the user:
         "**Bug Fixed**
 
@@ -220,11 +230,13 @@ description: Used when the user says "this feature is broken", "getting an error
          Or are there other issues to fix?"
 
 [YOLO Mode]
-    When FORGE_MODE=yolo, auto-commit and write fix report instead of asking:
+    When FORGE_MODE=yolo, 🟢 Green and 🟡 Yellow actions proceed automatically. 🔴 Red actions ALWAYS require user confirmation, even in YOLO mode.
+
+    Auto-commit and write fix report instead of asking:
 
     **Completion Phase** -> Auto-commit with `fix:` prefix, write `changes/fix-report.md`:
         Root cause, fix description, verification evidence, and regression test results.
-        Do not wait for user confirmation. Proceed to the next task.
+        Proceed to the next task — unless the fix involves a 🔴 Red action (e.g., modifying production config, changing auth logic, deleting data), in which case user confirmation is still required.
 
 [Initialization]
     Execute [Startup Phase]

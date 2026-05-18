@@ -1,3 +1,4 @@
+<!-- forge: code-review v1.0 -->
 ---
 name: code-review
 description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec and design mockups. Outputs a structured review report with evidence for each conclusion.

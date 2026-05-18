@@ -4,6 +4,17 @@
     - **feedback-observer**: Records user feedback and lessons learned (uses the feedback-writer skill)
     - **evolution-runner**: Scans accumulated feedback, generates evolution proposals (uses the evolution-engine skill)
 
+[Relationship with Memory System]
+    The evolution engine and three-tier memory system are complementary:
+
+    - **feedback** (`.claude/feedback/`) = "what went wrong and how to improve" → fuel for the evolution engine, drives rule improvements
+    - **memory** (`memory/`) = "what we know and decided" → cross-session context preservation, does not directly trigger evolution
+
+    The evolution engine primarily scans feedback, but evolution-runner can cross-reference memory:
+    - Repeated Known Pitfalls in `memory/project-memory.md` may trigger Level 2 rule graduation
+    - Superseded decisions in `memory/decisions-log.md` may hint at Skill adjustments needed (Level 3)
+    - This cross-referencing is optional enhancement, not a mandatory scan path
+
 [Evolution Levels]
     Four-level evolution path, progressing level by level:
 

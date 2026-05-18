@@ -2,7 +2,7 @@
 
 ## 产品概述
 
-这是一个开源的产品开发流程框架，整合了**废才**方法论的完整产品开发全流程，借鉴了 **oh-my-openagent** 的开放多客户端架构，吸收了 **superpowers** 的技能化设计和 TDD 纪律，融合了 **OpenSpec** 的轻量级迭代和 CLI 便捷体验，为独立开发者提供开箱即用的 AI 辅助产品开发体验。
+这是一个开源的产品开发流程框架，整合了**废才**方法论的完整产品开发全流程，借鉴了 **oh-my-openagent** 的开放多客户端架构，吸收了 **superpowers** 的技能化设计和 TDD 纪律，融合了 **OpenSpec** 的轻量级迭代和 CLI 便捷体验，参考了 **ai-coding-ok** 的三层记忆体系和 PDCA 强制闭环，为独立开发者提供开箱即用的 AI 辅助产品开发体验。
 
 **目标用户**：独立开发者、产品经理、创业者，他们使用 Claude Code/Cursor/OpenCode 等 AI 编程工具开发产品，需要一套经过验证的完整开发流程，但不想被绑定在单一平台。
 
@@ -37,8 +37,11 @@
 - **开放架构**：核心内容一份存放，各 AI 客户端分别做适配层，维护一份核心，多端同步更新。每个技能独立目录，自带 SKILL.md，可组合、可插拔、可扩展。
 - **项目进度自动检测**：框架自动检测当前项目进度（哪个阶段完成了，哪个阶段没做），引导用户进入下一步，不用用户自己记。
 - **evolution 进化引擎**：记录用户反馈，重复出现的经验自动升级为框架规则，框架用得越多越聪明。
+- **三层记忆体系**：项目记忆分三层（长期架构事实、中期决策记录、短期任务历史），版本控制存储在 `memory/` 目录，跨 session 保持上下文，解决 AI 失忆问题。
+- **红绿灯行为边界**：所有操作分为 🟢 自主执行、🟡 需确认、🔴 严禁无确认三级，YOLO 模式下 🔴 操作仍需确认，防止 AI 越界。
 - **强制 TDD 纪律**：开发阶段严格要求 RED-GREEN-REFACTOR 循环，提高代码质量。
 - **增量变更管理**：每个变更 proposal 独立文件夹（proposal + specs + design + tasks），迭代历史清晰可追溯。
+- **快速初始化模式**：用户一句话描述项目，AI 推断最小可用 Spec，不确定项标记 [待确认]，降低首次使用门槛。
 
 **扩展功能（未来）**
 - **模板市场**：内置常见产品类型的模板（Next.js 全栈、CLI 工具、Electron 桌面应用等），一键初始化项目骨架。
@@ -107,8 +110,9 @@
 | 需求收集 | Product-Spec-CHANGELOG.md | 自动生成（变更时） |
 | 设计规范 | Design-Brief.md | 可选 |
 | 开发计划 | DEV-PLAN.md | 必需 |
+| 项目记忆 | memory/project-memory.md, decisions-log.md, task-history.md | 自动生成（首次 /dev-builder 时） |
 | 框架配置 | .claude/CLAUDE.md, .claude/EVOLUTION.md | 自动生成 |
-| 增量变更 | openspec/changes/<change-name>/ | 自动创建 proposal.md、specs.md、design.md、tasks.md | 可选（迭代变更时） |
+| 增量变更 | changes/<change-name>/ | 可选（迭代变更时） |
 
 ### Forge 仓库目录结构（开源仓库本身））
 
@@ -117,7 +121,10 @@ Forge/
 ├── core/                      # 核心共享内容（技能、模板、agents）
 │   ├── skills/                # 各技能定义，每个技能独立目录
 │   ├── agents/                # Sub-agent 定义
-│   └── templates/             # 文档模板（Product-Spec, DEV-PLAN 等）
+│   ├── templates/             # 文档模板（Product-Spec, DEV-PLAN, 记忆模板等）
+│   │   └── memory/            # 三层记忆模板
+│   ├── hooks/                 # 钩子脚本（stop-gate, memory-check 等）
+│   └── feedback/              # 反馈目录
 ├── adapters/
 │   ├── claude-code/           # Claude Code 适配（.claude/ 目录结构）
 │   ├── cursor/                # Cursor 适配（.cursor/rules/ 目录结构）
@@ -137,7 +144,12 @@ user-project/
 │   ├── agents/
 │   ├── skills/
 │   └── ...
+├── memory/                    # 三层项目记忆（首次 /dev-builder 时创建）
+│   ├── project-memory.md      # 长期：架构、约束、已知陷阱
+│   ├── decisions-log.md       # 中期：架构决策记录（ADR）
+│   └── task-history.md        # 短期：近期任务摘要（最多30条）
 ├── Product-Spec.md            # 用户产品需求文档（用户项目根目录）
+├── DEV-PLAN.md                # 开发计划
 └── ...                        # 用户项目代码
 ```
 
@@ -149,3 +161,4 @@ user-project/
 - CLI + 增量变更：**OpenSpec** - 一键初始化，artifact-guided 迭代 workflow
 - 提示词工程：**awesome-chatgpt-prompts** - 每个技能是一份精心调校的提示词，社区贡献
 - 多角色分工：**OpenAI Symphony** - 不同阶段由专门的 Sub-Agent 负责，各尽其职
+- 记忆体系 + PDCA 闭环：**ai-coding-ok** - 三层记忆解决 AI 失忆，红绿灯行为边界约束 AI 越界
