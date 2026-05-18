@@ -1,5 +1,17 @@
 # 变更记录
 
+## [v1.7] - 2026-05-18
+### 重构
+- CLAUDE.md 从 309 行精简至 59 行，仅保留调度映射、身份定义、反馈衍生规则
+- 详细说明移至 core/docs/：file-structure.md、behavior-boundaries.md、memory-system.md、sub-agent-orchestration.md
+
+### 修复
+- feedback-observer 现支持自动化失败信号触发（编译错误、审查失败、验证失败），非仅用户纠正
+- dev-builder SKILL.md：审查失败和验证失败时自动调度 feedback-observer 记录反馈
+- Anti-Rationalization Checklist：新增"跳过反馈记录"正反样例
+
+---
+
 ## [v1.6] - 2026-05-18
 ### 修正
 - 修复 Product-Spec.md 中"不依赖 bash 钩子"的错误描述，明确同时提供 .sh 和 .bat 版本
