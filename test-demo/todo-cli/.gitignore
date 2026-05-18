@@ -1,6 +1,0 @@
-node_modules/
-dist/
-todo.json
-.env
-.env.local
-*.log
