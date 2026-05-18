@@ -1,5 +1,14 @@
 # 变更记录
 
+## [v1.8] - 2026-05-18
+### 修复
+- feedback-observer v1.1：失败时自动推断 Skill 评分（Precision/Coverage/Efficiency/Satisfaction），不再依赖手动打分
+- check-evolution 钩子：从软提醒改为硬触发（additionalContext JSON），Agent 必须在 session init 时 dispatch evolution-runner
+- dev-builder：失败时传递结构化上下文（trigger_reason + current_skill + ai_action + failure_detail），确保评分准确
+- 修复棘轮空转问题：feedback 有记录但无评分数据 → evolution-runner 无法触发提案 → 现在每次失败自动产生评分数据
+
+---
+
 ## [v1.7] - 2026-05-18
 ### 重构
 - CLAUDE.md 从 309 行精简至 59 行，仅保留调度映射、身份定义、反馈衍生规则

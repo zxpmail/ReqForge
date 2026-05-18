@@ -190,8 +190,8 @@ Eight hook scripts fire automatically at critical nodes:
 
 A harness that doesn't learn from usage is static. Forge evolves:
 
-1. **Level 0: Harness Foundation** — Context compaction, progressive disclosure, tool-call offloading — prerequisites for reliable evolution
-2. **Experience accumulation** — Failures (compile errors, review fails, verification fails) and corrections recorded automatically via feedback-observer
+1. **Level 0: Harness Foundation** — Context compaction, progressive disclosure, tool-call offloading, auto-scoring on failure — prerequisites for reliable evolution
+2. **Experience accumulation** — Failures and corrections are auto-recorded with inferred Skill scores (Precision/Coverage/Efficiency/Satisfaction). Scored data is the fuel for Level 2+.
 2. **Rule graduation** — Same feedback appears 3+ times → proposed as formal rule in Skill or control file
 3. **Skill optimization** — Skill's feedback scores consistently low → proposed adjustment
 4. **New Skill creation** — Repeated operation pattern without Skill coverage → proposed new Skill
