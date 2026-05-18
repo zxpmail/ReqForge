@@ -1,5 +1,20 @@
 # 变更记录
 
+## [v1.4] - 2026-05-18
+### 新增
+- 三层记忆体系：memory/ 目录，project-memory / decisions-log / task-history 三级，跨 session 保持上下文
+- 红绿灯行为边界：🟢🟡🔴 三级操作权限，YOLO 模式下 🔴 仍需确认
+- 快速初始化模式：一句话描述项目，AI 推断最小 Spec，不确定项标记 [待确认]
+- memory-check 钩子：文件编辑后检测记忆是否更新，防止遗忘
+
+### 修改
+- 吸收 ai-coding-ok 设计参考：三层记忆 + PDCA 强制闭环
+- 产品概述更新：新增 ai-coding-ok 参考来源
+- 目录结构调整：新增 memory/ 目录、hooks/、feedback/ 到 core/
+- DEV-PLAN.md 纳入用户项目根目录结构
+
+---
+
 ## [v1.3] - 2026-05-16
 ### 新增
 - 吸收 OpenAI Symphony 启示：多角色 Sub-Agent 分工，每个阶段由专门 Agent 负责，各尽其职，产出质量更高
