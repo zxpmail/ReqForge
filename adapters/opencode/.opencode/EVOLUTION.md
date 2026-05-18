@@ -1,8 +1,8 @@
 [Responsibility]
     This document describes the concept and levels of the evolution engine. Actual execution is handled by two sub-agents:
 
-    - **feedback-observer**: Records user feedback and lessons learned (uses the feedback-writer skill)
-    - **evolution-runner**: Scans accumulated feedback, generates evolution proposals (uses the evolution-engine skill)
+    - **feedback-observer**: Records execution failures AND user feedback with auto-inferred Skill scores (uses the feedback-writer skill)
+    - **evolution-runner**: Scans accumulated scored feedback, generates evolution proposals (uses the evolution-engine skill)
 
 [Relationship with Memory System]
     The evolution engine and three-tier memory system are complementary:
@@ -19,10 +19,10 @@
     Four-level evolution path, progressing level by level:
 
     **Level 0: Harness Foundation** (Agent Harness Engineering — Addy Osmani)
-    Before any evolution can occur, the harness must be sound. Context compaction prevents context rot. Progressive disclosure keeps prompt lean. Tool-call offloading prevents window waste. These are not features — they are prerequisites for reliable evolution.
+    Before any evolution can occur, the harness must be sound. Context compaction prevents context rot. Progressive disclosure keeps prompt lean. Tool-call offloading prevents window waste. Auto-scoring on failure feeds the ratchet. Hard-trigger evolution on session init ensures proposals surface. These are not features — they are prerequisites for reliable evolution.
 
     **Level 1: Experience Accumulation**
-    When the user provides corrections or feedback, the main Agent dispatches feedback-observer to record them.
+    Failures (compile errors, review fails, verification fails) and user corrections are recorded automatically via feedback-observer with auto-inferred Skill scores. Every failure generates scored data — not just text. This scored data is the fuel that makes Level 2+ possible.
 
     **Level 2: Rule Graduation**
     Feedback repeats 3+ times -> evolution-runner proposes promoting to formal rules in SKILL.md or CLAUDE.md.
@@ -37,7 +37,7 @@
     Evolution is nurturative, not intrusive.
 
     - Recording feedback -> Seamless (sub-agent executes silently)
-    - Aggregation scanning -> Seamless (silent on session initialization)
+    - Aggregation scanning -> Hard trigger on session init (check-evolution hook injects mandatory dispatch signal when feedback/ has entries)
     - Pending proposals -> Light touch (one-line notification)
     - Displaying proposals -> User actively chooses to view
     - Executing changes -> Each requires user confirmation, never auto-modify rules

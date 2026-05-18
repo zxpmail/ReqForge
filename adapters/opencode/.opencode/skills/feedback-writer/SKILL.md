@@ -34,7 +34,7 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
 
         5. **Skill Capability Assessment**
            After Skill execution completes, score across 4 dimensions (1-5).
-           Only assess after a Skill executes — no scoring during routine conversation.
+           Two sources: auto-inferred from failure (see below) or manual after completion.
 
            **Precision** — Was the Skill guidance accurate?
            5: Zero corrections / 4: 1-2 minor tweaks / 3: 3+ corrections / 2: Redo direction / 1: User gave up
@@ -49,6 +49,8 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
            5: Expressed satisfaction unprompted / 4: No negative feedback / 3: Requested changes / 2: Demanded major rework / 1: Rejected output entirely
 
            **Anti-inflation**: Had corrections -> Precision <= 3 / Improvised -> Coverage <= 3 / 2+ rounds -> Efficiency <= 3 / Had change requests -> Satisfaction <= 3
+
+           **Auto-scoring on failure**: When feedback-observer dispatches with a failure trigger_reason, it provides pre-inferred scores based on the failure type mapping in feedback-observer.md [Auto-Scoring on Failure]. Write these scores directly into the feedback file — do not re-evaluate or inflate them. These scores are the minimum signal the evolution engine needs to function. Without them, feedback accumulates but never triggers proposals.
 
         **Judgment Standard**:
         Only record when a signal is actually observed. Better to miss than to over-record.

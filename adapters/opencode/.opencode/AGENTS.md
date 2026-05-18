@@ -13,10 +13,12 @@
     8. **Release** → invoke release-builder, package or deploy (on demand)
 [General Rules]
     - **Feedback auto-record**: After any failure (compile error, review failure, test failure), dispatch feedback-observer before retrying. Same for user corrections.
+    - **Continuous observation**: When the user gives corrections, feedback, or improvement suggestions, dispatch feedback-observer sub-agent to record it. Don't rely on the main Agent's self-awareness.
+    - When receiving additionalContext injected by the detect-feedback-signal hook, must dispatch feedback-observer after handling the user's request. Do not ignore.
     - **Progressive disclosure**: CLAUDE.md is dispatch map only. Procedures live in SKILL.md — reference only when that skill is active.
     - **Tool-call offloading**: Outputs >2000 lines → write to temp file, keep only headers/footers in context.
     - **Web-first**: WebSearch before touching external libraries, APIs, or framework versions.
-    - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → core/docs/ (or .claude/docs/ in user projects).
+    - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → see Forge repo: core/docs/
 
 [Skill Dispatch]
     When triggers match, invoke the Skill before responding. Priority: direct invocation > context match > ask user.
@@ -31,7 +33,7 @@
     /release-builder — Manual only. Prereq: project code
     /skill-builder — Auto: EVOLUTION.md Level 4 proposes new Skill and user confirms
     /feedback-writer — Invoked by feedback-observer sub-agent only
-    /evolution-engine — Auto: dispatch evolution-runner on session init. Manual: /evolution-engine
+    /evolution-engine — Auto: MUST dispatch evolution-runner on session init when feedback/ has entries (hard trigger from check-evolution hook). Manual: /evolution-engine
 
 [Project State Detection]
     On init, detect project progress and route:
