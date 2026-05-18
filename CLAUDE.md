@@ -58,6 +58,8 @@
     - **Continuous observation**: When the user gives corrections, feedback, or improvement suggestions, dispatch feedback-observer sub-agent to record it. Don't rely on the main Agent's self-awareness.
     - When receiving additionalContext injected by the detect-feedback-signal hook, must dispatch feedback-observer after handling the user's request. Do not ignore.
     - **Design priority order** (when mockups exist): design tool mockups (highest) → Design-Brief.md → Product-Spec.md (functional logic). When mockups exist, all UI must match the design. Conflicts resolve in favor of the mockup. See each Skill's design reference strategy for details.
+    - **Progressive disclosure**: Do not pre-load skill files, agent definitions, or detailed process instructions beyond what the current task requires. Skill-specific procedures live in SKILL.md — reference them only when that skill is active. CLAUDE.md provides the dispatch map (which skill for which trigger), not the full procedure. This keeps the control file lean and context-efficient.
+    - **Tool-call offloading**: When a tool call returns large output (2,000+ lines of logs, full-file reads, extensive search results), store the output to a temporary file and keep only essential headers/footers in context. Reference the file path for later use rather than embedding the full content.
 
 [Three-Tier Memory System]
     Project memory is version-controlled markdown in the `memory/` directory, shared across sessions and team members.
@@ -228,168 +230,41 @@
 [Workflow]
     [Requirements Gathering]
         Trigger: User expresses product idea (auto) or invokes /product-spec-builder (manual)
-
         Execute: invoke product-spec-builder skill
-
-        After completion: output delivery guide, guide to next step
-
-    [Delivery]
-        Trigger: Auto-executes after Product Spec is generated
-
-        Output:
-            "✅ **Product Spec generated!**
-
-            File：Product-Spec.md
-
-            ---
-
-            ## 📘 Next Steps
-
-            - Invoke /design-brief-builder to define visual direction (optional)
-            - Invoke /design-maker to generate complete mockups (optional, requires Design Brief first)
-            - Invoke /dev-planner to create development plan
-            - Chat directly to modify UI or add features"
 
     [Design Brief]
         Trigger: User invokes /design-brief-builder
-
         Execute: invoke design-brief-builder skill
-
-        After completion:
-            "✅ **Design Brief generated!**
-
-            File：Design-Brief.md
-
-            Next Steps：
-            - Invoke /design-maker to generate complete mockups (optional)
-            - Invoke /dev-planner to create development plan
-            - Skip mockups and proceed with text-based development"
+        Prerequisites: Product-Spec.md must exist
 
     [Design Mockups]
         Trigger: User invokes /design-maker
-
         Execute: invoke design-maker skill
-
-        After completion:
-            "✅ **Design mockups complete!**
-
-            Design files have been generated via the design tool, covering all pages and state variants.
-
-            Invoke /dev-planner to create the development plan. Mockups will serve as the primary reference for Phase splitting and implementation."
+        Prerequisites: Product-Spec.md + Design-Brief.md must exist
 
     [Development Planning]
         Trigger: User invokes /dev-planner
-
         Execute: invoke dev-planner skill
-
-        After completion:
-            "✅ **DEV-PLAN generated!**
-
-            File：DEV-PLAN.md
-            Total N Phases.
-
-            Invoke /dev-builder to start development."
+        Prerequisites: Product-Spec.md must exist
 
     [Implementation]
         Trigger: User invokes /dev-builder
-
-        Step 1: Ask about design mockups
-            Ask user："Got design mockups? Share them if you do."
-            User sends images → record them, reference during development
-            User says no → continue
-
-        Step 2: Start development
-            Invoke dev-builder skill, enter Plan Mode, list current Phase's TaskList
-            Agent judges based on Task count and complexity:
-                → Main Agent develops directly
-                → Or dispatch implementer Sub-Agent: one fresh instance per Task, sequential if dependent, parallel if independent. Never edit the same file in parallel. Parallel Tasks each complete their own review → fix loop before commit. File conflicts resolved by Main Agent.
-
-        Step 3: per-Task development → review → fix loop
-
-            For each Task in the Phase, execute the following loop:
-
-            Code (see dev-builder SKILL.md for rules)
-                ↓
-            Dispatch code-reviewer for two-stage review
-                ↓
-            Stage 1 Spec Compliance results：
-                → Pass → proceed to Stage 2
-                → Fail → re-implement → re-dispatch code-reviewer
-                ↓
-            Stage 2 Code Quality results：
-                → Pass → run echo clean > ../../.needs-review → commit → Task done → next Task
-                → Fail → invoke bug-fixer to fix → re-dispatch code-reviewer (from Stage 1)
-
-            Loop until both Stages pass.
-
-            All Tasks done → proceed to Step 4
-
-            User can switch to manual mode at any time
-
-        Step 4: Phase-level final verification
-            Execute the four-step verification from dev-builder SKILL.md [Phase Completion].
-            Focus on cross-Task integration: import relationships, file dependencies, naming consistency.
-            Issues found → invoke bug-fixer → commit with fix: prefix → re-verify.
-
-        Step 5: User confirms Phase completion
-
-        Step 6: Guide to next Phase, or suggest /release-builder
-
-        Supplementary — manual entry points：
-        - User invokes /code-review → dispatch code-reviewer two-stage review → show report → user decides scope
-        - User invokes /bug-fixer or reports a bug → invoke bug-fixer skill → suggest /code-review after fix
+        Execute: invoke dev-builder skill. See dev-builder SKILL.md for full per-Phase workflow.
+        Prerequisites: Product-Spec.md + DEV-PLAN.md must exist
 
     [Release]
         Trigger: User invokes /release-builder
-
         Execute: invoke release-builder skill
-
-        After completion: show release results
 
     [Local Run]
         Trigger: User says "run it", "start the project", "let me see it", etc.
         Execute: auto-detect project type, install dependencies, start the project
-        Output："🚀 **Project started!** **Access**：http://localhost:[port] [brief usage instructions based on Product Spec]"
 
     [Content Revision]
-        When user requests changes:
+        Trigger: User requests changes during development
+        Execute: invoke product-spec-builder (iterative mode) → dev-planner → dev-builder → review → fix → verify → archive. See each SKILL.md for detailed procedures.
 
-        Step 1: Create change artifacts + clarify change scope
-            Create a directory named after the change (e.g. add-ai-recommend) under changes/:
-            ```
-            changes/<change-name>/
-            ├── proposal.md       # Change proposal
-            ├── specs.md          # Change specification (filled in this step)
-            ├── design.md         # Design decisions (filled during design phase)
-            └── tasks.md          # Task breakdown (filled during planning phase)
-            ```
-                ↓
-            Invoke product-spec-builder (iterative mode)
-                ↓
-            Clarify changes through questioning → fill specs.md → update Product-Spec.md → update Product-Spec-CHANGELOG.md
-
-        Step 2: Update development plan
-            Invoke dev-planner (iterative mode)
-                ↓
-            Fill tasks.md → update DEV-PLAN.md (create if absent) → identify affected Phases/Tasks
-            If there's a design phase before Step 2, fill design.md
-
-        Step 3: Execute code changes
-            Agent judges based on Task count and complexity:
-                → Main Agent uses dev-builder skill directly
-                → Or dispatch implementer Sub-Agent
-
-        Step 4: review → fix loop
-            Execute the same review → fix loop as [Implementation] Step 3.
-
-        Step 5: Verify → user confirm → archive
-            Execute the four-step verification from dev-builder SKILL.md [Phase Completion].
-            If issues found and fixed during verification, commits are already made.
-            After verification passes, dev-builder auto-archives changes/<change-name>/ to changes/archive/<change-name>/
-            User confirms → done
-
-        Post-completion guidance: continue conversation for more changes. If previously packaged/released, remind user to invoke /release-builder.
-
+    
 [Development & Testing Rules]
     Each Phase must pass the four-step verification (Code Review → Test Completeness → Compile Verify → Functional Test). All must pass before Phase can be confirmed complete.
 

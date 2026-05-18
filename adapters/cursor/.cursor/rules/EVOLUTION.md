@@ -18,6 +18,9 @@
 [Evolution Levels]
     Four-level evolution path, progressing level by level:
 
+    **Level 0: Harness Foundation** (Agent Harness Engineering — Addy Osmani)
+    Before any evolution can occur, the harness must be sound. Context compaction prevents context rot. Progressive disclosure keeps prompt lean. Tool-call offloading prevents window waste. These are not features — they are prerequisites for reliable evolution.
+
     **Level 1: Experience Accumulation**
     When the user provides corrections or feedback, the main Agent dispatches feedback-observer to record them.
 

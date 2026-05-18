@@ -1,5 +1,19 @@
 # 变更记录
 
+## [v1.5] - 2026-05-18
+### 新增
+- Agent Harness 工程参考来源：Addy Osmani - Agent = Model + Harness
+- 上下文压缩钩子：Post-Tool-Use 自动归档 task-history.md 旧条目，防止上下文腐败
+- 渐进式披露规则：CLAUDE.md 仅保留调度映射，详细流程驻留 SKILL.md，按需加载
+- 工具调用卸载策略：超过 2000 行的大输出写入临时文件，仅保留摘要于上下文
+
+### 修改
+- EVOLUTION.md 新增 Level 0（Harness Foundation），强调 Harness 是进化的先决条件
+- Workflow 部分精简，移除重复的详细流程定义，统一由 SKILL.md 承载
+- dev-builder SKILL.md 新增 Tool-Call Offloading 到 First Principles
+
+---
+
 ## [v1.4] - 2026-05-18
 ### 新增
 - 三层记忆体系：memory/ 目录，project-memory / decisions-log / task-history 三级，跨 session 保持上下文

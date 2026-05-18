@@ -162,3 +162,4 @@ user-project/
 - 提示词工程：**awesome-chatgpt-prompts** - 每个技能是一份精心调校的提示词，社区贡献
 - 多角色分工：**OpenAI Symphony** - 不同阶段由专门的 Sub-Agent 负责，各尽其职
 - 记忆体系 + PDCA 闭环：**ai-coding-ok** - 三层记忆解决 AI 失忆，红绿灯行为边界约束 AI 越界
+- Agent Harness 工程：**Addy Osmani - Agent Harness Engineering** - Agent = Model + Harness，Harness（提示词、工具、钩子、子代理、反馈循环）决定模型实际行为；导入上下文压缩、渐进式披露、工具调用卸载策略
