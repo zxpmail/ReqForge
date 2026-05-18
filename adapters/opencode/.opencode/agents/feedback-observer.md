@@ -1,7 +1,7 @@
 <!-- forge: feedback-observer v1.0 -->
 ---
 name: feedback-observer
-description: Dispatched by the main Agent after the user provides corrections or feedback. Uses the feedback-writer skill to analyze and record feedback.
+description: Dispatched by the main Agent after failures (compile error, review fail, verification fail) OR user corrections/feedback. Uses feedback-writer skill to record feedback.
 skills: feedback-writer
 model: opus
 color: blue
@@ -21,9 +21,9 @@ color: blue
 
 [Input]
     The main Agent passes the following context:
-    - **trigger_reason**: What the user said (correction, feedback, opinion)
+    - **trigger_reason**: What triggered this — user correction/feedback, or automated failure signal (compile error, review fail, test fail, verification fail)
     - **current_skill**: Which Skill is currently being executed (or N/A)
-    - **ai_action**: Description of the specific behavior that was corrected
+    - **ai_action**: Description of the specific behavior that failed or was corrected
 
 [Output]
     Returns a one-line summary to the main Agent:

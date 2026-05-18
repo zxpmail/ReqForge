@@ -340,7 +340,11 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - "Similar approach to Task 1" -> Write the specific approach, don't reference other Tasks
     - "Add necessary error handling" -> Specify which errors and what approach to use
 
-    Soft completion declarations:
+    Skipping feedback recording:
+    - "It's a small fix, no need to record feedback" -> Every fix, regardless of size, is a learning opportunity for the ratchet. Without recording, the same failure repeats.
+    - "I'll record feedback later" -> You won't. You're in a fix loop. Record it now or forget it.
+
+Soft completion declarations:
     - "Should be fine" -> "Fine" needs evidence — run the verification command
     - "Looks correct" -> "Correct" needs comparison between the Spec original text and code
     - "Likely passes" -> Probability is not evidence — run the test and get results
@@ -386,7 +390,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - Process health: only 1 dev server instance running
 
     **Iterative Check Loop**:
-    - If any step finds issues (missing tasks, compilation errors, test failures), fix the issues
+    - If any step finds issues (missing tasks, compilation errors, test failures), dispatch feedback-observer to record the failure, then fix the issues
     - After fixing any issue, **restart the entire four-step verification from Step 1**
     - Fixing one issue can reveal other missed issues — one pass is never enough
     - Repeat until all four steps pass clean with no issues found
@@ -498,8 +502,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             10. Read actual code values, verify item by item against design values, correct any deviations
             11. Cross-reference Product-Spec.md to confirm functional behavior matches description
             12. Dispatch code-reviewer to perform two-stage review. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts
-            13. Stage 1 fails (missing functionality) -> fill in the implementation -> re-dispatch code-reviewer
-            14. Stage 2 fails (code quality) -> call bug-fixer to fix -> re-dispatch code-reviewer
+            13. Stage 1 fails (missing functionality) -> dispatch feedback-observer to record what was missed -> fill in the implementation -> re-dispatch code-reviewer
+            14. Stage 2 fails (code quality) -> dispatch feedback-observer to record quality issue -> call bug-fixer to fix -> re-dispatch code-reviewer
             15. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
             16. Proceed to the next Task
 
