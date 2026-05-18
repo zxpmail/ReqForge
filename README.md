@@ -173,7 +173,7 @@ Feature complete → code-reviewer two-stage review
   └─ Stage 2 fail → bug-fixer fix → re-review
 ```
 
-Seven hook scripts fire automatically at critical nodes:
+Eight hook scripts fire automatically at critical nodes:
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -184,6 +184,7 @@ Seven hook scripts fire automatically at critical nodes:
 | mark-review-needed     | After file edit    | Mark changes as needing review          |
 | check-evolution        | On session start   | Check feedback accumulation             |
 | memory-check           | After file edit    | Remind to update memory if code changed |
+| context-compaction     | After tool use     | Auto-archive old task-history entries beyond 30 to prevent context rot |
 
 ### Evolution Layer — Steering Loop
 

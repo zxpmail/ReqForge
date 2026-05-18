@@ -1,5 +1,15 @@
 # 变更记录
 
+## [v1.6] - 2026-05-18
+### 修正
+- 修复 Product-Spec.md 中"不依赖 bash 钩子"的错误描述，明确同时提供 .sh 和 .bat 版本
+- .gitignore 新增 .claude/worktrees/ 排除测试工作树
+
+### 新增
+- README 钩子列表新增 context-compaction 条目
+
+---
+
 ## [v1.5] - 2026-05-18
 ### 新增
 - Agent Harness 工程参考来源：Addy Osmani - Agent = Model + Harness
