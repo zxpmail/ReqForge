@@ -74,8 +74,8 @@ copy settings.windows.json settings.json
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │  Control File (CLAUDE.md / .cursor/rules/reqforge.mdc)      │ ← Orchestration Layer
+│  <60 lines — dispatch map only, details in core/docs/       │
 │  Project state detection, flow routing, Skill dispatch       │
-│  Behavior Boundaries (🟢🟡🔴), Memory system routing        │
 ├─────────────────────────────────────────────────────────────┤
 │  Three-Tier Memory (Context Preservation)                    │ ← Memory Layer
 │  ├─ project-memory.md  Long-term: architecture, constraints │
@@ -85,7 +85,7 @@ copy settings.windows.json settings.json
 │  Sub-Agents × 4 (Context Firewall)                          │ ← Execution Layer
 │  ├─ implementer        Code + compile verify + self-check   │
 │  ├─ code-reviewer      Two-stage review                     │
-│  ├─ feedback-observer  Capture user corrections             │
+│  ├─ feedback-observer  Capture failures + user corrections  │
 │  └─ evolution-runner   Scan feedback accumulation           │
 ├─────────────────────────────────────────────────────────────┤
 │  Skills × 11 (Guides / Feedforward Control)                 │ ← Guidance Layer
@@ -190,7 +190,8 @@ Eight hook scripts fire automatically at critical nodes:
 
 A harness that doesn't learn from usage is static. Forge evolves:
 
-1. **Experience accumulation** — Corrections recorded silently, nearly invisible
+1. **Level 0: Harness Foundation** — Context compaction, progressive disclosure, tool-call offloading — prerequisites for reliable evolution
+2. **Experience accumulation** — Failures (compile errors, review fails, verification fails) and corrections recorded automatically via feedback-observer
 2. **Rule graduation** — Same feedback appears 3+ times → proposed as formal rule in Skill or control file
 3. **Skill optimization** — Skill's feedback scores consistently low → proposed adjustment
 4. **New Skill creation** — Repeated operation pattern without Skill coverage → proposed new Skill
@@ -198,6 +199,12 @@ A harness that doesn't learn from usage is static. Forge evolves:
 All evolution proposals require your explicit confirmation. No automatic rule changes.
 
 ---
+
+## Control File Philosophy
+
+CLAUDE.md is kept under 60 lines — a dispatch map, not a manual. Detailed procedures live in each Skill's SKILL.md (loaded only when that skill is active). Reference docs (behavior boundaries, memory system, sub-agent orchestration) live in `core/docs/`.
+
+Every rule in CLAUDE.md must be traceable to a specific failure or feedback. Generic best-practice rules belong in SKILL.md, not the control file. This keeps the prompt lean and every rule earns its place.
 
 ## Design Priority
 
@@ -235,6 +242,7 @@ Forge/
 │   ├── templates/             # Document templates
 │   │   └── memory/            # Three-tier memory templates
 │   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)
+│   ├── docs/                  # Detailed docs (behavior boundaries, memory system, etc.)
 │   └── feedback/              # Feedback templates
 ├── adapters/
 │   ├── claude-code/           # Claude Code adapter (.claude/)
