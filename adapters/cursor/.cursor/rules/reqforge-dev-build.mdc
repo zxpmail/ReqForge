@@ -1,31 +1,38 @@
 ---
-description: "Implementation execution. Build code phase by phase following DEV-PLAN, each Task goes through review -> fix loop."
+description: "Dev Builder — implementation execution. Build code phase by phase following DEV-PLAN, each Task goes through review → fix loop."
 globs: "*.{ts,tsx,js,jsx,css,json}"
 alwaysApply: true
 ---
 
 ## Dev Builder
 
-Build phase by phase following DEV-PLAN.md:
+Full skill definition: `.cursor/rules/skills/dev-builder/SKILL.md`
 
-### Development Discipline
-- Plan + TaskList before each Phase
-- Assess impact scope: list affected features before changing code
-- Single file under 300 lines, split if exceeded
-- TypeScript strict mode, no `any`
-- Naming: PascalCase for components, camelCase for functions/variables, kebab-case for files
-- Tailwind preferred for styling
-- YAGNI: don't write code for hypothetical requirements
+### Before Each Phase: Plan + TaskList
+1. Read Phase delivery checklist and key files from DEV-PLAN.md
+2. Explore existing code structure
+3. Plan implementation steps
+4. Use TaskCreate to break into specific Tasks
+5. No code without a Plan — this is non-negotiable
 
-### per-Task Loop
-1. Code
-2. Verify feature completeness against Spec
-3. Code quality self-check
-4. Compile verification
-5. Commit
+### Per-Task Loop
+1. **Before coding**: Load reference docs — read task description from DEV-PLAN, feature description from Product-Spec.md, design direction from Design-Brief.md
+2. **TDD**: Write test first (RED) → minimal code to pass (GREEN) → refactor (REFACTOR)
+3. **After coding**: Cross-reference against Spec, verify design values, check feature completeness
+4. **Code review**: Two-stage review (compliance + quality)
+5. **Memory update**: Append to task-history.md (mandatory). If decision made → decisions-log.md. If architecture changed → project-memory.md.
+6. **Commit**: Atomic commit after each Task. Must compile (`tsc --noEmit` zero errors) before commit.
 
-### Phase Completion Verification (Four Steps)
-1. Code Review — check against delivery checklist item by item
+### Phase Completion: Four-Step Verification
+1. Code Review — check delivery checklist item by item
 2. Test Completeness — all features implemented
 3. Compile Check — `tsc --noEmit` zero errors
-4. Functional Test — start dev server and verify
+4. Functional Test — start dev server, verify no errors
+
+If any step fails → dispatch feedback-observer → fix → restart from Step 1.
+
+### One Phase Per Invocation
+After Phase verification passes → stop. Do not start the next Phase. User must invoke `/dev-builder` again.
+
+### Design Reference
+If design tool MCP is available: read exact values before each Task, implement component by component, verify after implementation. Design draft takes precedence over Design-Brief.md.

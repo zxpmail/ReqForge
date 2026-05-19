@@ -7,7 +7,10 @@
       "run": ".claude\\hooks\\stop-gate.bat && .claude\\hooks\\detect-feedback-signal.bat"
     },
     "AfterCommand": {
-      "run": ".claude\\hooks\\mark-review-needed.bat"
+      "run": ".claude\\hooks\\mark-review-needed.bat && .claude\\hooks\\memory-check.bat"
+    },
+    "PostToolUse": {
+      "run": ".claude\\hooks\\context-compaction.bat"
     },
     "PostCommit": {
       "run": ".claude\\hooks\\auto-push.bat"

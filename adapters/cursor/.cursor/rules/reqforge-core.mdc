@@ -1,33 +1,61 @@
 ---
-description: "Forge product development framework — core instructions. From requirements to release, full workflow guidance."
-globs: "*.md"
+description: "Forge core development rules — code standards, TDD discipline, verification gates, memory system, and feedback loop. Applies to all code files."
+globs: "*.{ts,tsx,js,jsx,css,json,md}"
 alwaysApply: true
 ---
 
-# Forge — Product Development Framework
+## Forge Core Development Rules
 
-You are Forge, a senior product manager and full-stack development coach.
+### TDD First (RED-GREEN-REFACTOR)
+Tests must be written before functional code. No code without tests is allowed to be committed.
+- **RED**: First write a test that will fail
+- **GREEN**: Write minimal code to make the test pass
+- **REFACTOR**: Refactor while keeping the test green
 
-## Core Workflow
+### Code Standards
+- Single file does not exceed 300 lines — split by responsibility
+- TypeScript strict mode, no `any` (use `unknown` + type guards)
+- Naming: Components PascalCase, functions/variables camelCase, files kebab-case, constants UPPER_SNAKE_CASE
+- Each file has a single responsibility with a clear external interface
+- React prefers function components + Hooks, no class components
+- Styles prefer Tailwind, don't write custom CSS unless necessary
+- No unrelated refactoring — only touch what needs changing
+- YAGNI: don't write code for hypothetical future requirements
+- Follow the existing codebase style — don't force your own preferences
 
-1. **Requirements** → generate Product-Spec.md
-2. **Design Brief** (optional) → generate Design-Brief.md
-3. **Design Mockups** (optional) → generate mockups via design tool
-4. **Development Plan** → generate DEV-PLAN.md
-5. **Implementation** → develop phase by phase
-6. **Bug Fixing** → diagnose and fix issues
-7. **Code Review** → audit quality against Spec
-8. **Release** → build and deploy
+### Verification Is Evidence (Hard Gate)
+Every completion declaration must include the verification command and its output executed in the same message. "It's done" with no verification command is an invalid declaration. No on-the-spot verification, no completion.
 
-## Project State Detection
+### Four-Step Phase Verification
+After all Tasks in a Phase are complete:
+1. **Code Review** — cross-reference delivery checklist item by item
+2. **Test Completeness** — all features implemented, no omissions
+3. **Compile Check** — `tsc --noEmit` zero errors
+4. **Functional Test** — start dev server, verify no errors, test both new and existing features
 
-Auto-detect progress on init:
-- No Product-Spec.md → new project, guide user to describe their idea
-- Product-Spec.md exists, no code → Spec complete, guide to dev planning
-- Product-Spec.md + code exist → project in development
+If any step fails → fix → **restart from Step 1**. One pass is rarely enough.
 
-## General Rules
+### Memory System
+- `memory/project-memory.md` — Architecture facts, constraints (permanent)
+- `memory/decisions-log.md` — ADR-format decision records (permanent)
+- `memory/task-history.md` — Recent task summaries, max 30 entries (rolling)
 
-- Always web-search first when involving external libraries, APIs, or framework versions
-- Every completed feature must pass four-step verification: Code Review → Test Completeness → Compile Check → Functional Test
-- Don't skip prerequisite steps, don't rigid waterfall
+After every completed Task: append to task-history.md. If a technical decision was made, append to decisions-log.md. If architecture facts changed, update project-memory.md.
+
+### Feedback Auto-Record
+After any failure (compile error, review failure, verification failure), record feedback before retrying. Same for user corrections. This feeds the evolution engine and prevents repeated mistakes.
+
+### Tool-Call Offloading
+Outputs >2000 lines → write to temp file, keep only headers/footers in context.
+
+### Web-First
+WebSearch before touching external libraries, APIs, or framework versions.
+
+### Modification Discipline
+Before every code change: assess impact scope (list affected features), check side effects (CSS clipping, z-index, layout), think then change, regression-validate after.
+
+### Quality Thresholds
+Every feature must satisfy: happy path works, error path has clear messages, loading state, empty state, basic input validation, no sensitive info hardcoded.
+
+### Project Structure
+Project code goes in a `<project-name>/` subfolder, not flat in the root. Root holds only planning documents, design resources, and framework definitions.

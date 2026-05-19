@@ -1,25 +1,32 @@
 ---
-description: "Code review. Check feature completeness and code quality against Product Spec."
+description: "Code Review — two-stage review checking feature completeness and code quality against Product Spec."
 globs: "*.{ts,tsx,js,jsx}"
 alwaysApply: false
 ---
 
 ## Code Review
 
-Two-stage review:
+Full skill definition: `.cursor/rules/skills/code-review/SKILL.md`
 
-### Stage 1: Spec Compliance
-- Check each Product-Spec.md requirement item by item
-- Every feature must have corresponding code implementation
-- UI consistency check (if design mockups exist)
+### Two-Stage Review
 
-### Stage 2: Code Quality
-- Naming conventions, type safety, no `any`
-- No hardcoded secrets, no dangerous functions
+**Stage 1: Spec Compliance**
+Check each Product-Spec.md requirement item by item:
+- Every feature listed in the Spec must have corresponding code implementation
+- UI consistency check (if design mockups exist, verify pixel accuracy)
+- All states covered: loading, empty, error, edge cases
+- If Stage 1 fails → dispatch feedback-observer with `review_stage1_fail` → re-implement → re-review from Stage 1
+
+**Stage 2: Code Quality**
+- Naming conventions (PascalCase/camelCase/kebab-case)
+- TypeScript strict mode, no `any`
 - Files under 300 lines, single responsibility
-- No Spec drift (code features not in Spec)
+- No hardcoded secrets, no dangerous functions (eval, innerHTML)
+- No Spec drift (code features not in Product Spec)
+- Regression check: existing features not broken
+- If Stage 2 fails → dispatch feedback-observer with `review_stage2_fail` → bug-fixer fix → re-review from Stage 1
 
-### Output
+### Output Format
 - ✅ Fully implemented (with code location)
 - ⚠️ Partially implemented (with missing details)
 - ❌ Not implemented (with Spec reference)

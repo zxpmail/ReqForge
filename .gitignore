@@ -26,6 +26,3 @@ changes/archive/*
 
 # Worktrees (ephemeral test environments)
 .claude/worktrees/
-
-# Build artifact
-*.zip

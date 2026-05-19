@@ -1,27 +1,33 @@
 ---
-description: "Product Spec requirements gathering. Triggered when user wants to build a product, app, or tool."
+description: "Product Spec Builder — requirements gathering. Triggered when user describes a product idea, feature, or UI change."
 globs: "*.md"
 alwaysApply: false
 ---
 
 ## Product Spec Builder
 
-When the user describes a product idea, clarify through questioning:
+Full skill definition: `.cursor/rules/skills/product-spec-builder/SKILL.md`
 
-### Must Collect
+### First Principles
+- **AI-First**: For any feature, first consider how it can be done with AI
+- **Simplicity-First**: Complexity is the enemy. Question every feature: "do we really need this?"
+- **Online-First**: WebSearch before recommending competitors, technologies, or solutions
+
+### Must Collect (Must Satisfy)
 - Product positioning: what is it? What problem does it solve?
 - Target users: who will use it? Why?
-- Core features: what must it do?
-- User flow: complete path from opening to completing a task
-- AI capability needs: what requires AI?
+- Core features: what must it have? What makes the product invalid if removed?
+- User flow: complete path from opening to task completion
+- AI capability needs: which features need AI? What type?
 - Product type: Web / Desktop / CLI / Mobile
 
 ### Questioning Strategy
-- Don't accept vague answers
-- Call out logical contradictions directly
-- WebSearch competitors before suggesting
-- Proactively suggest AI enhancement options
+- Only 1-2 questions at a time, make them count
+- Do not accept vague answers: "roughly", "maybe", "probably"
+- Spot logical flaws and point them out directly
+- When the user says "you decide", analyze and recommend then ask for confirmation
+- Proactively suggest AI enhancement: "should we add a one-click AI X here?"
 
-### Output
-- Product-Spec.md — structured requirements document
-- Product-Spec-CHANGELOG.md — change log (if iteration occurs)
+### Output: Product-Spec.md
+Use `.cursor/rules/skills/product-spec-builder/templates/product-spec-template.md` for format.
+Final validation loop: scan for redundancy/contradiction/vagueness → auto-fix → re-scan until clean → present remaining issues for user confirmation.

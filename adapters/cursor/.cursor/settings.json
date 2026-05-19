@@ -7,7 +7,10 @@
       "run": "sh .cursor/rules/hooks/stop-gate.sh && sh .cursor/rules/hooks/detect-feedback-signal.sh"
     },
     "AfterCommand": {
-      "run": "sh .cursor/rules/hooks/mark-review-needed.sh"
+      "run": "sh .cursor/rules/hooks/mark-review-needed.sh && sh .cursor/rules/hooks/memory-check.sh"
+    },
+    "PostToolUse": {
+      "run": "sh .cursor/rules/hooks/context-compaction.sh"
     },
     "PostCommit": {
       "run": "sh .cursor/rules/hooks/auto-push.sh"

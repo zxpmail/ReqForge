@@ -1,25 +1,33 @@
 ---
-description: "Development plan generation. Analyze dependency relationships and split into development phases once Product-Spec.md is ready."
+description: "Dev Planner — analysis and phased development plan generation. Triggered when Product-Spec.md is ready."
 globs: "*.md"
 alwaysApply: false
 ---
 
 ## Dev Planner
 
-Read Product-Spec.md, analyze and generate phased development plan:
+Full skill definition: `.cursor/rules/skills/dev-planner/SKILL.md`
 
 ### Core Principles
-- Verifiable: each Phase must compile and run
-- Dependency order: dependencies first
+- Verifiable: each Phase must compile and run independently
+- Dependency order: infrastructure first, then core features, then supporting features, then polish
 - Right granularity: 1-3 core deliverables per Phase
 - Clear paths: each Phase lists specific files to create or modify
 - No placeholders: no TBD, TODO allowed
 
 ### Phase Splitting
-1. Infrastructure (project skeleton, database, routing) -> first
-2. Core features -> middle
-3. Supporting features -> later
-4. Polishing (packaging, deployment) -> last
+1. Infrastructure (project skeleton, database, routing) → Phase 1
+2. Core features → middle Phases
+3. Supporting features → later Phases
+4. Polishing (packaging, deployment) → final Phase
 
-### Output
-- DEV-PLAN.md — phased development plan, each phase with delivery checklist, key files, acceptance criteria
+### Each Phase Must Include
+- Delivery checklist (concrete, verifiable items)
+- Key files to create or modify
+- Acceptance criteria
+
+### Output: DEV-PLAN.md
+Use `.cursor/rules/skills/dev-planner/templates/dev-plan-template.md` for format.
+
+### Memory Check
+If `memory/` exists → update decisions-log.md with ADR for major planning decisions.
