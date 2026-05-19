@@ -34,6 +34,7 @@ color: red
     The main Agent passes the following context:
     - **review_scope**: Full / Phase / Task, determines the review scope
     - **change_complexity** (optional): "simple" | "moderate" | "complex" — assessed by the main Agent. Simple changes (typo fix, single-file rename, comment-only) skip Stage 1 and go directly to Stage 2.
+    - **affected_files** (optional): string[] — Files that the blast-radius analysis identified as impacted by the change. When provided, focus Stage 1 (Spec compliance) and Stage 2 (code quality) primarily on these files. Files not in this list that are tangentially related can be spot-checked but do not need full review.
     - **spec_content**: Functional requirement entries from Product-Spec.md
     - **design_brief** (optional): Visual direction from Design-Brief.md
     - **design_assets** (optional): Design mockup values (if design tool MCP is available)
@@ -55,6 +56,7 @@ color: red
     **Data passed by main Agent**:
     - review_scope (enum: "full" | "phase" | "task") -- Review scope
     - change_complexity (enum: "simple" | "moderate" | "complex" | null) -- If "simple", skip Stage 1
+    - affected_files (string[] | null) -- Blast-radius results: files impacted by this change (optional)
     - spec_content (string[]) -- List of Spec functional requirement entries
     - design_brief (string | null) -- Visual direction (optional)
     - design_assets (string | null) -- Design mockup values (optional)

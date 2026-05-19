@@ -6,10 +6,13 @@ All notable changes to Forge are documented here.
 ### Added
 - Exact version pinning rule in CLAUDE.md: every dependency must be exact patch, no ranges
 - Dedicated AGENTS.md template (core/templates/agents-template.md): constraint-focused format with tech stack, behavior boundaries, hard constraints
+- **Dependency graph** (scripts/dependency-graph.ts): file-level import graph for blast-radius analysis. `pnpm dep-graph build | affected | risk | stats`
 ### Changed
 - OpenCode AGENTS.md now uses dedicated template instead of CLAUDE.md clone
 - OpenCode CLAUDE.md removed (AGENTS.md is the only control file)
 - sync.ts updated: AGENTS.md template for OpenCode, check-sync excluded from adapter sync
+- dev-builder SKILL.md: Blast-Radar principle, dep-graph integration in review loop
+- code-reviewer agent: accepts `affected_files` input from blast-radius analysis for focused review
 
 ## [v1.13] - 2026-05-19
 ### Added

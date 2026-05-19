@@ -13,6 +13,7 @@
 ### v1.14 — 2026-05-19
 - **精确版本锁定**：每个依赖锁定到 `major.minor.patch`——无范围、无 `latest`
 - **专属 AGENTS.md 模板**：OpenCode 使用约束文件格式（技术栈、行为边界、硬约束），非 CLAUDE.md 克隆
+- **依赖图分析**：`scripts/dependency-graph.ts` — 文件级导入图，支持 blast-radius 影响范围分析。`pnpm dep-graph build | affected | risk | stats`。已集成到 dev-builder 审查循环，code-reviewer 接收 `affected_files` 精准定位审查范围
 
 ### v1.13 — 2026-05-19
 - **Planner Sub-Agent**：专用于架构设计和 Phase 拆分的独立 Agent，与 implementer 上下文解耦

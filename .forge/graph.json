@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "root": "C:\\work\\ReqForge",
+  "nodes": {
+    "scripts\\dependency-graph.ts": {
+      "imports": [],
+      "importedBy": []
+    },
+    "scripts\\sync.ts": {
+      "imports": [],
+      "importedBy": []
+    }
+  },
+  "stats": {
+    "totalFiles": 2,
+    "totalEdges": 0,
+    "languages": [
+      "typescript"
+    ],
+    "buildTimeMs": 4
+  }
+}

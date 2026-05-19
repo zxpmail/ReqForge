@@ -13,6 +13,7 @@ A complete product development methodology for AI coding assistants: Claude Code
 ### v1.14 — 2026-05-19
 - **Exact version pinning**: Every dependency pinned to `major.minor.patch` — no ranges, no `latest`
 - **Dedicated AGENTS.md template**: OpenCode gets a constraint-focused format (tech stack, behavior boundaries, hard constraints), not a CLAUDE.md clone
+- **Dependency graph**: `scripts/dependency-graph.ts` — file-level import graph for blast-radius analysis. `pnpm dep-graph build | affected | risk | stats`. Integrated into dev-builder review loop: code-reviewer receives `affected_files` for focused review
 
 ### v1.13 — 2026-05-19
 - **Planner sub-agent**: Dedicated agent for architecture design and Phase splitting, decoupled from implementer context

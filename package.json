@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "sync": "ts-node scripts/sync.ts",
+    "dep-graph": "ts-node scripts/dependency-graph.ts",
     "build": "tsc"
   },
   "keywords": [
