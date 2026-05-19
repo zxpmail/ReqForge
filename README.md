@@ -8,6 +8,32 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ---
 
+## What's New
+
+### v1.14 — 2026-05-19
+- **Exact version pinning**: Every dependency pinned to `major.minor.patch` — no ranges, no `latest`
+- **Dedicated AGENTS.md template**: OpenCode gets a constraint-focused format (tech stack, behavior boundaries, hard constraints), not a CLAUDE.md clone
+
+### v1.13 — 2026-05-19
+- **Planner sub-agent**: Dedicated agent for architecture design and Phase splitting, decoupled from implementer context
+- **Session handoff**: `handoff-template.md` + `check-handoff` hook to generate session summaries before context reset, preventing lost progress
+- **Complexity gate**: `code-reviewer` now skips Stage 1 for `change_complexity="simple"`, matching review depth to change scope
+- **Model version tracking**: `feedback-observer` records model version with each feedback, enabling evolution to detect outdated rules
+
+### v1.10–1.12 — 2026-05-19
+- **test-writer sub-agent**: Vitest-based test generator for `sync.ts` and core utilities
+- **check-sync hook**: Detects `core/` vs `adapters/` divergence after edits
+- **Self-wired settings**: ReqForge's own `.claude/settings.json` with all 6 hooks, `settings.local.json` pruned 65→32 lines
+
+### v1.9 — 2026-05-19
+- **AI Only for Judgment Tasks**: Deterministic logic is plain code, not AI busywork
+- **Fail Loudly**: Uncertainty must be stated explicitly, never hidden
+- **Token Budget Awareness**: Check context headroom after each Task
+
+See [CHANGELOG.md](./CHANGELOG.md) for the full version history.
+
+---
+
 ## Overview
 
 If you've done Vibe Coding, you know the hard part isn't getting AI to write code — it's managing the entire product development process. You tell AI "build me a writing tool," and it starts coding. Halfway through, you realize the direction is wrong and start over. Features finally work, but the UI looks terrible — no design specs, so AI pieced together default styles from training data. Fix the UI, introduce bugs. Fix bugs, introduce more bugs. Context gets long, AI forgets earlier requirements, code starts drifting.
@@ -277,34 +303,6 @@ Forge/
 ## Model Recommendation
 
 Forge covers the full product development pipeline, which demands more from the model than single-task setups. Opus or Sonnet-level models are recommended. Start with a small project to validate output quality and workflow smoothness before committing to a larger project.
-
----
-
-## What's New
-
-### v1.14 — 2026-05-19
-- **Exact version pinning**: Every dependency pinned to `major.minor.patch` — no ranges, no `latest`
-- **Dedicated AGENTS.md template**: OpenCode gets a constraint-focused format (tech stack, behavior boundaries, hard constraints), not a CLAUDE.md clone
-
-### v1.13 — 2026-05-19
-- **Planner sub-agent**: Dedicated agent for architecture design and Phase splitting, decoupled from implementer context
-- **Session handoff**: `handoff-template.md` + `check-handoff` hook to generate session summaries before context reset, preventing lost progress
-- **Complexity gate**: `code-reviewer` now skips Stage 1 for `change_complexity="simple"`, matching review depth to change scope
-- **Model version tracking**: `feedback-observer` records model version with each feedback, enabling evolution to detect outdated rules
-
-### v1.10–1.12 — 2026-05-19
-- **test-writer sub-agent**: Vitest-based test generator for `sync.ts` and core utilities
-- **check-sync hook**: Detects `core/` vs `adapters/` divergence after edits
-- **Self-wired settings**: ReqForge's own `.claude/settings.json` with all 6 hooks, `settings.local.json` pruned 65→32 lines
-
-### v1.9 — 2026-05-19
-- **AI Only for Judgment Tasks**: Deterministic logic is plain code, not AI busywork
-- **Fail Loudly**: Uncertainty must be stated explicitly, never hidden
-- **Token Budget Awareness**: Check context headroom after each Task
-
-See [CHANGELOG.md](./CHANGELOG.md) for the full version history.
-
----
 
 ## License
 

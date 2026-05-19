@@ -8,6 +8,32 @@
 
 ---
 
+## 近期更新
+
+### v1.14 — 2026-05-19
+- **精确版本锁定**：每个依赖锁定到 `major.minor.patch`——无范围、无 `latest`
+- **专属 AGENTS.md 模板**：OpenCode 使用约束文件格式（技术栈、行为边界、硬约束），非 CLAUDE.md 克隆
+
+### v1.13 — 2026-05-19
+- **Planner Sub-Agent**：专用于架构设计和 Phase 拆分的独立 Agent，与 implementer 上下文解耦
+- **Session Handoff 会话交接**：`handoff-template.md` + `check-handoff` 钩子，在上下文重置前生成会话摘要，防止进度丢失
+- **Complexity Gate 复杂度门**：`code-reviewer` 对 `change_complexity="simple"` 跳过 Stage 1，审查深度与变更范围匹配
+- **模型版本追踪**：`feedback-observer` 记录每次反馈的模型版本，使进化引擎能检测过时规则
+
+### v1.10–1.12 — 2026-05-19
+- **test-writer Sub-Agent**：为 `sync.ts` 和核心工具生成 Vitest 测试
+- **check-sync 钩子**：编辑后检测 `core/` 与 `adapters/` 不同步
+- **自身钩子配置**：ReqForge 自身的 `.claude/settings.json` 启用全部 6 个钩子，`settings.local.json` 从 65 行精简至 32 行
+
+### v1.9 — 2026-05-19
+- **AI Only for Judgment Tasks**：确定性逻辑用代码而非 AI 推理
+- **Fail Loudly**：不确定时明确说"不知道"
+- **Token Budget Awareness**：每个 Task 后评估上下文使用量
+
+完整版本历史见 [CHANGELOG.md](./CHANGELOG.md)。
+
+---
+
 ## 概述
 
 如果你体验过 Vibe Coding，就会知道难点不在于让 AI 写代码，而在于管理整个产品开发流程。你跟 AI 说"帮我做个写作工具"，它直接就开始写了。做到一半发现方向不对，推翻重来。功能终于能用了，UI 却一塌糊涂——没有设计规范，AI 只能从训练数据里拼凑默认样式。修 UI 引入 bug，修 bug 引入更多 bug。上下文越来越长，AI 忘了之前的需求，代码开始失控。
@@ -275,34 +301,6 @@ Forge/
 ## 模型推荐
 
 Forge 覆盖完整的产品开发流程，对模型的要求高于单一任务场景。推荐使用 Opus 或 Sonnet 级别的模型。建议先用小项目验证输出质量和工作流程流畅度，再投入到大型项目。
-
----
-
-## 近期更新
-
-### v1.14 — 2026-05-19
-- **精确版本锁定**：每个依赖锁定到 `major.minor.patch`——无范围、无 `latest`
-- **专属 AGENTS.md 模板**：OpenCode 使用约束文件格式（技术栈、行为边界、硬约束），非 CLAUDE.md 克隆
-
-### v1.13 — 2026-05-19
-- **Planner Sub-Agent**：专用于架构设计和 Phase 拆分的独立 Agent，与 implementer 上下文解耦
-- **Session Handoff 会话交接**：`handoff-template.md` + `check-handoff` 钩子，在上下文重置前生成会话摘要，防止进度丢失
-- **Complexity Gate 复杂度门**：`code-reviewer` 对 `change_complexity="simple"` 跳过 Stage 1，审查深度与变更范围匹配
-- **模型版本追踪**：`feedback-observer` 记录每次反馈的模型版本，使进化引擎能检测过时规则
-
-### v1.10–1.12 — 2026-05-19
-- **test-writer Sub-Agent**：为 `sync.ts` 和核心工具生成 Vitest 测试
-- **check-sync 钩子**：编辑后检测 `core/` 与 `adapters/` 不同步
-- **自身钩子配置**：ReqForge 自身的 `.claude/settings.json` 启用全部 6 个钩子，`settings.local.json` 从 65 行精简至 32 行
-
-### v1.9 — 2026-05-19
-- **AI Only for Judgment Tasks**：确定性逻辑用代码而非 AI 推理
-- **Fail Loudly**：不确定时明确说"不知道"
-- **Token Budget Awareness**：每个 Task 后评估上下文使用量
-
-完整版本历史见 [CHANGELOG.md](./CHANGELOG.md)。
-
----
 
 ## 许可证
 
