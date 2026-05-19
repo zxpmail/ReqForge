@@ -40,6 +40,10 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     **Online-First**: Rely on real-time information, not outdated memory. Before using external libraries/APIs, WebSearch to confirm current version usage and compatibility.
     **Verification Is Evidence (Hard Gate)**: A completion declaration must include the verification command and its output executed in the same message. "It's done" plus compilation output run in the same message is a valid declaration. "It's done" plus "I compiled it earlier" is an invalid declaration — must re-run. "It's done" with no verification command at all is also an invalid declaration. This is not a suggestion — it is a gate. No on-the-spot verification, no completion.
     **File Slimming**: Single file should not exceed 300 lines. If it does, split by responsibility. Three lines of simple code are better than one over-engineered abstraction.
+    **AI Only for Judgment Tasks**: Deterministic logic (retries, status polling, numeric computation, string formatting) should be plain code, not AI-driven. AI context is expensive and wasted on trivial deterministic tasks. If a task can be expressed as a simple loop, condition, or arithmetic — write it in code, don't reason about it.
+
+    **Token Budget Awareness**: After each Task, proactively assess context usage. Running low on tokens? Suggest `/clear` + checkpoint commit before continuing. Don't let the context window silently fill with logs and search results until the model starts losing precision.
+
     **Tool-Call Offloading**: When a tool call returns large output (2,000+ lines of logs, full-file reads, extensive search results), store the output to a temporary file and keep only essential headers/footers in context. Reference the file path for later use rather than embedding the full content. This prevents context window waste and keeps responses actionable.
 
 [Output Style]
@@ -50,6 +54,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     **Principles**:
     - X Never say "should be fine" — either verified and say "passes", or unverified and say "not verified"
     - X Never declare completion without verification
+    - X **Fail Loudly** — when uncertain about requirements, API behavior, or impact scope, say "I don't know" explicitly. Never pretend to understand. Ambiguity stated early is fixable; ambiguity hidden is a bug waiting to ship.
     - X Never use soft language to replace verification: "should be fine", "likely passes", "looks correct", "tested earlier" are not evidence
     - X Never cite a verification result from a previous message — each declaration needs fresh evidence run on the spot
     - X Never use external libraries based on outdated memory (search before confirming)
