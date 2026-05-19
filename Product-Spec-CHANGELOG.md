@@ -1,49 +1,5 @@
 # 变更记录
 
-## [v1.14] - 2026-05-19
-### 新增
-- OpenCode 适配格式说明：AGENTS.md 使用约束文件格式（技术栈精确版本、行为边界、硬约束列表），非 CLAUDE.md 克隆
-- 框架配置表新增 .opencode/AGENTS.md 条目
-- 技术说明增加各适配格式差异：CLAUDE.md / .mdc / AGENTS.md
-
----
-
-## [v1.13] - 2026-05-19
-### 新增
-- planner sub-agent：独立 Agent 负责架构设计和 Phase 拆分，与 implementer 上下文解耦
-- code-reviewer 新增 complexity gate：change_complexity="simple" 跳过 Stage 1，小改不走完整两阶段
-- feedback-observer 新增模型版本追踪：记录 model_version，检测规则是否因模型升级而过时
-- test-writer sub-agent：自动生成 sync.ts 等工具脚本的测试
-### 修改
-- Sub-Agent 列表从 4 个扩展至 7 个
-- agents 目录说明列出全部 6 个 agent 名称
-
----
-
-## [v1.12] - 2026-05-19
-### 修改
-- 架构图中 Sub-Agent 从 4 个更新至 6 个（含 test-writer、planner）
-- 模板说明更新为含 handoff 交接模板
-
----
-
-## [v1.10~1.11] - 2026-05-19
-### 新增
-- self-wired settings.json：ReqForge 自身开发环境钩子配置
-- check-sync 钩子：检测 core/ 与 adapters/ 不同步
-### 修改
-- settings.local.json 权限精简：65 行 → 32 行，一次性命令替换为通配模式
-
----
-
-## [v1.9] - 2026-05-19
-### 新增
-- AI Only for Judgment Tasks：确定性逻辑用代码而非 AI 推理
-- Fail Loudly：不确定时明确说"不知道"
-- Token Budget Awareness：每个 Task 后评估上下文使用量
-
----
-
 ## [v1.8] - 2026-05-18
 ### 修复
 - feedback-observer v1.1：失败时自动推断 Skill 评分（Precision/Coverage/Efficiency/Satisfaction），不再依赖手动打分
