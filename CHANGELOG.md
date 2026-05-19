@@ -2,6 +2,38 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.13] - 2026-05-19
+### Added
+- Planner sub-agent (core/agents/planner.md): dedicated agent for architecture design and Phase splitting, decoupled from implementer context
+- Session handoff mechanism: handoff-template.md + check-handoff hook + dev-builder Step 5 to generate handoff before context reset, preventing lost progress across sessions
+- Complexity gate for code-reviewer: change_complexity="simple" skips Stage 1, matching review depth to change scope
+- Model version tracking in feedback-observer: records model version with feedback, enabling evolution engine to detect outdated rules
+### Changed
+- Sub-Agent count 5→6, Hook count 9→10
+
+## [v1.12] - 2026-05-19
+### Fixed
+- Missing detect-feedback-signal and auto-push hooks in ReqForge's own .claude/settings.json
+- ReqForge self-development settings now at parity with adapter config
+
+## [v1.11] - 2026-05-19
+### Changed
+- README and Product-Spec updated for test-writer, check-sync, and self-wired settings
+
+## [v1.10] - 2026-05-19
+### Added
+- test-writer sub-agent (core/agents/test-writer.md): Vitest-based test generator for sync.ts and core utilities
+- check-sync hook (core/hooks/check-sync sh+bat): PostToolUse detection of core/ vs adapters/ divergence
+- ReqForge self-wiring: .claude/settings.json + settings.windows.json with all 6 hooks
+### Changed
+- .claude/settings.local.json pruned from 65→32 lines, one-time commands replaced with wildcard patterns
+
+## [v1.9] - 2026-05-19
+### Added
+- AI Only for Judgment Tasks: deterministic logic is plain code, not AI busywork
+- Fail Loudly: uncertainty must be stated explicitly, never hidden
+- Token Budget Awareness: check context headroom after each Task
+
 ## [v1.8] - 2026-05-18
 ### Added
 - Feedback auto-scoring: failures automatically infer Skill scores (Precision/Coverage/Efficiency/Satisfaction)

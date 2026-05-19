@@ -39,6 +39,9 @@ const ADAPTERS: Record<string, Record<string, string>> = {
   },
 };
 
+// Files that should NOT be synced to adapters (ReqForge-self only)
+const SKIP_FILES = new Set(["check-sync.sh", "check-sync.bat"]);
+
 function syncDir(srcDir: string, destDir: string): void {
   if (!fs.existsSync(srcDir)) {
     console.warn(`  ⚠️  Source directory not found: ${srcDir}`);
@@ -51,9 +54,11 @@ function syncDir(srcDir: string, destDir: string): void {
   }
   fs.mkdirSync(destDir, { recursive: true });
 
-  // Copy all files
+  // Copy all files, skipping ReqForge-self-only files
   const entries = fs.readdirSync(srcDir, { withFileTypes: true });
   for (const entry of entries) {
+    if (SKIP_FILES.has(entry.name)) continue;
+
     const srcPath = path.join(srcDir, entry.name);
     const destPath = path.join(destDir, entry.name);
 

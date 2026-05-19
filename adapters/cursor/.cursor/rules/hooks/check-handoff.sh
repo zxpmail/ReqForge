@@ -13,8 +13,20 @@ if [ ! -d "$MEMORY_DIR" ]; then
 fi
 
 # If handoff already exists from today, skip
-if [ -f "$HANDOFF_FILE" ] && [ "$(date +%Y-%m-%d)" = "$(date -r "$HANDOFF_FILE" +%Y-%m-%d 2>/dev/null)" ]; then
-  exit 0
+if [ -f "$HANDOFF_FILE" ]; then
+  TODAY=$(date +%Y-%m-%d)
+  # macOS: date -r, Linux: stat -c, Windows Git Bash: stat -c
+  FILE_DAY=""
+  if date -r "$HANDOFF_FILE" +%Y-%m-%d >/dev/null 2>&1; then
+    FILE_DAY=$(date -r "$HANDOFF_FILE" +%Y-%m-%d)
+  elif stat -c %y "$HANDOFF_FILE" >/dev/null 2>&1; then
+    FILE_DAY=$(stat -c %y "$HANDOFF_FILE" | cut -d' ' -f1)
+  else
+    :  # can't determine file date, skip check
+  fi
+  if [ "$FILE_DAY" = "$TODAY" ]; then
+    exit 0
+  fi
 fi
 
 # Signal: context may be running long — suggest handoff
