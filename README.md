@@ -82,11 +82,12 @@ copy settings.windows.json settings.json
 │  ├─ decisions-log.md   Mid-term: ADRs, technical decisions  │
 │  └─ task-history.md    Short-term: recent task summaries     │
 ├─────────────────────────────────────────────────────────────┤
-│  Sub-Agents × 4 (Context Firewall)                          │ ← Execution Layer
+│  Sub-Agents × 5 (Context Firewall)                          │ ← Execution Layer
 │  ├─ implementer        Code + compile verify + self-check   │
 │  ├─ code-reviewer      Two-stage review                     │
 │  ├─ feedback-observer  Capture failures + user corrections  │
-│  └─ evolution-runner   Scan feedback accumulation           │
+│  ├─ evolution-runner   Scan feedback accumulation           │
+│  └─ test-writer        Generate tests for tools/scripts     │
 ├─────────────────────────────────────────────────────────────┤
 │  Skills × 11 (Guides / Feedforward Control)                 │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
@@ -173,7 +174,7 @@ Feature complete → code-reviewer two-stage review
   └─ Stage 2 fail → bug-fixer fix → re-review
 ```
 
-Eight hook scripts fire automatically at critical nodes:
+Nine hook scripts fire automatically at critical nodes:
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -185,6 +186,7 @@ Eight hook scripts fire automatically at critical nodes:
 | check-evolution        | On session start   | Check feedback accumulation             |
 | memory-check           | After file edit    | Remind to update memory if code changed |
 | context-compaction     | After tool use     | Auto-archive old task-history entries beyond 30 to prevent context rot |
+| check-sync             | After tool use     | Detect core/ vs adapters/ divergence and remind to run pnpm sync |
 
 ### Evolution Layer — Steering Loop
 
@@ -238,7 +240,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 Forge/
 ├── core/                      # Shared core content
 │   ├── skills/                # 11 skill definitions, each in its own directory
-│   ├── agents/                # 4 Sub-agent definitions
+│   ├── agents/                # 5 Sub-agent definitions
 │   ├── templates/             # Document templates
 │   │   └── memory/            # Three-tier memory templates
 │   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)
@@ -250,7 +252,7 @@ Forge/
 │   └── opencode/              # OpenCode adapter (.opencode/)
 ├── .forge/                    # Forge project config
 │   └── config.example         #     config template (copy to config to activate)
-├── .claude/                   # Forge's own control files
+├── .claude/                   # Forge's own control files (self-wired hooks via settings.json)
 ├── CLAUDE.md                  # Main control file
 ├── scripts/
 │   └── sync.ts                # core → adapter sync script

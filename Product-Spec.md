@@ -33,6 +33,7 @@
   - `code-reviewer` → 代码审查
   - `feedback-observer` → 反馈记录
   - `evolution-runner` → 进化扫描
+  - `test-writer` → 自动生成测试
   每个角色专注一件事，产出质量更高。
 - **开放架构**：核心内容一份存放，各 AI 客户端分别做适配层，维护一份核心，多端同步更新。每个技能独立目录，自带 SKILL.md，可组合、可插拔、可扩展。
 - **项目进度自动检测**：框架自动检测当前项目进度（哪个阶段完成了，哪个阶段没做），引导用户进入下一步，不用用户自己记。
@@ -120,7 +121,7 @@
 Forge/
 ├── core/                      # 核心共享内容（技能、模板、agents）
 │   ├── skills/                # 各技能定义，每个技能独立目录
-│   ├── agents/                # Sub-agent 定义
+│   ├── agents/                # Sub-agent 定义（implementer, code-reviewer, feedback-observer, evolution-runner, test-writer）
 │   ├── templates/             # 文档模板（Product-Spec, DEV-PLAN, 记忆模板等）
 │   │   └── memory/            # 三层记忆模板
 │   ├── hooks/                 # 钩子脚本（stop-gate, memory-check 等）
