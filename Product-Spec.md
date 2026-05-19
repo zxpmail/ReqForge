@@ -28,10 +28,10 @@
 - **完整开发流程定义**：框架内置标准流程 → 需求收集 → 设计规范 → 开发计划 → 项目开发 → Bug 修复 → 代码审查 → 构建发布，每个阶段都有清晰的任务、输出和验收标准。
 - **多角色 Sub-Agent 分工**：借鉴 Symphony 思想，不同阶段由专门的 Sub-Agent 负责：
   - `product-spec-builder` → 需求收集
-  - `dev-planner` → 开发计划
+  - `planner` → 架构设计 + 任务拆分
   - `implementer` → 编码实现
-  - `code-reviewer` → 代码审查
-  - `feedback-observer` → 反馈记录
+  - `code-reviewer` → 代码审查（含 complexity gate，小改跳过 Stage 1）
+  - `feedback-observer` → 反馈记录（追踪模型版本，检测规则过时）
   - `evolution-runner` → 进化扫描
   - `test-writer` → 自动生成测试
   每个角色专注一件事，产出质量更高。
@@ -121,9 +121,9 @@
 Forge/
 ├── core/                      # 核心共享内容（技能、模板、agents）
 │   ├── skills/                # 各技能定义，每个技能独立目录
-│   ├── agents/                # Sub-agent 定义（implementer, code-reviewer, feedback-observer, evolution-runner, test-writer）
+│   ├── agents/                # Sub-agent 定义（planner, implementer, code-reviewer, feedback-observer, evolution-runner, test-writer）
 │   ├── templates/             # 文档模板（Product-Spec, DEV-PLAN, 记忆模板等）
-│   │   └── memory/            # 三层记忆模板
+│   │   └── memory/            # 三层记忆模板 + handoff 交接模板
 │   ├── hooks/                 # 钩子脚本（stop-gate, memory-check 等）
 │   └── feedback/              # 反馈目录
 ├── adapters/

@@ -26,6 +26,7 @@ color: blue
     - **current_skill**: Which Skill is currently being executed (or N/A)
     - **ai_action**: Description of the specific behavior that failed or was corrected
     - **failure_detail** (optional): Error message, review comment, or test output that describes what went wrong
+    - **model_version** (optional): AI model version string (e.g., "claude-sonnet-4-6", "claude-opus-4-7"). If provided, include in the feedback record. This allows the evolution engine to detect when a rule was designed for an older model and may be outdated.
 
 [Auto-Scoring on Failure]
     When trigger_reason is a failure type, automatically infer Skill Capability Assessment scores. These scores feed the evolution engine — without them, feedback accumulates but never triggers proposals.
@@ -46,6 +47,8 @@ color: blue
     - If the failure was recovered within 1 retry → cap scores at 3 (not catastrophic)
     - Satisfaction is always inferred: user_correction → ≤ 3, failure without user awareness → 4
 
+    **Model staleness note**: If model_version differs from the version used when the Skill was written, note it in the feedback. Rules that fail consistently with newer models may need retirement rather than reinforcement. The evolution engine should prioritize "rule outdated" over "rule needs strengthening" when a model upgrade has occurred.
+
     **Why this matters**: Without auto-scoring, feedback/ accumulates text but evolution-runner has no numeric signals to trigger proposals. The ratchet stays empty.
 
 [Output]
@@ -60,11 +63,13 @@ color: blue
     - current_skill (string | null) -- Which Skill is currently being executed
     - ai_action (string) -- Description of the specific behavior that failed or was corrected
     - failure_detail (string | null) -- Error message, review comment, or test output
+    - model_version (string | null) -- AI model version string for model-aware evolution
 
     **Data returned by Sub-Agent**:
     - signal_detected (boolean) -- Whether a feedback signal was detected
     - action_taken (string) -- "created" | "updated" | "none"
     - scores (object | null) -- {precision, coverage, efficiency, satisfaction} if auto-scored
+    - model_version (string | null) -- Model version from input (passed through for evolution engine)
     - summary (string) -- One-line summary for the main Agent to display
 
     **Collaboration boundaries**:

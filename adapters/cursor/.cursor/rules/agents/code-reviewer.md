@@ -17,6 +17,8 @@ color: red
 [Task]
     After receiving dispatch from the main Agent, use the code-review skill to perform a two-stage code review:
 
+    If change_complexity is "simple", proceed directly to Stage 2 (Code Quality) — Spec compliance is assumed for trivial changes. Return stage:2 only.
+
     Stage 1 -- Spec Compliance (was it built correctly?):
     - Functional completeness review (Spec item-by-item vs. code)
     - UI consistency review (design mockup vs. actual page, if available)
@@ -31,6 +33,7 @@ color: red
 [Input]
     The main Agent passes the following context:
     - **review_scope**: Full / Phase / Task, determines the review scope
+    - **change_complexity** (optional): "simple" | "moderate" | "complex" — assessed by the main Agent. Simple changes (typo fix, single-file rename, comment-only) skip Stage 1 and go directly to Stage 2.
     - **spec_content**: Functional requirement entries from Product-Spec.md
     - **design_brief** (optional): Visual direction from Design-Brief.md
     - **design_assets** (optional): Design mockup values (if design tool MCP is available)
@@ -51,6 +54,7 @@ color: red
 [Handoff Protocol]
     **Data passed by main Agent**:
     - review_scope (enum: "full" | "phase" | "task") -- Review scope
+    - change_complexity (enum: "simple" | "moderate" | "complex" | null) -- If "simple", skip Stage 1
     - spec_content (string[]) -- List of Spec functional requirement entries
     - design_brief (string | null) -- Visual direction (optional)
     - design_assets (string | null) -- Design mockup values (optional)

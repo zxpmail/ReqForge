@@ -82,12 +82,13 @@ copy settings.windows.json settings.json
 │  ├─ decisions-log.md   Mid-term: ADRs, technical decisions  │
 │  └─ task-history.md    Short-term: recent task summaries     │
 ├─────────────────────────────────────────────────────────────┤
-│  Sub-Agents × 5 (Context Firewall)                          │ ← Execution Layer
+│  Sub-Agents × 6 (Context Firewall)                          │ ← Execution Layer
 │  ├─ implementer        Code + compile verify + self-check   │
-│  ├─ code-reviewer      Two-stage review                     │
+│  ├─ code-reviewer      Two-stage review + complexity gate   │
 │  ├─ feedback-observer  Capture failures + user corrections  │
 │  ├─ evolution-runner   Scan feedback accumulation           │
-│  └─ test-writer        Generate tests for tools/scripts     │
+│  ├─ test-writer        Generate tests for tools/scripts     │
+│  └─ planner            Analyze Spec, split phases, plan     │
 ├─────────────────────────────────────────────────────────────┤
 │  Skills × 11 (Guides / Feedforward Control)                 │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
@@ -174,7 +175,7 @@ Feature complete → code-reviewer two-stage review
   └─ Stage 2 fail → bug-fixer fix → re-review
 ```
 
-Nine hook scripts fire automatically at critical nodes:
+Ten hook scripts fire automatically at critical nodes:
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -187,6 +188,7 @@ Nine hook scripts fire automatically at critical nodes:
 | memory-check           | After file edit    | Remind to update memory if code changed |
 | context-compaction     | After tool use     | Auto-archive old task-history entries beyond 30 to prevent context rot |
 | check-sync             | After tool use     | Detect core/ vs adapters/ divergence and remind to run pnpm sync |
+| check-handoff          | After tool use     | Suggest session handoff generation when context is running long |
 
 ### Evolution Layer — Steering Loop
 
@@ -240,9 +242,9 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 Forge/
 ├── core/                      # Shared core content
 │   ├── skills/                # 11 skill definitions, each in its own directory
-│   ├── agents/                # 5 Sub-agent definitions
+│   ├── agents/                # 6 Sub-agent definitions
 │   ├── templates/             # Document templates
-│   │   └── memory/            # Three-tier memory templates
+│   │   └── memory/            # Three-tier memory + session handoff templates
 │   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)
 │   ├── docs/                  # Detailed docs (behavior boundaries, memory system, etc.)
 │   └── feedback/              # Feedback templates

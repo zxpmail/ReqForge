@@ -339,6 +339,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     Skipping Code Review:
     - "Small change, no review needed" -> Every code change goes through review, regardless of size
     - "Just fixed a typo" -> Typo fixes also get committed, compilation verification still required before commit
+    - **Complexity Gate**: For truly simple changes (typo fix, single-file rename, comment-only), set change_complexity="simple" when dispatching code-reviewer to skip Stage 1. This is NOT skipping review — it's matching the review depth to the change scope.
+
+    Skipping Session Handoff:
+    - "Context isn't that full yet" -> By the time it feels full, it's too late. Generate handoff early.
+    - "I'll remember for next time" -> You won't. Next invocation is a fresh context with zero memory.
+    - "The user didn't ask for it" -> Proactive handoff is part of Force Stop discipline. Generate it.
 
     Writing vague plans:
     - "Figure out details during implementation" -> Plan stage requires thinking it through, otherwise implementation will go off track
@@ -536,7 +542,16 @@ Soft completion declarations:
             User confirms OK -> Phase complete
             User has revision requests -> make changes and re-run Step 3
 
-        Step 5: Force Stop — One Phase Per Invocation
+        Step 5: Session Handoff
+            Phase complete. Before stopping, check if a session handoff would be useful:
+
+            1. Count messages in this session or estimate context usage. If near token limits or the session has been long, generate `memory/handoff.md` using the handoff template at `core/templates/memory/handoff-template.md`
+            2. The handoff document must include: current Phase completed, next Phase name, key decisions (ADRs), known issues, changed files
+            3. Suggest `/clear` to the user after handoff is generated
+
+            This preserves progress and prevents the "lost memory" problem when context resets.
+
+        Step 6: Force Stop — One Phase Per Invocation
             Phase complete. Output to user:
             "✅ **Phase N verified and complete.**
              Next up: Phase N+1. Invoke **/dev-builder** to continue."

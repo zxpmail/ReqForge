@@ -10,7 +10,7 @@
       "run": "sh core/hooks/mark-review-needed.sh && sh core/hooks/memory-check.sh"
     },
     "PostToolUse": {
-      "run": "sh core/hooks/context-compaction.sh && sh core/hooks/check-sync.sh"
+      "run": "sh core/hooks/context-compaction.sh && sh core/hooks/check-sync.sh && sh core/hooks/check-handoff.sh"
     },
     "PostCommit": {
       "run": "sh core/hooks/auto-push.sh"

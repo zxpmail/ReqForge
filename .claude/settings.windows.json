@@ -10,7 +10,7 @@
       "run": "core\\hooks\\mark-review-needed.bat && core\\hooks\\memory-check.bat"
     },
     "PostToolUse": {
-      "run": "core\\hooks\\context-compaction.bat && core\\hooks\\check-sync.bat"
+      "run": "core\\hooks\\context-compaction.bat && core\\hooks\\check-sync.bat && core\\hooks\\check-handoff.bat"
     },
     "PostCommit": {
       "run": "core\\hooks\\auto-push.bat"
