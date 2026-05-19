@@ -2,6 +2,15 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.14] - 2026-05-19
+### Added
+- Exact version pinning rule in CLAUDE.md: every dependency must be exact patch, no ranges
+- Dedicated AGENTS.md template (core/templates/agents-template.md): constraint-focused format with tech stack, behavior boundaries, hard constraints
+### Changed
+- OpenCode AGENTS.md now uses dedicated template instead of CLAUDE.md clone
+- OpenCode CLAUDE.md removed (AGENTS.md is the only control file)
+- sync.ts updated: AGENTS.md template for OpenCode, check-sync excluded from adapter sync
+
 ## [v1.13] - 2026-05-19
 ### Added
 - Planner sub-agent (core/agents/planner.md): dedicated agent for architecture design and Phase splitting, decoupled from implementer context
