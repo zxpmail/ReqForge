@@ -18,7 +18,7 @@
     - **Progressive disclosure**: CLAUDE.md is dispatch map only. Procedures live in SKILL.md — reference only when that skill is active.
     - **Tool-call offloading**: Outputs >2000 lines → write to temp file, keep only headers/footers in context.
     - **Web-first**: WebSearch before touching external libraries, APIs, or framework versions.
-    - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → see Forge repo: core/docs/
+    - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → https://github.com/zxpmail/ReqForge/tree/main/core/docs/
 
 [Skill Dispatch]
     When triggers match, invoke the Skill before responding. Priority: direct invocation > context match > ask user.
