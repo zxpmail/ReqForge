@@ -1,0 +1,19 @@
+{
+  "hooks": {
+    "PreCommit": {
+      "run": "sh core/hooks/pre-commit-check.sh"
+    },
+    "BeforeCommand": {
+      "run": "sh core/hooks/stop-gate.sh"
+    },
+    "AfterCommand": {
+      "run": "sh core/hooks/mark-review-needed.sh && sh core/hooks/memory-check.sh"
+    },
+    "PostToolUse": {
+      "run": "sh core/hooks/context-compaction.sh && sh core/hooks/check-sync.sh"
+    },
+    "OnInit": {
+      "run": "sh core/hooks/check-evolution.sh"
+    }
+  }
+}
