@@ -1,5 +1,7 @@
 # Forge
 
+[![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
 A complete product development methodology for AI coding assistants: Claude Code, Cursor, OpenCode.
