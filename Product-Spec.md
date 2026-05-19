@@ -101,6 +101,7 @@
 - **技能化设计**：每个技能独立目录，自带 SKILL.md，清晰边界，可独立演进。
 - **依赖**：核心不需要任何依赖，用户有对应 AI 客户端就能用。
 - **跨平台**：支持 Windows/macOS/Linux，钩子脚本同时提供 .sh（Unix）和 .bat（Windows）版本，确保跨平台兼容性。
+- **适配格式**：Claude Code 使用 CLAUDE.md（dispatch map），Cursor 使用 .mdc 规则文件，OpenCode 使用 AGENTS.md（约束文件格式，含技术栈精确版本、行为边界、硬约束列表）。
 - **使用方式**：用户克隆 Forge → 复制对应客户端目录（如 `adapters/claude-code/`）到自己项目 → 粘贴进去就能用
 
 ## 补充说明
@@ -112,7 +113,7 @@
 | 设计规范 | Design-Brief.md | 可选 |
 | 开发计划 | DEV-PLAN.md | 必需 |
 | 项目记忆 | memory/project-memory.md, decisions-log.md, task-history.md | 自动生成（首次 /dev-builder 时） |
-| 框架配置 | .claude/CLAUDE.md, .claude/EVOLUTION.md | 自动生成 |
+| 框架配置 | .claude/CLAUDE.md / .opencode/AGENTS.md, .claude/EVOLUTION.md | 自动生成 |
 | 增量变更 | changes/<change-name>/ | 可选（迭代变更时） |
 
 ### Forge 仓库目录结构（开源仓库本身））

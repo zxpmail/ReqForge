@@ -45,7 +45,7 @@ Copy `adapters/cursor/.cursor/` to your project root.
 
 Copy `adapters/opencode/.opencode/` to your project root.
 
-**Note**: OpenCode uses `AGENTS.md` as its primary rules file (with `CLAUDE.md` as fallback). The adapter includes both.
+**Note**: OpenCode uses `AGENTS.md` as its rules file (constraint-focused format with tech stack, behavior boundaries, and hard constraints).
 
 ### Hook Configuration by Platform
 
