@@ -30,7 +30,7 @@
   - `product-spec-builder` → 需求收集
   - `planner` → 架构设计 + 任务拆分
   - `implementer` → 编码实现
-  - `code-reviewer` → 代码审查（含 complexity gate，小改跳过 Stage 1）
+  - `code-reviewer` → 代码审查（含 complexity gate + blast-radius 分析，小改跳过 Stage 1）
   - `feedback-observer` → 反馈记录（追踪模型版本，检测规则过时）
   - `evolution-runner` → 进化扫描
   - `test-writer` → 自动生成测试
@@ -43,6 +43,7 @@
 - **强制 TDD 纪律**：开发阶段严格要求 RED-GREEN-REFACTOR 循环，提高代码质量。
 - **增量变更管理**：每个变更 proposal 独立文件夹（proposal + specs + design + tasks），迭代历史清晰可追溯。
 - **快速初始化模式**：用户一句话描述项目，AI 推断最小可用 Spec，不确定项标记 [待确认]，降低首次使用门槛。
+- **依赖图分析**：内置文件级依赖图工具，自动追踪代码间引用关系，变更时计算 blast-radius 影响范围，用数据驱动 complexity gate 决策，指导 code-reviewer 精准审查。
 
 **扩展功能（未来）**
 - **模板市场**：内置常见产品类型的模板（Next.js 全栈、CLI 工具、Electron 桌面应用等），一键初始化项目骨架。
@@ -132,7 +133,7 @@ Forge/
 │   ├── cursor/                # Cursor 适配（.cursor/rules/ 目录结构）
 │   ├── opencode/              # OpenCode 适配（.opencode/ 目录结构）
 │   └── gemini-cli/            # Gemini CLI 适配（未来）
-├── scripts/                   # 同步脚本（核心 → 各适配器同步）
+├── scripts/                   # 同步脚本、依赖图分析工具
 └── README.md                  # 使用说明
 ```
 

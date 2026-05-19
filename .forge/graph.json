@@ -17,6 +17,6 @@
     "languages": [
       "typescript"
     ],
-    "buildTimeMs": 4
+    "buildTimeMs": 8
   }
 }
