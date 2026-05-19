@@ -18,6 +18,7 @@
     - **Progressive disclosure**: CLAUDE.md is dispatch map only. Procedures live in SKILL.md — reference only when that skill is active.
     - **Tool-call offloading**: Outputs >2000 lines → write to temp file, keep only headers/footers in context.
     - **Web-first**: WebSearch before touching external libraries, APIs, or framework versions.
+    - **Pin exact versions**: Every tech stack dependency must be pinned to exact version (major.minor.patch). No ranges (`^1.0.0`), no `latest`, no `*`. If the version is uncertain, WebSearch to confirm before writing.
     - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → https://github.com/zxpmail/ReqForge/tree/main/core/docs/
 
 [Skill Dispatch]

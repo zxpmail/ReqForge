@@ -103,12 +103,14 @@ function main(): void {
       syncDir(srcPath, destPath);
     }
 
-    // Sync root CLAUDE.md -> adapter's primary control file
-    copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, cfg.controlFile));
-
-    // OpenCode also keeps CLAUDE.md as fallback (OpenCode reads CLAUDE.md if no AGENTS.md)
+    // Sync control file to adapter
     if (adapter === "opencode") {
+      // AGENTS.md is constraint-focused, not a CLAUDE.md mirror
+      copyFile(path.join(ROOT, "core", "templates", "agents-template.md"), path.join(adapterDir, cfg.controlFile));
+      // OpenCode also keeps CLAUDE.md as fallback (reads it if no AGENTS.md)
       copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, ".opencode", "CLAUDE.md"));
+    } else {
+      copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, cfg.controlFile));
     }
 
     // Sync EVOLUTION.md
