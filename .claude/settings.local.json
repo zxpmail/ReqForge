@@ -50,7 +50,18 @@
       "Skill(dev-builder)",
       "Bash(chmod +x bin/todo)",
       "Bash(pnpm install *)",
-      "Bash(pnpm run *)"
+      "Bash(pnpm run *)",
+      "Bash(gh repo *)",
+      "Bash(gh api *)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(curl -s https://api.github.com/repos/Mark7766/ai-coding-ok/git/trees/master?recursive=1)",
+      "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(item['path']\\) for item in data.get\\('tree',[]\\)]\")",
+      "Bash(curl -s \"https://api.github.com/repos/Mark7766/ai-coding-ok/git/trees/master?recursive=1\")",
+      "Bash(curl -s https://api.github.com/repos/Mark7766/ai-coding-ok)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Name:', d.get\\('name'\\)\\); print\\('Desc:', d.get\\('description'\\)\\); print\\('Lang:', d.get\\('language'\\)\\); print\\('Stars:', d.get\\('stargazers_count'\\)\\); print\\('Forks:', d.get\\('forks_count'\\)\\); print\\('Created:', d.get\\('created_at'\\)\\); print\\('Updated:', d.get\\('updated_at'\\)\\); print\\('Default:', d.get\\('default_branch'\\)\\); print\\('Topics:', d.get\\('topics'\\)\\)\")",
+      "Bash(curl *)",
+      "Bash(cp C:/work/ReqForge/core/hooks/memory-check.sh C:/work/ReqForge/adapters/claude-code/.claude/hooks/)",
+      "Bash(cp C:/work/ReqForge/core/hooks/memory-check.bat C:/work/ReqForge/adapters/claude-code/.claude/hooks/)"
     ]
   }
 }
