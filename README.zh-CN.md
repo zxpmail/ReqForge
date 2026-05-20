@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.14.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.14.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -17,6 +17,10 @@
 ---
 
 ## 近期更新
+
+### v1.14.2 — 2026-05-20
+- **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层；提供 `install.sh` / `install.ps1` 封装
+- **安全升级**：`--force` 合并安装，不覆盖已有 `feedback/` 与 `settings.local.json`
 
 ### v1.14.1 — 2026-05-20
 - **脚本单元测试**：`scripts/__tests__/` 覆盖 `sync.ts` 与 `dependency-graph.ts`（Vitest 4.1.6），`pnpm test` 一键验证
@@ -90,6 +94,35 @@ cd ReqForge
 记住克隆路径，后续从 `ReqForge/adapters/...` **复制到** 你的应用项目。
 
 ### 步骤 2 — 安装到你的项目
+
+**方式 A — 一键安装（推荐）**
+
+在 Forge 克隆目录下执行（需 Node.js，用于 `ts-node`）：
+
+```bash
+# 安装到指定项目
+pnpm forge-install claude-code --target /path/to/my-app
+
+# 安装到当前目录
+pnpm forge-install cursor .
+
+# 升级合并（保留你的 feedback/ 与 settings.local.json）
+pnpm forge-install claude-code --target ../my-app --force
+```
+
+```powershell
+# Windows — 或在仓库根目录使用 PowerShell 封装
+.\scripts\install.ps1 claude-code C:\path\to\my-app
+```
+
+```bash
+# macOS / Linux 封装
+./scripts/install.sh opencode /path/to/my-app
+```
+
+Windows 下会自动应用 `settings.windows.json` → `settings.json`；其他平台可加 `--windows`。
+
+**方式 B — 手动复制**
 
 进入你的应用目录，按所用客户端**只复制对应适配目录**：
 
@@ -377,6 +410,8 @@ Forge/
 ├── CLAUDE.md                  # 主控制文件
 ├── scripts/
 │   ├── sync.ts                # core → adapter 同步脚本
+│   ├── install.ts             # adapter → 用户项目安装
+│   ├── install.sh / install.ps1 # 安装命令封装
 │   ├── dependency-graph.ts    # 文件级依赖图与 blast-radius 分析
 │   └── __tests__/             # Vitest 单元测试
 ├── vitest.config.ts           # 测试配置
@@ -413,6 +448,7 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm test:watch` | 监听模式运行测试 |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
+| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目 |
 
 修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
 

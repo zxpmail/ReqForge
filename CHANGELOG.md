@@ -2,6 +2,13 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.14.2] - 2026-05-20
+### Added
+- **forge-install**: `scripts/install.ts` copies adapter bundles into user projects (`pnpm forge-install <client> [--target dir] [--force]`)
+- `scripts/install.sh` / `scripts/install.ps1` thin wrappers for one-command install
+- Windows: auto-applies `settings.windows.json` → `settings.json` on win32 (or `--windows`)
+- Merge mode (`--force`) preserves existing `feedback/` files and `settings.local.json`
+
 ## [v1.14.1] - 2026-05-20
 ### Added
 - Vitest unit tests for `scripts/sync.ts` and `scripts/dependency-graph.ts` (`scripts/__tests__/`)

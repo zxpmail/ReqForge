@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.14.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.14.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
@@ -17,6 +17,10 @@ A complete product development methodology for AI coding assistants: Claude Code
 ---
 
 ## What's New
+
+### v1.14.2 — 2026-05-20
+- **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter into your project; `install.sh` / `install.ps1` wrappers included
+- **Safe upgrade**: `--force` merges without overwriting `feedback/` or `settings.local.json`
 
 ### v1.14.1 — 2026-05-20
 - **Script unit tests**: `scripts/__tests__/` covers `sync.ts` and `dependency-graph.ts` (Vitest 4.1.6); run `pnpm test` to verify
@@ -90,6 +94,35 @@ cd ReqForge
 Keep the clone path handy — you will copy files **from** `ReqForge/adapters/...` **into** your app project.
 
 ### Step 2 — Install into your project
+
+**Option A — One-command install (recommended)**
+
+From your Forge clone (requires Node.js for `ts-node`):
+
+```bash
+# Install into another project
+pnpm forge-install claude-code --target /path/to/my-app
+
+# Install into current directory
+pnpm forge-install cursor .
+
+# Merge upgrade (keeps your feedback/ and settings.local.json)
+pnpm forge-install claude-code --target ../my-app --force
+```
+
+```powershell
+# Windows — or use the PowerShell wrapper from the Forge repo root
+.\scripts\install.ps1 claude-code C:\path\to\my-app
+```
+
+```bash
+# macOS / Linux wrapper
+./scripts/install.sh opencode /path/to/my-app
+```
+
+On Windows, `settings.windows.json` is applied automatically. Use `--windows` on other platforms if needed.
+
+**Option B — Manual copy**
 
 Create or open your app directory, then copy **only** the adapter folder for your AI client.
 
@@ -378,6 +411,8 @@ Forge/
 ├── CLAUDE.md                  # Main control file
 ├── scripts/
 │   ├── sync.ts                # core → adapter sync script
+│   ├── install.ts             # adapter → user project install
+│   ├── install.sh / install.ps1 # install wrappers
 │   ├── dependency-graph.ts    # File-level import graph + blast-radius
 │   └── __tests__/             # Vitest unit tests
 ├── vitest.config.ts           # Test runner config
@@ -415,6 +450,7 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm test:watch` | Run tests in watch mode |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
+| `pnpm forge-install <client> --target <dir>` | Install adapter into a user project |
 
 Always run `pnpm sync` after changing `core/skills`, `core/agents`, `core/hooks`, etc. — otherwise the `check-sync` hook will warn about adapter drift.
 
