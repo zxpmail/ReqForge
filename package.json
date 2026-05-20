@@ -1,12 +1,13 @@
 {
   "name": "reqforge",
-  "version": "1.0.0",
+  "version": "1.14.0",
   "description": "Open-source product development framework for AI coding assistants (Claude Code/Cursor/OpenCode)",
-  "main": "index.js",
   "scripts": {
     "sync": "ts-node scripts/sync.ts",
     "dep-graph": "ts-node scripts/dependency-graph.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "keywords": [
     "ai",
@@ -16,11 +17,12 @@
     "opencode",
     "framework"
   ],
-  "author": "",
+  "author": "zxpmail",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "typescript": "^5.7.0",
-    "ts-node": "^10.9.2"
+    "@types/node": "22.19.19",
+    "ts-node": "10.9.2",
+    "typescript": "5.7.3",
+    "vitest": "4.1.6"
   }
 }

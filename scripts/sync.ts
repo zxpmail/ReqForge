@@ -40,9 +40,9 @@ const ADAPTERS: Record<string, Record<string, string>> = {
 };
 
 // Files that should NOT be synced to adapters (ReqForge-self only)
-const SKIP_FILES = new Set(["check-sync.sh", "check-sync.bat"]);
+export const SKIP_FILES = new Set(["check-sync.sh", "check-sync.bat"]);
 
-function syncDir(srcDir: string, destDir: string): void {
+export function syncDir(srcDir: string, destDir: string): void {
   if (!fs.existsSync(srcDir)) {
     console.warn(`  ⚠️  Source directory not found: ${srcDir}`);
     return;
@@ -72,7 +72,7 @@ function syncDir(srcDir: string, destDir: string): void {
   console.log(`  ✅ ${destDir}`);
 }
 
-function copyFile(src: string, dest: string): void {
+export function copyFile(src: string, dest: string): void {
   if (!fs.existsSync(src)) {
     console.warn(`  ⚠️  Source not found: ${src}`);
     return;
@@ -120,4 +120,6 @@ function main(): void {
   console.log("✅ Sync complete");
 }
 
-main();
+if (require.main === module) {
+  main();
+}

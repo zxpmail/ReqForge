@@ -1,14 +1,27 @@
 # Forge
 
-[![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.14.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
 面向 AI 编程助手（Claude Code、Cursor、OpenCode）的完整产品开发方法论。
 
+**使用框架无需 npm install** — 将适配目录复制到项目根目录，打开 AI 客户端即可。仅在本仓库贡献或运行 `scripts/` 时才需要 Node.js + pnpm。
+
+| 章节 | 说明 |
+|------|------|
+| [安装与使用](#安装与使用) | 克隆、复制适配层、钩子、首次运行 |
+| [工作流程](#工作流程) | 需求 → 计划 → 开发 → 发布 |
+| [框架开发与维护](#框架开发与维护) | 测试、同步、依赖图（贡献者） |
+
 ---
 
 ## 近期更新
+
+### v1.14.1 — 2026-05-20
+- **脚本单元测试**：`scripts/__tests__/` 覆盖 `sync.ts` 与 `dependency-graph.ts`（Vitest 4.1.6），`pnpm test` 一键验证
+- **依赖图修复**：正确解析 `import { x } from "./y"` 等命名导入，blast-radius 更准确
+- **工程对齐**：`package.json` 版本 `1.14.0`，开发依赖精确锁定 patch 版本；`DEV-PLAN.md` 增加 Phase 进度表
 
 ### v1.14 — 2026-05-19
 - **精确版本锁定**：每个依赖锁定到 `major.minor.patch`——无范围、无 `latest`
@@ -22,7 +35,7 @@
 - **模型版本追踪**：`feedback-observer` 记录每次反馈的模型版本，使进化引擎能检测过时规则
 
 ### v1.10–1.12 — 2026-05-19
-- **test-writer Sub-Agent**：为 `sync.ts` 和核心工具生成 Vitest 测试
+- **test-writer Sub-Agent**：为工具脚本生成 Vitest 测试（v1.14.1 已落地 `sync` / `dependency-graph` 测试套件）
 - **check-sync 钩子**：编辑后检测 `core/` 与 `adapters/` 不同步
 - **自身钩子配置**：ReqForge 自身的 `.claude/settings.json` 启用全部 6 个钩子，`settings.local.json` 从 65 行精简至 32 行
 
@@ -51,50 +64,128 @@ Forge 是一个 **Agent Harness（智能体框架）**——不是优化你与 A
 
 ---
 
-## 快速开始
+## 安装与使用
 
-> **Forge 不建议使用 YOLO 模式。** Forge 的价值在于关卡——每个阶段、审查和进化提案都会要求你确认。YOLO 模式自动批准这些，使框架失去意义。不启用 YOLO 以获得完整收益。
->
-> 如果确实启用 YOLO，所有关卡切换为**异步写入模式**——审查报告、修复日志、进化提案和阶段检查点写入 `changes/` 和 `.claude/.yolo-pending/` 而不阻塞执行。dev-builder 会自动进入下一 Phase 而无需重新调用 `/dev-builder`。这样保留了进化引擎的数据流，让你在运行后审查完整输出。关卡不会跳过，只是不阻塞。
->
-> **通过配置文件启用**（优先级：项目 > 全局 > 环境变量）：
-> 1. **项目级**：复制 `.forge/config.example` 为 `.forge/config`，取消注释 `FORGE_MODE=yolo`
-> 2. **全局级**：创建 `~/.forge/config`（Linux/Mac）或 `%USERPROFILE%\.forge\config`（Windows），写入 `FORGE_MODE=yolo`
-> 3. **环境变量**：`export FORGE_MODE=yolo`（Linux/Mac）或 `set FORGE_MODE=yolo`（Windows）
+Forge 采用**复制即用**：不向 npm 发布包，你的业务项目里也**不需要** `npm install` 安装 Forge。
 
-### Claude Code
+### 前置条件
 
-复制 `adapters/claude-code/.claude/` 到你的项目根目录，然后打开 Claude Code。
+| 必需 | 说明 |
+|------|------|
+| **AI 客户端**（任选其一） | [Claude Code](https://docs.anthropic.com/en/docs/claude-code)、[Cursor](https://cursor.com)、[OpenCode](https://opencode.ai) |
+| **Git** | 用于克隆本仓库；你自己的项目可选用 Git |
+| **项目目录** | 空目录或已有代码均可；Forge 文件放在项目根目录 |
 
-### Cursor
+| 可选（仅贡献本仓库） | 说明 |
+|----------------------|------|
+| Node.js 22.x LTS + pnpm 10.x | 运行 `pnpm test`、`pnpm sync`、`pnpm dep-graph` — 见 [框架开发与维护](#框架开发与维护) |
 
-复制 `adapters/cursor/.cursor/` 到你的项目根目录。
+### 步骤 1 — 克隆 Forge
 
-### OpenCode
-
-复制 `adapters/opencode/.opencode/` 到你的项目根目录。
-
-**注意**：OpenCode 使用 `AGENTS.md` 作为规则文件（约束文件格式，包含技术栈、行为边界和硬约束）。
-
-### 按平台配置钩子
-
-钩子在关键事件（提交、消息、编辑、启动）时自动触发。需要平台特定的设置：
-
-| 平台 | 使用的 `settings.json` | 钩子脚本 | 要求 |
-|----------|-------------------------------|--------------|-------------|
-| Linux/Mac | `settings.json`（默认） | `.sh` | `sh`（内置） |
-| Windows | `settings.windows.json` | `.bat` | 无需（cmd 原生） |
-
-复制适配器目录后，重命名或复制平台文件：
-
-```
-# Windows — 使用 .bat 钩子（无需 Git Bash）
-copy settings.windows.json settings.json
-
-# Linux/Mac — .sh 钩子开箱即用，无需操作
+```bash
+git clone https://github.com/zxpmail/ReqForge.git
+cd ReqForge
 ```
 
-**OpenCode** 不使用 `settings.json`——它的 `.sh`（Linux/Mac）和 `.bat`/`.ps1`（Windows）钩子在各自平台原生工作。
+记住克隆路径，后续从 `ReqForge/adapters/...` **复制到** 你的应用项目。
+
+### 步骤 2 — 安装到你的项目
+
+进入你的应用目录，按所用客户端**只复制对应适配目录**：
+
+| 客户端 | 从 Forge 克隆中复制 | 复制到项目 |
+|--------|---------------------|------------|
+| **Claude Code** | `adapters/claude-code/.claude/` | `<你的项目>/.claude/` |
+| **Cursor** | `adapters/cursor/.cursor/` | `<你的项目>/.cursor/` |
+| **OpenCode** | `adapters/opencode/.opencode/` | `<你的项目>/.opencode/` |
+
+**命令示例**（请替换为实际路径）：
+
+```bash
+# macOS / Linux — Claude Code
+cp -R /path/to/ReqForge/adapters/claude-code/.claude /path/to/my-app/.claude
+
+# macOS / Linux — Cursor
+cp -R /path/to/ReqForge/adapters/cursor/.cursor /path/to/my-app/.cursor
+
+# macOS / Linux — OpenCode
+cp -R /path/to/ReqForge/adapters/opencode/.opencode /path/to/my-app/.opencode
+```
+
+```powershell
+# Windows — Claude Code（PowerShell）
+Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\claude-code\.claude C:\path\to\my-app\.claude
+
+# Windows — Cursor
+Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to\my-app\.cursor
+```
+
+> **OpenCode** 主控文件为 `.opencode/AGENTS.md`（约束格式：技术栈、行为边界、硬约束），不是根目录 `CLAUDE.md` 的副本。
+
+### 步骤 3 — 启用钩子（Claude Code / Cursor）
+
+钩子在提交、编辑、会话启动等时机自动运行。复制 `.claude/` 或 `.cursor/` 后：
+
+| 平台 | 操作 |
+|------|------|
+| **Windows** | 在 `.claude/`（或 `.cursor/rules` 下相应目录）执行：`copy settings.windows.json settings.json` |
+| **Linux / Mac** | 默认 `settings.json` 使用 `.sh` 脚本，无需改动 |
+| **OpenCode** | 无 `settings.json`；各平台原生支持 `.sh` / `.bat` 钩子 |
+
+### 步骤 4 — 在 AI 客户端中首次使用
+
+1. 用 AI 客户端打开**你的项目目录**（已包含 `.claude/`、`.cursor/` 或 `.opencode/`）。
+2. 新建对话。Forge 会根据现有文件自动判断进度（`Product-Spec.md`、`DEV-PLAN.md`、代码、`memory/` 等）。
+3. 用自然语言描述产品想法，或调用 Skill：
+
+| 目标 | Skill 命令（Claude Code / OpenCode） | 产出 |
+|------|--------------------------------------|------|
+| 需求收集 | `/product-spec-builder` | `Product-Spec.md` |
+| 设计规范（可选） | `/design-brief-builder` | `Design-Brief.md` |
+| 开发计划 | `/dev-planner` | `DEV-PLAN.md` |
+| 编码实现 | `/dev-builder` | 代码 + 自动创建 `memory/` |
+| Bug 修复 | 描述问题（可自动触发 `/bug-fixer`） | 修复 + 审查闭环 |
+| 构建发布 | `/release-builder` | 打包 / 部署检查清单 |
+
+**Cursor**：`.cursor/rules/` 规则会自动加载；在对话中说明要执行的 Skill（如「执行 product-spec-builder」），或使用客户端自带的 Skill 入口。
+
+**快速 Spec**：一句话例如「带 AI 教练的习惯追踪 App」，可生成带 `[待确认]` 标记的最小 `Product-Spec.md`，再逐步完善。
+
+### 安装后 — 项目中会出现的文件
+
+```
+my-app/
+├── .claude/          # 或 .cursor/ 或 .opencode/  ← 你复制的适配层
+├── Product-Spec.md   # /product-spec-builder 之后
+├── DEV-PLAN.md       # /dev-planner 之后
+├── Design-Brief.md   # 可选
+├── memory/           # 首次 /dev-builder 时自动创建
+│   ├── project-memory.md
+│   ├── decisions-log.md
+│   └── task-history.md
+└── src/ ...          # 你的业务代码
+```
+
+除非你明确要求，Forge **不会**擅自修改你项目里的 `package.json`。
+
+### 在已有项目中升级 Forge
+
+1. 拉取最新 `ReqForge` 克隆（或下载新版本）。
+2. 用新适配目录覆盖项目中的 `.claude/` / `.cursor/` / `.opencode/`（若自定义过 `feedback/`，请先备份）。
+3. Windows 下重新执行 `settings.windows.json` → `settings.json`（如适用）。
+
+### YOLO 模式（不建议）
+
+> Forge 的价值在于**关卡**：阶段、审查、进化提案需你确认。YOLO 会全自动放行，削弱框架约束。
+>
+> 若仍启用，关卡改为**异步写入**（产物在 `changes/`、`.claude/.yolo-pending/`）。🔴 红色边界操作仍须明确批准。
+>
+> 启用方式（优先级：项目 > 全局 > 环境变量）：
+> 1. 复制 `.forge/config.example` → `.forge/config`，设置 `FORGE_MODE=yolo`
+> 2. 或 `~/.forge/config` / `%USERPROFILE%\.forge\config`
+> 3. 或环境变量 `FORGE_MODE=yolo`
+
+更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。
 
 ---
 
@@ -285,7 +376,10 @@ Forge/
 ├── .claude/                   # Forge 自身的控制文件
 ├── CLAUDE.md                  # 主控制文件
 ├── scripts/
-│   └── sync.ts                # core → adapter 同步脚本
+│   ├── sync.ts                # core → adapter 同步脚本
+│   ├── dependency-graph.ts    # 文件级依赖图与 blast-radius 分析
+│   └── __tests__/             # Vitest 单元测试
+├── vitest.config.ts           # 测试配置
 ├── changes/                   # 变更产物
 ├── EVOLUTION.md               # 进化引擎定义
 ├── Product-Spec.md            # Forge 自身产品需求文档
@@ -296,6 +390,31 @@ Forge/
 ├── LICENSE                    # MIT 许可证
 └── README.md / README.zh-CN.md # 使用说明
 ```
+
+---
+
+## 框架开发与维护
+
+修改 `core/` 后需同步到各适配器，提交前建议跑通测试与编译。
+
+**环境要求**：Node.js 22.x LTS、pnpm 10.x
+
+```bash
+pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
+pnpm test             # 运行单元测试（12 项）
+pnpm build            # 编译 scripts/ 到 dist/
+pnpm sync             # 将 core/ 同步到 adapters/
+pnpm dep-graph build  # 构建项目依赖图 → .forge/graph.json
+pnpm dep-graph stats  # 查看图统计
+```
+
+| 命令 | 说明 |
+|------|------|
+| `pnpm test:watch` | 监听模式运行测试 |
+| `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
+| `pnpm dep-graph risk [files...]` | 变更风险评分 |
+
+修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
 
 ---
 

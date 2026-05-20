@@ -22,6 +22,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - Design tool MCP -> if missing, mark as "no design draft mode"
     - gh CLI -> if available, can automatically create GitHub repo and push
     - playwright -> if available, can do UI automated testing
+    - **Dependency Graph** (`dep-graph`) -> if available, enables blast-radius analysis for impact assessment and risk-scored complexity gating
 
     Installation Strategy:
     - When required dependencies are missing or version requirements not met, the Agent autonomously determines the installation method and installs directly — no manual user operation needed
@@ -36,6 +37,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - This rule is non-negotiable. Any rationalization like "write code first, add tests later" is a violation.
 
     **Modification Discipline**: Before every code change, assess the impact scope. Think before changing, regression-validate after changing. Don't rush, don't break existing functionality.
+    **Blast-Radar**: If the project has a dependency graph (`.forge/graph.json`), run `pnpm dep-graph affected <file>` before changing any file to see what depends on it. Run `pnpm dep-graph risk <file>` to get a data-driven complexity score. Pass the affected files to code-reviewer as `affected_files` so the review focuses on what matters.
     **SDK-First**: Don't reinvent what the framework and SDK already provide. WebSearch to confirm whether the SDK already supports it before implementing.
     **Online-First**: Rely on real-time information, not outdated memory. Before using external libraries/APIs, WebSearch to confirm current version usage and compatibility.
     **Verification Is Evidence (Hard Gate)**: A completion declaration must include the verification command and its output executed in the same message. "It's done" plus compilation output run in the same message is a valid declaration. "It's done" plus "I compiled it earlier" is an invalid declaration — must re-run. "It's done" with no verification command at all is also an invalid declaration. This is not a suggestion — it is a gate. No on-the-spot verification, no completion.
@@ -512,11 +514,14 @@ Soft completion declarations:
             9. **REFACTOR**: Refactor and optimize code, run tests to confirm still green
             10. Read actual code values, verify item by item against design values, correct any deviations
             11. Cross-reference Product-Spec.md to confirm functional behavior matches description
-            12. Dispatch code-reviewer to perform two-stage review. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts
-            13. Stage 1 fails (missing functionality) -> dispatch feedback-observer with trigger_reason="review_stage1_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
-            14. Stage 2 fails (code quality) -> dispatch feedback-observer with trigger_reason="review_stage2_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
-            15. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
-            16. Proceed to the next Task
+            12. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
+                - risk score "low" → change_complexity="simple" (skip Stage 1)
+                - risk score "medium" or "high" → change_complexity="moderate" or "complex"
+            13. Dispatch code-reviewer with `affected_files` and `change_complexity` set. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
+            14. Stage 1 fails (missing functionality) -> dispatch feedback-observer with trigger_reason="review_stage1_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
+            15. Stage 2 fails (code quality) -> dispatch feedback-observer with trigger_reason="review_stage2_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
+            16. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
+            17. Proceed to the next Task
 
             **Memory Update Step** (mandatory after every Task completion):
             - Append to `memory/task-history.md`: date, phase, type (feat/fix/refactor), description, changed files, notes
@@ -533,6 +538,7 @@ Soft completion declarations:
         Step 3: Phase Completion Verification
             After all Tasks are complete, execute the four-step verification in [Phase Completion Assessment]
             This is the final confirmation, ensuring all Task code together compiles, runs, and functions completely
+            Before verification, rebuild the dependency graph: `pnpm dep-graph build` (if available)
             Attach evidence for each step
             If not passed, fix the issues found → **restart the entire four-step verification from Step 1**
             One pass is rarely enough — repeat until all four steps pass clean with no issues found

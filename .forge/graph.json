@@ -4,19 +4,39 @@
   "nodes": {
     "scripts\\dependency-graph.ts": {
       "imports": [],
-      "importedBy": []
+      "importedBy": [
+        "scripts\\__tests__\\dependency-graph.test.ts"
+      ]
     },
     "scripts\\sync.ts": {
+      "imports": [],
+      "importedBy": [
+        "scripts\\__tests__\\sync.test.ts"
+      ]
+    },
+    "scripts\\__tests__\\dependency-graph.test.ts": {
+      "imports": [
+        "scripts\\dependency-graph.ts"
+      ],
+      "importedBy": []
+    },
+    "scripts\\__tests__\\sync.test.ts": {
+      "imports": [
+        "scripts\\sync.ts"
+      ],
+      "importedBy": []
+    },
+    "vitest.config.ts": {
       "imports": [],
       "importedBy": []
     }
   },
   "stats": {
-    "totalFiles": 2,
-    "totalEdges": 0,
+    "totalFiles": 5,
+    "totalEdges": 2,
     "languages": [
       "typescript"
     ],
-    "buildTimeMs": 8
+    "buildTimeMs": 11
   }
 }

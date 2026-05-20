@@ -17,12 +17,12 @@ import { execSync } from "child_process";
 
 // --- Types ---
 
-interface GraphNode {
+export interface GraphNode {
   imports: string[];
   importedBy: string[];
 }
 
-interface DependencyGraph {
+export interface DependencyGraph {
   version: number;
   root: string;
   nodes: Record<string, GraphNode>;
@@ -65,14 +65,14 @@ const RESOLVE_EXTENSIONS = [".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".py",
 
 const IMPORT_PATTERNS: Record<string, RegExp[]> = {
   typescript: [
-    /(?:import|export)\s+(?:\{[^}]*\}\s+)?(?:\*\s+as\s+)?\w*(?:\s+as\s+\w+)?\s+from\s+['"]([^'"]+)['"]/g,
-    /(?:import|export)\s+['"]([^'"]+)['"]/g,
+    /import\s+(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/g,
+    /export\s+(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/g,
     /(?:const|let|var)\s+\w+\s*=\s*require\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
     /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
   ],
   javascript: [
-    /(?:import|export)\s+(?:\{[^}]*\}\s+)?(?:\*\s+as\s+)?\w*(?:\s+as\s+\w+)?\s+from\s+['"]([^'"]+)['"]/g,
-    /(?:import|export)\s+['"]([^'"]+)['"]/g,
+    /import\s+(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/g,
+    /export\s+(?:[^'"]*?\s+from\s+)?['"]([^'"]+)['"]/g,
     /(?:const|let|var)\s+\w+\s*=\s*require\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
     /import\s*\(\s*['"]([^'"]+)['"]\s*\)/g,
   ],
@@ -118,7 +118,7 @@ function readFile(filePath: string): string | null {
  * Resolve an import path to an actual file in the project.
  * Returns the resolved path or null if it's a bare import (npm package) or unresolvable.
  */
-function resolveImport(fromFile: string, importPath: string, rootDir: string, allFiles: Set<string>): string | null {
+export function resolveImport(fromFile: string, importPath: string, rootDir: string, allFiles: Set<string>): string | null {
   if (!importPath.startsWith(".") && !path.isAbsolute(importPath)) return null; // bare import
 
   const resolved = path.isAbsolute(importPath)
@@ -186,7 +186,7 @@ function extractImports(filePath: string, content: string, rootDir: string, allF
 
 // --- Graph building ---
 
-function buildGraph(rootDir: string): DependencyGraph {
+export function buildGraph(rootDir: string): DependencyGraph {
   const start = Date.now();
 
   const absFiles = findSourceFiles(rootDir);
@@ -241,7 +241,7 @@ function buildGraph(rootDir: string): DependencyGraph {
  * BFS from changed files through reverse edges (importedBy) to find all
  * transitively affected files up to `maxDepth`.
  */
-function affectedFiles(graph: DependencyGraph, changed: string[], maxDepth = 3): string[] {
+export function affectedFiles(graph: DependencyGraph, changed: string[], maxDepth = 3): string[] {
   const result = new Set<string>();
   const queue: Array<{ file: string; depth: number }> = changed.map(f => ({ file: f, depth: 0 }));
 
@@ -262,7 +262,7 @@ function affectedFiles(graph: DependencyGraph, changed: string[], maxDepth = 3):
   return [...result].sort();
 }
 
-interface RiskResult {
+export interface RiskResult {
   score: number;
   level: "low" | "medium" | "high";
   details: Record<string, { centrality: number; affected: number }>;
@@ -272,7 +272,7 @@ interface RiskResult {
  * Risk score = Σ centrality(importedBy) * affectedDescendants for each changed file.
  * Heuristic thresholds: low ≤ 5, medium ≤ 20, high > 20.
  */
-function riskScore(graph: DependencyGraph, changed: string[]): RiskResult {
+export function riskScore(graph: DependencyGraph, changed: string[]): RiskResult {
   let total = 0;
   const details: RiskResult["details"] = {};
 
@@ -393,4 +393,6 @@ Usage:
   }
 }
 
-main();
+if (require.main === module) {
+  main();
+}

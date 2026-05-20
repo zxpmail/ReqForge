@@ -2,6 +2,18 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.14.1] - 2026-05-20
+### Added
+- Vitest unit tests for `scripts/sync.ts` and `scripts/dependency-graph.ts` (`scripts/__tests__/`)
+- `pnpm test` / `vitest.config.ts` in repo root
+### Fixed
+- `dependency-graph.ts`: TypeScript named imports (`import { x } from "./y"`) now resolve correctly
+
+### Changed
+- `package.json` version aligned to `1.14.0`; devDependencies pinned to exact patch versions (no `^`)
+- `scripts/sync.ts` and `scripts/dependency-graph.ts` export testable functions; CLI guarded with `require.main === module`
+- `DEV-PLAN.md`: progress table, Phase 10 tests, 6 agents, OpenCode AGENTS.md, sync script docs
+
 ## [v1.14] - 2026-05-19
 ### Added
 - Exact version pinning rule in CLAUDE.md: every dependency must be exact patch, no ranges

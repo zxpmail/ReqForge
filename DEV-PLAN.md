@@ -5,6 +5,27 @@
 
 ---
 
+## 当前进度（v1.14）
+
+| Phase | 状态 | 备注 |
+|-------|------|------|
+| 1 项目骨架 | ✅ 完成 | `core/`、`adapters/`、`scripts/` |
+| 2 核心技能 | ✅ 完成 | 11 个 Skill |
+| 3 Sub-agent | ✅ 完成 | 6 个 Agent（含 planner、test-writer） |
+| 4 文档模板 | ✅ 完成 | 含 memory / agents 模板 |
+| 5 Claude Code 适配 | ✅ 完成 | |
+| 6 同步脚本 | ✅ 完成 | `scripts/sync.ts`（工具函数内联，无单独 utils.ts） |
+| 7 Cursor 适配 | ✅ 完成 | |
+| 8 OpenCode 适配 | ✅ 完成 | 主控为 `AGENTS.md`，非 CLAUDE.md |
+| 9 README 收尾 | ✅ 完成 | 中英文 README + CHANGELOG |
+| 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/` |
+
+**验证命令**：`pnpm install` → `pnpm test` → `pnpm build` → `pnpm sync`
+
+**待办（未来）**：`adapters/gemini-cli/`、模板市场、Dashboard Web UI
+
+---
+
 ## Phase 1: 项目骨架搭建 + 核心目录结构
 
 **交付内容**：
@@ -64,12 +85,14 @@
 
 **关键文件**：
 - `core/agents/implementer.md` — 实现者 Sub-agent
+- `core/agents/planner.md` — 架构与 Phase 拆分 Sub-agent
 - `core/agents/code-reviewer.md` — 审查者 Sub-agent
 - `core/agents/feedback-observer.md` — 反馈观察员 Sub-agent
 - `core/agents/evolution-runner.md` — 进化引擎 Sub-agent
+- `core/agents/test-writer.md` — 测试生成 Sub-agent
 
 **验收标准**：
-- 所有四个 Sub-agent 定义完整
+- 所有六个 Sub-agent 定义完整
 - 每个文件明确角色、任务、输出规范
 - 遵循 OpenAI Symphony 多角色分工思想，各尽其职
 
@@ -125,11 +148,10 @@
 - 确保 core 更新后，所有适配器能一键同步
 
 **关键文件**：
-- `scripts/sync.ts` — 主同步逻辑
-- `scripts/utils.ts` — 工具函数（复制文件、创建目录）
+- `scripts/sync.ts` — 主同步逻辑（`syncDir`、`copyFile` 内联实现）
 
 **验收标准**：
-- 运行 `pnpm sync` 或 `node scripts/sync.js` 能正常执行
+- 运行 `pnpm sync` 或 `npm run sync` 能正常执行
 - 核心更新后，所有适配器目录同步完成
 - 不覆盖适配器中特定配置文件
 
@@ -162,8 +184,8 @@
 
 **关键文件**：
 - `adapters/opencode/.opencode/` — OpenCode 适配目录
-- `adapters/opencode/agents.md` — agents 定义
-- `adapters/opencode/CLAUDE.md` — 主控入口
+- `adapters/opencode/.opencode/AGENTS.md` — 主控入口（约束文件格式）
+- `adapters/opencode/.opencode/EVOLUTION.md` — 进化引擎定义
 
 **验收标准**：
 - 用户复制后，OpenCode 能正确加载
@@ -192,13 +214,33 @@
 
 ---
 
+## Phase 10: 脚本自动化测试
+
+**交付内容**：
+- 为 `scripts/sync.ts`、`scripts/dependency-graph.ts` 增加 Vitest 单元测试
+- 导出可测函数，`require.main === module` 守卫 CLI 入口
+- `package.json` 版本与 CHANGELOG 对齐，依赖精确锁定 patch 版本
+
+**关键文件**：
+- `scripts/__tests__/sync.test.ts` — 同步逻辑（跳过 check-sync、目录复制）
+- `scripts/__tests__/dependency-graph.test.ts` — 图构建、blast-radius、风险评分
+- `vitest.config.ts` — 测试配置
+
+**验收标准**：
+- `pnpm test` 全部通过
+- `pnpm build` 编译通过
+- `package.json` 无 `^` 范围依赖
+
+---
+
 ## 技术栈
 
 | 层级 | 技术 | 版本 | 说明 |
 |------|------|------|------|
 | 语言 | 纯 Markdown + 文本 | - | 规则和模板都是文本文件，不需要编译 |
 | 同步脚本 | Node.js | 22.x LTS | 可选同步脚本运行时 |
-| 语言 | TypeScript | 5.7.x | 类型安全，同步脚本使用 |
+| 语言 | TypeScript | 5.7.3 | 类型安全，同步脚本使用 |
+| 测试 | Vitest | 4.1.6 | 脚本单元测试 |
 | 包管理 | pnpm | 10.x | 快速，磁盘空间高效 |
 
 ## 开发规则

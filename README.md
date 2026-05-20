@@ -1,14 +1,27 @@
 # Forge
 
-[![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.14.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
 A complete product development methodology for AI coding assistants: Claude Code, Cursor, OpenCode.
 
+**No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
+
+| Section | Description |
+|---------|-------------|
+| [Installation & Usage](#installation--usage) | Clone, copy adapters, hooks, first run |
+| [Workflow](#workflow) | Spec → Plan → Build → Release |
+| [Framework Development](#framework-development) | Tests, sync, dependency graph (contributors) |
+
 ---
 
 ## What's New
+
+### v1.14.1 — 2026-05-20
+- **Script unit tests**: `scripts/__tests__/` covers `sync.ts` and `dependency-graph.ts` (Vitest 4.1.6); run `pnpm test` to verify
+- **Dependency graph fix**: Named imports (`import { x } from "./y"`) now resolve correctly for more accurate blast-radius
+- **Engineering alignment**: `package.json` at `1.14.0` with exact patch-pinned devDependencies; `DEV-PLAN.md` progress table added
 
 ### v1.14 — 2026-05-19
 - **Exact version pinning**: Every dependency pinned to `major.minor.patch` — no ranges, no `latest`
@@ -22,7 +35,7 @@ A complete product development methodology for AI coding assistants: Claude Code
 - **Model version tracking**: `feedback-observer` records model version with each feedback, enabling evolution to detect outdated rules
 
 ### v1.10–1.12 — 2026-05-19
-- **test-writer sub-agent**: Vitest-based test generator for `sync.ts` and core utilities
+- **test-writer sub-agent**: Vitest-based test generator for tools/scripts (v1.14.1 ships the `sync` / `dependency-graph` test suite)
 - **check-sync hook**: Detects `core/` vs `adapters/` divergence after edits
 - **Self-wired settings**: ReqForge's own `.claude/settings.json` with all 6 hooks, `settings.local.json` pruned 65→32 lines
 
@@ -51,50 +64,128 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 
 ---
 
-## Quick Start
+## Installation & Usage
 
-> **YOLO mode is not recommended with Forge.** Forge's value is in its gating — every phase, review, and evolution proposal asks for your confirmation. YOLO mode auto-approves all of these, rendering the harness pointless. Run without YOLO to get the full benefit.
->
-> If you do run YOLO, all gates switch to **async write mode** — review reports, fix logs, evolution proposals, and phase checkpoints are written to `changes/` and `.claude/.yolo-pending/` instead of blocking execution. The dev-builder also auto-advances to the next Phase without waiting for `/dev-builder` re-invocation. This preserves the data flow for the evolution engine and lets you review the full output after the run. Gates don't skip, they just don't block.
->
-> **Enable via config files** (priority: project > global > env var):
-> 1. **Project**: copy `.forge/config.example` to `.forge/config`, uncomment `FORGE_MODE=yolo`
-> 2. **Global**: create `~/.forge/config` (Linux/Mac) or `%USERPROFILE%\.forge\config` (Windows) with `FORGE_MODE=yolo`
-> 3. **Env var**: `export FORGE_MODE=yolo` (Linux/Mac) or `set FORGE_MODE=yolo` (Windows)
+Forge is **copy-to-use**: no package publish, no `npm install` in your app project. You only need a supported AI coding assistant.
 
-### Claude Code
+### Prerequisites
 
-Copy `adapters/claude-code/.claude/` to your project root and open Claude Code.
+| Required | Notes |
+|----------|-------|
+| **AI client** (one of) | [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Cursor](https://cursor.com), or [OpenCode](https://opencode.ai) |
+| **Git** | Clone this repo; optional for your own project |
+| **Empty or existing project folder** | Forge files live at the project root alongside your code |
 
-### Cursor
+| Optional (contributors only) | Notes |
+|------------------------------|-------|
+| Node.js 22.x LTS + pnpm 10.x | Run `pnpm test`, `pnpm sync`, `pnpm dep-graph` — see [Framework Development](#framework-development) |
 
-Copy `adapters/cursor/.cursor/` to your project root.
+### Step 1 — Clone Forge
 
-### OpenCode
-
-Copy `adapters/opencode/.opencode/` to your project root.
-
-**Note**: OpenCode uses `AGENTS.md` as its rules file (constraint-focused format with tech stack, behavior boundaries, and hard constraints).
-
-### Hook Configuration by Platform
-
-Hooks fire automatically at key events (commit, message, edit, startup). They require platform-specific settings:
-
-| Platform | File to use as `settings.json` | Hook scripts | Requirement |
-|----------|-------------------------------|--------------|-------------|
-| Linux/Mac | `settings.json` (default) | `.sh` | `sh` (built-in) |
-| Windows | `settings.windows.json` | `.bat` | None (cmd native) |
-
-After copying the adapter directory, rename or copy the platform file:
-
-```
-# Windows — use .bat hooks (no Git Bash needed)
-copy settings.windows.json settings.json
-
-# Linux/Mac — .sh hooks work out of the box, no action needed
+```bash
+git clone https://github.com/zxpmail/ReqForge.git
+cd ReqForge
 ```
 
-**OpenCode** doesn't use `settings.json` — its `.sh` (Linux/Mac) and `.bat`/`.ps1` (Windows) hooks work on each platform natively.
+Keep the clone path handy — you will copy files **from** `ReqForge/adapters/...` **into** your app project.
+
+### Step 2 — Install into your project
+
+Create or open your app directory, then copy **only** the adapter folder for your AI client.
+
+| Client | Copy from (inside Forge clone) | Into your project |
+|--------|-------------------------------|-------------------|
+| **Claude Code** | `adapters/claude-code/.claude/` | `<your-project>/.claude/` |
+| **Cursor** | `adapters/cursor/.cursor/` | `<your-project>/.cursor/` |
+| **OpenCode** | `adapters/opencode/.opencode/` | `<your-project>/.opencode/` |
+
+**Examples** (replace paths with your actual locations):
+
+```bash
+# macOS / Linux — Claude Code
+cp -R /path/to/ReqForge/adapters/claude-code/.claude /path/to/my-app/.claude
+
+# macOS / Linux — Cursor
+cp -R /path/to/ReqForge/adapters/cursor/.cursor /path/to/my-app/.cursor
+
+# macOS / Linux — OpenCode
+cp -R /path/to/ReqForge/adapters/opencode/.opencode /path/to/my-app/.opencode
+```
+
+```powershell
+# Windows — Claude Code (PowerShell)
+Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\claude-code\.claude C:\path\to\my-app\.claude
+
+# Windows — Cursor
+Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to\my-app\.cursor
+```
+
+> **OpenCode** uses `.opencode/AGENTS.md` as the control file (constraint format: tech stack, behavior boundaries, hard constraints) — not a copy of root `CLAUDE.md`.
+
+### Step 3 — Enable hooks (Claude Code & Cursor)
+
+Hooks run on commit, edit, session start, etc. After copying `.claude/` or `.cursor/`:
+
+| Platform | Action |
+|----------|--------|
+| **Windows** | In `.claude/` (or `.cursor/` inside rules): `copy settings.windows.json settings.json` |
+| **Linux / Mac** | Default `settings.json` uses `.sh` hooks — no change needed |
+| **OpenCode** | No `settings.json`; `.sh` / `.bat` hooks work per platform |
+
+### Step 4 — First run in your AI client
+
+1. Open **your project folder** (the one that now contains `.claude/`, `.cursor/`, or `.opencode/`) in the AI client.
+2. Start a new chat. Forge detects progress from files present (`Product-Spec.md`, `DEV-PLAN.md`, code, `memory/`).
+3. Describe your product idea in natural language, or invoke a Skill:
+
+| Goal | Skill command (Claude Code / OpenCode style) | Output |
+|------|-----------------------------------------------|--------|
+| Requirements | `/product-spec-builder` | `Product-Spec.md` |
+| Design brief (optional) | `/design-brief-builder` | `Design-Brief.md` |
+| Dev plan | `/dev-planner` | `DEV-PLAN.md` |
+| Implementation | `/dev-builder` | Code + `memory/` (auto-created) |
+| Bug fix | Describe the bug (auto-triggers `/bug-fixer`) | Fix + review loop |
+| Release | `/release-builder` | Build / deploy checklist |
+
+**Cursor**: rules load from `.cursor/rules/` automatically; refer to skills in chat (e.g. “run product-spec-builder”) or use your client’s skill UI if configured.
+
+**Quick Spec**: one sentence like *“A habit tracker with AI coaching”* — the agent can generate a minimal `Product-Spec.md` with `[待确认]` markers for you to refine.
+
+### After installation — what appears in your project
+
+```
+my-app/
+├── .claude/          # or .cursor/ or .opencode/  ← you copied this
+├── Product-Spec.md   # after /product-spec-builder
+├── DEV-PLAN.md       # after /dev-planner
+├── Design-Brief.md   # optional
+├── memory/           # auto-created on first /dev-builder
+│   ├── project-memory.md
+│   ├── decisions-log.md
+│   └── task-history.md
+└── src/ ...          # your application code
+```
+
+Forge does **not** modify your `package.json` unless you ask the agent to add dependencies during development.
+
+### Updating Forge in an existing project
+
+1. Pull the latest `ReqForge` clone (or download a new release).
+2. Re-copy the adapter directory over your project’s `.claude/` / `.cursor/` / `.opencode/` (back up local `feedback/` if you customized it).
+3. Re-apply Windows `settings.windows.json` → `settings.json` if needed.
+
+### YOLO mode (not recommended)
+
+> Forge’s value is **gating** — phases, reviews, and evolution proposals ask for confirmation. YOLO auto-approves them and weakens the harness.
+>
+> If enabled, gates switch to **async write mode** (artifacts under `changes/` and `.claude/.yolo-pending/`). 🔴 red-boundary actions still require explicit approval.
+>
+> Enable (priority: project > global > env):
+> 1. Copy `.forge/config.example` → `.forge/config`, set `FORGE_MODE=yolo`
+> 2. Or `~/.forge/config` / `%USERPROFILE%\.forge\config`
+> 3. Or env `FORGE_MODE=yolo`
+
+More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 
 ---
 
@@ -286,7 +377,10 @@ Forge/
 ├── .claude/                   # Forge's own control files (self-wired hooks via settings.json)
 ├── CLAUDE.md                  # Main control file
 ├── scripts/
-│   └── sync.ts                # core → adapter sync script
+│   ├── sync.ts                # core → adapter sync script
+│   ├── dependency-graph.ts    # File-level import graph + blast-radius
+│   └── __tests__/             # Vitest unit tests
+├── vitest.config.ts           # Test runner config
 ├── changes/                   # Change artifacts (proposal/specs/design/tasks)
 │   └── archive/               # Archived implemented changes
 ├── EVOLUTION.md               # Evolution engine definition
@@ -298,6 +392,31 @@ Forge/
 ├── LICENSE                    # MIT license
 └── README.md                  # This file
 ```
+
+---
+
+## Framework Development
+
+After editing `core/`, sync to adapters and run tests before committing.
+
+**Requirements**: Node.js 22.x LTS, pnpm 10.x
+
+```bash
+pnpm install          # Dev dependencies (TypeScript, Vitest, etc.)
+pnpm test             # Unit tests (12 cases)
+pnpm build            # Compile scripts/ to dist/
+pnpm sync             # Sync core/ → adapters/
+pnpm dep-graph build  # Build dependency graph → .forge/graph.json
+pnpm dep-graph stats  # Print graph statistics
+```
+
+| Command | Description |
+|---------|-------------|
+| `pnpm test:watch` | Run tests in watch mode |
+| `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
+| `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
+
+Always run `pnpm sync` after changing `core/skills`, `core/agents`, `core/hooks`, etc. — otherwise the `check-sync` hook will warn about adapter drift.
 
 ---
 
