@@ -1,5 +1,11 @@
 # 变更记录
 
+## [v1.14] - 2026-05-19
+### 新增
+- 依赖图分析成为核心功能：内置文件级依赖图工具，变更时计算 blast-radius 影响范围，数据驱动 complexity gate 决策
+
+---
+
 ## [v1.8] - 2026-05-18
 ### 修复
 - feedback-observer v1.1：失败时自动推断 Skill 评分（Precision/Coverage/Efficiency/Satisfaction），不再依赖手动打分

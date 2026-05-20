@@ -20,6 +20,8 @@
     - **Web-first**: WebSearch before touching external libraries, APIs, or framework versions.
     - **Pin exact versions**: Every tech stack dependency must be pinned to exact version (major.minor.patch). No ranges (`^1.0.0`), no `latest`, no `*`. If the version is uncertain, WebSearch to confirm before writing.
     - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → https://github.com/zxpmail/ReqForge/tree/main/core/docs/
+    - **Dependency Graph**: If `.forge/graph.json` exists, use `pnpm dep-graph <affected|risk>` before code changes to scope impact via blast-radius analysis.
+    - **forge-install**: To copy Forge adapters into user projects, run `pnpm forge-install <client> --target <dir>` (or `./scripts/install.sh` / `./scripts/install.ps1`).
 
 [Skill Dispatch]
     When triggers match, invoke the Skill before responding. Priority: direct invocation > context match > ask user.

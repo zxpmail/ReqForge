@@ -26,6 +26,7 @@ description: Used when the user says "this feature is broken", "getting an error
     - Design tool MCP (Pencil / Figma, etc.) -> if available, cross-reference design to check if UI is correct
     - Playwright plugin -> if available, automate reproduction and verification
     - git -> if available, use git log/diff/blame to trace changes
+    - **Dependency Graph** (`dep-graph`) -> if available, run `pnpm dep-graph affected <file>` to scope the blast radius before debugging
 
 [First Principles]
     **No Guessing, No Experiments**: No conclusions without evidence. Collect first, analyze first, hypothesize first, then verify. Do not rush to change code when you see an error.
@@ -74,6 +75,7 @@ description: Used when the user says "this feature is broken", "getting an error
         - Environment information (Node version, browser, OS — where relevant)
         - Recent code changes (git log, git diff — which commits may have introduced the problem)
         - Relevant logs (console output, network requests, database queries)
+        - **Blast-radius** (if dep-graph is available): run `pnpm dep-graph affected <bug-file>` to find all files that depend on the buggy module — these are also at risk
 
     [Hypothesis Rules]
         - Maximum 3 hypotheses at a time, sorted by likelihood
@@ -83,7 +85,7 @@ description: Used when the user says "this feature is broken", "getting an error
 
     [Fix Rules]
         - Change only one file / one logical point at a time
-        - Assess impact scope before changing (same as dev-builder's modification discipline)
+        - Assess impact scope before changing: if dep-graph is available, run `pnpm dep-graph affected <file>` and `pnpm dep-graph risk <file>` for data-driven impact assessment
         - Compile-verify after change (tsc --noEmit)
         - Function-verify after change (reproduction steps no longer trigger the bug)
         - Regression-verify after change (related existing functionality still works normally)
