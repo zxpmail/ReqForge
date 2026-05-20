@@ -18,6 +18,12 @@
 
 ## 近期更新
 
+### v1.15 — 2026-05-20
+- **全 Skill 新增 Gotchas 章节**：11 个 Skill 全部增加 `[Gotchas]` 章节，记录领域特定失败模式（模糊需求、隐私泄漏、过早演化、重复反馈等）。每个 Skill 随时间积累实战教训。
+- **Skill 模板更新**：新 Skill 自动包含 `[Gotchas]` 推荐章节。
+- **CLAUDE.md 增加 CLI 最佳实践**：`/model`、`/compact`、`/context`、`/sandbox` 用法写入 General Rules。关键规则包裹 `<important if="">` 标签提升遵守率。
+- **命名统一**：dev-builder、code-review、bug-fixer 的 `[Anti-Rationalization Checklist]` 统一为 `[Gotchas: Anti-Rationalization]`。
+
 ### v1.14.2 — 2026-05-20
 - **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层；提供 `install.sh` / `install.ps1` 封装
 - **安全升级**：`--force` 合并安装，不覆盖已有 `feedback/` 与 `settings.local.json`
@@ -296,7 +302,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 ### 引导层 — 11 个 Skill
 
-每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔：
+每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔。每个 Skill 包含 `[Gotchas]` 章节记录常见陷阱与实战教训：
 
 | Skill | 职责 |
 | ------------------------ | -------------------------------------------------------------------------------------- |

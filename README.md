@@ -18,6 +18,12 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ## What's New
 
+### v1.15 — 2026-05-20
+- **Gotchas in every skill**: `[Gotchas]` section added to all 11 skills capturing domain-specific failure points (vague requirements, privacy leaks, premature evolution, duplicate feedback, etc.). Each skill accumulates hard-won lessons over time.
+- **Skill template updated**: New skills automatically include a `[Gotchas]` section as a recommended component.
+- **CLI best practices in CLAUDE.md**: `/model`, `/compact`, `/context`, `/sandbox` usage guidance encoded as General Rules. Key rules wrapped in `<important if="">` tags for better adherence.
+- **Renamed `[Anti-Rationalization Checklist]` → `[Gotchas: Anti-Rationalization]`** in dev-builder, code-review, bug-fixer for naming consistency.
+
 ### v1.14.2 — 2026-05-20
 - **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter into your project; `install.sh` / `install.ps1` wrappers included
 - **Safe upgrade**: `--force` merges without overwriting `feedback/` or `settings.local.json`
@@ -296,7 +302,7 @@ AI infers everything — product type, target users, core features, tech stack, 
 
 ### Guidance Layer — 11 Skills
 
-Each Skill is an independent methodology module — composable, extensensible, pluggable:
+Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
 
 | Skill                    | Responsibility                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
