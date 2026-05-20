@@ -23,6 +23,10 @@ A complete product development methodology for AI coding assistants: Claude Code
 - **Skill template updated**: New skills automatically include a `[Gotchas]` section as a recommended component.
 - **CLI best practices in CLAUDE.md**: `/model`, `/compact`, `/context`, `/sandbox` usage guidance encoded as General Rules. Key rules wrapped in `<important if="">` tags for better adherence.
 - **Renamed `[Anti-Rationalization Checklist]` → `[Gotchas: Anti-Rationalization]`** in dev-builder, code-review, bug-fixer for naming consistency.
+- **Glue Code First**: dev-builder's "SDK-First" upgraded to "Glue Code First" — priority chain: framework built-in → open-source library → AI prompt → custom logic only when necessary.
+- **Generator/Optimizer recursion**: evolution-engine now has explicit First Principles — the engine that evolves rules should itself be evolvable through the same feedback loop.
+- **Cross-session audit**: code-review added principle that complex reviews must run in isolated sub-agent sessions to prevent self-confirmation bias.
+- **Prompt remediation**: feedback template now includes a `prompt_remediation` field — each failure can carry a reusable prompt fragment to prevent recurrence.
 
 ### v1.14.2 — 2026-05-20
 - **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter into your project; `install.sh` / `install.ps1` wrappers included

@@ -23,6 +23,10 @@
 - **Skill 模板更新**：新 Skill 自动包含 `[Gotchas]` 推荐章节。
 - **CLAUDE.md 增加 CLI 最佳实践**：`/model`、`/compact`、`/context`、`/sandbox` 用法写入 General Rules。关键规则包裹 `<important if="">` 标签提升遵守率。
 - **命名统一**：dev-builder、code-review、bug-fixer 的 `[Anti-Rationalization Checklist]` 统一为 `[Gotchas: Anti-Rationalization]`。
+- **Glue Code First 胶水代码优先**：dev-builder 的 "SDK-First" 升级为 "Glue Code First"——优先级链：框架内置 → 开源库 → AI 提示词 → 仅业务逻辑自研。
+- **Generator/Optimizer 递归原则**：evolution-engine 新增 First Principles，进化引擎自身也应是可被进化的对象。
+- **跨会话审计**：code-review 新增原则——复杂审查必须在独立子会话中执行，防止自我确认偏差。
+- **Prompt Remediation 补救提示词**：feedback 模板新增 `prompt_remediation` 字段，每次失败可附带可复用的 prompt 片段防止再犯。
 
 ### v1.14.2 — 2026-05-20
 - **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层；提供 `install.sh` / `install.ps1` 封装
