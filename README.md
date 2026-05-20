@@ -21,7 +21,7 @@ A complete product development methodology for AI coding assistants: Claude Code
 ### v1.14.1 — 2026-05-20
 - **Script unit tests**: `scripts/__tests__/` covers `sync.ts` and `dependency-graph.ts` (Vitest 4.1.6); run `pnpm test` to verify
 - **Dependency graph fix**: Named imports (`import { x } from "./y"`) now resolve correctly for more accurate blast-radius
-- **Engineering alignment**: `package.json` at `1.14.0` with exact patch-pinned devDependencies; `DEV-PLAN.md` progress table added
+- **Engineering alignment**: `package.json` at `1.14.1` with exact patch-pinned devDependencies; `DEV-PLAN.md` progress table added
 
 ### v1.14 — 2026-05-19
 - **Exact version pinning**: Every dependency pinned to `major.minor.patch` — no ranges, no `latest`

@@ -21,7 +21,7 @@
 ### v1.14.1 — 2026-05-20
 - **脚本单元测试**：`scripts/__tests__/` 覆盖 `sync.ts` 与 `dependency-graph.ts`（Vitest 4.1.6），`pnpm test` 一键验证
 - **依赖图修复**：正确解析 `import { x } from "./y"` 等命名导入，blast-radius 更准确
-- **工程对齐**：`package.json` 版本 `1.14.0`，开发依赖精确锁定 patch 版本；`DEV-PLAN.md` 增加 Phase 进度表
+- **工程对齐**：`package.json` 版本 `1.14.1`，开发依赖精确锁定 patch 版本；`DEV-PLAN.md` 增加 Phase 进度表
 
 ### v1.14 — 2026-05-19
 - **精确版本锁定**：每个依赖锁定到 `major.minor.patch`——无范围、无 `latest`
