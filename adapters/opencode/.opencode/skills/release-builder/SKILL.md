@@ -58,6 +58,12 @@ description: Used when the user wants to package, deploy, publish, or go live, o
     └── SKILL.md                           # Main Skill definition (this file)
     ```
 
+[Gotchas]
+    **Privacy leaks in build artifacts**: API keys, local paths, env files, debug logs — all can end up in the bundle. Always grep for `/Users/`, `C:\Users\`, `API_KEY`, `sk-ant-` before packaging. A leak in the build is a leak in production.
+    **Skipping smoke test**: "It compiles, so it ships" — no. Compilation means the types are right, not that the app works. Run the binary, hit the homepage, verify the core flow. 30 seconds of smoke testing saves a rollback.
+    **Version tag mismatch**: package.json version, git tag, and release artifact name must match. Inconsistency here creates confusion that takes hours to untangle.
+    **Build cache pollution**: CI or local caches can mask build failures. Always do `rm -rf dist &&` before the final build command. A cached success is not proof of a clean build.
+
 [Output Artifacts]
     - **Build artifacts** — .next/, dist/, release/ and other build output directories
     - **Deployment URL** (Web) — production environment access address

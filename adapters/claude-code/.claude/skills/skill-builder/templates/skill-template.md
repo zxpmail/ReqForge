@@ -83,6 +83,12 @@ description: [One-sentence description: when to use, what it does, what it produ
 [XXX Strategy]
     [Name based on domain: Dialogue Strategy / Review Strategy / Development Strategy / ...]
     [Describe the execution methodology — how to do it]
+
+[Gotchas]
+    **Common Pitfall 1**: [What Claude gets wrong, and what to do instead]
+    **Common Pitfall 2**: [Another failure point accumulated from practice]
+    **Common Pitfall 3**: [Another lesson learned the hard way]
+    Gotchas are the highest-signal content in a Skill. Add failure points as you discover them. If you're not adding to this section, you're repeating mistakes.
 ```
 
 ## On-Demand Sections

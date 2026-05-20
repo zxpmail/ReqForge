@@ -60,6 +60,12 @@ description: Used when the user says they want to build a product, application, 
         └── changelog-template.md          # Changelog Template
     ```
 
+[Gotchas]
+    **Skipping WebSearch**: "I know this domain well" → WebSearch anyway. Competitors, frameworks, and best practices change fast. The moment you skip search is the moment you recommend an outdated approach.
+    **Accepting vague requirements**: "users will like it", "good UX", "modern design" → these are not requirements. Keep pressing until you get specifics. If you stop at vague, the Spec will be unimplementable.
+    **Over-scoping**: Every "nice to have" the user mentions is scope creep unless explicitly cut. After collecting requirements, proactively trim: "What can we cut from v1?"
+    **Missing conflict detection**: In iteration mode, failing to detect conflicts between new and existing requirements. Always cross-reference the existing Spec before finalizing changes.
+
 [Output Artifacts]
     - **Product-Spec.md** — Product Requirements Document (created in 0-to-1 mode, updated in iteration mode)
     - **Product-Spec-CHANGELOG.md** — Requirements Changelog (appended in iteration mode)

@@ -29,6 +29,12 @@ description: Used when the Design Brief is complete and the user needs to genera
     **Components First Principle**: Build reusable components first, then compose pages from them. Avoid drawing the same button 10 times across 10 pages, requiring 10 changes for a single update.
     **Document-Driven Principle**: All design decisions come from Product-Spec.md and Design-Brief.md. Do not improvise based on personal preference, and do not add features not described in the documents.
 
+[Gotchas]
+    **Missing state variants**: Default state only is not a design. Every interactive component needs: empty, loading, error, active/selected, and disabled states. If you only design the happy path, development will guess the rest.
+    **Skipping component isolation**: Drawing the same button on 10 pages = 10 updates when the button changes. Build a component library first, compose pages from it. The extra 5 minutes saves hours.
+    **Design tool sync loss**: The design tool has the source of truth, but the SKILL.md describes what was true at invocation time. If the design tool is available, re-read values before each Task — don't trust memory.
+    **Inconsistent spacing/color system**: Using ad-hoc values instead of a design token system. Every color, spacing, and font size should come from a defined palette, not "this looks about right."
+
 [Output Artifacts]
     - **Design Deliverables** (created via design tool MCP):
       - Design tokens (color, typography, spacing, border radius system)

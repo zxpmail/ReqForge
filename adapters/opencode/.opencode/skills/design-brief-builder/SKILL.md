@@ -66,6 +66,12 @@ description: Used when the user wants to define a design style or visual directi
         └── design-brief-template.md          # Design Brief output template
     ```
 
+[Gotchas]
+    **Open-ended questions instead of choices**: "What style do you want?" → useless. The user is not a designer. Always give concrete options: "Linear or Notion? Dark or light? Sharp or rounded?" Reference anchoring beats abstract adjectives every time.
+    **Relying on memory for design trends**: "Minimalism is in" → based on when? Design trends shift every 6-12 months. WebSearch for current design language of reference products before recommending.
+    **Skipping accessibility**: Color contrast, font size hierarchy, touch targets. These are not v2 concerns — if the Design Brief doesn't address them, the code won't either.
+    **Copying without thinking**: "Let's make it like Product X" — know WHY Product X made those choices. Their context may not apply. Adapt, don't clone.
+
 [Output Artifacts]
     - **Design-Brief.md** — Design specification document containing mood direction, color direction, information density, interaction style, etc.
 

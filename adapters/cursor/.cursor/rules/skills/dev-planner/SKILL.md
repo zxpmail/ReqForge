@@ -49,6 +49,12 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
         └── dev-plan-template.md           # DEV-PLAN.md Output Template
     ```
 
+[Gotchas]
+    **Unrealistic Phasing**: "Do everything in Phase 1" is the most common failure. Each Phase must produce compilable, runnable, demonstrable output. If a Phase has no visible outcome, it's too broad — split it.
+    **Missing dependency order**: Building feature B before feature A when B depends on A. Always trace the dependency chain: infrastructure → data → API → UI. Violating this order means stubs and tech debt.
+    **Tech stack without WebSearch**: "I'll use the latest version of X" → no, confirm. Versions change, breaking changes happen, compatibility issues exist. WebSearch every tech stack choice before writing it down.
+    **Ignoring existing code**: In iteration mode, assuming the project is greenfield. Always scan existing code structure first — the plan must respect what's already there, not redesign from scratch.
+
 [Output Artifacts]
     - **DEV-PLAN.md** — Phased development plan (created in generation mode, updated in iteration mode)
     - **changes/\<change-name\>/tasks.md** — Task breakdown (filled in iteration mode)

@@ -31,6 +31,12 @@ description: Used when the user wants to create a new Skill, or when an EVOLUTIO
         └── skill-template.md              # Skeleton template for new Skills
     ```
 
+[Gotchas]
+    **Skipping template**: "I know the structure well enough" — read the template anyway. Every time you skip, you'll miss something: a section heading, a required field, or the consistent format.
+    **Not cross-referencing existing Skills**: Writing in a different style from the rest of the codebase. Always read 1-2 existing Skills before creating a new one. Consistency matters for maintainability.
+    **Empty sections**: "To be filled later" is technical debt. If a section isn't needed, don't include it. If it IS needed, fill it now. Empty sections in a Skill cause confusion when the Skill is invoked.
+    **Missing Gotchas**: You're building a Skill that WILL accumulate failure points. If you don't leave a [Gotchas] section, where will those lessons go? Nowhere — they'll be repeated.
+
 [Output Artifacts]
     - **skills/\<skill-name\>/SKILL.md** — new Skill definition file (relative to framework root)
     - **skills/\<skill-name\>/templates/** — template directory for the new Skill (if any, relative to framework root)

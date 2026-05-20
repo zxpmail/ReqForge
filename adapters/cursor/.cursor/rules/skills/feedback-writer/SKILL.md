@@ -55,6 +55,12 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
         **Judgment Standard**:
         Only record when a signal is actually observed. Better to miss than to over-record.
 
+[Gotchas]
+    **Missing context**: Recording "the user corrected the AI" without capturing what the AI did, what the correct behavior should be, and which Skill was in use. A feedback entry without context is noise — it can't drive evolution.
+    **Duplicate entries**: The same failure mode recorded 5 times because no one checked FEEDBACK-INDEX.md first. Always check existing entries before creating new ones — merge, don't duplicate.
+    **False positives**: User frustration does not always equal bad AI behavior. Frustration at the tool/environment/language itself should not be recorded as AI capability feedback. Discriminate signal from noise.
+    **Skipping scoring**: Writing qualitative feedback without Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
+
 [Output Artifacts]
     - **../../feedback/\<topic-name\>.md** — feedback topic file
     - **../../feedback/FEEDBACK-INDEX.md** — feedback index (append or update)

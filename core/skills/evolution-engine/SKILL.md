@@ -13,6 +13,12 @@ description: Auto-triggers on session init, or manually triggered when the user 
     Signals found -> Generate proposals and return to the main Agent; execute after user confirmation.
     No signals -> Return "no evolution suggestions".
 
+[Gotchas]
+    **Premature graduation**: One feedback entry does not make a pattern. The 3-occurrence threshold exists for a reason — graduating too early means bloating CLAUDE.md with one-off issues. Wait for the data.
+    **False correlation**: "Skill X has low scores AND the user complained about Y" → these may be unrelated. Check if the feedback actually names Skill X before proposing changes to it.
+    **Ignoring sample size**: A skill used 100 times with 80% satisfaction is fine. A skill used 5 times with 60% satisfaction is noise. Always check the denominator before acting on a score.
+    **Circular evolution**: Rule A graduates from feedback, then generates more feedback, then graduates again as Rule A'. This is the ratchet spinning without progress. After graduating a rule, skip that pattern for N cycles.
+
 [Output Artifacts]
     - **Evolution proposals** (screen output) — three types: Rule Graduation / Skill Optimization / New Skill. Each proposal includes confirm/skip options.
 
