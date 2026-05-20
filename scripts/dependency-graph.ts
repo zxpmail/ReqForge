@@ -184,6 +184,11 @@ function extractImports(filePath: string, content: string, rootDir: string, allF
   return [...resolvedSet];
 }
 
+/** Normalise a relative path to forward slashes (consistent across platforms) */
+function normPath(p: string): string {
+  return p.replace(/\\/g, "/");
+}
+
 // --- Graph building ---
 
 export function buildGraph(rootDir: string): DependencyGraph {
@@ -196,7 +201,7 @@ export function buildGraph(rootDir: string): DependencyGraph {
   // Normalise to relative paths from rootDir
   const nodes: Record<string, GraphNode> = {};
   for (const f of absFiles) {
-    const rel = path.relative(rootDir, f);
+    const rel = normPath(path.relative(rootDir, f));
     const lang = EXT_TO_LANG[path.extname(f)];
     if (lang) langSet.add(lang);
     nodes[rel] = { imports: [], importedBy: [] };
@@ -204,12 +209,14 @@ export function buildGraph(rootDir: string): DependencyGraph {
 
   // Extract imports — first pass builds forward edges
   for (const f of absFiles) {
-    const rel = path.relative(rootDir, f);
+    const rel = normPath(path.relative(rootDir, f));
     const content = readFile(f);
     if (!content) continue;
 
     const deps = extractImports(f, content, rootDir, fileSet);
-    nodes[rel].imports = deps.map(d => path.relative(rootDir, d));
+    nodes[rel].imports = deps
+      .map(d => normPath(path.relative(rootDir, d)))
+      .filter(d => nodes[d] !== undefined);
   }
 
   // Second pass builds reverse edges
@@ -346,7 +353,7 @@ function main(): void {
       const g = loadGraph(cwd);
       if (!g) { console.error("No graph found — run 'pnpm dep-graph build' first"); process.exit(1); }
 
-      const files = args[1] ? args.slice(1) : getGitChanged(cwd);
+      const files = args[1] ? args.slice(1).map(normPath) : getGitChanged(cwd).map(normPath);
       if (!files.length) { console.log("No files specified and no uncommitted changes."); return; }
 
       const aff = affectedFiles(g, files);
@@ -360,7 +367,7 @@ function main(): void {
       const g = loadGraph(cwd);
       if (!g) { console.error("No graph found — run 'pnpm dep-graph build' first"); process.exit(1); }
 
-      const files = args[1] ? args.slice(1) : getGitChanged(cwd);
+      const files = args[1] ? args.slice(1).map(normPath) : getGitChanged(cwd).map(normPath);
       if (!files.length) { console.log("No files specified and no uncommitted changes."); return; }
 
       const r = riskScore(g, files);

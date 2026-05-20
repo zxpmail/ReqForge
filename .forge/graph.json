@@ -8,6 +8,12 @@
         "scripts\\__tests__\\dependency-graph.test.ts"
       ]
     },
+    "scripts\\install.ts": {
+      "imports": [],
+      "importedBy": [
+        "scripts\\__tests__\\install.test.ts"
+      ]
+    },
     "scripts\\sync.ts": {
       "imports": [],
       "importedBy": [
@@ -17,6 +23,12 @@
     "scripts\\__tests__\\dependency-graph.test.ts": {
       "imports": [
         "scripts\\dependency-graph.ts"
+      ],
+      "importedBy": []
+    },
+    "scripts\\__tests__\\install.test.ts": {
+      "imports": [
+        "scripts\\install.ts"
       ],
       "importedBy": []
     },
@@ -32,11 +44,11 @@
     }
   },
   "stats": {
-    "totalFiles": 5,
-    "totalEdges": 2,
+    "totalFiles": 7,
+    "totalEdges": 3,
     "languages": [
       "typescript"
     ],
-    "buildTimeMs": 11
+    "buildTimeMs": 8
   }
 }
