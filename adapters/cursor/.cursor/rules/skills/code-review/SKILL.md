@@ -26,6 +26,7 @@ description: Used when the user wants to review code, check quality, verify feat
     **Zero Trust Claims**: Do not accept vague conclusions like "already implemented" or "roughly matches." Every feature either has a code implementation (with file path and line number) or it does not.
     **Evidence is King**: Saying "passed" must be accompanied by compilation output, API responses, or value comparison results. A "passed" without evidence equals not having reviewed at all.
     **Leave No Stone Unturned**: Every single functional requirement in the Spec must be checked. Sweeping statements like "the rest looks normal" are not acceptable.
+    **Cross-Session Audit**: Important reviews (entire Phase completion, security audit, architecture change) should be performed in a fresh sub-agent session. Reviewing code in the same session where it was written creates self-confirmation bias — the model tends to validate its own assumptions. When `change_complexity` is "complex" or "moderate", flag the review as requiring isolation.
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
 [Output Style]

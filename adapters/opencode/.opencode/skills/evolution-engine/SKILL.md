@@ -13,6 +13,12 @@ description: Auto-triggers on session init, or manually triggered when the user 
     Signals found -> Generate proposals and return to the main Agent; execute after user confirmation.
     No signals -> Return "no evolution suggestions".
 
+[First Principles]
+    **Data-Driven Evolution**: No change without data. A single feedback entry is an anecdote, not a signal. Wait for the 3-occurrence threshold before proposing rule graduation. Let the data speak, not your intuition.
+    **Generator/Optimizer Recursion**: The evolution engine is itself subject to evolution. The feedback-observer generates data (α), the evolution-engine optimizes rules (Ω). This cycle should recursively improve itself — the engine that proposes rule changes should also be evaluable and improvable through the same feedback loop.
+    **Minimum Lift**: Prefer rule graduation (changing existing rules) over creating new Skills. A 3-line rule addition to an existing SKILL.md is faster to deploy and easier to maintain than a new Skill directory. Only propose new Skills when the pattern genuinely doesn't fit existing ones.
+    **Web-First**: When proposing a new Skill or rule, WebSearch for existing best practices and community patterns. Don't invent from scratch what already has a well-known solution.
+
 [Gotchas]
     **Premature graduation**: One feedback entry does not make a pattern. The 3-occurrence threshold exists for a reason — graduating too early means bloating CLAUDE.md with one-off issues. Wait for the data.
     **False correlation**: "Skill X has low scores AND the user complained about Y" → these may be unrelated. Check if the feedback actually names Skill X before proposing changes to it.

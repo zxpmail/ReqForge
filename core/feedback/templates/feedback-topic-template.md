@@ -12,6 +12,7 @@ scores:                        # Optional — only fill after Skill execution
   efficiency: [1-5]
   satisfaction: [1-5]
   evidence: "[One-sentence rationale per score]"
+prompt_remediation: "[Optional — reusable prompt fragment to prevent this issue next time]"
 ---
 
 # [Issue Title]
@@ -21,3 +22,5 @@ scores:                        # Optional — only fill after Skill execution
 **Context**: [Under what circumstances it occurred]
 
 **Lesson / Recommendation**: [What was learned, what to do differently]
+
+**Prompt Remediation**: [Optional — a ready-to-use prompt or constraint that, when included in the Skill's invocation prompt, prevents this failure from recurring. E.g., "Before selecting a database, explicitly confirm: does the data need to survive a server restart?"]
