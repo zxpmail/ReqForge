@@ -18,7 +18,15 @@
 
 ## 近期更新
 
-### v1.15 — 2026-05-20
+### v1.16 — 2026-05-21
+- **Harness Engineering 工程化原则**：dev-builder 新增 Tool AI-fication 优先级（CLI > MCP > Skill > GUI）、Substitute Don't Mock（真实替身替代 Mock）、Environment-First（项目先跑起来再写功能）、Minimum Runnable Subset（每个 Phase 交付端到端核心路径）、Scripted Verification（复杂 Phase 自动生成 `verify-phase-N.sh`）。
+- **Machine Gates 机器门**：CLAUDE.md 新增三级可执行门禁——Hallucination Gate（路径/依赖不存在则失败）、Sloppiness Gate（无验证证据则阻止完成）、Overstepping Gate（范围蔓延则拒绝）。可编码的门禁必须用 lint/test/hook 实现。
+- **Iron Rules 入门铁律**：提炼 8 条 Forge 基线规则（知识卸载、无 prompt 魔法、真实文件、护栏等），写入 Product-Spec.md 与 README。
+- **llms.txt**：AI 可搜索的项目摘要，放置于仓库根目录。
+- **目录级 AGENTS.md**：为 `core/skills/`、`core/agents/`、`core/hooks/`、`core/templates/`、`core/feedback/` 添加 MUST/MUST NOT/SHOULD 规则。
+- **validate-skill.sh**：正式 SKILL.md 规范校验器——检查 frontmatter、必需章节、kebab-case 命名、Gotchas 条目数、文件大小、TODO 标记。通过 `pnpm validate-skill` 运行。
+- **Claude Code 适配器规则迁移**：目录级规则从 AGENTS.md（Claude Code 不读取）迁移到 `.claude/rules/*.md`，使用路径作用域 `globs` 前导元数据。AGENTS.md 保留给 OpenCode 适配器。
+- **SKILL.md 结构性审计**：校验全部 11 个 Skill——修复 11 个缺失必需章节的错误和 19 个警告（为 design-maker、evolution-engine、feedback-writer、bug-fixer、code-review、dev-builder、dev-planner 添加 [Dependency Check]、[File Structure]、[Initialization]、[Output Style]、[Gotchas] 章节）。
 - **全 Skill 新增 Gotchas 章节**：11 个 Skill 全部增加 `[Gotchas]` 章节，记录领域特定失败模式（模糊需求、隐私泄漏、过早演化、重复反馈等）。每个 Skill 随时间积累实战教训。
 - **Skill 模板更新**：新 Skill 自动包含 `[Gotchas]` 推荐章节。
 - **CLAUDE.md 增加 CLI 最佳实践**：`/model`、`/compact`、`/context`、`/sandbox` 用法写入 General Rules。关键规则包裹 `<important if="">` 标签提升遵守率。

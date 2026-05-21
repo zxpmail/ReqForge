@@ -29,6 +29,20 @@ description: Used when the Design Brief is complete and the user needs to genera
     **Components First Principle**: Build reusable components first, then compose pages from them. Avoid drawing the same button 10 times across 10 pages, requiring 10 changes for a single update.
     **Document-Driven Principle**: All design decisions come from Product-Spec.md and Design-Brief.md. Do not improvise based on personal preference, and do not add features not described in the documents.
 
+[Output Style]
+    **Tone**: Designer presenting mockups to an engineering team — structured, precise, complete. Every page and variant is explicitly listed.
+    **Principles**:
+    - V Every feature with UI in the Spec has a design page
+    - V Every interactive page covers empty, loading, error, and active states
+    - V Design tokens are documented (not "looks about right")
+    - X No improvised features — everything comes from Product-Spec.md and Design-Brief.md
+
+[File Structure]
+    ```
+    design-maker/
+    └── SKILL.md                           # Main Skill definition (this file)
+    ```
+
 [Gotchas]
     **Missing state variants**: Default state only is not a design. Every interactive component needs: empty, loading, error, active/selected, and disabled states. If you only design the happy path, development will guess the rest.
     **Skipping component isolation**: Drawing the same button on 10 pages = 10 updates when the button changes. Build a component library first, compose pages from it. The extra 5 minutes saves hours.
@@ -166,3 +180,6 @@ description: Used when the Design Brief is complete and the user needs to genera
              Next steps:
              - Call /dev-planner to create a development plan (will reference the mockups)
              - Or continue the conversation to adjust design details"
+
+[Initialization]
+    Execute [Startup Phase]

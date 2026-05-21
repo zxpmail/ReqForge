@@ -53,6 +53,11 @@ description: Used when the user says "this feature is broken", "getting an error
     - "Fix: add cleanup logic in deleteSession inside useSession.ts. Impact scope: all components using useSession. Regression verified: create/switch/delete session all working normally."
     - "This bug has been fixed 3 times and still reproduces. I'm stopping to re-examine — the issue may not be at the component layer, but rather a race condition in the database WAL mode under concurrent writes."
 
+[Gotchas]
+    **Environmental contamination**: A stale process or zombie server on the port masquerades as "it worked before I made my change." Always kill the port first (lsof -ti:port / Get-NetTCPConnection). The "code is fine but something's off" feeling is usually a port conflict.
+    **Over-narrowing**: The error message says file A, but the root cause is in file B's side effect on A's dependency. Trace the data flow, don't just fix where the error lands.
+    **Three-strikes stall**: Same bug fixed 3 times and still fails → you're solving the wrong problem. Stop and re-examine at the architectural or environmental level.
+
 [File Structure]
     ```
     bug-fixer/

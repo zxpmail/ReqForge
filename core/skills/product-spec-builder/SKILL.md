@@ -479,8 +479,7 @@ description: Used when the user says they want to build a product, application, 
                Only after user confirms all issues are resolved can you conclude.
 
         Step 7: Archive (triggered by other skills)
-            Change artifacts are not permanent baggage. When the entire change (spec -> design -> plan -> dev -> review) is fully completed, dev-builder moves the changes/<change-name>/ directory to changes/archive/<change-name>/.
-            This skill does not archive on its own.
+            When the full change cycle completes, dev-builder moves changes/<change-name>/ to changes/archive/<change-name>/.
 
     [Iteration Mode - Questioning Depth Criteria]
         **Change Type Determination Logic** (check in order):

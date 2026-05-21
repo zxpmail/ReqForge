@@ -327,6 +327,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - Full-Stack (backend-focused) -> FastAPI + React / Spring Boot + React / Go + React
     After selection, WebSearch to verify framework versions and compatibility.
 
+[Gotchas]
+    **Plan-not-loaded**: Starting implementation without reading the current DEV-PLAN.md Phase → building the wrong thing. Always read DEV-PLAN.md first, confirm the Phase and Task, then code.
+    **Skipping Environment-First**: Jumping into feature code before the project skeleton compiles and runs. No code on a broken foundation. The first task of any Phase should be making things runnable.
+    **Phase scope creep**: "I'll just add this small improvement while I'm coding" → that's how Phases inflate and never finish. One Phase, one goal. Additional improvements go to the feedback channel or next Phase.
+    **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
+
 [Anti-Rationalization Checklist]
     Agents tend to use "reasonable" excuses to skip rules. Here are common rationalizations and the correct response.
 

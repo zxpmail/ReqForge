@@ -72,8 +72,8 @@ description: Used when the user wants to create a new Skill, or when an EVOLUTIO
 
         **Recommended** (most Skills have these):
         - [Output Style] — tone + principles + typical expressions
-        - [XXX Dimension/Checklist] — domain-specific inspection dimensions (name tailored to domain)
-        - [XXX Strategy] — domain-specific methodology (name tailored to domain)
+        - [DOMAIN Dimension/Checklist] — domain-specific inspection dimensions (name tailored to domain)
+        - [DOMAIN Strategy] — domain-specific methodology (name tailored to domain)
 
         **On-Demand** (specific Skill types need these):
         - [Information Sufficiency Check] — collection / analysis type Skills
@@ -118,7 +118,7 @@ description: Used when the user wants to create a new Skill, or when an EVOLUTIO
         - Required 5 -> keep all
         - Recommended -> decide based on domain needs
         - On-Demand -> decide based on Skill type
-        Determine domain-specific naming: what XXX should be in [XXX Dimension Checklist] and [XXX Strategy]
+        Determine domain-specific naming: what DOMAIN should be in [DOMAIN Dimension Checklist] and [DOMAIN Strategy]
 
     [Step 4: Fill Content]
         Fill each Section one by one:

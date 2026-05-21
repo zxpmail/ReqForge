@@ -18,7 +18,15 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ## What's New
 
-### v1.15 — 2026-05-20
+### v1.16 — 2026-05-21
+- **Harness Engineering principles**: dev-builder upgraded with Tool AI-fication Priority (CLI > MCP > Skill > GUI), Substitute Don't Mock (real substitutes over mocks), Environment-First (project must run before features), Minimum Runnable Subset (each Phase delivers an end-to-end core path). Scripted Verification (complex Phases generate `verify-phase-N.sh`).
+- **Machine Gates**: 3-level enforceable gates added to CLAUDE.md — Hallucination Gate (fails on wrong paths/missing deps), Sloppiness Gate (blocks completion without verification evidence), Overstepping Gate (rejects scope creep). Codification principle: gates that can be linted MUST be codified.
+- **Iron Rules**: 8 baseline rules extracted as the Forge foundation (knowledge offloading, no prompt magic, real files, guardrails, etc.). Documented in Product-Spec.md and README.
+- **llms.txt**: AI-searchable project summary at repo root for LLM discoverability.
+- **Per-directory AGENTS.md**: Local operational boundaries for `core/skills/`, `core/agents/`, `core/hooks/`, `core/templates/`, `core/feedback/` — each directory gets MUST/MUST NOT/SHOULD rules.
+- **validate-skill.sh**: Formal SKILL.md specification validator — checks frontmatter, required sections, kebab-case, Gotchas count, file size, placeholder markers. Runs via `pnpm validate-skill`.
+- **Claude Code adapter rules migration**: Per-directory rules converted from AGENTS.md (which Claude Code doesn't read) to `.claude/rules/*.md` with path-scoped `globs` frontmatter. AGENTS.md retained for OpenCode adapter.
+- **SKILL.md structural audit**: All 11 skills validated — 11 missing-section errors and 19 warnings fixed (added [Dependency Check], [File Structure], [Initialization], [Output Style], [Gotchas] sections across design-maker, evolution-engine, feedback-writer, bug-fixer, code-review, dev-builder, dev-planner).
 - **Gotchas in every skill**: `[Gotchas]` section added to all 11 skills capturing domain-specific failure points (vague requirements, privacy leaks, premature evolution, duplicate feedback, etc.). Each skill accumulates hard-won lessons over time.
 - **Skill template updated**: New skills automatically include a `[Gotchas]` section as a recommended component.
 - **CLI best practices in CLAUDE.md**: `/model`, `/compact`, `/context`, `/sandbox` usage guidance encoded as General Rules. Key rules wrapped in `<important if="">` tags for better adherence.
