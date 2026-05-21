@@ -365,6 +365,17 @@ A harness that doesn't learn from usage is static. Forge evolves:
 
 All evolution proposals require your explicit confirmation. No automatic rule changes.
 
+### Iron Rules — Non-Negotiable Baseline
+
+1. Define the problem before writing code
+2. Plan before executing
+3. Every step must be verifiable — "looks right" is not completion
+4. Commit frequently — every progress point should be a rollback checkpoint
+5. Keep docs updated — context loss is the silent killer
+6. Trust only machine evidence (reproducible commands, test output, CI status) — not AI's verbal assurance
+7. Codify rules — if it can be lint/test/schema/hook/CI, it MUST be; natural language alone is not enforcement
+8. Non-compliant output must fail, not rely on humans remembering to check
+
 ---
 
 ## Control File Philosophy

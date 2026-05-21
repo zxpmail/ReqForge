@@ -1,0 +1,66 @@
+# Forge
+
+> Product Development Framework for AI Coding Assistants — from fuzzy ideas to shippable products, with full AI-assisted guidance.
+
+## One-Line Definition
+
+Forge is an **Agent Harness** — a system of constraints, guidance, and feedback that makes AI coding assistants produce verifiable, high-quality output. Harness = Guides (feedforward) + Sensors (feedback) + Steering Loop (evolution).
+
+## Problem It Solves
+
+Vibe Coding without a harness: AI writes code → direction drifts → no design specs → bugs multiply → context grows → AI forgets earlier requirements → code diverges. The root cause isn't model capability — it's the lack of a **system** around the model.
+
+## How It Works
+
+### 5-Stage Workflow
+
+1. **Requirements** → `/product-spec-builder` → Product-Spec.md
+2. **Design Brief** → `/design-brief-builder` → Design-Brief.md (optional)
+3. **Development Plan** → `/dev-planner` → DEV-PLAN.md
+4. **Implementation** → `/dev-builder` → project code (one Phase per invocation)
+5. **Review & Release** → `/code-review`, `/bug-fixer`, `/release-builder`
+
+### Core Architecture
+
+- **11 Skills** — Independent methodology modules (product-spec-builder, dev-builder, bug-fixer, code-review, etc.). Each includes `[First Principles]`, `[Gotchas]`, and `[Anti-Rationalization Checklist]`.
+- **6 Sub-Agents** — Context-isolated workers (implementer, code-reviewer, feedback-observer, evolution-runner, test-writer, planner). Fresh instance per task, no inherited context.
+- **10 Hooks** — Automatic enforcement (pre-commit-check, auto-push, stop-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, context-compaction, check-sync, check-handoff).
+- **3-Tier Memory** — project-memory.md (permanent architecture facts), decisions-log.md (ADR records), task-history.md (30-entry rolling log).
+- **Evolution Loop** — feedback-observer records failures → evolution-engine detects patterns (3+ occurrences) → generates rule upgrade proposals → skill-builder implements.
+- **Dependency Graph** — `scripts/dependency-graph.ts` for file-level blast-radius analysis before code changes.
+
+### Key Principles
+
+- **Glue Code First**: Use SDK built-in → open-source library → AI prompt → custom code only for business logic.
+- **Substitute, Don't Mock**: Real substitutes (H2, local FS) over mock data — local failures must predict production failures.
+- **Tool AI-fication**: CLI > MCP Server > Skill > GUI — scripts are AI's hands.
+- **Verification Is Evidence**: "It's done" without on-the-spot verification command output is an invalid declaration.
+- **Minimum Runnable Subset**: Each Phase delivers a core path that works end-to-end, even if features are incomplete.
+
+### Supported Clients
+
+3 adapter formats — copy into your project and open your AI client:
+
+| Client | Adapter Location | Format |
+|--------|-----------------|--------|
+| Claude Code | `adapters/claude-code/` | `.claude/` directory |
+| Cursor | `adapters/cursor/` | `.cursor/rules/` directory |
+| OpenCode | `adapters/opencode/` | `.opencode/` directory |
+
+One-command install: `pnpm forge-install <client> --target <dir>`
+
+## Quick Start
+
+```bash
+git clone https://github.com/zxpmail/ReqForge.git
+cd ReqForge
+pnpm forge-install claude-code --target /path/to/your/project
+```
+
+No npm install required to use the framework. Node.js + pnpm only needed for contributors running `pnpm test`, `pnpm sync`, `pnpm dep-graph`.
+
+## Repository
+
+- GitHub: https://github.com/zxpmail/ReqForge
+- License: MIT
+- Language: English + Chinese (README.zh-CN.md)

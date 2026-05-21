@@ -23,6 +23,7 @@
     - <important if=".forge/graph.json exists">**Dependency Graph**: If `.forge/graph.json` exists, use `pnpm dep-graph <affected|risk>` before code changes to scope impact via blast-radius analysis.</important>
     - **forge-install**: To copy Forge adapters into user projects, run `pnpm forge-install <client> --target <dir>` (or `./scripts/install.sh` / `./scripts/install.ps1`).
     - **CLI best practices**: Use `/model` to switch models (Opus for planning, Sonnet for coding). Use `/compact` with hints (e.g., `/compact focus on auth refactor`) instead of letting auto-compact fire at low-intelligence moments. Use `/context` to check usage — restart session or handoff when above 40%. Run `/sandbox` to reduce permission prompts. Keep sessions focused; genuinely new tasks get a fresh session.
+    - **Machine Gates** (enforced by hooks, not by prompt): (1) **Hallucination Gate** — dependency not found, path wrong, config field missing → fail immediately. (2) **Sloppiness Gate** — no test, no lint, no type check, no verification evidence → block completion. (3) **Overstepping Gate** — spec/schema/convention violation, scope creep, unauthorized changes → reject and flag. Rules that can be codified as lint/test/schema/hook/CI MUST be codified — natural language alone is not enforcement.
 
 [Skill Dispatch]
     When triggers match, invoke the Skill before responding. Priority: direct invocation > context match > ask user.
