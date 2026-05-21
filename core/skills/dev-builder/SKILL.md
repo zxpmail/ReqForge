@@ -39,6 +39,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     **Modification Discipline**: Before every code change, assess the impact scope. Think before changing, regression-validate after changing. Don't rush, don't break existing functionality.
     **Blast-Radar**: If the project has a dependency graph (`.forge/graph.json`), run `pnpm dep-graph affected <file>` before changing any file to see what depends on it. Run `pnpm dep-graph risk <file>` to get a data-driven complexity score. Pass the affected files to code-reviewer as `affected_files` so the review focuses on what matters.
     **Glue Code First**: Don't reinvent what already works. Prioritize mature capabilities in order: (1) framework/ SDK built-in, (2) well-maintained open-source library, (3) AI-generated boilerplate via prompt. Only write custom code for business logic, orchestration, and integration glue. If you're implementing something that has an industry-standard solution, you're doing it wrong. WebSearch to confirm availability before deciding to implement yourself.
+    **Tool AI-fication Priority**: When selecting tools for AI Agent to use, follow this priority: (1) CLI — AI can directly execute and parse output, (2) MCP Server — protocol-adapted access, (3) Skill/Tool — custom wrapper, (4) GUI — AI cannot use. If a team's ops tool only has a GUI, write a CLI wrapper script before the next development step. Scripts are AI's hands — without them, AI is crippled.
+    **Substitute, Don't Mock**: When local environment needs replacements for cloud services (database, queue, storage), use real substitute implementations (H2 for MySQL, in-memory queue for Kafka, local filesystem for S3), not mocks that return hardcoded data. Mocks pass locally but fail in production; real substitutes surface real issues.
     **Online-First**: Rely on real-time information, not outdated memory. Before using external libraries/APIs, WebSearch to confirm current version usage and compatibility.
     **Verification Is Evidence (Hard Gate)**: A completion declaration must include the verification command and its output executed in the same message. "It's done" plus compilation output run in the same message is a valid declaration. "It's done" plus "I compiled it earlier" is an invalid declaration — must re-run. "It's done" with no verification command at all is also an invalid declaration. This is not a suggestion — it is a gate. No on-the-spot verification, no completion.
     **File Slimming**: Single file should not exceed 300 lines. If it does, split by responsibility. Three lines of simple code are better than one over-engineered abstraction.
@@ -357,6 +359,10 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - "It's a small fix, no need to record feedback" -> Every fix, regardless of size, is a learning opportunity for the ratchet. Without recording, the same failure repeats.
     - "I'll record feedback later" -> You won't. You're in a fix loop. Record it now or forget it.
 
+    Mocking instead of substituting:
+    - "I'll just mock the database for local testing" -> Mocks return what you expect, not what reality delivers. Use a real substitute (H2, SQLite, in-memory store) so local failures predict production failures.
+    - "This service isn't available locally, I'll stub it" -> A stub that always returns 200 teaches AI nothing. Write a real local implementation or script that exercises the same code path.
+
 Soft completion declarations:
     - "Should be fine" -> "Fine" needs evidence — run the verification command
     - "Looks correct" -> "Correct" needs comparison between the Spec original text and code
@@ -402,6 +408,9 @@ Soft completion declarations:
     - No exposed keys: grep to check for hardcoded API Keys, Tokens in code
     - Process health: only 1 dev server instance running
 
+    **Scripted Verification** (recommended for complex Phases):
+    For Phases with 5+ tasks or multi-service integration, generate a `scripts/verify-phase-N.sh` (or `.bat`) verification script that the AI can run directly. The script should cover: (1) compile check, (2) unit test run, (3) dev server health check, (4) core API smoke test. Scripts are AI's hands — a checklist is for humans, a script is for AI.
+
     **Iterative Check Loop**:
     - If any step finds issues (missing tasks, compilation errors, test failures), dispatch feedback-observer with trigger_reason="verification_fail", current_skill="dev-builder", ai_action=[what failed], failure_detail=[error output] -> then fix the issues
     - After fixing any issue, **restart the entire four-step verification from Step 1**
@@ -439,6 +448,8 @@ Soft completion declarations:
 
     [Project Setup Phase]
         Initialize the project in the <project-name>/ subfolder, not in the root directory.
+
+        **Environment-First**: Priority is making the project runnable locally before adding features. A project that compiles and starts with zero features is more valuable than one with 10 features that can't run. The local-run loop is AI's verification loop — without it, every change requires human manual deployment to verify, and AI is effectively blind.
 
         Memory initialization (before project setup):
         1. Create `memory/` directory at project root

@@ -21,7 +21,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - Existing project code -> if present, scan existing structure as constraints, enter iteration mode
 
 [First Principles]
-    **Verifiable Principle**: Each Phase must be compilable, runnable, and show results upon completion. No "write a bunch of code but nothing runs" Phases allowed.
+    **Verifiable Principle**: Each Phase must be compilable, runnable, and show results upon completion. No "write a bunch of code but nothing runs" Phases allowed. Each Phase should deliver a **minimum runnable subset** — a core path that works end-to-end, even if features are incomplete. It's better to have 3 features that run than 10 features that don't.
 
     **Dependency Order Principle**: Foundation first, building later. Infrastructure (project skeleton, database, routing) always comes before business features. When features have dependencies, the depended-upon item is built first.
 
