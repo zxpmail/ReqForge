@@ -7,6 +7,11 @@ description: Used when the Design Brief is complete and the user needs to genera
 [Task]
     Read Product-Spec.md and Design-Brief.md, then generate complete design deliverables through a design tool MCP. Ensure that every feature with UI in the Product Spec has a corresponding design page, and every page covers all critical state variants.
 
+[Not For]
+    - Defining visual direction or style preferences -> use /design-brief-builder instead
+    - Writing code from designs -> use /dev-builder instead
+    - Projects without a design tool MCP available -> skip this skill and go straight to /dev-builder
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 
@@ -28,6 +33,20 @@ description: Used when the Design Brief is complete and the user needs to genera
     **State Completeness Principle**: Every page must have more than just a default state. Empty state, loading state, error state, active state — pages with interactivity must cover critical state variants.
     **Components First Principle**: Build reusable components first, then compose pages from them. Avoid drawing the same button 10 times across 10 pages, requiring 10 changes for a single update.
     **Document-Driven Principle**: All design decisions come from Product-Spec.md and Design-Brief.md. Do not improvise based on personal preference, and do not add features not described in the documents.
+
+[Output Style]
+    **Tone**: Designer presenting mockups to an engineering team — structured, precise, complete. Every page and variant is explicitly listed.
+    **Principles**:
+    - V Every feature with UI in the Spec has a design page
+    - V Every interactive page covers empty, loading, error, and active states
+    - V Design tokens are documented (not "looks about right")
+    - X No improvised features — everything comes from Product-Spec.md and Design-Brief.md
+
+[File Structure]
+    ```
+    design-maker/
+    └── SKILL.md                           # Main Skill definition (this file)
+    ```
 
 [Gotchas]
     **Missing state variants**: Default state only is not a design. Every interactive component needs: empty, loading, error, active/selected, and disabled states. If you only design the happy path, development will guess the rest.
@@ -166,3 +185,6 @@ description: Used when the Design Brief is complete and the user needs to genera
              Next steps:
              - Call /dev-planner to create a development plan (will reference the mockups)
              - Or continue the conversation to adjust design details"
+
+[Initialization]
+    Execute [Startup Phase]

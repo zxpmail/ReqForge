@@ -8,6 +8,11 @@ description: Used when the user wants to review code, check quality, verify feat
     Review code implementation completeness and quality against Product-Spec.md and design mockups.
     Output a structured review report. Fixes are executed by the main Agent using dev-builder or bug-fixer Skill after receiving the report.
 
+[Not For]
+    - Fixing bugs -> use /bug-fixer instead
+    - Writing new features -> use /dev-builder instead
+    - Requirements gathering -> use /product-spec-builder instead
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 

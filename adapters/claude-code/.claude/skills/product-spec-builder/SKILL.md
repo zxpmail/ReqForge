@@ -9,6 +9,12 @@ description: Used when the user says they want to build a product, application, 
 
     **Iteration Mode**: When the user proposes new features, requirement changes, or iterative ideas during development, use questioning to help the user clarify the change, detect conflicts with the existing Spec, directly update the Product Spec file, and automatically record the changelog.
 
+[Not For]
+    - Creating development plans -> use /dev-planner instead
+    - Writing code -> use /dev-builder instead
+    - Designing visual style -> use /design-brief-builder instead
+    - Fixing bugs -> use /bug-fixer instead
+
 [Dependency Check]
     Executed automatically as the first step when the Skill starts. All checks must pass before entering the main workflow.
 
@@ -479,8 +485,7 @@ description: Used when the user says they want to build a product, application, 
                Only after user confirms all issues are resolved can you conclude.
 
         Step 7: Archive (triggered by other skills)
-            Change artifacts are not permanent baggage. When the entire change (spec -> design -> plan -> dev -> review) is fully completed, dev-builder moves the changes/<change-name>/ directory to changes/archive/<change-name>/.
-            This skill does not archive on its own.
+            When the full change cycle completes, dev-builder moves changes/<change-name>/ to changes/archive/<change-name>/.
 
     [Iteration Mode - Questioning Depth Criteria]
         **Change Type Determination Logic** (check in order):

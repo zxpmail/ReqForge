@@ -13,6 +13,11 @@ description: Auto-triggers on session init, or manually triggered when the user 
     Signals found -> Generate proposals and return to the main Agent; execute after user confirmation.
     No signals -> Return "no evolution suggestions".
 
+[Not For]
+    - Recording individual feedback entries -> use /feedback-writer instead
+    - Creating new Skills -> use /skill-builder instead
+    - Fixing bugs or code issues -> use /bug-fixer or /code-review instead
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 

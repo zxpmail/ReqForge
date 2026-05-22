@@ -14,7 +14,7 @@ When creating a new Skill, copy the content below, replace [placeholders], and d
 ```markdown
 ---
 name: [skill-name]
-description: [One-sentence description: when to use, what it does, what it produces]
+description: [Decidable trigger: "Used when the user does X or says Y. Produces Z." Avoid "helps with" / "supports" / "assists with"]
 ---
 
 [Task]
@@ -40,6 +40,10 @@ description: [One-sentence description: when to use, what it does, what it produ
     **[Principle Name]**: [One-sentence explanation]
     **[Principle Name]**: [One-sentence explanation]
     **Web-First**: When external knowledge is involved, WebSearch to confirm before acting.
+
+[Not For]
+    - [Scenario where this Skill should NOT be used, and what to use instead]
+    - [Another exclusion boundary]
 
 [File Structure]
     ```

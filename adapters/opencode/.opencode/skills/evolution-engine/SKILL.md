@@ -13,6 +13,18 @@ description: Auto-triggers on session init, or manually triggered when the user 
     Signals found -> Generate proposals and return to the main Agent; execute after user confirmation.
     No signals -> Return "no evolution suggestions".
 
+[Not For]
+    - Recording individual feedback entries -> use /feedback-writer instead
+    - Creating new Skills -> use /skill-builder instead
+    - Fixing bugs or code issues -> use /bug-fixer or /code-review instead
+
+[Dependency Check]
+    Automatically executed as the first step when the Skill starts.
+
+    Required:
+    - ../../feedback/FEEDBACK-INDEX.md → If missing, no feedback data exists; return "no evolution suggestions"
+    - At least one feedback file with occurrences >= 1 → If no feedback files exist, there is nothing to evolve
+
 [First Principles]
     **Data-Driven Evolution**: No change without data. A single feedback entry is an anecdote, not a signal. Wait for the 3-occurrence threshold before proposing rule graduation. Let the data speak, not your intuition.
     **Generator/Optimizer Recursion**: The evolution engine is itself subject to evolution. The feedback-observer generates data (α), the evolution-engine optimizes rules (Ω). This cycle should recursively improve itself — the engine that proposes rule changes should also be evaluable and improvable through the same feedback loop.
@@ -25,10 +37,24 @@ description: Auto-triggers on session init, or manually triggered when the user 
     **Ignoring sample size**: A skill used 100 times with 80% satisfaction is fine. A skill used 5 times with 60% satisfaction is noise. Always check the denominator before acting on a score.
     **Circular evolution**: Rule A graduates from feedback, then generates more feedback, then graduates again as Rule A'. This is the ratchet spinning without progress. After graduating a rule, skip that pattern for N cycles.
 
+[File Structure]
+    ```
+    evolution-engine/
+    └── SKILL.md                           # Main Skill definition (this file)
+    ```
+
+[Output Style]
+    **Tone**: Scientific analyst reporting pattern signals — data-driven, conservative, actionable. Proposals are suggestions, not commands.
+    **Principles**:
+    - V Every proposal cites occurrence count + source — no data, no proposal
+    - V A single feedback entry is an anecdote, not a signal
+    - V Always check denominator (total skill uses) before acting on scores
+    - X No premature graduation — wait for 3+ occurrences
+
 [Output Artifacts]
     - **Evolution proposals** (screen output) — three types: Rule Graduation / Skill Optimization / New Skill. Each proposal includes confirm/skip options.
 
-[Scan Flow]
+[Workflow]
 
     Step 1: Scan Graduation Candidates
         Read ../../feedback/FEEDBACK-INDEX.md to locate all feedback files
@@ -90,3 +116,7 @@ description: Auto-triggers on session init, or manually triggered when the user 
     Return to the main Agent:
     - Proposals exist: "N evolution suggestions pending" + full proposal content
     - No proposals: "No evolution suggestions"
+
+[Initialization]
+    Step 1: Execute [Dependency Check]
+    Step 2: Execute [Workflow]

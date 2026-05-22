@@ -7,6 +7,7 @@
     "forge-install": "ts-node scripts/install.ts",
     "dep-graph": "ts-node scripts/dependency-graph.ts",
     "validate-skill": "bash scripts/validate-skill.sh",
+    "create-skill": "bash scripts/create-skill.sh",
     "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest"

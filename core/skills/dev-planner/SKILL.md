@@ -9,6 +9,11 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     **Iteration Mode**: When the Product Spec changes, analyze the scope of impact, update the Phase breakdown and file inventory in DEV-PLAN.md. Completed Phases (marked with [x]) remain untouched.
 
+[Not For]
+    - Writing actual code -> use /dev-builder instead
+    - Gathering requirements -> use /product-spec-builder instead
+    - Fixing bugs -> use /bug-fixer instead
+
 [Dependency Check]
     Executed automatically as the first step when the Skill starts:
 

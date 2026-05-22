@@ -18,6 +18,12 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ## What's New
 
+### v1.17 — 2026-05-22
+- **Decidable Activation — [Not For] section**: All 11 skills now include a `[Not For]` section specifying when NOT to use the skill and what to use instead. Added as a required section in validate-skill.sh. Updated skill-template.md.
+- **Three-Layer Diagnostic Model**: bug-fixer now goes beyond root cause to ask: Symptom → Design Flaw → Principle Violation. Every fix report includes all three layers to prevent recurrence, not just patch the symptom.
+- **Numeric Quality Rubric**: skill-builder gets a 16-item, 32-point scoring system. Ship threshold ≥ 24 with no critical item at 0. Run `pnpm validate-skill --score` to compute.
+- **create-skill.sh scaffold**: CLI tool to generate a new Skill directory from a name. Supports `--minimal` (required sections only) and `--full` (with recommended sections). Run `pnpm create-skill <name>`.
+
 ### v1.16 — 2026-05-21
 - **Harness Engineering principles**: dev-builder upgraded with Tool AI-fication Priority (CLI > MCP > Skill > GUI), Substitute Don't Mock (real substitutes over mocks), Environment-First (project must run before features), Minimum Runnable Subset (each Phase delivers an end-to-end core path). Scripted Verification (complex Phases generate `verify-phase-N.sh`).
 - **Machine Gates**: 3-level enforceable gates added to CLAUDE.md — Hallucination Gate (fails on wrong paths/missing deps), Sloppiness Gate (blocks completion without verification evidence), Overstepping Gate (rejects scope creep). Codification principle: gates that can be linted MUST be codified.

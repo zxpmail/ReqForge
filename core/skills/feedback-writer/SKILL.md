@@ -9,6 +9,11 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
     Yes -> Write to ../../feedback/ and update the index.
     No -> Return "no new feedback".
 
+[Not For]
+    - Evolving rules from feedback patterns -> use /evolution-engine instead
+    - Fixing the underlying bug that caused the feedback -> use /bug-fixer instead
+    - General user conversation not related to AI behavior -> do not record, not feedback material
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 

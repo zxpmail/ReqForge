@@ -18,6 +18,12 @@
 
 ## 近期更新
 
+### v1.17 — 2026-05-22
+- **Decidable Activation 可判定激活 — [Not For] 章节**：全部 11 个 Skill 新增 `[Not For]` 章节，明确什么时候不该使用该 Skill 及应改用什么。validate-skill.sh 将其列为必需章节。skill-template.md 同步更新。
+- **三层诊断模型**：bug-fixer 不止定位根因——追问 现象层 → 设计缺陷层 → 原则违反层。每个修复报告包含三层诊断，从源头防止复发，而非仅修补症状。
+- **数值化质量评分表**：skill-builder 新增 16 项 32 分制评分表，交付阈值 ≥ 24 分且无关键项为 0。运行 `pnpm validate-skill --score` 计算评分。
+- **create-skill.sh 脚手架**：CLI 工具，从名称自动生成完整 Skill 目录。支持 `--minimal`（仅必需章节）和 `--full`（含推荐章节）。运行 `pnpm create-skill <名称>`。
+
 ### v1.16 — 2026-05-21
 - **Harness Engineering 工程化原则**：dev-builder 新增 Tool AI-fication 优先级（CLI > MCP > Skill > GUI）、Substitute Don't Mock（真实替身替代 Mock）、Environment-First（项目先跑起来再写功能）、Minimum Runnable Subset（每个 Phase 交付端到端核心路径）、Scripted Verification（复杂 Phase 自动生成 `verify-phase-N.sh`）。
 - **Machine Gates 机器门**：CLAUDE.md 新增三级可执行门禁——Hallucination Gate（路径/依赖不存在则失败）、Sloppiness Gate（无验证证据则阻止完成）、Overstepping Gate（范围蔓延则拒绝）。可编码的门禁必须用 lint/test/hook 实现。

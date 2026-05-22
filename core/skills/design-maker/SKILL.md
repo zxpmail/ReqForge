@@ -7,6 +7,11 @@ description: Used when the Design Brief is complete and the user needs to genera
 [Task]
     Read Product-Spec.md and Design-Brief.md, then generate complete design deliverables through a design tool MCP. Ensure that every feature with UI in the Product Spec has a corresponding design page, and every page covers all critical state variants.
 
+[Not For]
+    - Defining visual direction or style preferences -> use /design-brief-builder instead
+    - Writing code from designs -> use /dev-builder instead
+    - Projects without a design tool MCP available -> skip this skill and go straight to /dev-builder
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 

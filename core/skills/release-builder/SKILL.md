@@ -8,6 +8,12 @@ description: Used when the user wants to package, deploy, publish, or go live, o
     Execute the full build-package-test-publish lifecycle according to project type.
     Ensure the release artifact: can be installed, can run, has no privacy leaks, has no security vulnerabilities.
 
+[Not For]
+    - Writing code or features -> use /dev-builder instead
+    - Fixing bugs found during testing -> use /bug-fixer instead
+    - Reviewing code quality -> use /code-review instead
+    - Projects with no code yet -> use /dev-builder first
+
 [Dependency Check]
     Executed on demand after requirements gathering, based on the user's chosen release channel.
 

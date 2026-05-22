@@ -8,6 +8,11 @@ description: Used when the user wants to review code, check quality, verify feat
     Review code implementation completeness and quality against Product-Spec.md and design mockups.
     Output a structured review report. Fixes are executed by the main Agent using dev-builder or bug-fixer Skill after receiving the report.
 
+[Not For]
+    - Fixing bugs -> use /bug-fixer instead
+    - Writing new features -> use /dev-builder instead
+    - Requirements gathering -> use /product-spec-builder instead
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 
@@ -45,7 +50,7 @@ description: Used when the user wants to review code, check quality, verify feat
     **Typical Expressions**:
     - "Spec requires 'user can delete a session' (Section 3.2). Code has deleteSession call at session-list.tsx:89, API /api/sessions/[id] supports DELETE method. Fully implemented."
     - "Spec requires 'dark mode' (Section 4.1). ThemeProvider implements the toggle logic, but form components in settings-view.tsx are not dark-adapted — input backgrounds appear white in dark mode. Partially implemented."
-    - "Code found hardcoded database path '/Users/xxx/data.db' at src/lib/db.ts:23. Security issue."
+    - "Code found hardcoded database path '/Users/example/data.db' at src/lib/db.ts:23. Security issue."
 
 [File Structure]
     ```
@@ -96,7 +101,7 @@ description: Used when the user wants to review code, check quality, verify feat
         - Hardcoded credentials: API Key, Token, plaintext passwords
         - Dangerous functions: eval(), dangerouslySetInnerHTML, innerHTML
         - SQL injection: string-concatenated SQL statements
-        - Path leakage: code containing developer's local absolute paths (/Users/xxx/, C:\Users\xxx\)
+        - Path leakage: code containing developer's local absolute paths (/Users/example/, C:\Users\example\)
         - Environment variables: whether VITE_-prefixed variables expose sensitive information
         - Dependency vulnerabilities: npm audit results
 
@@ -107,6 +112,12 @@ description: Used when the user wants to review code, check quality, verify feat
         - Extra database tables or fields
         - Out-of-scope UI components
         - Mark as "Spec Drift" — could be a good extension or scope creep
+
+[Gotchas]
+    **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.
+    **Evidence-less conclusions**: Saying "looks good" without file:line evidence. Every finding needs a concrete location. "Looks good" is not a review finding — it's a skipped step.
+    **Regression blind spot**: Only reviewing changed files without checking what depends on them. Use `dep-graph affected <file>` if available to scope impact.
+    **Skipping compilation verification**: "It's just a style change" → style files can break. Run compilation verification every time.
 
 [Anti-Rationalization Checklist]
     Agents tend to skip rules using "reasonable" justifications. Here are common rationalizations and the correct response.

@@ -13,6 +13,11 @@ description: Used when the user says "this feature is broken", "getting an error
     1. User directly reports a bug -> main Agent invokes bug-fixer -> after fix, suggest user run /code-review to verify
     2. code-review Stage 2 fails (code quality issues) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review starting from Stage 1
 
+[Not For]
+    - Feature requests or new functionality -> use /dev-builder instead
+    - Code quality or style issues without runtime errors -> use /code-review instead
+    - Performance optimization without a specific bug -> use /code-review with performance dimension
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 
@@ -181,6 +186,33 @@ description: Used when the user says "this feature is broken", "getting an error
     - If fix fails -> roll back, return to Stage 3
     - 3 consecutive fix failures -> stop and re-examine whether it is an architectural issue or comprehension error
 
+[Three-Layer Diagnostic Model]
+    After Stage 4 (fix implemented), apply three-layer diagnostic depth to prevent recurrence:
+
+    **Layer 1: Symptom** (what broke)
+    - The immediate error: exception, wrong output, missing feature
+    - This is the bug you just fixed — surface level
+
+    **Layer 2: Design Flaw** (why the bug was possible)
+    - Ask: "What structural weakness allowed this bug to exist?"
+    - Common design flaws: missing validation layer, implicit state coupling, absent error boundary, race condition window, missing type constraint
+    - This layer answers: "Why wasn't this caught before it shipped?"
+
+    **Layer 3: Principle Violation** (what rule was broken that enabled the flaw)
+    - Map the design flaw to a violated First Principle from the relevant Skill
+    - Common violations: skipping Dependency Check, ignoring Anti-Rationalization, bypassing Output Style, no regression test
+    - This layer answers: "What process gap allowed the design flaw to exist?"
+
+    **Output format** (included in Completion Phase report):
+    - Symptom: [root cause you just fixed]
+    - Design Flaw: [structural weakness that allowed the bug]
+    - Principle Violation: [which rule/process was skipped or inadequate]
+
+    Example:
+    - Symptom: session.id is undefined when session is deleted
+    - Design Flaw: useSession hook holds a stale reference after session deletion — no cleanup logic
+    - Principle Violation: "One at a Time" — the delete operation didn't ensure dependent references were cleaned before completing
+
 [Workflow]
     [Startup Phase]
         Step 1: Dependency Check
@@ -232,6 +264,11 @@ description: Used when the user says "this feature is broken", "getting an error
          - Compilation: tsc --noEmit zero errors
          - Function: [reproduction steps] no longer trigger the bug
          - Regression: [list of related features] verified normal
+
+         **Three-Layer Diagnosis**:
+         - Symptom: [what broke]
+         - Design Flaw: [structural weakness that allowed the bug]
+         - Principle Violation: [which rule/process was skipped]
 
          Shall I commit? (commit message: fix: [problem description])
          Or are there other issues to fix?"

@@ -9,6 +9,11 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     **Iteration Mode**: When the Product Spec changes, analyze the scope of impact, update the Phase breakdown and file inventory in DEV-PLAN.md. Completed Phases (marked with [x]) remain untouched.
 
+[Not For]
+    - Writing actual code -> use /dev-builder instead
+    - Gathering requirements -> use /product-spec-builder instead
+    - Fixing bugs -> use /bug-fixer instead
+
 [Dependency Check]
     Executed automatically as the first step when the Skill starts:
 
@@ -35,7 +40,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     **Explicit File Path Principle**: Each Phase must list the specific file paths to be created or modified. "Implement chat feature" is not a plan — "create src/components/views/chat-view.tsx and src/hooks/use-chat.ts" is a plan.
 
     **No Placeholder Principle**: Every word in the Plan must be specific enough that anyone picking up this Plan can start working immediately.
-    - Not allowed: TBD, TODO, "to be filled", "to be determined", "implement later"
+    - Not allowed: TBD, "to be filled", "to be determined", "implement later"
     - Not allowed: "similar to Task N" — repeat the specific content, don't reference
     - Not allowed: "add appropriate error handling" — specify what errors and how to handle them
     - Not allowed: "implement related features" — list specific feature names and behaviors
@@ -48,6 +53,15 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     └── templates/
         └── dev-plan-template.md           # DEV-PLAN.md Output Template
     ```
+
+[Output Style]
+    **Tone**: Architect communicating a build plan — structured, explicit, dependency-aware. Every Phase has a clear user-visible outcome.
+    **Principles**:
+    - V Every Phase compiles and runs independently
+    - V Phase boundaries follow dependency order (infra → features)
+    - V Every Task lists specific file paths, not "implement X"
+    - X No TBD or placeholder items — every word must be executable
+    - X No "implement related features" — list specific feature names
 
 [Gotchas]
     **Unrealistic Phasing**: "Do everything in Phase 1" is the most common failure. Each Phase must produce compilable, runnable, demonstrable output. If a Phase has no visible outcome, it's too broad — split it.
@@ -260,7 +274,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             Apply the "Granularity Calibration" from [Analysis Strategies] to check again
             Confirm every core feature in the Spec has a corresponding Phase
             Confirm Phase order does not violate dependency relationships
-            No-placeholder check: scan output for placeholders like TBD, TODO, "to be filled", "to be determined", "similar to Phase/Task N" — replace with specific content if found
+            No-placeholder check: scan output for placeholders like TBD, "to be filled", "to be determined", "similar to Phase/Task N" — replace with specific content if found
 
         Step 4: Output file
             Save as DEV-PLAN.md

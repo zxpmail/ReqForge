@@ -9,6 +9,25 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
     Yes -> Write to ../../feedback/ and update the index.
     No -> Return "no new feedback".
 
+[Not For]
+    - Evolving rules from feedback patterns -> use /evolution-engine instead
+    - Fixing the underlying bug that caused the feedback -> use /bug-fixer instead
+    - General user conversation not related to AI behavior -> do not record, not feedback material
+
+[Dependency Check]
+    Automatically executed as the first step when the Skill starts.
+
+    Required:
+    - ../../feedback/ directory → If missing, create from templates/feedback-index-template.md
+    - ../../feedback/FEEDBACK-INDEX.md → If missing, create from templates/feedback-index-template.md
+    - Signal context from feedback-observer → correction, failure, or assessment data
+
+[First Principles]
+    **Signal Over Noise**: Only record when a signal is actually observed. Better to miss than to over-record. User frustration at the tool/environment itself is not AI capability feedback.
+    **Dedup Before Write**: Always check FEEDBACK-INDEX.md for existing entries before creating new ones. Merge, don't duplicate. The same failure mode recorded 5 times inflates occurrence counts without adding information.
+    **Scored Feedback**: Every feedback entry must have Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
+    **Context Completeness**: A feedback entry without context (what the AI did, what the correct behavior is, which Skill was in use) is noise — it can't drive evolution.
+
 [Observation Dimensions]
     The following 5 types of signals trigger feedback recording:
 
@@ -61,6 +80,20 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
     **False positives**: User frustration does not always equal bad AI behavior. Frustration at the tool/environment/language itself should not be recorded as AI capability feedback. Discriminate signal from noise.
     **Skipping scoring**: Writing qualitative feedback without Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
 
+[File Structure]
+    ```
+    feedback-writer/
+    └── SKILL.md                           # Main Skill definition (this file)
+    ```
+
+[Output Style]
+    **Tone**: Auditor recording an incident — factual, structured, contextual. Every entry must be actionable by the evolution-engine.
+    **Principles**:
+    - V Every entry includes Precision/Coverage/Efficiency/Satisfaction scores
+    - V Every entry captures what the AI did, what was correct, and which Skill was in use
+    - V Check FEEDBACK-INDEX.md before writing — merge, don't duplicate
+    - X No entries for user frustration with the tool/environment itself
+
 [Output Artifacts]
     - **../../feedback/\<topic-name\>.md** — feedback topic file
     - **../../feedback/FEEDBACK-INDEX.md** — feedback index (append or update)
@@ -70,7 +103,7 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
     Not project-related -> Do not write, let the AI client handle via default behavior
     No duplicate writing — each piece of information goes into exactly one system
 
-[Write Flow] 1. Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md) 2. Check if a feedback topic already exists (dedup) - Exists -> Update content + occurrences +1 + update updated - Does not exist -> Create new file + update index 3. Filename in kebab-case, brief topic description 4. Write using templates/feedback-topic-template.md format 5. Update FEEDBACK-INDEX.md
+[Workflow] 1. Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md) 2. Check if a feedback topic already exists (dedup) - Exists -> Update content + occurrences +1 + update updated - Does not exist -> Create new file + update index 3. Filename in kebab-case, brief topic description 4. Write using templates/feedback-topic-template.md format 5. Update FEEDBACK-INDEX.md
 
 [File Specification]
     Storage location: ../../feedback/
@@ -80,3 +113,7 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
 
 [Return Format]
     Return to the main Agent after execution: - New record: "Recorded 1 feedback: [title] ([filename])" - Updated existing: "Updated [filename], occurrences: N -> N+1" - No signal: "No new feedback"
+
+[Initialization]
+    Step 1: Execute [Dependency Check]
+    Step 2: Execute [Workflow]

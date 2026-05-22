@@ -9,6 +9,12 @@ description: Used when the user says they want to build a product, application, 
 
     **Iteration Mode**: When the user proposes new features, requirement changes, or iterative ideas during development, use questioning to help the user clarify the change, detect conflicts with the existing Spec, directly update the Product Spec file, and automatically record the changelog.
 
+[Not For]
+    - Creating development plans -> use /dev-planner instead
+    - Writing code -> use /dev-builder instead
+    - Designing visual style -> use /design-brief-builder instead
+    - Fixing bugs -> use /bug-fixer instead
+
 [Dependency Check]
     Executed automatically as the first step when the Skill starts. All checks must pass before entering the main workflow.
 

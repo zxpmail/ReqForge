@@ -7,6 +7,11 @@ description: Used when the user wants to define a design style or visual directi
 [Task]
     Through a designer-interviews-client approach, guide the user to define the product's visual direction and output a well-structured Design-Brief.md that can be used both by design tools and by dev-builder for coding.
 
+[Not For]
+    - Generating actual mockups or design files -> use /design-maker instead
+    - Writing code -> use /dev-builder instead
+    - Defining product features -> use /product-spec-builder instead
+
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 

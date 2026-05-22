@@ -9,6 +9,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop**. User must call /dev-builder again for next Phase.
 
+[Not For]
+    - Fixing bugs in existing code -> use /bug-fixer instead
+    - Reviewing code quality -> use /code-review instead
+    - Planning development phases -> use /dev-planner instead
+    - Gathering requirements -> use /product-spec-builder instead
+
 [Dependency Check]
     Executed automatically as the first step when the Skill starts.
 
