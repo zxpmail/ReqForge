@@ -18,15 +18,23 @@
 
 ## 近期更新
 
+### v1.19.1 — 2026-05-23
+- **幻觉门已接入**：全部适配器 `settings.json` 注册 `PreToolUse` → `hallucination-gate`；钩子脚本修正为读取 `tool_name`；Windows 版改用 Node 解析 JSON。
+- **并行审查文档对齐**：`code-review`、`dev-builder`、`bug-fixer` SKILL 及 README 工作流图统一为并行 4 Agent + 聚合，移除过时的 Stage 1/2 描述；置信度阈值统一为 ≥0.6 / 0.3。
+- **Commands 层补全**：为 `design-brief-builder`、`design-maker`、`evolution-engine`、`feedback-writer` 新增 `commands/*.md`（11 个 Skill 凡有 slash 命令均有命令层）。
+- **Loadout 清理**：用户 loadout 移除仅 ReqForge 自研可用的 `check-sync` 钩子。
+- **跨平台工具**：`pnpm validate-skill` 默认使用 `scripts/validate-skill.mjs`（Windows 无需 bash）；新增 `pnpm apply-loadout <名称> <客户端>` 合并 loadout 钩子到 settings。
+- **文档与版本**：`package.json`、DEV-PLAN、Product-Spec、`core/docs/` 同步至 v1.19.1；Sub-Agent 数量更正为 10。
+
 ### v1.19 — 2026-05-23
 - **Loadout 机制**：可复用的技能/Agent/钩子/MCP 服务器捆绑包，适配不同项目类型。内置 4 个 loadout：`full`、`web-app`、`cli-tool`、`minimal`。`loadout.schema.json` 做校验，`pnpm sync` 同步到所有适配器。
 - **loadout.schema.json**：JSON Schema v7 校验，定义必需字段（name、version、description、skills、agents、hooks）。
 
 ### v1.18 — 2026-05-23
 - **skill.json 元数据**：全部 11 个 Skill 新增机器可读的 `skill.json`（名称、版本、触发条件、前置依赖、关联 Agent、钩子）。`validate-skill.sh` 通过 Node/Python 自动校验。JSON Schema 在 `core/skills/skill.schema.json`。
-- **Commands 命令层**：7 个可调用的 Skill 新增 `commands/<name>.md`，含 YAML 前导元数据 + 分阶段工作流（目标 → 行动 → 验收标准）。CLAUDE.md [Skill Dispatch] 引用命令层获取分步流程。
+- **Commands 命令层**：全部 11 个 Skill 凡暴露 slash 命令均有 `commands/<name>.md`（v1.19.1 补全 design-brief-builder 等 4 个）；含 YAML 前导元数据 + 分阶段工作流。`pnpm validate-skill` 默认使用跨平台 `validate-skill.mjs`。
 - **并行 Agent 代码审查**：4 个专业审查 Agent（design、bug、security、types）并发执行，每个返回结构化发现与置信度评分（0.0-1.0）。聚合器按阈值过滤（≥0.6 确认为问题，0.3-0.6 降级为疑似，<0.3 抑制），跨 Agent 协同时加分。替代旧的串行两阶段审查。
-- **幻觉门（Hallucination Gate）**：PreToolUse 钩子在 Write/Edit 前验证目标目录是否存在，防止路径幻觉。
+- **幻觉门（Hallucination Gate）**：PreToolUse 钩子在 Write/Edit 前验证目标目录是否存在（v1.19.1 已写入全部适配器 settings）。
 - **项目状态注入**：`check-evolution.sh` 在会话启动时检测 Product-Spec/DEV-PLAN/Code 存在情况，以 `additionalContext` 注入路由引导。
 - **validate-skill.sh — skill.json 校验**：新增存在性检查 + 必需字段验证（name、version、description、triggers.auto/manual/command）。
 - **sub-agent-orchestration.md**：文档化并行审查模式，含全部 4 个专业 Agent 与聚合规则。
@@ -273,7 +281,7 @@ my-app/
 │  ├─ decisions-log.md   中期：ADR 技术决策                    │
 │  └─ task-history.md    短期：近期任务摘要                     │
 ├─────────────────────────────────────────────────────────────┤
-│  Sub-Agent × 9（上下文隔离防火墙）                           │ ← 执行层
+│  Sub-Agent × 10（上下文隔离防火墙）                          │ ← 执行层
 │  ├─ implementer        编码 + 编译验证 + 自我检查            │
 │  ├─ code-reviewer      并行调度 + 置信度聚合                 │
 │  ├─ code-reviewer-*  4 个专业 Agent（design、bug、security、types）│
@@ -448,7 +456,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 Forge/
 ├── core/                      # 核心共享内容
 │   ├── skills/                # 11 个 Skill 定义，每个独立目录
-│   ├── agents/                # 9 个 Sub-Agent 定义
+│   ├── agents/                # 10 个 Sub-Agent 定义
 │   ├── loadouts/              # 可复用的技能/Agent/钩子捆绑包
 │   ├── templates/             # 文档模板
 │   │   └── memory/            # 三层记忆 + 会话交接模板
@@ -467,6 +475,8 @@ Forge/
 │   ├── install.ts             # adapter → 用户项目安装
 │   ├── install.sh / install.ps1 # 安装命令封装
 │   ├── dependency-graph.ts    # 文件级依赖图与 blast-radius 分析
+│   ├── validate-skill.mjs     # 跨平台 SKILL.md 校验（默认 pnpm validate-skill）
+│   ├── apply-loadout.ts       # 将 loadout 钩子合并到 adapter settings
 │   └── __tests__/             # Vitest 单元测试
 ├── vitest.config.ts           # 测试配置
 ├── changes/                   # 变更产物
@@ -490,9 +500,11 @@ Forge/
 
 ```bash
 pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
-pnpm test             # 运行单元测试（12 项）
+pnpm test             # 运行单元测试（22 项）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
+pnpm validate-skill   # 校验 core/skills/（跨平台 .mjs，可加 --strict）
+pnpm apply-loadout full claude-code  # 将 loadout 钩子写入 adapter settings
 pnpm dep-graph build  # 构建项目依赖图 → .forge/graph.json
 pnpm dep-graph stats  # 查看图统计
 ```
@@ -500,6 +512,8 @@ pnpm dep-graph stats  # 查看图统计
 | 命令 | 说明 |
 |------|------|
 | `pnpm test:watch` | 监听模式运行测试 |
+| `pnpm validate-skill:bash` | 使用 bash 版 validate-skill.sh（需 WSL/Git Bash） |
+| `pnpm apply-loadout <loadout> <client>` | 将 loadout（full/web-app/cli-tool/minimal）钩子合并到 settings；加 `--dry-run` 预览 |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
 | `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目 |

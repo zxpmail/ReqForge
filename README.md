@@ -18,15 +18,23 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ## What's New
 
+### v1.19.1 — 2026-05-23
+- **Hallucination Gate wired**: All adapter `settings.json` register `PreToolUse` → `hallucination-gate`; hook reads `tool_name` from stdin JSON; Windows `.bat` uses Node parsing.
+- **Parallel review docs aligned**: code-review, dev-builder, bug-fixer SKILLs and README workflow unified to parallel 4-agent + aggregation; removed stale Stage 1/2 language; confidence thresholds ≥0.6 / 0.3.
+- **Commands layer complete**: Added `commands/*.md` for design-brief-builder, design-maker, evolution-engine, feedback-writer (all 11 skills with slash commands now have command files).
+- **Loadout cleanup**: Removed ReqForge-only `check-sync` from user-facing loadouts.
+- **Cross-platform tooling**: `pnpm validate-skill` defaults to `scripts/validate-skill.mjs`; added `pnpm apply-loadout <name> <client>`.
+- **Docs & version**: package.json, DEV-PLAN, Product-Spec, core/docs synced to v1.19.1; Sub-Agent count corrected to 10.
+
 ### v1.19 — 2026-05-23
 - **Loadout mechanism**: Reusable bundles of skills, agents, hooks, and MCP servers for different project types. 4 built-in loadouts: `full`, `web-app`, `cli-tool`, `minimal`. Validated by `loadout.schema.json`. Synced to all adapters via `pnpm sync`.
 - **loadout.schema.json**: JSON Schema v7 validation for loadout definitions (required fields: name, version, description, skills, agents, hooks).
 
 ### v1.18 — 2026-05-23
 - **skill.json metadata**: All 11 skills now ship with machine-readable `skill.json` (name, version, triggers, prerequisites, agents, hooks). Validated by `validate-skill.sh` via Node/Python. JSON Schema at `core/skills/skill.schema.json`.
-- **Commands layer**: 7 user-invokable skills now have `commands/<name>.md` with YAML frontmatter + phased workflows (Goal → Actions → Acceptance). CLAUDE.md [Skill Dispatch] references commands for step-by-step procedures.
+- **Commands layer**: All 11 skills with slash commands now have `commands/<name>.md` (v1.19.1 completed the remaining 4). YAML frontmatter + phased workflows. `pnpm validate-skill` uses cross-platform `validate-skill.mjs` by default.
 - **Parallel agent code review**: 4 specialized review agents (design, bug, security, types) run concurrently, each returning structured findings with confidence scores (0.0-1.0). Aggregator applies thresholding (≥0.6 confirmed, 0.3-0.6 suspected, <0.3 suppressed) with cross-agent boost. Replaces the old serial two-stage review.
-- **Hallucination Gate**: PreToolUse hook verifies Write/Edit target directories exist before allowing file creation, preventing path hallucinations.
+- **Hallucination Gate**: PreToolUse hook verifies Write/Edit target directories exist (v1.19.1: registered in all adapter settings).
 - **Project state injection**: `check-evolution.sh` now detects Product-Spec/DEV-PLAN/Code presence on session start and injects routing guidance as `additionalContext`.
 - **validate-skill.sh — skill.json validation**: Added existence check + required field validation (name, version, description, triggers.auto/manual/command).
 - **sub-agent-orchestration.md**: Documented parallel review pattern with all 4 specialist agents and aggregation rules.
@@ -273,7 +281,7 @@ More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 │  ├─ decisions-log.md   Mid-term: ADRs, technical decisions  │
 │  └─ task-history.md    Short-term: recent task summaries     │
 ├─────────────────────────────────────────────────────────────┤
-│  Sub-Agents × 9 (Context Firewall)                          │ ← Execution Layer
+│  Sub-Agents × 10 (Context Firewall)                         │ ← Execution Layer
 │  ├─ implementer        Code + compile verify + self-check   │
 │  ├─ code-reviewer      Parallel dispatch + confidence aggregation   │
 │  ├─ code-reviewer-*  4 specialists (design, bug, security, types)│
@@ -448,7 +456,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 Forge/
 ├── core/                      # Shared core content
 │   ├── skills/                # 11 skill definitions, each in its own directory
-│   ├── agents/                # 9 Sub-agent definitions
+│   ├── agents/                # 10 Sub-agent definitions
 │   ├── loadouts/              # Reusable skill/agent/hook bundles
 │   ├── templates/             # Document templates
 │   │   └── memory/            # Three-tier memory + session handoff templates
@@ -468,6 +476,8 @@ Forge/
 │   ├── install.ts             # adapter → user project install
 │   ├── install.sh / install.ps1 # install wrappers
 │   ├── dependency-graph.ts    # File-level import graph + blast-radius
+│   ├── validate-skill.mjs     # Cross-platform SKILL.md validator (default pnpm validate-skill)
+│   ├── apply-loadout.ts       # Merge loadout hooks into adapter settings
 │   └── __tests__/             # Vitest unit tests
 ├── vitest.config.ts           # Test runner config
 ├── changes/                   # Change artifacts (proposal/specs/design/tasks)
@@ -492,9 +502,11 @@ After editing `core/`, sync to adapters and run tests before committing.
 
 ```bash
 pnpm install          # Dev dependencies (TypeScript, Vitest, etc.)
-pnpm test             # Unit tests (12 cases)
+pnpm test             # Unit tests (22 cases)
 pnpm build            # Compile scripts/ to dist/
 pnpm sync             # Sync core/ → adapters/
+pnpm validate-skill   # Validate core/skills/ (cross-platform .mjs; add --strict)
+pnpm apply-loadout full claude-code  # Write loadout hooks to adapter settings
 pnpm dep-graph build  # Build dependency graph → .forge/graph.json
 pnpm dep-graph stats  # Print graph statistics
 ```
@@ -502,6 +514,8 @@ pnpm dep-graph stats  # Print graph statistics
 | Command | Description |
 |---------|-------------|
 | `pnpm test:watch` | Run tests in watch mode |
+| `pnpm validate-skill:bash` | Bash validate-skill.sh (requires WSL/Git Bash) |
+| `pnpm apply-loadout <loadout> <client>` | Merge loadout (full/web-app/cli-tool/minimal) hooks into settings; `--dry-run` to preview |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
 | `pnpm forge-install <client> --target <dir>` | Install adapter into a user project |
