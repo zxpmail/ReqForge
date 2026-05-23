@@ -27,6 +27,7 @@
 
 [Skill Dispatch]
     When triggers match, invoke the Skill before responding. Priority: direct invocation > context match > ask user.
+    Each skill has detailed phased workflows in `commands/<name>.md` within its skill directory — invoke by name, reference commands for step-by-step procedures.
 
     /product-spec-builder — Auto: user expresses product idea, describes features, wants to modify UI/requirements
     /design-brief-builder — Manual only. Prereq: Product-Spec.md

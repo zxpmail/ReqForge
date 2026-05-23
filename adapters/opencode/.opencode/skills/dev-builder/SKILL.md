@@ -439,6 +439,24 @@ Soft completion declarations:
     - Phase completion cannot be confirmed without passing
     - If problems are found and fixed during verification, use `fix:` prefix for the fix commit (per-Task commits are already completed in Step 2)
 
+    **Phase Summary Generation** (auto-generated after all passes):
+    Generate a structured phase summary appended to the Phase completion report:
+
+    ```
+    📋 Phase N Summary
+
+    **Completed**: X/Y delivery checklist items
+    **Key files created/modified**: [list]
+
+    **Architecture decisions**: [any ADRs made this phase]
+    **Known limitations**: [unresolved issues, deferred items]
+    **Verification evidence**: [compilation: pass | tests: X passed | lint: pass]
+
+    **Next step**: Phase N+1 — [Phase name from DEV-PLAN]
+    ```
+
+    This summary serves as a quick-reference handoff point for the next session or next Phase invocation.
+
 [Workflow (Initialization Mode)]
     Trigger condition: Has DEV-PLAN.md, no project code
 

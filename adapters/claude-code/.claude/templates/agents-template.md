@@ -1,3 +1,8 @@
+---
+name: agents-template
+description: Template for generating project AGENTS.md constraint files
+---
+
 <!-- forge: AGENTS.md template v1.0 -->
 # Project Rules
 
@@ -9,10 +14,10 @@ Pin all versions to exact patch. AI must use these versions — no guessing, no 
 
 ```
 <!-- Fill in your project's actual versions -->
-Runtime: <language> <exact-version>
-Framework: <framework> <exact-version>
-Package Manager: <manager> <exact-version>
-Database: <database> <exact-version>
+Runtime: [language] [exact-version]
+Framework: [framework] [exact-version]
+Package Manager: [manager] [exact-version]
+Database: [database] [exact-version]
 ```
 
 ## Behavior Boundaries
@@ -32,7 +37,7 @@ Database: <database> <exact-version>
 ## Project Structure
 
 ```
-<!-- Fill in your project structure -->
+[Fill in your project structure]
 ```
 
 Rule: AI-generated code must follow the above structure. Do not place files outside these directories without asking.

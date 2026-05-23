@@ -62,6 +62,61 @@ validate_skill() {
   fi
   pass
 
+  # 2. skill.json exists
+  local skill_json="$dir/skill.json"
+  if [ ! -f "$skill_json" ]; then
+    error "skill.json not found in $dir"
+  else
+    # Validate required fields using available runtime
+    local validation_passed=true
+    if command -v node &>/dev/null && node -e "process.exit(0)" 2>/dev/null; then
+      if ! node -e "
+const fs = require('fs');
+const d = JSON.parse(fs.readFileSync('$skill_json', 'utf-8'));
+const required = ['name','version','description'];
+const missing = required.filter(k => !(k in d));
+if (missing.length) {
+  console.error('missing required fields: ' + missing.join(', '));
+  process.exit(1);
+}
+if (!d.triggers || !['auto','manual','command'].every(k => k in d.triggers)) {
+  console.error('triggers missing auto/manual/command');
+  process.exit(1);
+}
+console.log('OK');
+" 2>&1; then
+        validation_passed=false
+      fi
+    elif command -v python3 &>/dev/null && python3 --version >/dev/null 2>&1; then
+      if ! python3 -c "
+import json, sys
+with open('$skill_json') as f:
+    d = json.load(f)
+required = ['name', 'version', 'description']
+missing = [k for k in required if k not in d]
+if missing:
+    print('missing required fields: ' + ', '.join(missing))
+    sys.exit(1)
+if not d.get('triggers') or not all(k in d['triggers'] for k in ['auto', 'manual', 'command']):
+    print('triggers missing auto/manual/command')
+    sys.exit(1)
+print('OK')
+" 2>&1; then
+        validation_passed=false
+      fi
+    else
+      # Fallback: basic grep-based check
+      if ! grep -q '"name"' "$skill_json" || ! grep -q '"version"' "$skill_json"; then
+        validation_passed=false
+      fi
+    fi
+    if [ "$validation_passed" = true ]; then
+      pass
+    else
+      error "skill.json validation failed"
+    fi
+  fi
+
   local content
   content=$(cat "$skill_md")
 

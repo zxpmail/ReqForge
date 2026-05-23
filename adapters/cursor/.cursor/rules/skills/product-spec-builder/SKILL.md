@@ -294,6 +294,49 @@ description: Used when the user says they want to build a product, application, 
             Recap understanding, confirm no deviation
             Correct issues on the spot
 
+    [Clarifying Questions Phase]
+        Goal: Before diving into details, resolve ambiguities and edge cases that could cause rework later. This phase prevents "we built what you said but that's not what you meant."
+
+        Step 1: Ambiguity scan
+            Review everything gathered so far, identify unclear items:
+            - Vague scope: "support multiple users" — how many? Concurrent? With roles?
+            - Unstated assumptions: "users can share" — share what? Public link? Within team?
+            - Missing boundaries: "works offline" — fully offline or cache + sync?
+            - Edge cases: What happens when a required external service is down? What about empty states?
+            - Implicit defaults: "simple interface" — simple for whom? Power user or complete beginner?
+
+        Step 2: Present ambiguities to user
+            Present 2-4 targeted questions per round. Format:
+
+            ```
+            🔍 Clarifying before we proceed:
+
+            1. You said "users can share" — do you mean:
+               a) Generate a public link (anyone can view)?
+               b) Share within a team/workspace?
+               c) Something else?
+
+            2. What happens when the AI API is unreachable?
+               a) Show error and block usage
+               b) Fall back to manual mode
+               c) Queue and retry
+
+            (Choose or tell me your own answer.)
+            ```
+
+        Step 3: Resolve
+            - For each question, get a clear answer before moving on
+            - If the user says "I don't know" → offer 2-3 options with trade-offs
+            - Record answers as explicit Spec entries so they are not forgotten
+
+        Step 4: Boundary documentation
+            After resolving ambiguities, document the boundaries explicitly:
+            - In-scope: [confirmed features]
+            - Out-of-scope for v1: [explicitly cut features]
+            - Deferred decisions: [items left open with trigger conditions]
+
+        This phase is NOT optional for new product specs. It prevents the most common source of rework: ambiguous requirements that get interpreted differently by developer and user.
+
     [Requirements Refinement Phase]
         Goal: Fill gaps, force the user to think clearly, determine AI capability needs and interface layout
 

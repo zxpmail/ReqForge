@@ -10,7 +10,7 @@
       "run": "sh .claude/hooks/mark-review-needed.sh && sh .claude/hooks/memory-check.sh"
     },
     "PostToolUse": {
-      "run": "sh .claude/hooks/context-compaction.sh"
+      "run": "sh .claude/hooks/context-compaction.sh && sh .claude/hooks/check-handoff.sh"
     },
     "PostCommit": {
       "run": "sh .claude/hooks/auto-push.sh"

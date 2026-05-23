@@ -25,3 +25,4 @@ fi
 
 # If we get here, memory exists but wasn't updated recently
 echo '{"decision": "approve", "reason": "Reminder: project memory exists but task-history.md was not updated after code changes. Consider appending to memory/task-history.md and checking if decisions-log.md or project-memory.md need updates."}'
+exit 0

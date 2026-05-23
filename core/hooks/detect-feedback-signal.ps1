@@ -1,6 +1,6 @@
 ﻿# Hook: UserPromptSubmit
 # Detect correction/feedback signals in user prompt via PowerShell
-$c = $input | Out-String
+$c = [Console]::In.ReadToEnd()
 if ($c) {
     try {
         $p = ($c | ConvertFrom-Json).prompt

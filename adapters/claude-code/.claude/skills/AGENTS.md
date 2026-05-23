@@ -15,9 +15,11 @@ Each subdirectory is an independent Skill with a `SKILL.md` as the entry point. 
 ### MUST
 - Directory name MUST be kebab-case (e.g., `bug-fixer`, `dev-builder`)
 - Every Skill MUST have a `SKILL.md` with frontmatter (`name` + `description`)
+- Every Skill MUST have a `skill.json` with metadata (name, version, description, triggers, prerequisites)
 - `SKILL.md` MUST include sections: [Task], [Dependency Check], [First Principles], [File Structure], [Workflow], [Gotchas], [Initialization]
 - `description` in frontmatter MUST be decidable — specify when to use, not just what it does (e.g., "Used when user reports error/bug" not "Helps with bugs")
 - Templates MUST use `*-template.md` naming
+- Skill commands MUST live in `commands/<name>.md` with frontmatter (description, argument-hint)
 
 ### MUST NOT
 - Do NOT create implicit cross-skill dependencies — skills should not rely on hidden file paths or script side-effects from other skill directories

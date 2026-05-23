@@ -19,3 +19,5 @@ Each `.md` file defines a Sub-Agent — a context-isolated worker that executes 
 - Keep agent definitions under 200 lines — agents are specialists, not generalists
 - Include explicit "stop conditions" — when should the agent hand back to the orchestrator
 - Specify what context the agent needs (spec items, deliverables, files, project structure) and what it does NOT need
+- Parallel review agents SHOULD return structured findings with confidence scores (0.0-1.0)
+- Aggregation agents SHOULD filter by confidence threshold (>= 0.6 confirmed, 0.3-0.6 suspected, < 0.3 suppressed)

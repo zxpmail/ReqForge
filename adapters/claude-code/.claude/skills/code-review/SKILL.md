@@ -31,6 +31,7 @@ description: Used when the user wants to review code, check quality, verify feat
     **Zero Trust Claims**: Do not accept vague conclusions like "already implemented" or "roughly matches." Every feature either has a code implementation (with file path and line number) or it does not.
     **Evidence is King**: Saying "passed" must be accompanied by compilation output, API responses, or value comparison results. A "passed" without evidence equals not having reviewed at all.
     **Leave No Stone Unturned**: Every single functional requirement in the Spec must be checked. Sweeping statements like "the rest looks normal" are not acceptable.
+    **Confidence-Based Reporting**: Every finding must include a confidence score (0-100%). Only findings ≥ 80% confidence are reported as confirmed issues. Findings below 80% are reported as "suspected issues" with the reason for uncertainty. This reduces noise and prevents speculative conclusions from blocking progress.
     **Cross-Session Audit**: Important reviews (entire Phase completion, security audit, architecture change) should be performed in a fresh sub-agent session. Reviewing code in the same session where it was written creates self-confirmation bias — the model tends to validate its own assumptions. When `change_complexity` is "complex" or "moderate", flag the review as requiring isolation.
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
@@ -43,8 +44,10 @@ description: Used when the user wants to review code, check quality, verify feat
     - X Never say "roughly matches" or "basically done" — either it matches or it does not
     - X Never skip any Spec item
     - X Never trust your own previous review conclusion (re-verify every time)
+    - X Never report findings without a confidence score — every conclusion must be tagged [100%], [≥80%], or [<80%]
     - V Every checkmark is accompanied by specific evidence
     - V Every crossmark cites the Spec original text + actual code discrepancy
+    - V Findings < 80% confidence are reported as "suspected" not "confirmed", with explicit uncertainty reason
     - V Security issues are highlighted separately, not mixed in with functional issues
 
     **Typical Expressions**:
@@ -116,6 +119,7 @@ description: Used when the user wants to review code, check quality, verify feat
 [Gotchas]
     **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.
     **Evidence-less conclusions**: Saying "looks good" without file:line evidence. Every finding needs a concrete location. "Looks good" is not a review finding — it's a skipped step.
+    **Confidence inflation**: Defaulting to 100% on every finding defeats the purpose. Be honest about uncertainty — if you only scanned the file briefly or the code path is complex, lower the confidence accordingly. A finding at 70% with clear uncertainty documentation is more useful than a finding falsely claimed at 100%.
     **Regression blind spot**: Only reviewing changed files without checking what depends on them. Use `dep-graph affected <file>` if available to scope impact.
     **Skipping compilation verification**: "It's just a style change" → style files can break. Run compilation verification every time.
 
@@ -185,44 +189,61 @@ description: Used when the user wants to review code, check quality, verify feat
         - Phase review (triggered by dev-builder Phase completion verification) -> current Phase's delivery checklist
         - Task review (triggered by dev-builder per-Task review) -> current Task's delivery checklist
 
-    [Step 2: Scan Code Implementation]
+    [Step 2: Parallel Agent Dispatch] (for moderate/complex changes)
+        For simple changes (typo fix, single-file rename, comment-only), skip to [Step 3].
+        For moderate/complex changes, dispatch 4 specialized agents concurrently:
+        - **code-reviewer-design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
+        - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
+        - **code-reviewer-security**: OWASP Top 10, credential leaks, injection, XSS
+        - **code-reviewer-types**: Type safety, nullability, any/ts-ignore, edge cases
+        Each agent returns structured findings with confidence scores (0.0-1.0).
+
+    [Step 3: Scan Code Implementation]
         Traverse the project code directory
         Identify: pages/routes, components, API endpoints, database tables, hooks, utility functions
         Build a code map (what features are in which files)
 
-    [Step 3: Item-by-Item Comparison]
-        Apply the [Item-by-Item Comparison Method]:
-        - Compare against the [Functional Completeness] dimension: every Spec item vs code
-        - Compare against the [UI Consistency] dimension: design mockups vs actual pages (if available)
-        - Check [Spec Drift Detection]: are there features in the code not described in the Spec
+    [Step 4: Aggregation & Confidence Scoring]
+        Collect findings from all specialized agents. Apply aggregation rules:
 
-    [Step 4: Code Quality + Security Review]
-        Apply [Code Quality] and [Security Scan] from [Review Dimension Checklist]
-        Apply the [Security Scan Method] to grep for dangerous patterns
-        Compilation verification: tsc --noEmit
+        **Confidence thresholding**:
+        - Confidence >= 0.6 -> include as confirmed finding
+        - Confidence 0.3-0.6 -> downgrade to "suspected"
+        - Confidence < 0.3 -> suppress (noise)
 
-    [Step 5: Output Review Report]
+        **Deduplication**: same file + same line range + same category -> keep highest confidence
+
+        **Cross-agent boost**: if two agents flag the same file+line at >= 0.6, boost by 0.1 (max 1.0)
+
+        **Compilation verification**: tsc --noEmit
+
+    [Step 5: Output Aggregated Review Report]
         Format:
         "**Code Review Report**
 
          **Reference Documents**: Product-Spec.md [+ DEV-PLAN.md Phase N]
 
+         **Agent Coverage**: design [✅/❌] | bug [✅/❌] | security [✅/❌] | types [✅/❌]
+
          ---
 
+         **Confirmed Issues (X)** (confidence >= 60%)
+         - [category] [file:line] — description — [agent name] — [confidence%]
+
+         **Suspected Issues (X)** (confidence 30-60%, flagged for manual review)
+         - [category] [file:line] — description — uncertainty reason — [confidence%]
+
          **Fully Implemented (X items)**
-         - [feature name]: [code location] — [verification method]
+         - [feature name]: [code location] — [verification method] — [100%]
 
          **Partially Implemented (X items)**
-         - [feature name]: [what is missing] — Spec original text: '...'
+         - [feature name]: [what is missing] — Spec original text: '...' — [confidence%]
 
          **Not Implemented (X items)**
-         - [feature name]: Spec original text: '...'
+         - [feature name]: Spec original text: '...' — [100%]
 
          **Spec Drift (X items)**
-         - [description]: code location — no corresponding requirement in Spec
-
-         **Security Issues (X items)**
-         - [description]: [file:line_number]
+         - [description]: code location — no corresponding requirement in Spec — [confidence%]
 
          **Code Quality**
          - Large files: [list files >300 lines]
@@ -232,14 +253,14 @@ description: Used when the user wants to review code, check quality, verify feat
          ---
 
          **Priority Classification**
-         High: [core functionality missing, security issues]
-         Medium: [auxiliary features, UI details, code quality]
-         Low: [enhancement suggestions, optional optimizations]"
+         High: [core functionality missing, security issues — >= 60% confidence]
+         Medium: [auxiliary features, UI details, code quality — >= 60% confidence]
+         Low: [enhancement suggestions, suspected issues < 60% confidence]"
 
     Note: This Skill's scope ends at outputting the report. Fixes are routed by the main Agent after receiving the report:
-    - Stage 1 failure (missing features / non-compliant with Spec) -> main Agent invokes dev-builder to fill the gap
-    - Stage 2 failure (code quality / security issues) -> main Agent invokes bug-fixer to fix
-    - After fixes are complete, the main Agent re-dispatches code-review starting from Stage 1
+    - Confirmed missing features / non-compliant with Spec -> main Agent invokes dev-builder to fill the gap
+    - Bug / security / type issues -> main Agent invokes bug-fixer to fix
+    - After fixes are complete, the main Agent re-dispatches code-review starting from Step 1
 
 [YOLO Mode]
     When FORGE_MODE=yolo, the review report is written to file instead of blocking:

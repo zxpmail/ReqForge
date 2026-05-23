@@ -159,6 +159,25 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - When feature priority is ambiguous -> "Should we do A first or B first?"
     - Beyond these cases, the Spec is clear enough — no need to keep questioning the user
 
+    **Parallel Codebase Exploration** (when existing code is present):
+    When scanning existing code in iteration mode or when the project already has code, use parallel exploration for efficiency:
+
+    1. **Split exploration scope** into independent dimensions:
+       - Routes/Pages: map all pages and API routes
+       - Data layer: schemas, models, migrations, storage
+       - Components: UI component tree, shared components
+       - Services: external API integrations, business logic modules
+       - Configuration: project config, dependency versions, build setup
+
+    2. **Dispatch parallel sub-agents** (one per dimension) each with:
+       - A focused prompt: "Explore [dimension] in [project]. List all files, their responsibilities, and key patterns."
+       - A strict output format: file path → responsibility → key exports/interfaces
+
+    3. **Merge results**: Combine all exploration outputs into a unified code map
+    4. **Annotate constraints**: Flag patterns that the plan must respect (existing conventions, architectural decisions)
+
+    This avoids the slow sequential "read one file at a time" approach and provides a comprehensive codebase picture in a single parallel pass.
+
 [Information Sufficiency Criteria]
     DEV-PLAN.md can be generated when the following conditions are met:
 
@@ -207,6 +226,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
         Step 5: Scan existing code (if present)
             If the project directory already has code -> scan directory structure, identify tech stack and implemented features
             Mark as existing code constraints to avoid Plan conflicting with existing structure
+            For codebases with more than 20 files, use [Parallel Codebase Exploration] strategy to dispatch parallel sub-agents for efficient comprehensive scanning
 
         Step 6: Load memory (if present)
             If memory/ exists -> read project-memory.md (architecture constraints, known pitfalls), decisions-log.md (past decisions to respect), task-history.md (what has been implemented)
