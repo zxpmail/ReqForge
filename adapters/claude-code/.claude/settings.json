@@ -7,7 +7,7 @@
       "run": "sh .claude/hooks/pre-commit-check.sh"
     },
     "BeforeCommand": {
-      "run": "sh .claude/hooks/stop-gate.sh && sh .claude/hooks/retry-gate.sh && sh .claude/hooks/detect-feedback-signal.sh"
+      "run": "sh .claude/hooks/phase-exit-guard.sh && sh .claude/hooks/stop-gate.sh && sh .claude/hooks/retry-gate.sh && sh .claude/hooks/detect-feedback-signal.sh"
     },
     "AfterCommand": {
       "run": "sh .claude/hooks/mark-review-needed.sh && sh .claude/hooks/memory-check.sh"

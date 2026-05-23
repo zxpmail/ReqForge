@@ -7,7 +7,7 @@
       "run": "sh .cursor/rules/hooks/pre-commit-check.sh"
     },
     "BeforeCommand": {
-      "run": "sh .cursor/rules/hooks/stop-gate.sh && sh .cursor/rules/hooks/retry-gate.sh && sh .cursor/rules/hooks/detect-feedback-signal.sh"
+      "run": "sh .cursor/rules/hooks/phase-exit-guard.sh && sh .cursor/rules/hooks/stop-gate.sh && sh .cursor/rules/hooks/retry-gate.sh && sh .cursor/rules/hooks/detect-feedback-signal.sh"
     },
     "AfterCommand": {
       "run": "sh .cursor/rules/hooks/mark-review-needed.sh && sh .cursor/rules/hooks/memory-check.sh"

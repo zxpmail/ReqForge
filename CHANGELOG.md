@@ -2,6 +2,14 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.22.1] - 2026-05-23
+### Added
+- **agent-harness-seven-layer-map.md**: AGENT魔方「七层 Harness」↔ ReqForge mapping (teaching skeleton vs product pipeline).
+- **phase-exit-guard** hook: blocks agent stop while `.forge/phase-exit-block` exists (Ralph-style Phase completion); wired in all loadouts + adapter settings.
+### Changed
+- **dev-builder** `phase-completion-assessment`: when/how to write/remove `.forge/phase-exit-block`.
+- **evolution-engine**: proposals require **Predicted effect** + **Verify by** (observability-driven evolution).
+
 ## [v1.22.0] - 2026-05-23
 ### Added
 - **context7-comparison.md**: vs [upstash/context7](https://github.com/upstash/context7) — stack with ReqForge; optional CLAUDE.md rule snippet.

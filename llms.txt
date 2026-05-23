@@ -30,7 +30,7 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 
 - **12 Skills** — Independent methodology modules (product-spec-builder, change-manager, dev-builder, bug-fixer, code-review, etc.). Each includes `[First Principles]`, `[Gotchas]`, and command layers where applicable.
 - **10 Sub-Agents** — Context-isolated workers (implementer, planner, code-reviewer + 4 specialists, feedback-observer, evolution-runner, test-writer). Fresh instance per task.
-- **8 default hooks** — hallucination-gate, pre-commit-check, stop-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, memory-guard (auto-push optional).
+- **9 default hooks** — hallucination-gate, pre-commit-check, phase-exit-guard, stop-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, memory-guard (auto-push optional).
 - **3-Tier Memory** — project-memory.md (permanent architecture facts), decisions-log.md (ADR records), task-history.md (30-entry rolling log).
 - **Evolution Loop** — feedback-observer records failures → evolution-engine detects patterns (3+ occurrences) → generates rule upgrade proposals → skill-builder implements.
 - **Dependency Graph** — `scripts/dependency-graph.ts` for file-level blast-radius analysis before code changes.
@@ -60,4 +60,4 @@ Sync after editing core: `pnpm sync`
 
 Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`
 
-Version: v1.22.0
+Version: v1.22.1

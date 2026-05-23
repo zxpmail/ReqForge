@@ -1,12 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.22.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.22.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
 **开源 Agent Harness** — 适配 Claude Code、Cursor、OpenCode：用 Skill、钩子、记忆与进化约束模型，产出可验证、可回滚，而不只靠对话。
 
-**一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md)
+**一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md) · [七层对照 →](core/docs/agent-harness-seven-layer-map.md)
 
 > **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md) · **和 [Context7](https://github.com/upstash/context7)？** 库文档注入；建议与 ReqForge **叠加**。[Context7 →](core/docs/context7-comparison.md)
 
@@ -27,7 +27,7 @@ flowchart LR
     Build[dev-builder]
     Rev[code-review / bug-fixer]
     Rel[release-builder]
-    Hooks[8 个钩子 + 进化]
+    Hooks[9 个钩子 + 进化]
     Mem[memory/ 三层记忆]
   end
 
@@ -58,6 +58,9 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.22.1 — 2026-05-23
+- **Harness 七层对照** + **phase-exit-guard**（Phase 未完成阻止退出）；进化提案需写预期效果与验证方式。
 
 ### v1.22.0 — 2026-05-23
 - **Context7**：对照文档、dev-builder 库文档策略、Spec/Plan 的 Context7 ID 列、`web-app` 可选 MCP。
@@ -503,6 +506,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | ---------------------- | ------------------ | --------------------------------------- |
 | hallucination-gate | 工具调用前 | Write/Edit 目标目录不存在则阻止 |
 | pre-commit-check | 提交前 | 编译失败则阻止提交 |
+| phase-exit-guard | Agent 停止前 | 存在 `.forge/phase-exit-block` 时阻止停止（Phase 未验收） |
 | stop-gate | Agent 停止前 | 代码未审查则阻止停止 |
 | detect-feedback-signal | 用户消息时 | 自动检测纠正信号 |
 | mark-review-needed | 文件编辑后 | 标记需要审查的变更 |

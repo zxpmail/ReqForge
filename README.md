@@ -1,12 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.22.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.22.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
 **Open-source Agent Harness** for Claude Code, Cursor, and OpenCode — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
 
-**Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md)
+**Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md) · [Seven-layer map →](core/docs/agent-harness-seven-layer-map.md)
 
 > **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md)
 
@@ -27,7 +27,7 @@ flowchart LR
     Build[dev-builder]
     Rev[code-review / bug-fixer]
     Rel[release-builder]
-    Hooks[8 hooks + evolution]
+    Hooks[9 hooks + evolution]
     Mem[memory/ 3-tier]
   end
 
@@ -58,6 +58,9 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.22.1 — 2026-05-23
+- **Seven-layer Harness map** + **phase-exit-guard** hook (Ralph-style Phase stop); evolution proposals need predicted effect + verify-by.
 
 ### v1.22.0 — 2026-05-23
 - **Context7**: comparison doc, library-docs strategy in dev-builder, Context7 ID columns in Spec/Plan templates, optional MCP in `web-app` loadout.
@@ -503,6 +506,7 @@ Eight hook scripts fire automatically in shipped adapters (plus `check-sync` in 
 | ---------------------- | ------------------ | --------------------------------------- |
 | hallucination-gate     | Before tool use    | Block Write/Edit to non-existent dirs   |
 | pre-commit-check       | Before commit      | Block commit if compilation fails       |
+| phase-exit-guard       | Before agent stops | Block stop while `.forge/phase-exit-block` exists (incomplete Phase) |
 | stop-gate              | Before agent stops | Block stop if code hasn't been reviewed |
 | detect-feedback-signal | On user message    | Auto-detect correction signals          |
 | mark-review-needed     | After file edit    | Mark changes as needing review          |

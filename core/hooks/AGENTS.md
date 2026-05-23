@@ -23,6 +23,12 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 - Return actionable messages — "Compilation failed: src/utils.ts:12 — Type 'string' is not assignable to 'number'" not just "failed"
 - Prefer composite hooks (`memory-guard`) in loadouts when multiple scripts share the same trigger — delegate to legacy scripts inside the composite
 
+### Stop / phase hooks
+| Name | Trigger | Purpose |
+|------|---------|---------|
+| `phase-exit-guard` | BeforeCommand | Block stop while `.forge/phase-exit-block` exists (Ralph-style Phase completion) |
+| `stop-gate` | BeforeCommand | Block stop when code changed but not reviewed |
+
 ### Composite hooks
 | Name | Trigger | Delegates to |
 |------|---------|----------------|

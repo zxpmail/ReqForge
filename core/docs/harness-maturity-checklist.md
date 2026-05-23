@@ -22,7 +22,8 @@
 | 3 | **Context management** | Long sessions compact or hand off without silent loss | `memory-guard`, `memory/` 3-tier, `context-compaction` |
 | 4 | **State persistence** | Decisions and task progress survive sessions | `memory/project-memory.md`, `task-history.md`, `decisions-log.md` |
 | 5 | **Validation loop** | Tests, lint, or typecheck before “done” | `dev-builder` TDD, `pre-commit-check`, Sloppiness Gate in `CLAUDE.md` |
-| 6 | **Error → rule** | Same mistake not repeated blindly | `feedback/` + `evolution-engine`, `detect-feedback-signal` |
+| 6 | **Error → rule** | Same mistake not repeated blindly | `feedback/` + `evolution-engine` (proposals include predicted effect + verify-by), `detect-feedback-signal` |
+| 6b | **Phase exit guard** | Agent cannot stop while Phase acceptance open | `phase-exit-guard` + `.forge/phase-exit-block` — see [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) |
 
 ---
 
@@ -79,5 +80,6 @@
 - [openspec-comparison.md](./openspec-comparison.md) — scoped changes
 - [superpowers-comparison.md](./superpowers-comparison.md) — engineering discipline
 - [context7-comparison.md](./context7-comparison.md) — library docs injection (optional MCP partner)
+- [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) — AGENT魔方七层 ↔ ReqForge
 - [memory-system.md](./memory-system.md) — three-tier memory
 - [behavior-boundaries.md](./behavior-boundaries.md) — what Forge must not do

@@ -80,21 +80,32 @@ description: Auto-triggers on session init, or manually triggered when the user 
         No signals -> Return "no evolution suggestions"
 
 [Proposal Format]
+    Each proposal MUST include **falsifiable verification** (AHE-style observability — see [agent-harness-seven-layer-map.md](../../docs/agent-harness-seven-layer-map.md)):
+
+    - **Predicted effect**: which failure class should decrease (e.g. hallucinated paths, skipped tests, wrong API usage)
+    - **Verify by**: how to check after applying (e.g. "zero feedback with tag X in next 5 runs", "pnpm test", "grep SKILL for new rule")
+
     "**Evolution Suggestions** (N total)
 
      **Rule Graduation** (X items)
      1. [feedback title]: occurred [N] times (source: [source_skill])
         Suggest writing to: [target file] at [target location]
         Summary: [one sentence]
+        Predicted effect: [...]
+        Verify by: [...]
         -- Confirm / Skip
 
      **Skill Optimization** (X items)
      1. [Skill name]: [N] related feedback entries accumulated
         Optimization suggestion: [specific suggestion]
+        Predicted effect: [...]
+        Verify by: [...]
         -- Confirm / Skip
 
      **New Skill Proposal** (X items)
      1. [operation pattern description]: occurred [N] times
+        Predicted effect: [...]
+        Verify by: [...]
         -- Confirm Create / Skip"
 
 [Post-Confirmation Execution]

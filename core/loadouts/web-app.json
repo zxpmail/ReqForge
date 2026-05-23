@@ -29,6 +29,7 @@
   ],
   "hooks": [
     "pre-commit-check",
+    "phase-exit-guard",
     "stop-gate",
     "detect-feedback-signal",
     "mark-review-needed",

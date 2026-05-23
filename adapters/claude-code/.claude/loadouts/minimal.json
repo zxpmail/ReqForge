@@ -16,6 +16,7 @@
   ],
   "hooks": [
     "pre-commit-check",
+    "phase-exit-guard",
     "stop-gate",
     "detect-feedback-signal",
     "memory-check",

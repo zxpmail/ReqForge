@@ -56,8 +56,14 @@
     **Verification Timeliness Rule**:
     Each verification command in the four steps must be executed in the same message as the report. "Already verified earlier" is not accepted. If any code modification occurs in between, all four steps must be re-run.
 
+    **Phase exit guard (Ralph-style soft stop)**:
+    - If four-step verification is **not** complete, or DEV-PLAN acceptance items for this Phase remain open: write one line to `.forge/phase-exit-block` (UTF-8) describing what is missing. The `phase-exit-guard` hook will block agent stop until resolved.
+    - Do **not** write this file once all four steps pass — only use it when the agent would otherwise stop early.
+    - After user confirms Phase complete: `rm -f .forge/phase-exit-block` (or `del` on Windows).
+
     **After All Pass**:
     - Report results to the user (with evidence)
+    - Remove `.forge/phase-exit-block` if present
     - Archive: scan the changes/ directory, check if any change artifacts related to this Phase's delivery checklist exist. If yes and all are fully implemented, move changes/<change-name>/ to changes/archive/<change-name>/
     - User confirms -> Phase complete
     - Phase completion cannot be confirmed without passing

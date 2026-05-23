@@ -7,7 +7,7 @@
       "run": "sh core/hooks/pre-commit-check.sh"
     },
     "BeforeCommand": {
-      "run": "sh core/hooks/stop-gate.sh && sh core/hooks/retry-gate.sh && sh core/hooks/detect-feedback-signal.sh"
+      "run": "sh core/hooks/phase-exit-guard.sh && sh core/hooks/stop-gate.sh && sh core/hooks/retry-gate.sh && sh core/hooks/detect-feedback-signal.sh"
     },
     "AfterCommand": {
       "run": "sh core/hooks/mark-review-needed.sh && sh core/hooks/memory-check.sh"

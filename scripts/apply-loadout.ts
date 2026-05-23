@@ -43,7 +43,18 @@ const HOOK_REGISTRY: Record<
   },
   "pre-commit-check": { event: "PreCommit", sh: "pre-commit-check.sh", bat: "pre-commit-check.bat" },
   "auto-push": { event: "PostCommit", sh: "auto-push.sh", bat: "auto-push.bat" },
-  "stop-gate": { event: "BeforeCommand", sh: "stop-gate.sh", bat: "stop-gate.bat", combineWith: ["detect-feedback-signal"] },
+  "phase-exit-guard": {
+    event: "BeforeCommand",
+    sh: "phase-exit-guard.sh",
+    bat: "phase-exit-guard.bat",
+    combineWith: ["stop-gate", "detect-feedback-signal"],
+  },
+  "stop-gate": {
+    event: "BeforeCommand",
+    sh: "stop-gate.sh",
+    bat: "stop-gate.bat",
+    combineWith: ["phase-exit-guard", "detect-feedback-signal"],
+  },
   "detect-feedback-signal": {
     event: "BeforeCommand",
     sh: "detect-feedback-signal.sh",

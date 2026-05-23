@@ -7,7 +7,7 @@
       "run": "sh .opencode/hooks/pre-commit-check.sh"
     },
     "BeforeCommand": {
-      "run": "sh .opencode/hooks/stop-gate.sh && sh .opencode/hooks/retry-gate.sh && sh .opencode/hooks/detect-feedback-signal.sh"
+      "run": "sh .opencode/hooks/phase-exit-guard.sh && sh .opencode/hooks/stop-gate.sh && sh .opencode/hooks/retry-gate.sh && sh .opencode/hooks/detect-feedback-signal.sh"
     },
     "AfterCommand": {
       "run": "sh .opencode/hooks/mark-review-needed.sh && sh .opencode/hooks/memory-check.sh"
