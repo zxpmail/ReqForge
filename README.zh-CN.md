@@ -18,6 +18,16 @@
 
 ## 近期更新
 
+### v1.18 — 2026-05-23
+- **skill.json 元数据**：全部 11 个 Skill 新增机器可读的 `skill.json`（名称、版本、触发条件、前置依赖、关联 Agent、钩子）。`validate-skill.sh` 通过 Node/Python 自动校验。JSON Schema 在 `core/skills/skill.schema.json`。
+- **Commands 命令层**：7 个可调用的 Skill 新增 `commands/<name>.md`，含 YAML 前导元数据 + 分阶段工作流（目标 → 行动 → 验收标准）。CLAUDE.md [Skill Dispatch] 引用命令层获取分步流程。
+- **并行 Agent 代码审查**：4 个专业审查 Agent（design、bug、security、types）并发执行，每个返回结构化发现与置信度评分（0.0-1.0）。聚合器按阈值过滤（≥0.6 确认为问题，0.3-0.6 降级为疑似，<0.3 抑制），跨 Agent 协同时加分。替代旧的串行两阶段审查。
+- **幻觉门（Hallucination Gate）**：PreToolUse 钩子在 Write/Edit 前验证目标目录是否存在，防止路径幻觉。
+- **项目状态注入**：`check-evolution.sh` 在会话启动时检测 Product-Spec/DEV-PLAN/Code 存在情况，以 `additionalContext` 注入路由引导。
+- **validate-skill.sh — skill.json 校验**：新增存在性检查 + 必需字段验证（name、version、description、triggers.auto/manual/command）。
+- **sub-agent-orchestration.md**：文档化并行审查模式，含全部 4 个专业 Agent 与聚合规则。
+- 通过 `pnpm sync` 同步到全部 3 个适配器（claude-code、cursor、opencode）。
+
 ### v1.17 — 2026-05-22
 - **Decidable Activation 可判定激活 — [Not For] 章节**：全部 11 个 Skill 新增 `[Not For]` 章节，明确什么时候不该使用该 Skill 及应改用什么。validate-skill.sh 将其列为必需章节。skill-template.md 同步更新。
 - **三层诊断模型**：bug-fixer 不止定位根因——追问 现象层 → 设计缺陷层 → 原则违反层。每个修复报告包含三层诊断，从源头防止复发，而非仅修补症状。
@@ -259,9 +269,10 @@ my-app/
 │  ├─ decisions-log.md   中期：ADR 技术决策                    │
 │  └─ task-history.md    短期：近期任务摘要                     │
 ├─────────────────────────────────────────────────────────────┤
-│  Sub-Agent × 6（上下文隔离防火墙）                           │ ← 执行层
+│  Sub-Agent × 9（上下文隔离防火墙）                           │ ← 执行层
 │  ├─ implementer        编码 + 编译验证 + 自我检查            │
-│  ├─ code-reviewer      两阶段审查 + complexity gate          │
+│  ├─ code-reviewer      并行调度 + 置信度聚合                 │
+│  ├─ code-reviewer-*  4 个专业 Agent（design、bug、security、types）│
 │  ├─ feedback-observer  捕获失败 + 用户纠正                   │
 │  ├─ evolution-runner   扫描反馈积累                          │
 │  ├─ test-writer        为工具/脚本生成测试                   │
@@ -330,7 +341,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **dev-planner** | 开发计划。分析依赖关系，拆分为多个阶段，输出分阶段开发计划。 |
 | **dev-builder** | 编码实现。将工作拆分为 Task——每个 Task 走"编码 → 审查 → 修复 → 提交"闭环。 |
 | **bug-fixer** | 四阶段系统调试。不要猜测，不要盲目尝试：收集证据 → 分析模式 → 提出假设 → 修复。 |
-| **code-review** | 两阶段审查。第一阶段检查 Spec 符合性，第二阶段检查代码质量。 |
+| **code-review** | 并行 Agent 审查——4 个专业 Agent（design、bug、security、types）并发执行，置信度聚合（≥0.6 确认，0.3-0.6 疑似）。 |
 | **release-builder** | 构建与部署。内置隐私审计和冒烟测试。 |
 | **feedback-writer** | 记录用户纠正和反馈为结构化文件。为进化引擎提供数据。 |
 | **evolution-engine** | 扫描积累的反馈，识别模式（3 次以上出现），生成升级规则或优化技能的提案。 |
@@ -345,11 +356,9 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 代码不算完成直到被审查：
 
 ```
-功能完成 → code-reviewer 两阶段审查
-  ├─ Stage 1 通过 → Stage 2
-  ├─ Stage 1 失败 → 重新实现 → 重新审查
-  └─ Stage 2 通过 → 提交 + 推送 → Task 完成
-  └─ Stage 2 失败 → bug-fixer 修复 → 重新审查
+功能完成 → code-reviewer 并行 Agent 审查
+  ├─ 全部通过 → 提交 + 推送 → Task 完成
+  └─ 发现问题 → bug-fixer 修复 → 重新审查
 ```
 
 十个钩子脚本在关键节点自动触发：
@@ -417,7 +426,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 5. **开发计划** — 调用 /dev-planner，输出 DEV-PLAN.md
 6. **构建** — 调用 /dev-builder，逐个完成每个 Phase 的 Task
 7. **记忆自动更新** — 每个 Task 后自动更新项目记忆
-8. **自动审查** — code-reviewer 两阶段审查
+8. **自动审查** — code-reviewer 并行 Agent 审查 + 置信度聚合
 9. **自动修复** — 审查失败自动触发 bug-fixer
 10. **提交和推送** — 审查通过后自动提交 + 推送
 11. **阶段验证** — 跨 Task 集成检查 + 编译 + 功能测试
@@ -430,7 +439,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 Forge/
 ├── core/                      # 核心共享内容
 │   ├── skills/                # 11 个 Skill 定义，每个独立目录
-│   ├── agents/                # 6 个 Sub-Agent 定义
+│   ├── agents/                # 9 个 Sub-Agent 定义
 │   ├── templates/             # 文档模板
 │   │   └── memory/            # 三层记忆 + 会话交接模板
 │   ├── hooks/                 # 钩子脚本 (.sh/.bat/.ps1)
