@@ -2,6 +2,14 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.21.0] - 2026-05-23
+### Added
+- **harness-maturity-checklist.md**: P0/P1/P2 self-assessment for harness readiness; positioning vs consumer scheduled-automation products.
+- **Product-Spec**: `Integrations, Operations & Scheduling` section (integrations, notifications, jobs, observability); Quick Mode infers defaults.
+### Changed
+- README / README.zh-CN: Harness OS analogy + scope boundary (shippable product vs post-chat life automation).
+- **product-spec-builder**: Fix broken 0-to-1 workflow reference in SKILL.md.
+
 ## [v1.20.9] - 2026-05-23
 ### Added
 - **open-design-comparison.md**: vs [nexu-io/open-design](https://github.com/nexu-io/open-design); when to use OD vs ReqForge design skills.

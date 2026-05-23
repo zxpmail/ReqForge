@@ -57,6 +57,16 @@ This template is used to generate a structurally complete Product Spec document.
 - External dependencies: What services need to be called? Any limitations?
 - Special requirements: Offline use? System permissions? Performance requirements?
 
+## Integrations, Operations & Scheduling
+<Declare how the product talks to the outside world and what runs without the user in the chat. Use a table; mark unknowns [TBD]. Quick Mode: default "none at MVP" where reasonable.>
+
+| Area | Choice | Notes |
+|------|--------|-------|
+| External integrations | <APIs, webhooks, OAuth providers, payment, storage> | <Auth, rate limits, failure behavior> |
+| Notifications | <Email / Slack / in-app / push / none> | <Who gets what, when> |
+| Scheduled or background jobs | <Cron, queue worker, serverless schedule, none at MVP> | <What runs, how often, idempotency> |
+| Observability & ops | <Logs, metrics, health check, alerts> | <Where hosted, who gets paged> |
+
 ## Additional Notes
 <Use a table to explain options, states, logic, etc. if needed>
 
@@ -163,6 +173,15 @@ Two-column layout: left input area at 40%, right output area at 60%.
 - **Image Generation**: Calls AI image generation service, each batch of 9 images takes approximately 30-60 seconds
 - **File Export**: Supports batch download in PNG format, packaged as ZIP file
 
+## Integrations, Operations & Scheduling
+
+| Area | Choice | Notes |
+|------|--------|-------|
+| External integrations | AI image API only | API key in env; rate limits per provider |
+| Notifications | None at MVP | Optional email when batch completes (post-MVP) |
+| Scheduled or background jobs | None at MVP | Generation is on-demand in browser session |
+| Observability & ops | Vercel analytics + client error toasts | No server cron in MVP |
+
 ## Additional Notes
 
 | Option | Values | Description |
@@ -212,4 +231,9 @@ Two-column layout: left input area at 40%, right output area at 60%.
    - External service dependencies, special requirements
    - Only include when there are technical constraints; omit otherwise
 
-9. **Additional Notes**: Use a table, suitable for explaining options, states, logic
+9. **Integrations, Operations & Scheduling**:
+   - Always include the table (Quick Mode may use "none at MVP" defaults)
+   - Surfaces webhooks, notifications, cron/queues, and ops before dev-planner runs
+   - ReqForge does not run scheduled jobs — this section defines what **your product** must implement
+
+10. **Additional Notes**: Use a table, suitable for explaining options, states, logic

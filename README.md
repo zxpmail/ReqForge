@@ -1,10 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.20.9-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.21.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
 **Open-source Agent Harness** for Claude Code, Cursor, and OpenCode — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
+
+**Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md)
 
 > **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md)
 
@@ -56,6 +58,10 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.21.0 — 2026-05-23
+- **Harness maturity checklist**: P0/P1/P2 self-assessment + README positioning (OS analogy, shippable product scope).
+- **Product-Spec**: Integrations / ops / scheduling table; Quick Mode + SKILL 0-to-1 reference fix.
 
 ### v1.20.9 — 2026-05-23
 - **Open Design**: comparison doc + design discovery questionnaire, 5 visual presets, anti-slop + 5D self-critique in design skills.

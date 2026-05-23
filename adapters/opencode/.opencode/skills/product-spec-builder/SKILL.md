@@ -150,7 +150,8 @@ description: Used when the user says they want to build a product, application, 
 
     Step 4: Execute corresponding workflow
         - Quick Mode: Execute [Workflow (Quick Mode)]
-        - 0-to-1 Mode: Execute 
+        - 0-to-1 Mode: Execute [Workflow (0-to-1 Mode)]
+
 [Workflow (Quick Mode)]
     **Trigger**: User gives a one-sentence description or says they want to start fast.
     **Goal**: Generate a minimal usable Product Spec in one round, with uncertain items marked [待确认] / [TBD].
@@ -167,6 +168,7 @@ description: Used when the user says they want to build a product, application, 
         - User flow (one primary path)
         - AI capability needs (if any)
         - Recommended tech stack
+        - Integrations / notifications / scheduled jobs / observability (default "none at MVP" or [待确认] unless obvious from description)
 
         WebSearch for similar products and typical tech stacks before inferring.
         For anything uncertain, choose the simpler option and mark it [待确认].
