@@ -1,12 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.20.8-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.9-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
 **开源 Agent Harness** — 适配 Claude Code、Cursor、OpenCode：用 Skill、钩子、记忆与进化约束模型，产出可验证、可回滚，而不只靠对话。
 
-> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 擅长**单次存量变更**（CLI + `changes/`）。**ReqForge** = **需求→产品**全流程 + Harness。[OpenSpec 对照 →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** Superpowers = 工程纪律（TDD、子 Agent）；ReqForge 增加 Product-Spec、计划、记忆、多客户端。[Superpowers 对照 →](core/docs/superpowers-comparison.md)
+> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md)
 
 **使用框架无需 npm install** — 将适配目录复制到项目根目录，打开 AI 客户端即可。仅在本仓库贡献或运行 `scripts/` 时才需要 Node.js + pnpm。
 
@@ -56,6 +56,9 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.20.9 — 2026-05-23
+- **Open Design**：对照文档 + 设计发现问卷、五预设、反 slop 与五维自检。
 
 ### v1.20.8 — 2026-05-23
 - **superpowers-comparison.md**：与 obra/superpowers 对照（TDD、子 Agent、选型）。
@@ -359,7 +362,7 @@ my-app/
 > 2. 或 `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. 或环境变量 `FORGE_MODE=yolo`
 
-更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。对照文档：[OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md)。
+更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。对照文档：[OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md)。
 
 ---
 
@@ -645,6 +648,7 @@ pnpm dep-graph stats  # 查看图统计
 |------|------|------------|
 | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | 规格驱动 `changes/` + CLI | [openspec-comparison.md](core/docs/openspec-comparison.md) — 已吸收为 `/change-manager` |
 | [Superpowers](https://github.com/obra/superpowers) | Skill + TDD + 子 Agent 驱动开发 | [superpowers-comparison.md](core/docs/superpowers-comparison.md) — 技能化/TDD 已融入 dev-builder |
+| [Open Design](https://github.com/nexu-io/open-design) | 设计稿、预览、Design System 库 | [open-design-comparison.md](core/docs/open-design-comparison.md) — 问卷/五预设/反 slop 已进 design Skill |
 | [OpenHuman](https://github.com/tinyhumansai/openhuman) | 个人 AI 运行时、Memory Tree、集成 | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — 可选记忆后端与上下文规则 |
 
 ---

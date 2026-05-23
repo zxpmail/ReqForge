@@ -45,7 +45,9 @@ description: Used when the Design Brief is complete and the user needs to genera
 [File Structure]
     ```
     design-maker/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md
+    └── references/
+        └── design-self-critique.md        # 五维自检 + anti-slop（交付前）
     ```
 
 [Gotchas]
@@ -172,6 +174,10 @@ description: Used when the Design Brief is complete and the user needs to genera
 
         Step 3: Spec Cross-Reference
             Re-read the Product Spec's feature requirements to confirm that no feature's corresponding UI has been missed
+
+        Step 3b: Design self-critique (required)
+            Execute `references/design-self-critique.md` and `design-brief-builder/references/anti-ai-slop-checklist.md`
+            Revise mockups if any dimension ≤2; record scores in the completion report
 
         Step 4: Output Report
             Present the design completion report to the user:

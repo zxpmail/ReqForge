@@ -158,6 +158,7 @@ flowchart LR
 - 记忆体系：`core/docs/memory-system.md`（含可选外部后端说明）
 - OpenSpec 对照：`core/docs/openspec-comparison.md`
 - Superpowers 对照：`core/docs/superpowers-comparison.md`
+- Open Design 对照：`core/docs/open-design-comparison.md`
 - 变更流 Skill：`core/skills/change-manager/SKILL.md`
 - 记忆模板：`core/templates/memory/`
 - 主调度：`CLAUDE.md`

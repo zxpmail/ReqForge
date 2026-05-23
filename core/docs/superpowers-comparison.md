@@ -152,6 +152,7 @@ flowchart TD
 ## 相关文件
 
 - OpenSpec 变更对照：[openspec-comparison.md](./openspec-comparison.md)
+- Open Design 设计对照：[open-design-comparison.md](./open-design-comparison.md)
 - OpenHuman 记忆对照：[openhuman-comparison.md](./openhuman-comparison.md)
 - TDD 与 Phase 执行：`core/skills/dev-builder/SKILL.md`
 - 审查聚合：`core/skills/code-review/SKILL.md`、`core/agents/code-reviewer.md`

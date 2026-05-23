@@ -66,9 +66,12 @@ description: Used when the user wants to define a design style or visual directi
 [File Structure]
     ```
     design-brief-builder/
-    ├── SKILL.md                              # Main Skill definition (this file)
-    └── templates/
-        └── design-brief-template.md          # Design Brief output template
+    ├── SKILL.md
+    ├── templates/design-brief-template.md
+    └── references/
+        ├── design-discovery-questionnaire.md   # Turn-1 锁定范围（P0）
+        ├── visual-direction-presets.md         # 五学派方向预设
+        └── anti-ai-slop-checklist.md          # Brief 定稿前自检
     ```
 
 [Gotchas]
@@ -215,6 +218,13 @@ description: Used when the user wants to define a design style or visual directi
             WebSearch for current design trends and mainstream visual styles in this category
             This serves as the basis for recommending options to the user later
 
+        Step 4: Design Discovery questionnaire (required)
+            Execute `references/design-discovery-questionnaire.md` — radios/short answers only, 1–2 items per turn if needed
+            Record answers; do not start pixel-level or Brief prose until all 10 fields are locked
+
+        Step 5: Visual direction preset (if user still vague)
+            Offer 5 presets from `references/visual-direction-presets.md`; user picks one → seed Mood/Color/Density
+
     [Interview Phase]
         Purpose: Explore each dimension in the [Interview Dimension Checklist] through conversation
 
@@ -254,6 +264,9 @@ description: Used when the user wants to define a design style or visual directi
              Did I get that right?"
 
     [Output Phase]
+        Step 0: Anti-slop review
+            Run `references/anti-ai-slop-checklist.md`; append `## Anti-Slop Review` to Brief draft
+
         Step 1: Load Template
             Read templates/design-brief-template.md
 

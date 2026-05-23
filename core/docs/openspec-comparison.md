@@ -119,6 +119,7 @@ flowchart TD
 
 - 个人助理 / 记忆对照：[openhuman-comparison.md](./openhuman-comparison.md)
 - 工程纪律 / TDD 对照：[superpowers-comparison.md](./superpowers-comparison.md)
+- 设计稿 / 预览对照：[open-design-comparison.md](./open-design-comparison.md)
 - Skill：`core/skills/change-manager/SKILL.md`
 - 命令：`core/skills/change-manager/commands/change-manager.md`
 - 模板：`core/skills/change-manager/templates/`

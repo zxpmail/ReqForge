@@ -2,6 +2,13 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.9] - 2026-05-23
+### Added
+- **open-design-comparison.md**: vs [nexu-io/open-design](https://github.com/nexu-io/open-design); when to use OD vs ReqForge design skills.
+- **Design P0 from OD**: `design-discovery-questionnaire`, `visual-direction-presets`, `anti-ai-slop-checklist`, `design-self-critique`; Design-Brief template sections.
+### Changed
+- `design-brief-builder` / `design-maker` workflows reference new `references/` files.
+
 ## [v1.20.8] - 2026-05-23
 ### Added
 - **superpowers-comparison.md**: ReqForge vs [obra/superpowers](https://github.com/obra/superpowers) — workflow mapping, TDD/subagent alignment, when to combine or pick one.

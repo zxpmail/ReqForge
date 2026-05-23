@@ -173,6 +173,7 @@ user-project/
 - 流程方法论：**废才** - 完整产品开发从0到1流程
 - 开放多客户端：**oh-my-openagent** - 不绑定单一平台
 - 技能化架构：**superpowers** - 每个技能独立可插拔，强制 TDD（对照见 `core/docs/superpowers-comparison.md`）
+- 设计发现与反 slop：**open-design** - 问卷锁范围、五预设方向、交付前自检（对照见 `core/docs/open-design-comparison.md`，已吸收至 design-brief / design-maker）
 - CLI + 增量变更：**OpenSpec** - artifact-guided 迭代；Forge 用 `/change-manager` + `changes/` 对齐同类流程（见 openspec-comparison.md）
 - 提示词工程：**awesome-chatgpt-prompts** - 每个技能是一份精心调校的提示词，社区贡献
 - 多角色分工：**OpenAI Symphony** - 不同阶段由专门的 Sub-Agent 负责，各尽其职

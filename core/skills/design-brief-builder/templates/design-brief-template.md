@@ -22,6 +22,26 @@ This template is used to generate a design specification document. Design tools 
 - Target users
 - Core functionality summary
 
+## Design Discovery
+<!-- Locked in design-brief-builder Step 4 — see references/design-discovery-questionnaire.md -->
+| Field | Answer |
+|-------|--------|
+| Surface | |
+| Primary audience | |
+| Tone | |
+| Brand context | |
+| Density default | |
+| Theme | |
+| Motion | |
+| Must-not | |
+| Reference pick | |
+| Success look | |
+
+## Visual Direction Preset
+<!-- If user picked a preset: Editorial Monocle | Modern Minimal | Warm Soft | Tech Utility | Brutalist Experimental | Custom -->
+- **Preset**: [name or Custom]
+- **Notes**: [any tweak to preset]
+
 ## Design Direction
 
 ### Mood Keywords
@@ -84,6 +104,11 @@ This template is used to generate a design specification document. Design tools 
 - **Empty State**: [Direction — illustration? text guidance? minimal placeholder?]
 - **Loading State**: [Skeleton screen / Spinning indicator / Progress bar / Typewriter effect]
 - **Error State**: [Direction]
+
+## Anti-Slop Review
+<!-- From anti-ai-slop-checklist.md — patterns explicitly avoided -->
+- [e.g. No purple gradient hero-only layout]
+- [e.g. No decorative glassmorphism cards]
 
 ---
 
