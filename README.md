@@ -43,7 +43,7 @@ A complete product development methodology for AI coding assistants: Claude Code
 ### v1.17 — 2026-05-22
 - **Decidable Activation — [Not For] section**: All 11 skills now include a `[Not For]` section specifying when NOT to use the skill and what to use instead. Added as a required section in validate-skill.sh. Updated skill-template.md.
 - **Three-Layer Diagnostic Model**: bug-fixer now goes beyond root cause to ask: Symptom → Design Flaw → Principle Violation. Every fix report includes all three layers to prevent recurrence, not just patch the symptom.
-- **Numeric Quality Rubric**: skill-builder gets a 16-item, 32-point scoring system. Ship threshold ≥ 24 with no critical item at 0. Run `pnpm validate-skill --score` to compute.
+- **Numeric Quality Rubric**: skill-builder gets a 16-item, 32-point scoring system. Ship threshold ≥ 24 with no critical item at 0. Run `pnpm validate-skill:bash --score` to compute (bash script only).
 - **create-skill.sh scaffold**: CLI tool to generate a new Skill directory from a name. Supports `--minimal` (required sections only) and `--full` (with recommended sections). Run `pnpm create-skill <name>`.
 
 ### v1.16 — 2026-05-21
@@ -81,13 +81,13 @@ A complete product development methodology for AI coding assistants: Claude Code
 ### v1.13 — 2026-05-19
 - **Planner sub-agent**: Dedicated agent for architecture design and Phase splitting, decoupled from implementer context
 - **Session handoff**: `handoff-template.md` + `check-handoff` hook to generate session summaries before context reset, preventing lost progress
-- **Complexity gate**: `code-reviewer` now skips Stage 1 for `change_complexity="simple"`, matching review depth to change scope
+- **Complexity gate**: `code-reviewer` now skips parallel specialist agents for `change_complexity="simple"`, matching review depth to change scope
 - **Model version tracking**: `feedback-observer` records model version with each feedback, enabling evolution to detect outdated rules
 
 ### v1.10–1.12 — 2026-05-19
 - **test-writer sub-agent**: Vitest-based test generator for tools/scripts (v1.14.1 ships the `sync` / `dependency-graph` test suite)
 - **check-sync hook**: Detects `core/` vs `adapters/` divergence after edits
-- **Self-wired settings**: ReqForge's own `.claude/settings.json` with all 6 hooks, `settings.local.json` pruned 65→32 lines
+- **Self-wired settings**: ReqForge's own `.claude/settings.json` with hook events wired; `settings.local.json` pruned 65→32 lines
 
 ### v1.9 — 2026-05-19
 - **AI Only for Judgment Tasks**: Deterministic logic is plain code, not AI busywork
@@ -203,13 +203,21 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### Step 3 — Enable hooks (Claude Code & Cursor)
 
-Hooks run on commit, edit, session start, etc. After copying `.claude/` or `.cursor/`:
+Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` already registers all **10 hooks** (including `PreToolUse` → `hallucination-gate`). After copying `.claude/` or `.cursor/`:
 
 | Platform | Action |
 |----------|--------|
 | **Windows** | In `.claude/` (or `.cursor/` inside rules): `copy settings.windows.json settings.json` |
 | **Linux / Mac** | Default `settings.json` uses `.sh` hooks — no change needed |
 | **OpenCode** | No `settings.json`; `.sh` / `.bat` hooks work per platform |
+
+### Step 3b — Loadouts (optional)
+
+Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-tool`, `minimal`). Each JSON lists recommended skills, agents, and hooks for a project type.
+
+- **Default install** ≈ `full` loadout (all hooks in `settings.json`).
+- **Trim hooks** (contributors, from Forge clone): `pnpm apply-loadout minimal claude-code` merges a lighter hook set into adapter `settings.json`. Add `--dry-run` to preview.
+- Loadouts are **reference manifests** — skills/agents are already copied; use loadouts to understand what each bundle includes.
 
 ### Step 4 — First run in your AI client
 
@@ -234,15 +242,24 @@ Hooks run on commit, edit, session start, etc. After copying `.claude/` or `.cur
 
 ```
 my-app/
-├── .claude/          # or .cursor/ or .opencode/  ← you copied this
-├── Product-Spec.md   # after /product-spec-builder
-├── DEV-PLAN.md       # after /dev-planner
-├── Design-Brief.md   # optional
-├── memory/           # auto-created on first /dev-builder
+├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
+│   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
+│   ├── settings.json           # 10 hooks wired (incl. hallucination-gate)
+│   ├── skills/                 # 11 Skill definitions + commands/
+│   ├── agents/                 # 10 Sub-agent definitions
+│   ├── hooks/                  # .sh + .bat hook scripts
+│   ├── loadouts/               # full | web-app | cli-tool | minimal
+│   ├── feedback/               # evolution fuel (lessons learned)
+│   ├── EVOLUTION.md            # evolution engine levels
+│   └── rules/                  # Claude Code: .claude/rules/*.md; Cursor: .cursor/rules/*.mdc
+├── Product-Spec.md             # after /product-spec-builder
+├── DEV-PLAN.md                 # after /dev-planner
+├── Design-Brief.md             # optional
+├── memory/                     # auto-created on first /dev-builder
 │   ├── project-memory.md
 │   ├── decisions-log.md
 │   └── task-history.md
-└── src/ ...          # your application code
+└── <project-name>/ ...         # your application code (not flat in root)
 ```
 
 Forge does **not** modify your `package.json` unless you ask the agent to add dependencies during development.
@@ -363,6 +380,19 @@ Each Skill is an independent methodology module — composable, extensensible, p
 
 Every Task gets a **fresh Sub-Agent instance**. No reuse, no inherited context. The orchestrator provides complete task context (spec items, deliverables, files, project structure) but NOT previous task history. This prevents error assumptions from cascading across tasks.
 
+| Sub-Agent | Skill | Responsibility |
+|-----------|-------|----------------|
+| **planner** | dev-planner | Architecture design + Phase splitting |
+| **implementer** | dev-builder | Code + compile verify + self-check |
+| **code-reviewer** | code-review | Aggregate parallel review findings |
+| **code-reviewer-design** | code-review | Spec compliance, UI consistency, drift |
+| **code-reviewer-bug** | code-review | Bug patterns, races, resource leaks |
+| **code-reviewer-security** | code-review | OWASP Top 10, credential leaks, XSS |
+| **code-reviewer-types** | code-review | Type safety, nullability, edge cases |
+| **feedback-observer** | feedback-writer | Record failures + user corrections |
+| **evolution-runner** | evolution-engine | Scan feedback → evolution proposals |
+| **test-writer** | dev-builder | Generate Vitest tests for scripts/utilities |
+
 ### Inspection Layer — Hook + Review Loop
 
 Code isn't done until it's reviewed:
@@ -376,7 +406,7 @@ Feature complete → code-reviewer parallel review
   └─ pass → commit + push → Task done
 ```
 
-Eleven hook scripts fire automatically at critical nodes:
+Ten hook scripts fire automatically at critical nodes (plus `check-sync` in the ReqForge repo only — see note below):
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -399,9 +429,9 @@ A harness that doesn't learn from usage is static. Forge evolves:
 
 1. **Level 0: Harness Foundation** — Context compaction, progressive disclosure, tool-call offloading, auto-scoring on failure — prerequisites for reliable evolution
 2. **Experience accumulation** — Failures and corrections are auto-recorded with inferred Skill scores (Precision/Coverage/Efficiency/Satisfaction). Scored data is the fuel for Level 2+.
-2. **Rule graduation** — Same feedback appears 3+ times → proposed as formal rule in Skill or control file
-3. **Skill optimization** — Skill's feedback scores consistently low → proposed adjustment
-4. **New Skill creation** — Repeated operation pattern without Skill coverage → proposed new Skill
+3. **Rule graduation** — Same feedback appears 3+ times → proposed as formal rule in Skill or control file
+4. **Skill optimization** — Skill's feedback scores consistently low → proposed adjustment
+5. **New Skill creation** — Repeated operation pattern without Skill coverage → proposed new Skill
 
 All evolution proposals require your explicit confirmation. No automatic rule changes.
 
@@ -464,19 +494,22 @@ Forge/
 │   ├── docs/                  # Detailed docs (behavior boundaries, memory system, etc.)
 │   └── feedback/              # Feedback templates
 ├── adapters/
-│   ├── claude-code/           # Claude Code adapter (.claude/)
+│   ├── claude-code/           # Claude Code adapter (.claude/ + .claude/rules/)
 │   ├── cursor/                # Cursor adapter (.cursor/rules/)
 │   └── opencode/              # OpenCode adapter (.opencode/)
 ├── .forge/                    # Forge project config
 │   └── config.example         #     config template (copy to config to activate)
 ├── .claude/                   # Forge's own control files (self-wired hooks via settings.json)
 ├── CLAUDE.md                  # Main control file
+├── llms.txt                   # AI-searchable project summary
 ├── scripts/
 │   ├── sync.ts                # core → adapter sync script
 │   ├── install.ts             # adapter → user project install
 │   ├── install.sh / install.ps1 # install wrappers
 │   ├── dependency-graph.ts    # File-level import graph + blast-radius
 │   ├── validate-skill.mjs     # Cross-platform SKILL.md validator (default pnpm validate-skill)
+│   ├── validate-skill.sh      # Full validator + --score rubric (pnpm validate-skill:bash)
+│   ├── create-skill.sh        # Scaffold new Skill directory (pnpm create-skill)
 │   ├── apply-loadout.ts       # Merge loadout hooks into adapter settings
 │   └── __tests__/             # Vitest unit tests
 ├── vitest.config.ts           # Test runner config
@@ -514,7 +547,8 @@ pnpm dep-graph stats  # Print graph statistics
 | Command | Description |
 |---------|-------------|
 | `pnpm test:watch` | Run tests in watch mode |
-| `pnpm validate-skill:bash` | Bash validate-skill.sh (requires WSL/Git Bash) |
+| `pnpm validate-skill:bash` | Bash validate-skill.sh (requires WSL/Git Bash); add `--score` for 32-point rubric |
+| `pnpm create-skill <name>` | Scaffold new Skill from name (`--minimal` or `--full`) |
 | `pnpm apply-loadout <loadout> <client>` | Merge loadout (full/web-app/cli-tool/minimal) hooks into settings; `--dry-run` to preview |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |

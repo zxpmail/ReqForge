@@ -43,7 +43,7 @@
 ### v1.17 — 2026-05-22
 - **Decidable Activation 可判定激活 — [Not For] 章节**：全部 11 个 Skill 新增 `[Not For]` 章节，明确什么时候不该使用该 Skill 及应改用什么。validate-skill.sh 将其列为必需章节。skill-template.md 同步更新。
 - **三层诊断模型**：bug-fixer 不止定位根因——追问 现象层 → 设计缺陷层 → 原则违反层。每个修复报告包含三层诊断，从源头防止复发，而非仅修补症状。
-- **数值化质量评分表**：skill-builder 新增 16 项 32 分制评分表，交付阈值 ≥ 24 分且无关键项为 0。运行 `pnpm validate-skill --score` 计算评分。
+- **数值化质量评分表**：skill-builder 新增 16 项 32 分制评分表，交付阈值 ≥ 24 分且无关键项为 0。运行 `pnpm validate-skill:bash --score` 计算评分（仅 bash 脚本支持）。
 - **create-skill.sh 脚手架**：CLI 工具，从名称自动生成完整 Skill 目录。支持 `--minimal`（仅必需章节）和 `--full`（含推荐章节）。运行 `pnpm create-skill <名称>`。
 
 ### v1.16 — 2026-05-21
@@ -87,7 +87,7 @@
 ### v1.10–1.12 — 2026-05-19
 - **test-writer Sub-Agent**：为工具脚本生成 Vitest 测试（v1.14.1 已落地 `sync` / `dependency-graph` 测试套件）
 - **check-sync 钩子**：编辑后检测 `core/` 与 `adapters/` 不同步
-- **自身钩子配置**：ReqForge 自身的 `.claude/settings.json` 启用全部 6 个钩子，`settings.local.json` 从 65 行精简至 32 行
+- **自身钩子配置**：ReqForge 自身的 `.claude/settings.json` 已接入钩子事件，`settings.local.json` 从 65 行精简至 32 行
 
 ### v1.9 — 2026-05-19
 - **AI Only for Judgment Tasks**：确定性逻辑用代码而非 AI 推理
@@ -203,13 +203,21 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### 步骤 3 — 启用钩子（Claude Code / Cursor）
 
-钩子在提交、编辑、会话启动等时机自动运行。复制 `.claude/` 或 `.cursor/` 后：
+钩子在工具调用前、提交、编辑、会话启动等时机自动运行。默认 `settings.json` 已注册全部 **10 个钩子**（含 `PreToolUse` → `hallucination-gate`）。复制 `.claude/` 或 `.cursor/` 后：
 
 | 平台 | 操作 |
 |------|------|
 | **Windows** | 在 `.claude/`（或 `.cursor/rules` 下相应目录）执行：`copy settings.windows.json settings.json` |
 | **Linux / Mac** | 默认 `settings.json` 使用 `.sh` 脚本，无需改动 |
 | **OpenCode** | 无 `settings.json`；各平台原生支持 `.sh` / `.bat` 钩子 |
+
+### 步骤 3b — Loadout（可选）
+
+适配层自带 **4 个 loadout 捆绑包**（`loadouts/` 目录）：`full`、`web-app`、`cli-tool`、`minimal`。每个 JSON 列出该场景推荐的 skills、agents、hooks。
+
+- **默认安装** ≈ `full` loadout（`settings.json` 含全部钩子）。
+- **精简钩子**（贡献者，在 Forge 克隆目录）：`pnpm apply-loadout minimal claude-code` 将更轻的钩子集写入 adapter 的 `settings.json`；加 `--dry-run` 可预览。
+- Loadout 是**参考清单**——skills/agents 已随适配层复制，loadout 用于了解各场景包含什么。
 
 ### 步骤 4 — 在 AI 客户端中首次使用
 
@@ -234,15 +242,24 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ```
 my-app/
-├── .claude/          # 或 .cursor/ 或 .opencode/  ← 你复制的适配层
-├── Product-Spec.md   # /product-spec-builder 之后
-├── DEV-PLAN.md       # /dev-planner 之后
-├── Design-Brief.md   # 可选
-├── memory/           # 首次 /dev-builder 时自动创建
+├── .claude/                    # 或 .cursor/ 或 .opencode/  ← 适配层
+│   ├── CLAUDE.md               # 控制文件（OpenCode 为 AGENTS.md）
+│   ├── settings.json           # 10 个钩子（含 hallucination-gate）
+│   ├── skills/                 # 11 个 Skill + commands/
+│   ├── agents/                 # 10 个 Sub-Agent
+│   ├── hooks/                  # .sh + .bat 钩子脚本
+│   ├── loadouts/               # full | web-app | cli-tool | minimal
+│   ├── feedback/               # 进化燃料（经验教训）
+│   ├── EVOLUTION.md            # 进化引擎层级说明
+│   └── rules/                  # Claude Code: .claude/rules/*.md；Cursor: .cursor/rules/*.mdc
+├── Product-Spec.md             # /product-spec-builder 之后
+├── DEV-PLAN.md                 # /dev-planner 之后
+├── Design-Brief.md             # 可选
+├── memory/                     # 首次 /dev-builder 时自动创建
 │   ├── project-memory.md
 │   ├── decisions-log.md
 │   └── task-history.md
-└── src/ ...          # 你的业务代码
+└── <project-name>/ ...         # 业务代码（勿平铺在根目录）
 ```
 
 除非你明确要求，Forge **不会**擅自修改你项目里的 `package.json`。
@@ -363,6 +380,19 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 每个 Task 获得**全新的 Sub-Agent 实例**。不重用，不继承上下文。编排器提供完整的任务上下文（Spec 项、交付物、文件、项目结构），但不提供之前的任务历史。这防止错误假设在任务间级联传播。
 
+| Sub-Agent | 对应 Skill | 职责 |
+|-----------|------------|------|
+| **planner** | dev-planner | 架构设计 + Phase 拆分 |
+| **implementer** | dev-builder | 编码 + 编译验证 + 自检 |
+| **code-reviewer** | code-review | 聚合并行审查结果 |
+| **code-reviewer-design** | code-review | 规格符合度、UI 一致性、漂移 |
+| **code-reviewer-bug** | code-review | Bug 模式、竞态、资源泄漏 |
+| **code-reviewer-security** | code-review | OWASP Top 10、凭据泄漏、XSS |
+| **code-reviewer-types** | code-review | 类型安全、空值、边界情况 |
+| **feedback-observer** | feedback-writer | 记录失败与用户纠正 |
+| **evolution-runner** | evolution-engine | 扫描反馈 → 进化提案 |
+| **test-writer** | dev-builder | 为脚本/工具生成 Vitest 测试 |
+
 ### 检查层 — 钩子 + 审查循环
 
 代码不算完成直到被审查：
@@ -376,7 +406,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
   └─ 通过 → 提交 + 推送 → Task 完成
 ```
 
-十一个钩子脚本在关键节点自动触发：
+十个钩子脚本在关键节点自动触发（ReqForge 仓库另有 `check-sync`，见下方说明）：
 
 | 钩子 | 触发时机 | 动作 |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -464,18 +494,21 @@ Forge/
 │   ├── docs/                  # 详细文档
 │   └── feedback/              # 反馈模板
 ├── adapters/
-│   ├── claude-code/           # Claude Code 适配
+│   ├── claude-code/           # Claude Code 适配（.claude/ + .claude/rules/）
 │   ├── cursor/                # Cursor 适配
 │   └── opencode/              # OpenCode 适配
 ├── .forge/                    # Forge 项目配置
 ├── .claude/                   # Forge 自身的控制文件
 ├── CLAUDE.md                  # 主控制文件
+├── llms.txt                   # AI 可搜索的项目摘要
 ├── scripts/
 │   ├── sync.ts                # core → adapter 同步脚本
 │   ├── install.ts             # adapter → 用户项目安装
 │   ├── install.sh / install.ps1 # 安装命令封装
 │   ├── dependency-graph.ts    # 文件级依赖图与 blast-radius 分析
 │   ├── validate-skill.mjs     # 跨平台 SKILL.md 校验（默认 pnpm validate-skill）
+│   ├── validate-skill.sh      # 完整校验 + --score 评分（pnpm validate-skill:bash）
+│   ├── create-skill.sh        # 脚手架新建 Skill（pnpm create-skill）
 │   ├── apply-loadout.ts       # 将 loadout 钩子合并到 adapter settings
 │   └── __tests__/             # Vitest 单元测试
 ├── vitest.config.ts           # 测试配置
@@ -512,7 +545,8 @@ pnpm dep-graph stats  # 查看图统计
 | 命令 | 说明 |
 |------|------|
 | `pnpm test:watch` | 监听模式运行测试 |
-| `pnpm validate-skill:bash` | 使用 bash 版 validate-skill.sh（需 WSL/Git Bash） |
+| `pnpm validate-skill:bash` | bash 版 validate-skill.sh（需 WSL/Git Bash）；加 `--score` 为 32 分评分表 |
+| `pnpm create-skill <名称>` | 从名称脚手架生成 Skill（`--minimal` 或 `--full`） |
 | `pnpm apply-loadout <loadout> <client>` | 将 loadout（full/web-app/cli-tool/minimal）钩子合并到 settings；加 `--dry-run` 预览 |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
