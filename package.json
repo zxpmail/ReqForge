@@ -1,6 +1,6 @@
 {
   "name": "reqforge",
-  "version": "1.20.7",
+  "version": "1.20.8",
   "description": "ReqForge — From requirements to shippable products. Agent Harness for Claude Code, Cursor, OpenCode.",
   "repository": {
     "type": "git",

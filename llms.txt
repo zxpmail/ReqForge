@@ -58,6 +58,6 @@ One-command install: `pnpm forge-install <client> --target <dir>`
 
 Sync after editing core: `pnpm sync`
 
-Comparisons: `core/docs/openspec-comparison.md`, `core/docs/openhuman-comparison.md`
+Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/openhuman-comparison.md`
 
-Version: v1.20.3
+Version: v1.20.8

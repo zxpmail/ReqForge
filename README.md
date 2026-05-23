@@ -1,12 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.20.7-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.8-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
 **Open-source Agent Harness** for Claude Code, Cursor, and OpenCode — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
 
-> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** OpenSpec excels at **one brownfield change at a time** (CLI + `changes/` + slash commands). **ReqForge** covers the **full product pipeline** and adds harness machinery (hooks, parallel review, feedback loop). Brownfield deltas use `/change-manager` (OpenSpec-aligned). [Full comparison →](core/docs/openspec-comparison.md)
+> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One brownfield change at a time (CLI + `changes/`). **ReqForge** = full **requirements → product** pipeline + Harness (hooks, review, evolution). [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** Superpowers = execution discipline (TDD, subagents); ReqForge adds Product-Spec, plan, memory, multi-client. [Superpowers →](core/docs/superpowers-comparison.md)
 
 **No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
 
@@ -56,6 +56,9 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.20.8 — 2026-05-23
+- **superpowers-comparison.md**: vs obra/superpowers (TDD, subagents, when to use which).
 
 ### v1.20.7 — 2026-05-23
 - **Positioning**: Hero = requirements → product; subline = Agent Harness; brand **ReqForge** in README titles.
@@ -356,7 +359,7 @@ Forge does **not** modify your `package.json` unless you ask the agent to add de
 > 2. Or `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. Or env `FORGE_MODE=yolo`
 
-More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [openspec-comparison.md](core/docs/openspec-comparison.md) · [openhuman-comparison.md](core/docs/openhuman-comparison.md).
+More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md).
 
 ---
 
@@ -643,6 +646,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Project | Focus | Forge doc |
 |---------|--------|-----------|
 | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | Spec-driven `changes/` + CLI | [openspec-comparison.md](core/docs/openspec-comparison.md) — absorbed via `/change-manager` |
+| [Superpowers](https://github.com/obra/superpowers) | Skills + TDD + subagent-driven development | [superpowers-comparison.md](core/docs/superpowers-comparison.md) — skill/TDD discipline absorbed in dev-builder |
 | [OpenHuman](https://github.com/tinyhumansai/openhuman) | Personal AI runtime, Memory Tree, integrations | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — optional memory backends, context rules |
 
 ---

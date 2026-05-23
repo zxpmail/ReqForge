@@ -2,6 +2,12 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.8] - 2026-05-23
+### Added
+- **superpowers-comparison.md**: ReqForge vs [obra/superpowers](https://github.com/obra/superpowers) — workflow mapping, TDD/subagent alignment, when to combine or pick one.
+### Changed
+- README / README.zh-CN: Superpowers callout + reference table row; cross-links in openspec/openhuman comparison docs.
+
 ## [v1.20.7] - 2026-05-23
 ### Changed
 - **Brand messaging**: README/README.zh-CN lead with「需求→产品」, subtitle **Agent Harness**; product name unified as **ReqForge** in hero (repo name unchanged).

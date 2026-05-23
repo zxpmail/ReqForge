@@ -1,7 +1,7 @@
 # Forge 与 OpenHuman 对照
 
 > 参考：[tinyhumansai/openhuman](https://github.com/tinyhumansai/openhuman)（Personal AI harness — local memory, integrations, desktop UI）  
-> 本文说明两者定位差异、可借鉴点，以及 Forge **不建议照搬** 的部分。与 [openspec-comparison.md](./openspec-comparison.md) 互补：OpenSpec 对齐「变更工件」；OpenHuman 对齐「记忆与上下文基础设施」。
+> 本文说明两者定位差异、可借鉴点，以及 Forge **不建议照搬** 的部分。与 [openspec-comparison.md](./openspec-comparison.md)、[superpowers-comparison.md](./superpowers-comparison.md) 互补：OpenSpec 对齐「变更工件」；OpenHuman 对齐「记忆与上下文基础设施」；Superpowers 对齐「TDD 与子 Agent 执行纪律」。
 
 ---
 
@@ -157,6 +157,7 @@ flowchart LR
 
 - 记忆体系：`core/docs/memory-system.md`（含可选外部后端说明）
 - OpenSpec 对照：`core/docs/openspec-comparison.md`
+- Superpowers 对照：`core/docs/superpowers-comparison.md`
 - 变更流 Skill：`core/skills/change-manager/SKILL.md`
 - 记忆模板：`core/templates/memory/`
 - 主调度：`CLAUDE.md`
