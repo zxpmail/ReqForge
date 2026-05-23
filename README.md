@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
@@ -17,6 +17,10 @@ A complete product development methodology for AI coding assistants: Claude Code
 ---
 
 ## What's New
+
+### v1.20.3 — 2026-05-23
+- **All Skill commands thinned**: Every `commands/*.md` is now an index to `SKILL.md` (no duplicated phase prose).
+- **auto-push off by default**: Removed from adapter `settings.json` and loadouts; enable manually if you want push-after-commit.
 
 ### v1.20.2 — 2026-05-23
 - **Spec / change-manager split**: Iteration mode no longer creates `changes/` — use `/change-manager` for scoped features; major edits stay in Product-Spec.md.
@@ -219,7 +223,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### Step 3 — Enable hooks (Claude Code & Cursor)
 
-Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` already registers all **10 hooks** (including `PreToolUse` → `hallucination-gate`). After copying `.claude/` or `.cursor/`:
+Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` registers **9 hooks** (including `PreToolUse` → `hallucination-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
 
 | Platform | Action |
 |----------|--------|
@@ -262,7 +266,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
-│   ├── settings.json           # 10 hooks wired (incl. hallucination-gate)
+│   ├── settings.json           # 9 hooks wired (incl. hallucination-gate; auto-push optional)
 │   ├── skills/                 # 12 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
@@ -424,16 +428,15 @@ Feature complete → code-reviewer parallel review
   ├─ moderate/complex → 4 agents in parallel (design, bug, security, types)
   ├─ confirmed spec gaps → re-implement → re-review
   └─ confirmed quality issues → bug-fixer fix → re-review
-  └─ pass → commit + push → Task done
+  └─ pass → commit (push when ready) → Task done
 ```
 
-Ten hook scripts fire automatically at critical nodes (plus `check-sync` in the ReqForge repo only — see note below):
+Nine hook scripts fire automatically in shipped adapters (plus `check-sync` in the ReqForge repo only — see note below):
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
 | hallucination-gate     | Before tool use    | Block Write/Edit to non-existent dirs   |
 | pre-commit-check       | Before commit      | Block commit if compilation fails       |
-| auto-push              | After commit       | Auto-push to remote                     |
 | stop-gate              | Before agent stops | Block stop if code hasn't been reviewed |
 | detect-feedback-signal | On user message    | Auto-detect correction signals          |
 | mark-review-needed     | After file edit    | Mark changes as needing review          |
@@ -443,6 +446,8 @@ Ten hook scripts fire automatically at critical nodes (plus `check-sync` in the 
 | check-handoff          | After tool use     | Suggest session handoff generation when context is running long |
 
 > **Note**: `check-sync` (detects core/ vs adapters/ divergence) ships only in the ReqForge repo's `core/hooks/` — not in installed adapter bundles.
+
+> **Optional — auto-push**: Not enabled by default. To push after every commit, add to `settings.json`: `"PostCommit": { "run": "sh .claude/hooks/auto-push.sh" }` (adjust path for Cursor/OpenCode). Script remains in `hooks/auto-push.sh`.
 
 ### Evolution Layer — Steering Loop
 

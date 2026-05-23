@@ -15,9 +15,6 @@
     "PostToolUse": {
       "run": "sh .opencode/hooks/context-compaction.sh && sh .opencode/hooks/check-handoff.sh"
     },
-    "PostCommit": {
-      "run": "sh .opencode/hooks/auto-push.sh"
-    },
     "OnInit": {
       "run": "sh .opencode/hooks/check-evolution.sh"
     }

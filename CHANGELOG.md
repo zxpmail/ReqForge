@@ -2,6 +2,11 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.3] - 2026-05-23
+### Changed
+- **Commands layer**: All 12 skills' `commands/*.md` are index-only pointers to SKILL.md.
+- **auto-push**: Removed from default adapter `settings.json` and from full/web-app/cli-tool loadout hook lists (optional manual enable documented in README).
+
 ## [v1.20.2] - 2026-05-23
 ### Changed
 - **P0 — Spec vs change-manager**: product-spec-builder iteration no longer creates `changes/`; moderate scoped features route to `/change-manager`. Sole owner of `changes/` documented in both skills.

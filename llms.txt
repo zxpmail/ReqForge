@@ -58,4 +58,4 @@ Sync after editing core: `pnpm sync`
 
 Comparisons: `core/docs/openspec-comparison.md`, `core/docs/openhuman-comparison.md`
 
-Version: v1.20.2
+Version: v1.20.3

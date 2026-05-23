@@ -30,7 +30,6 @@
   ],
   "hooks": [
     "pre-commit-check",
-    "auto-push",
     "stop-gate",
     "detect-feedback-signal",
     "mark-review-needed",

@@ -15,9 +15,6 @@
     "PostToolUse": {
       "run": "sh .claude/hooks/context-compaction.sh && sh .claude/hooks/check-handoff.sh"
     },
-    "PostCommit": {
-      "run": "sh .claude/hooks/auto-push.sh"
-    },
     "OnInit": {
       "run": "sh .claude/hooks/check-evolution.sh"
     }

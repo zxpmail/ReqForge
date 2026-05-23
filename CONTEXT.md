@@ -1,10 +1,10 @@
 # CONTEXT
 
 ## 当前正在做什么
-- v1.20.2：P0 Spec/change-manager 分工 + P1 审查默认 simple + commands 瘦身（本地未提交）
+- v1.20.3：全部 commands 索引化 + auto-push 默认关闭（本地待提交）
 
 ## 上次停在哪个位置
-- 已推送 `120cf69`（v1.20.1 审计）
+- 已推送 `7516a28`（v1.20.2）
 
 ## 近期关键决定和原因
-- `changes/` 仅 change-manager 创建；product-spec-builder 大改 Spec、中等功能转交 change-manager
+- 用户项目默认 9 个钩子；auto-push 需手动加 PostCommit，避免误推远程
