@@ -38,7 +38,11 @@ description: Used when the user says "this feature is broken", "getting an error
     **One at a Time**: Change one thing at a time. Verify after the change, confirm it works, then proceed. Changing multiple things at once makes it impossible to know which change was the real fix.
     **Modification Discipline**: Fixing a bug is still changing code. Assess the impact before changing. Regression-test after the fix. Fixing A must not break B.
     **Web-First**: Unfamiliar error messages should be WebSearched before judging. Third-party library bugs should be searched for known issues before rolling your own investigation.
-    **Stop on Repeated Failure**: If the same bug has been fixed multiple times without success, the Agent should stop and re-examine the problem itself — it may not be a code-level issue but an architectural, environmental, or comprehension problem. The exact number of attempts before stopping is left to the Agent's judgment based on bug complexity.
+    **Stop on Repeated Failure**: If the same bug has been fixed multiple times without success, the Agent should stop and re-examine the problem itself — it may not be a code-level issue but an architectural, environmental, or comprehension problem. Specifically:
+    - Check `.forge/.retry-counter.json` — if `retries >= max_retries` (default 3), do NOT attempt another fix.
+    - Instead, set `state="escalated"` and present options to the user: A) Manual investigation, B) Adjust approach, C) Skip and move on.
+    - The hook at `core/hooks/retry-gate.sh` enforces this at the gate level — even if the agent tries to proceed, the hook will block.
+    - The exact number of attempts before stopping is read from `max_retries` in `.forge/.retry-counter.json`.
 
 [Output Style]
     **Tone**:

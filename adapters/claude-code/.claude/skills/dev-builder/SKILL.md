@@ -234,13 +234,48 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             13. Dispatch code-reviewer with `affected_files` and `change_complexity` set.
                 **Default `change_complexity`**: `simple` unless the Task touches multiple modules, new public APIs, auth/payments/data migration, or dep-graph risk is medium/high — then use `moderate` or `complex`.
                 code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
-            14. Confirmed spec/completeness issues (design agent, confidence ≥ 0.6) -> dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
-            15. Confirmed bug/security/type issues -> dispatch feedback-observer with trigger_reason="review_quality_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
-            16. Review passes (no confirmed HIGH issues) -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
+
+            13.5 **Retry gate check** (before processing review results):
+               - Read `.forge/.retry-counter.json` (create with `{"state":"resolved","retries":0}` if absent)
+               - If `state == "escalated"` -> STOP loop immediately. Present escalation options to user per [Retry Escalation]. Do NOT auto-retry.
+               - If `state == "active"` and `retries >= max_retries` -> set `state="escalated"`, then escalate per [Retry Escalation]. Do NOT continue the auto-fix loop.
+               - Otherwise -> proceed to process review results normally.
+
+            14. Confirmed spec/completeness issues (design agent, confidence >= 0.6):
+               a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_spec_fail"`, set `state="active"`
+               b. dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing]
+               c. fill in the implementation
+               d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 13)
+               e. If retry_count >= max_retries -> set state="escalated", escalate to user per [Retry Escalation]
+
+            15. Confirmed bug/security/type issues:
+               a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_quality_fail"`, set `state="active"`
+               b. dispatch feedback-observer with trigger_reason="review_quality_fail", current_skill="dev-builder", ai_action=[quality issue]
+               c. call bug-fixer to fix
+               d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 13)
+               e. If retry_count >= max_retries -> set state="escalated", escalate to user per [Retry Escalation]
+
+            16. Review passes (no confirmed HIGH issues):
+               a. Clear retry counter: write `{"state":"resolved","retries":0,"task":null,"phase":null,"last_failure":null,"last_error":null,"history":[],"max_retries":3}` to `.forge/.retry-counter.json`
+               b. TaskUpdate mark complete
+               c. execute `echo clean > ../../.needs-review` to clear review status
+               d. update memory files
+               e. commit
             17. **Cleanup worktree**: If a worktree was created in step 6, remove it after merge:
                 - `git worktree remove .claude/worktrees/<task-name>`
                 - If the worktree directory was created outside git (no `git worktree add` was used), just `rm -rf` it
             18. Proceed to the next Task
+
+            **[Retry Escalation]**
+            When retry_count reaches max_retries (default: 3), or state is "escalated", the auto-fix loop stops and escalates to the user:
+
+              Present exactly three options — do NOT auto-continue:
+              A) **Manual fix** -> user fixes the issue themselves, then re-dispatches code-reviewer. After user confirms fix, reset counter: write {"state":"resolved","retries":0} to `.forge/.retry-counter.json`, then re-dispatch code-reviewer.
+              B) **Skip task** -> mark task as deferred in `memory/task-history.md`, reset retry counter, move to next Task. Do not leave the session stuck.
+              C) **Adjust approach** -> user provides new guidance (different implementation strategy, different tech, etc.). Reset retry counter, restart the Task loop from the beginning.
+
+              State remains "escalated" until user picks an option.
+              Do NOT auto-retry while in "escalated" state — the `.forge/.retry-counter.json` state file and the retry-gate hook enforce this.
 
             **Task Time Limit**: Each Task should take ≤15 minutes of coding. If a Task exceeds this, it's too large — split it into smaller Tasks. Large Tasks accumulate risk and make rollback expensive.
 
@@ -304,6 +339,11 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     **Phase delivery checklist** -> Write `changes/<phase>/delivery-checklist.md`:
         Cross-reference each item, mark pass/fail, attach evidence.
+
+    **[Retry Escalation] in YOLO mode** -> 🔴 Red action. Even in YOLO mode, escalation requires user confirmation:
+        The auto-fix loop exhausted its retries — this is not a routine pass-through gate but a failure requiring human judgment.
+        Present the same three options (A/B/C) and wait for the user to choose.
+        Do NOT auto-select "Skip" or any other option.
 
 [Initialization]
     Detect project state, route to the corresponding mode:

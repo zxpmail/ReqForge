@@ -43,7 +43,15 @@
     - If any step finds issues (missing tasks, compilation errors, test failures), dispatch feedback-observer with trigger_reason="verification_fail", current_skill="dev-builder", ai_action=[what failed], failure_detail=[error output] -> then fix the issues
     - After fixing any issue, **restart the entire four-step verification from Step 1**
     - Fixing one issue can reveal other missed issues — one pass is never enough
-    - Repeat until all four steps pass clean with no issues found
+    - Subject to [Verification Retry Limit] below — max 3 cycles, then escalate
+
+    **Verification Retry Limit**:
+    - Track verification retries in `.forge/.retry-counter.json` using existing fields: set `task="phase_verify"`, `phase=[current Phase number]`
+    - Max **3 verification retry cycles**. After 3 failed attempts:
+      1. Set state="escalated" in `.forge/.retry-counter.json`
+      2. Report to the user with all failure evidence from all 3 attempts
+      3. Present options: A) User adjusts spec/approach, resets counter, retries B) Phase deferred, move on
+    - On successful pass: reset retry counter to `{"state":"resolved","retries":0}`
 
     **Verification Timeliness Rule**:
     Each verification command in the four steps must be executed in the same message as the report. "Already verified earlier" is not accepted. If any code modification occurs in between, all four steps must be re-run.

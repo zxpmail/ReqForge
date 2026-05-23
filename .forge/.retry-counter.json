@@ -1,0 +1,10 @@
+{
+  "task": null,
+  "phase": null,
+  "retries": 0,
+  "max_retries": 3,
+  "last_failure": null,
+  "last_error": null,
+  "history": [],
+  "state": "resolved"
+}
