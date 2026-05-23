@@ -81,7 +81,12 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 [File Structure]
     ```
     dev-builder/
-    └── SKILL.md                           # Main Skill Definition (this file)
+    ├── SKILL.md                           # 主流程（本文件）
+    └── references/                        # 渐进披露：规范、策略、验证清单
+        ├── development-rules-checklist.md
+        ├── development-strategies.md
+        ├── anti-rationalization.md
+        └── phase-completion-assessment.md
     ```
 
 [Output Artifacts]
@@ -93,245 +98,14 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     - **memory/project-memory.md** — Update when architecture facts or constraints change
 
 [Development Rules Checklist]
-    All rules that must be followed during coding, organized by category.
+    编码期必须遵守的规范（代码标准、目录结构、数据库、Git、进程管理等）。
+    **执行前读取** references/development-rules-checklist.md；Continuous Development Mode Step 2 引用此清单。
 
-    [Code Standards]
-        - Single file does not exceed 300 lines, split by responsibility if it does
-        - TypeScript strict mode, no `any` (use `unknown` + type guards)
-        - Naming: Components PascalCase, functions/variables camelCase, files kebab-case, constants UPPER_SNAKE_CASE
-        - Each file has a single responsibility with a clear external interface
-        - Prefer pure functions; isolate side effects into dedicated layers (hooks, API routes)
-        - React prefers function components + Hooks, no class components
-        - Styles prefer Tailwind, don't write custom CSS unless Tailwind can't achieve it
-        - No unrelated refactoring — only touch what needs changing, don't "fix up" other things
-        - Follow the existing codebase style — don't force your own preferences
-        - YAGNI: Don't write code for hypothetical future requirements
-
-    [Project Structure Standards]
-        Project code goes in a subfolder named after the project, not flat in the root. The root directory only holds planning documents, design resources, and framework definition directories.
-
-        ```
-        project/
-        ├── Product-Spec.md         # Root directory, not in git
-        ├── DEV-PLAN.md             # Root directory, not in git
-        ├── <project-name>/         # Project code folder
-        │   ├── src/
-        │   ├── package.json
-        │   └── ...
-        └── Framework definition directory  # .claude/ (Claude Code) /.cursor/rules/ (Cursor) /.opencode/ (OpenCode)
-        ```
-
-        Internal project folder structure prefers the official framework scaffolding default layout.
-        If the project already has code -> keep the existing structure, don't force reorganization.
-        If generating from scratch with official scaffolding -> use the framework-recommended layout, no additional directory structure adjustments.
-
-        Below are typical structures for each framework for reference (not mandatory templates):
-
-        **Node.js Full-Stack (Next.js) — `create-next-app` default**:
-        ```
-        src/
-        ├── app/
-        │   ├── layout.tsx
-        │   ├── page.tsx
-        │   └── api/
-        ├── components/
-        └── public/
-        ```
-
-        **React Frontend (Vite) — `create-vite` default + common additions**:
-        ```
-        src/
-        ├── components/
-        ├── hooks/
-        ├── routes/           -> react-router routes (if used)
-        ├── lib/
-        └── public/
-        ```
-
-        **Java / Spring Boot — `spring init` default**:
-        ```
-        src/main/java/com/company/project/
-        ├── controller/
-        ├── service/
-        ├── repository/
-        ├── model/
-        └── Application.java
-        ```
-
-        **Go — Official recommended layout (golang-standards)**:
-        ```
-        cmd/                   -> main.go entry point
-        internal/              -> Internal packages not exposed externally
-        pkg/                   -> Exported shared packages (if any)
-        go.mod
-        ```
-
-        **Rust — `cargo new` default + common additions**:
-        ```
-        src/
-        ├── main.rs
-        ├── lib.rs
-        ├── routes/
-        └── models/
-        Cargo.toml
-        ```
-
-        **Python / FastAPI — `fastapi dev` scaffold default**:
-        ```
-        src/
-        ├── main.py
-        ├── routers/
-        ├── models/
-        └── core/
-        ```
-
-        **General Principles** (these are more important than specific directory structures):
-        - Framework scaffold defaults are best practices — don't invent new directory structures
-        - Existing projects follow the existing style, don't force reorganization
-        - Each file has a clear single responsibility
-        - Files that change together stay together (group by feature, not by technical layer)
-
-    [Code Structure and Design Principles]
-        **Module Design**:
-        - Each module has a clear boundary and external interface
-        - Someone can understand what the module does and how to use it without reading the internal implementation
-        - Can swap the internal implementation without affecting callers
-        - Can be understood and tested independently
-
-        **Split Signals** (when to split):
-        - File exceeds 300 lines
-        - A function/component does 3+ different things
-        - Changing one feature requires touching 5+ files simultaneously (too tightly coupled)
-
-        **Don't Split Signals** (when not to split):
-        - Small amount of code with logical cohesion
-        - Splitting would require jumping between multiple files unnecessarily
-        - Splitting just to "look tidy" (over-abstraction)
-
-    [Database Structure Standards]
-        - Table names snake_case, field names snake_case
-        - Every table must have id (primary key), created_at, updated_at
-        - When storing JSON in TEXT, annotate the JSON structure in code comments
-        - Fields with default values must declare DEFAULT in the schema
-        - Migrations use ALTER TABLE, check if column/table already exists before executing
-        - No bare SQL string concatenation in code (use parameterized queries to prevent injection)
-        - Index strategy: add indexes for frequently queried fields, but don't over-index
-        - Table relationships must be documented in the Phase delivery checklist
-
-    [Environment Variables and Security]
-        - Vite's VITE_ prefixed variables are exposed to the browser — cannot put API Keys
-        - Next.js variables without NEXT_PUBLIC_ prefix are server-only — safe
-        - AI API calls must go through the server side (Next.js API route or Express), not the browser
-        - .env.example committed as a template to Git, .env.local holds actual values (.gitignore)
-        - Never hardcode any keys, paths, or personal information in code
-
-    [Extensibility and Maintainability]
-        - Configuration over hardcoding: extract values that may change into constants or configuration
-        - Interface over implementation: depend on abstractions (TypeScript interface), not concrete implementations
-        - Progressive enhancement: get core features working first, add enhancements later
-        - Layered error handling: component layer catches and displays UI, service layer catches and logs
-        - Don't over-engineer for the future: build what's needed now
-
-    [Quality Thresholds]
-        Every feature implementation must satisfy:
-        - [x] Happy path works correctly
-        - [x] Error path has clear error messages
-        - [x] Loading state (asynchronous operations have loading indicators)
-        - [x] Empty state (no-data state has guidance)
-        - [x] Basic input validation (required fields, format)
-        - [x] No sensitive information hardcoded
-
-    [Modification Discipline]
-        Before every code change, execute:
-        1. Assess impact scope: what existing features will this change affect? List them
-        2. Check side effects: especially CSS (overflow-hidden clipping popovers, z-index stacking, flex-shrink layout)
-        3. Think then change: confirm the approach won't break existing features before proceeding
-        4. Regression validation: after changes, not only test the new feature but also verify related existing features
-
-    [Git Workflow]
-        Atomic commits:
-        - Commit after each independent feature is complete, don't accumulate until Phase end
-        - One commit should contain only one logical change (one feature, one fix, one config change)
-        - A Phase may have multiple commits; no need for a summary commit at Phase completion
-
-        Commit message convention:
-        - Phase development: `phase-N: feature description`
-        - Bug fix: `fix: issue description`
-        - New feature: `feat: feature description`
-        - Refactor: `refactor: description`
-        - Config/dependencies: `chore: description`
-
-        Push strategy:
-        - Push to remote immediately after each commit
-        - Confirm the current branch is correct before pushing
-        - If remote is not configured -> remind the user to configure it first
-
-        Commit threshold:
-        - Minimum threshold for atomic commit: compiles (tsc --noEmit zero errors)
-        - Phase completion threshold: all four steps pass
-        - No commit allowed if compilation fails
-
-    [Process Management]
-        Before each start/restart of dev server:
-        - Determine the dev server process name and port number based on the project tech stack
-        - Kill any process occupying that port, wait 2 seconds to ensure the port is released
-        - Confirm that only 0 or 1 dev server instance is running, prevent multi-instance conflicts
 
 [Development Strategies]
-    Methodologies during coding, use as needed.
+    Plan Mode、设计稿对照、在线搜索、技术栈选择等策略。
+    **按需读取** references/development-strategies.md。
 
-    **Plan Mode Strategy**
-    Before each Phase starts, must enter Plan Mode and list the TaskList. This is a prerequisite for coding and cannot be skipped.
-    1. Read the Phase's delivery checklist and key files from DEV-PLAN.md
-    2. Explore existing code structure, understand the current state
-    3. Plan the specific implementation steps, clarify what to change first, what to change next, which files need to be created or modified
-    4. Use TaskCreate to break implementation steps into specific Tasks — one Task per page, component, or feature
-    5. Once the TaskList is ready, start coding directly — no need to wait for user confirmation
-
-    Prohibited: writing code directly without a Plan and TaskList.
-    Plan Mode is responsible for "how to implement this Phase"; DEV-PLAN.md is responsible for "which Phases to do".
-
-    **Design Draft Reference Strategy**
-
-    If design tool MCP is connected (e.g., Pencil, Figma, etc.), the following steps are **non-skippable**:
-
-    **Before each feature development**:
-    - Use the design tool API to read the exact values of all involved pages and variants (width, height, padding, gap, font size, font weight, color, border radius, shadow)
-    - View the design draft visual effects
-    - Reading once at Phase start is not enough — re-read before each Task, don't rely on memory
-
-    **During coding**:
-    - Implement component by component against the extracted values
-    - When design draft conflicts with Design Brief, the design draft takes precedence
-
-    **After each feature development**:
-    - Read the actual values in code (Tailwind class / style), verify item by item against design values
-    - View the design draft, confirm layout structure matches
-    - Fix any deviations before committing
-    - Ask the user to confirm the final visual result in the browser
-
-    If no design tool (degraded mode):
-    - Use Design-Brief.md as the primary reference
-    - If no Design-Brief -> use Product-Spec.md text description as reference
-
-    **Online Search Strategy**
-    The following scenarios require WebSearch before coding:
-    1. Using external libraries/APIs -> confirm current version usage and API signatures
-    2. Whether SDK/framework has built-in functionality -> confirm before deciding whether to implement or use directly
-    3. Encountering uncertain technical approaches -> search for best practices
-    4. Unfamiliar error messages -> search for others' solutions
-
-    **Tech Stack Selection Strategy** (used in initialization mode)
-    Configure the project according to the DEV-PLAN.md tech stack table. If DEV-PLAN does not specify:
-    - Web (frontend only) -> React + Vite + TypeScript + Tailwind
-    - Web (full-stack) -> Next.js + TypeScript + Tailwind
-    - Desktop -> Electron + Next.js + TypeScript + Tailwind
-    - CLI -> Node.js + TypeScript + Commander
-    - CLI Agent -> Node.js + TypeScript (refer to [CLI Agent Product] project structure)
-    - Mobile -> React Native / Expo
-    - Backend API -> FastAPI (Python) / Spring Boot (Java) / Gin (Go) / Actix (Rust)
-    - Full-Stack (backend-focused) -> FastAPI + React / Spring Boot + React / Go + React
-    After selection, WebSearch to verify framework versions and compatibility.
 
 [Gotchas]
     **Plan-not-loaded**: Starting implementation without reading the current DEV-PLAN.md Phase → building the wrong thing. Always read DEV-PLAN.md first, confirm the Phase and Task, then code.
@@ -340,122 +114,14 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
 
 [Anti-Rationalization Checklist]
-    Agents tend to use "reasonable" excuses to skip rules. Here are common rationalizations and the correct response.
+    常见「合理借口」与正确回应。
+    **遇阻力时读取** references/anti-rationalization.md。
 
-    Skipping Plan Mode:
-    - "This is simple, just write it directly" -> Plan Mode doesn't care about complexity, it's about discipline. Simple Phases also need Plan + TaskList
-    - "Just changing one file" -> Even one file requires impact assessment before proceeding
-    - "User is waiting, write first" -> 5 minutes of planning saves 30 minutes of rework
-
-    Skipping verification:
-    - "I just tested this" -> Every completion declaration requires fresh evidence run on the spot
-    - "This change couldn't possibly break anything" -> Changes that can't break anything are the most likely to break something. Verify.
-    - "Compilation passes, so it's fine" -> Compilation passing doesn't mean functionality works. Every step of the four-step process is needed.
-
-    Skipping Code Review:
-    - "Small change, no review needed" -> Every code change goes through review, regardless of size
-    - "Just fixed a typo" -> Typo fixes also get committed, compilation verification still required before commit
-    - **Complexity Gate**: For truly simple changes (typo fix, single-file rename, comment-only), set change_complexity="simple" when dispatching code-reviewer to skip parallel agent dispatch and run a quick quality check only. This is NOT skipping review — it's matching the review depth to the change scope.
-
-    Skipping Session Handoff:
-    - "Context isn't that full yet" -> By the time it feels full, it's too late. Generate handoff early.
-    - "I'll remember for next time" -> You won't. Next invocation is a fresh context with zero memory.
-    - "The user didn't ask for it" -> Proactive handoff is part of Force Stop discipline. Generate it.
-
-    Writing vague plans:
-    - "Figure out details during implementation" -> Plan stage requires thinking it through, otherwise implementation will go off track
-    - "Similar approach to Task 1" -> Write the specific approach, don't reference other Tasks
-    - "Add necessary error handling" -> Specify which errors and what approach to use
-
-    Skipping feedback recording:
-    - "It's a small fix, no need to record feedback" -> Every fix, regardless of size, is a learning opportunity for the ratchet. Without recording, the same failure repeats.
-    - "I'll record feedback later" -> You won't. You're in a fix loop. Record it now or forget it.
-
-    Mocking instead of substituting:
-    - "I'll just mock the database for local testing" -> Mocks return what you expect, not what reality delivers. Use a real substitute (H2, SQLite, in-memory store) so local failures predict production failures.
-    - "This service isn't available locally, I'll stub it" -> A stub that always returns 200 teaches AI nothing. Write a real local implementation or script that exercises the same code path.
-
-Soft completion declarations:
-    - "Should be fine" -> "Fine" needs evidence — run the verification command
-    - "Looks correct" -> "Correct" needs comparison between the Spec original text and code
-    - "Likely passes" -> Probability is not evidence — run the test and get results
-
-    Skipping Phase Boundaries:
-    - "Just read the next Phase briefly" -> Do not read it. One Phase per invocation.
-    - "Since all files are here, might as well do Phase N+1 too" -> No. User must call /dev-builder again.
-    - "Saving time by continuing to the next Phase" -> This is not saving time, it's skipping process. Stop.
-    - "User said continue, so I'll start Phase N+1" -> User said continue to confirm Phase N is complete. They did NOT say to start Phase N+1. Invoke /dev-builder is required.
 
 [Phase Completion Assessment]
-    When each Phase is complete, all of the following checks must pass. One pass is rarely enough — iterative checking until clean.
+    Phase 结束四步验证 + 迭代循环 + Phase Summary 模板。
+    **Step 3 必须按此文执行** references/phase-completion-assessment.md。
 
-    **Four-Step Verification** (all must pass to confirm Phase completion):
-
-    Step 1: Code Review
-    - Cross-reference the DEV-PLAN.md Phase delivery checklist, confirm each item is implemented item by item
-    - Check code quality: naming conventions, type safety, no `any`, no circular dependencies
-    - Check for changes outside the Phase scope (scope creep)
-    - Output evidence: delivery checklist cross-reference results
-
-    Step 2: Test Completeness
-    - All planned features for this Phase are implemented
-    - No omissions, no half-baked work
-    - Output evidence: feature checklist with checkmarks
-
-    Step 3: Compilation Verification
-    - TypeScript compilation zero errors (tsc --noEmit)
-    - No missing dependencies
-    - Output evidence: compilation command output
-
-    Step 4: Functional Testing
-    - Start dev server, confirm no error output
-    - New features are usable
-    - Existing features are not broken (regression)
-    - If Playwright is available -> use browser automation to test core interaction flows
-    - If Playwright is not available -> use curl to check API endpoint returns 200 + remind user to manually confirm UI rendering in browser
-    - Output evidence: startup logs + API response + design value comparison results
-
-    **Smoke Tests** (additional checks beyond the four steps):
-    - Security scan: npm audit has no critical vulnerabilities
-    - No exposed keys: grep to check for hardcoded API Keys, Tokens in code
-    - Process health: only 1 dev server instance running
-
-    **Scripted Verification** (recommended for complex Phases):
-    For Phases with 5+ tasks or multi-service integration, generate a `scripts/verify-phase-N.sh` (or `.bat`) verification script that the AI can run directly. The script should cover: (1) compile check, (2) unit test run, (3) dev server health check, (4) core API smoke test. Scripts are AI's hands — a checklist is for humans, a script is for AI.
-
-    **Iterative Check Loop**:
-    - If any step finds issues (missing tasks, compilation errors, test failures), dispatch feedback-observer with trigger_reason="verification_fail", current_skill="dev-builder", ai_action=[what failed], failure_detail=[error output] -> then fix the issues
-    - After fixing any issue, **restart the entire four-step verification from Step 1**
-    - Fixing one issue can reveal other missed issues — one pass is never enough
-    - Repeat until all four steps pass clean with no issues found
-
-    **Verification Timeliness Rule**:
-    Each verification command in the four steps must be executed in the same message as the report. "Already verified earlier" is not accepted. If any code modification occurs in between, all four steps must be re-run.
-
-    **After All Pass**:
-    - Report results to the user (with evidence)
-    - Archive: scan the changes/ directory, check if any change artifacts related to this Phase's delivery checklist exist. If yes and all are fully implemented, move changes/<change-name>/ to changes/archive/<change-name>/
-    - User confirms -> Phase complete
-    - Phase completion cannot be confirmed without passing
-    - If problems are found and fixed during verification, use `fix:` prefix for the fix commit (per-Task commits are already completed in Step 2)
-
-    **Phase Summary Generation** (auto-generated after all passes):
-    Generate a structured phase summary appended to the Phase completion report:
-
-    ```
-    📋 Phase N Summary
-
-    **Completed**: X/Y delivery checklist items
-    **Key files created/modified**: [list]
-
-    **Architecture decisions**: [any ADRs made this phase]
-    **Known limitations**: [unresolved issues, deferred items]
-    **Verification evidence**: [compilation: pass | tests: X passed | lint: pass]
-
-    **Next step**: Phase N+1 — [Phase name from DEV-PLAN]
-    ```
-
-    This summary serves as a quick-reference handoff point for the next session or next Phase invocation.
 
 [Workflow (Initialization Mode)]
     Trigger condition: Has DEV-PLAN.md, no project code

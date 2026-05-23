@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.4-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -17,6 +17,9 @@
 ---
 
 ## 近期更新
+
+### v1.20.4 — 2026-05-23
+- **SKILL 瘦身**：`dev-builder`、`product-spec-builder` 细则迁入 `references/`，主 SKILL 控制在 500 行以内。
 
 ### v1.20.3 — 2026-05-23
 - **全部 Commands 瘦身**：12 个 Skill 的 `commands/*.md` 仅作索引，详情在 `SKILL.md`。

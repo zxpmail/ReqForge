@@ -2,6 +2,11 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.4] - 2026-05-23
+### Changed
+- **SKILL progressive disclosure**: `dev-builder` and `product-spec-builder` oversized sections moved to `references/`; main SKILL.md under 500 lines (validate-skill warning cleared).
+- **`scripts/split-skill-references.mjs`**: Utility to repeat the split pattern for other skills.
+
 ## [v1.20.3] - 2026-05-23
 ### Changed
 - **Commands layer**: All 12 skills' `commands/*.md` are index-only pointers to SKILL.md.

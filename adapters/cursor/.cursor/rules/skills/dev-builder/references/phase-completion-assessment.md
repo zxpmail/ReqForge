@@ -1,0 +1,74 @@
+# Phase Completion Assessment
+
+<!-- 从 SKILL.md 渐进披露拆分；主流程见 ../SKILL.md -->
+
+[Phase Completion Assessment]
+    When each Phase is complete, all of the following checks must pass. One pass is rarely enough — iterative checking until clean.
+
+    **Four-Step Verification** (all must pass to confirm Phase completion):
+
+    Step 1: Code Review
+    - Cross-reference the DEV-PLAN.md Phase delivery checklist, confirm each item is implemented item by item
+    - Check code quality: naming conventions, type safety, no `any`, no circular dependencies
+    - Check for changes outside the Phase scope (scope creep)
+    - Output evidence: delivery checklist cross-reference results
+
+    Step 2: Test Completeness
+    - All planned features for this Phase are implemented
+    - No omissions, no half-baked work
+    - Output evidence: feature checklist with checkmarks
+
+    Step 3: Compilation Verification
+    - TypeScript compilation zero errors (tsc --noEmit)
+    - No missing dependencies
+    - Output evidence: compilation command output
+
+    Step 4: Functional Testing
+    - Start dev server, confirm no error output
+    - New features are usable
+    - Existing features are not broken (regression)
+    - If Playwright is available -> use browser automation to test core interaction flows
+    - If Playwright is not available -> use curl to check API endpoint returns 200 + remind user to manually confirm UI rendering in browser
+    - Output evidence: startup logs + API response + design value comparison results
+
+    **Smoke Tests** (additional checks beyond the four steps):
+    - Security scan: npm audit has no critical vulnerabilities
+    - No exposed keys: grep to check for hardcoded API Keys, Tokens in code
+    - Process health: only 1 dev server instance running
+
+    **Scripted Verification** (recommended for complex Phases):
+    For Phases with 5+ tasks or multi-service integration, generate a `scripts/verify-phase-N.sh` (or `.bat`) verification script that the AI can run directly. The script should cover: (1) compile check, (2) unit test run, (3) dev server health check, (4) core API smoke test. Scripts are AI's hands — a checklist is for humans, a script is for AI.
+
+    **Iterative Check Loop**:
+    - If any step finds issues (missing tasks, compilation errors, test failures), dispatch feedback-observer with trigger_reason="verification_fail", current_skill="dev-builder", ai_action=[what failed], failure_detail=[error output] -> then fix the issues
+    - After fixing any issue, **restart the entire four-step verification from Step 1**
+    - Fixing one issue can reveal other missed issues — one pass is never enough
+    - Repeat until all four steps pass clean with no issues found
+
+    **Verification Timeliness Rule**:
+    Each verification command in the four steps must be executed in the same message as the report. "Already verified earlier" is not accepted. If any code modification occurs in between, all four steps must be re-run.
+
+    **After All Pass**:
+    - Report results to the user (with evidence)
+    - Archive: scan the changes/ directory, check if any change artifacts related to this Phase's delivery checklist exist. If yes and all are fully implemented, move changes/<change-name>/ to changes/archive/<change-name>/
+    - User confirms -> Phase complete
+    - Phase completion cannot be confirmed without passing
+    - If problems are found and fixed during verification, use `fix:` prefix for the fix commit (per-Task commits are already completed in Step 2)
+
+    **Phase Summary Generation** (auto-generated after all passes):
+    Generate a structured phase summary appended to the Phase completion report:
+
+    ```
+    📋 Phase N Summary
+
+    **Completed**: X/Y delivery checklist items
+    **Key files created/modified**: [list]
+
+    **Architecture decisions**: [any ADRs made this phase]
+    **Known limitations**: [unresolved issues, deferred items]
+    **Verification evidence**: [compilation: pass | tests: X passed | lint: pass]
+
+    **Next step**: Phase N+1 — [Phase name from DEV-PLAN]
+    ```
+
+    This summary serves as a quick-reference handoff point for the next session or next Phase invocation.

@@ -60,10 +60,15 @@ description: Used when the user says they want to build a product, application, 
 [File Structure]
     ```
     product-spec-builder/
-    ├── SKILL.md                           # Main Skill Definition (this file)
+    ├── SKILL.md                           # 主流程（本文件）
+    ├── references/                        # 渐进披露：访谈策略、0-to-1、迭代工作流
+    │   ├── requirements-dimensions.md
+    │   ├── conversation-strategy.md
+    │   ├── workflow-0-to-1.md
+    │   └── workflow-iteration.md
     └── templates/
-        ├── product-spec-template.md       # Product Spec Output Template
-        └── changelog-template.md          # Changelog Template
+        ├── product-spec-template.md
+        └── changelog-template.md
     ```
 
 [Gotchas]
@@ -76,8 +81,7 @@ description: Used when the user says they want to build a product, application, 
 [Output Artifacts]
     - **Product-Spec.md** — Product Requirements Document (created in 0-to-1 mode, updated in iteration mode)
     - **Product-Spec-CHANGELOG.md** — Requirements Changelog (appended in iteration mode)
-    - **changes/** — NOT created by this skill. Scoped features use `/change-manager` only (see [Workflow (Iteration Mode)] routing).
-
+    - **changes/** — NOT created by this skill. Scoped features use `/change-manager` only (see 
 [Output Style]
     **Tone**:
     - Direct, calm, occasionally with a world-weary coldness
@@ -104,105 +108,24 @@ description: Used when the user says they want to build a product, application, 
     - "What goes on the left and what goes on the right — have you figured that out? Or are you going to let the dev guess?"
     - "Got it figured out? Then let's continue. Not figured out? Then keep thinking."
 
+
+
+
 [Requirements Dimension Checklist]
-    During the conversation, information from the following dimensions must be collected (not necessarily in order, follow the natural flow of conversation):
-
-    **Must Collect** (without these, the Product Spec is worthless):
-    - Product positioning: What is this? What problem does it solve? Why you?
-    - Target users: Who will use it? Why? Will they die without it?
-    - Core features: What features are essential? Which ones, if removed, make the product invalid?
-    - User flow: How do users use it? The complete path from opening to task completion?
-    - AI capability needs: Which features need AI? What type of AI capability?
-    - Product type: Is this a Web app, desktop app, CLI tool, or mobile app?
-
-    **Try to Collect** (with these, the Product Spec can actually be implemented):
-    - Overall layout: Agent analyzes suitable layout based on product type and functional requirements, recommends to the user and confirms
-    - Area content: What content goes in each area, what functionality does it carry
-    - Control specifications: Primary input/output methods and interaction elements
-    - Input/Output: What does the user input? What does the system output? What format?
-    - Use cases: 3-5 specific scenarios, the more specific the better
-    - AI enhancement points: Where could "one-click AI optimization" or "AI smart recommendation" be added?
-    - Technical complexity: Does the user need to log in? Where is data stored? Is a server needed?
-
-    **Optional Collection** (icing on the cake):
-    - Technical preferences: Are there specific technical requirements?
-    - Reference products: Any existing products to learn from? What to copy, what not to copy?
-    - Priorities: What goes in phase one, what goes in phase two?
+    访谈需收集的维度 + 信息充分性判定。
+    **0-to-1 / Iteration 提问时读取** references/requirements-dimensions.md。
 
 [Conversation Strategy]
-    **Opening Strategy**:
-    - No small talk, start questioning directly based on what the user has already expressed
-    - Let the user dump everything in their head first, then start dissecting
+    开场、提问、方案与 AI/平台/技术引导、搜索与确认。
+    **对话阶段读取** references/conversation-strategy.md。
 
-    **Questioning Strategy**:
-    - Only ask 1-2 questions at a time, questions must hit the core
-    - Do not accept vague answers: "roughly", "maybe", "probably", "users will like it" — drill down until clear
-    - Spot logical flaws, point them out directly, show no mercy
-    - If the user is deluding themselves, calmly pour cold water
-    - When the user says "you decide the layout" or "whatever", the Agent analyzes the product characteristics and recommends a layout plan, then asks for confirmation or adjustment
+[Workflow (0-to-1 Mode)]
+    从零到一完整阶段（探索 → 澄清 → 细化 → 生成 Spec）。
+    **进入 0-to-1 后按步执行** references/workflow-0-to-1.md。
 
-    **Solution Guidance Strategy**:
-    - User knows but hasn't articulated clearly → continue pressing, don't offer solutions
-    - User genuinely doesn't know → give 2-3 concrete options, each including:
-      1. Option name (one-sentence summary)
-      2. Pros (why choose this)
-      3. Cons (what you pay for choosing this)
-      4. Suitable scenarios (when is this the best choice)
-    - If similar products' approaches are found through search, cite them: "Product X does it this way, because..."
-    - After giving options, continue pressing them to choose, after choosing, continue pressing the next detail
-    - Options are tools, not escape routes
-
-    **AI Capability Guidance Strategy**:
-    - Whenever the user describes a feature, actively think: can this be done with AI?
-    - Proactively ask: "Should we add a one-click AI X here?"
-    - If the user designs a tedious manual workflow → directly suggest simplifying with AI
-    - Later in the conversation, proactively summarize the types of AI capabilities needed
-
-    **Platform Adaptation Strategy**:
-    - Based on product characteristics, proactively recommend platform direction:
-      - Needs offline use / system-level permissions / file operations → Desktop (Electron)
-      - Pure content display / light interaction / needs sharing → Web
-      - Developer-oriented / batch processing / automation → CLI
-      - Mobile scenarios / fragmented usage / push notifications → Mobile
-    - Don't decide for the user, but give clear recommendations with reasoning
-    - Respect clear user preferences, guide them to choose if they don't have one
-
-    **Technical Requirements Guidance Strategy**:
-    - For users without programming background, don't ask technical questions directly — infer technical needs from business scenarios
-    - Follow the Simplicity-First Principle, don't add complexity unless necessary
-    - When a desired feature would significantly increase complexity, first advise against it or suggest phasing
-
-    **Search Strategy**:
-    - Follow the [Online-First Principle], the following scenarios must be searched before answering:
-      1. User mentions specific competitors or reference products → search to understand their features and approaches
-      2. The user's product direction has a mature market → search for existing competitive landscape
-      3. Involves external services/APIs/frameworks → search for latest versions and usage
-      4. User asks "can X be done" or "are there existing solutions" → search to confirm
-      5. When giving solution recommendations → search to verify feasibility
-    - Search results should support your advice, not be a rehash of search results
-
-    **Confirmation Strategy**:
-    - Periodically recap collected information, directly challenge contradictions
-    - When enough information is gathered, move forward without dragging things out
-    - If the user says "that's about it" but information is clearly insufficient, keep asking
-
-[Information Sufficiency Criteria]
-    A Product Spec can be generated when the following conditions are met:
-
-    **Must Satisfy**:
-    - [x] Product positioning is clear (can explain what this is in one plain sentence)
-    - [x] Target users are defined (know who it's for, why they'd use it)
-    - [x] Core features are defined (can articulate what features the product must have and why)
-    - [x] User flow is clear (at least one complete path from start to finish)
-    - [x] AI capability needs are clear (know which features need AI and what type of AI)
-    - [x] Product type is determined (Web / Desktop / CLI / Mobile)
-
-    **Try to Satisfy**:
-    - [x] Overall layout direction exists (rough structure is understood)
-    - [x] Basic control specifications are defined (primary input/output methods are clear)
-
-    If "Must Satisfy" conditions are not met, continue questioning — don't force-generate a garbage document.
-    If "Try to Satisfy" conditions are not met, generation is possible but mark items as [TBD].
+[Workflow (Iteration Mode)]
+    存量 Spec 迭代与 change-manager 路由。
+    **Iteration Mode 完整步骤** references/workflow-iteration.md。
 
 [Startup Check]
     When the Skill starts, first execute the following checks:
@@ -227,9 +150,7 @@ description: Used when the user says they want to build a product, application, 
 
     Step 4: Execute corresponding workflow
         - Quick Mode: Execute [Workflow (Quick Mode)]
-        - 0-to-1 Mode: Execute [Workflow (0-to-1 Mode)]
-        - Iteration Mode: Execute [Workflow (Iteration Mode)]
-
+        - 0-to-1 Mode: Execute 
 [Workflow (Quick Mode)]
     **Trigger**: User gives a one-sentence description or says they want to start fast.
     **Goal**: Generate a minimal usable Product Spec in one round, with uncertain items marked [待确认] / [TBD].
