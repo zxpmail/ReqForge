@@ -1,0 +1,18 @@
+{
+  "description": "Agent Harness for AI coding assistants: idea → Spec → Plan → Build. Claude Code, Cursor, OpenCode. OpenSpec-style changes via /change-manager.",
+  "homepage": "https://github.com/zxpmail/ReqForge#readme",
+  "topics": [
+    "agent-harness",
+    "ai-agents",
+    "ai-coding",
+    "claude-code",
+    "cursor",
+    "opencode",
+    "product-development",
+    "spec-driven-development",
+    "prompt-engineering",
+    "developer-tools",
+    "llm",
+    "tdd"
+  ]
+}

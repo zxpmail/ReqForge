@@ -1,12 +1,51 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.5-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.6-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
 面向 AI 编程助手（Claude Code、Cursor、OpenCode）的完整产品开发方法论。
 
+> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec) 有何不同？** OpenSpec 擅长**存量项目里的一次变更**（CLI + `changes/` + 斜杠命令）。**Forge** 覆盖**从想法到可交付产品**的全流程（需求 → 计划 → TDD 开发 → 审查 → 发布），并带钩子、记忆、进化与多客户端适配；存量增量走 `/change-manager`（思路对齐 OpenSpec）。[详细对照 →](core/docs/openspec-comparison.md)
+
 **使用框架无需 npm install** — 将适配目录复制到项目根目录，打开 AI 客户端即可。仅在本仓库贡献或运行 `scripts/` 时才需要 Node.js + pnpm。
+
+### 架构一览
+
+```mermaid
+flowchart LR
+  subgraph inputs [你]
+    Idea[想法 / 变更需求]
+  end
+
+  subgraph forge [Forge 框架]
+    Spec[product-spec-builder]
+    Chg[change-manager]
+    Plan[dev-planner]
+    Build[dev-builder]
+    Rev[code-review / bug-fixer]
+    Rel[release-builder]
+    Hooks[8 个钩子 + 进化]
+    Mem[memory/ 三层记忆]
+  end
+
+  subgraph clients [AI 客户端]
+    CC[Claude Code]
+    CU[Cursor]
+    OC[OpenCode]
+  end
+
+  Idea --> Spec
+  Spec --> Plan
+  Idea --> Chg
+  Chg --> Plan
+  Plan --> Build
+  Build --> Rev
+  Rev --> Rel
+  Hooks -.-> Build
+  Mem -.-> Build
+  forge --> clients
+```
 
 | 章节 | 说明 |
 |------|------|
@@ -17,6 +56,9 @@
 ---
 
 ## 近期更新
+
+### v1.20.6 — 2026-05-23
+- **可发现性**：README 顶部 OpenSpec 对照 + 架构图；可用脚本把 About/Topics 同步到 GitHub。
 
 ### v1.20.5 — 2026-05-23
 - **memory-guard**：PostToolUse 合并归档与交接提示（默认 8 个钩子）。
@@ -580,6 +622,7 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm validate-skill:bash` | bash 版 validate-skill.sh（需 WSL/Git Bash）；加 `--score` 为 32 分评分表 |
 | `pnpm create-skill <名称>` | 从名称脚手架生成 Skill（`--minimal` 或 `--full`） |
 | `pnpm apply-loadout <loadout> <client>` | 将 loadout（full/web-app/cli-tool/minimal）钩子合并到 settings；加 `--dry-run` 预览 |
+| `pnpm set-github-metadata` | 把 `.github/repo-metadata.json` 同步到 GitHub About/Topics（需 `GITHUB_TOKEN`） |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
 | `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目 |

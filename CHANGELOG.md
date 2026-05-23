@@ -2,6 +2,12 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.6] - 2026-05-23
+### Added
+- **GitHub discoverability**: README top — OpenSpec one-liner + architecture mermaid; `.github/repo-metadata.json` + `scripts/set-github-metadata.mjs` for About description/topics.
+### Changed
+- `package.json`: repository/homepage/keywords aligned with repo metadata.
+
 ## [v1.20.5] - 2026-05-23
 ### Changed
 - **memory-guard hook**: `PostToolUse` runs `memory-guard` (wraps `context-compaction` + `check-handoff`). `memory-check` stays on `AfterCommand`. Default hook count 9→8. Legacy scripts retained for direct invoke.

@@ -1,12 +1,51 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.5-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.6-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
 A complete product development methodology for AI coding assistants: Claude Code, Cursor, OpenCode.
 
+> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** OpenSpec excels at **one brownfield change at a time** (CLI + `changes/` + slash commands). **Forge** covers the **full product pipeline** (idea → Spec → Plan → TDD build → review → release) and adds hooks, memory, evolution, and multi-client adapters. Brownfield deltas use `/change-manager` (OpenSpec-aligned). [Full comparison →](core/docs/openspec-comparison.md)
+
 **No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
+
+### Architecture at a glance
+
+```mermaid
+flowchart LR
+  subgraph inputs [You]
+    Idea[Idea / change request]
+  end
+
+  subgraph forge [Forge Harness]
+    Spec[product-spec-builder]
+    Chg[change-manager]
+    Plan[dev-planner]
+    Build[dev-builder]
+    Rev[code-review / bug-fixer]
+    Rel[release-builder]
+    Hooks[8 hooks + evolution]
+    Mem[memory/ 3-tier]
+  end
+
+  subgraph clients [AI clients]
+    CC[Claude Code]
+    CU[Cursor]
+    OC[OpenCode]
+  end
+
+  Idea --> Spec
+  Spec --> Plan
+  Idea --> Chg
+  Chg --> Plan
+  Plan --> Build
+  Build --> Rev
+  Rev --> Rel
+  Hooks -.-> Build
+  Mem -.-> Build
+  forge --> clients
+```
 
 | Section | Description |
 |---------|-------------|
@@ -17,6 +56,9 @@ A complete product development methodology for AI coding assistants: Claude Code
 ---
 
 ## What's New
+
+### v1.20.6 — 2026-05-23
+- **Discoverability**: OpenSpec diff + architecture diagram at README top; `pnpm` script to sync GitHub About/topics from `.github/repo-metadata.json`.
 
 ### v1.20.5 — 2026-05-23
 - **memory-guard**: PostToolUse bundles context-compaction + check-handoff (8 default hooks).
@@ -582,6 +624,7 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm validate-skill:bash` | Bash validate-skill.sh (requires WSL/Git Bash); add `--score` for 32-point rubric |
 | `pnpm create-skill <name>` | Scaffold new Skill from name (`--minimal` or `--full`) |
 | `pnpm apply-loadout <loadout> <client>` | Merge loadout (full/web-app/cli-tool/minimal) hooks into settings; `--dry-run` to preview |
+| `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json` (needs `GITHUB_TOKEN`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
 | `pnpm forge-install <client> --target <dir>` | Install adapter into a user project |
