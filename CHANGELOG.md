@@ -2,6 +2,11 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.7] - 2026-05-23
+### Changed
+- **Brand messaging**: README/README.zh-CN lead with「需求→产品」, subtitle **Agent Harness**; product name unified as **ReqForge** in hero (repo name unchanged).
+- `repo-metadata.json` description aligned; re-run `pnpm set-github-metadata` to refresh GitHub About.
+
 ## [v1.20.6] - 2026-05-23
 ### Added
 - **GitHub discoverability**: README top — OpenSpec one-liner + architecture mermaid; `.github/repo-metadata.json` + `scripts/set-github-metadata.mjs` for About description/topics.

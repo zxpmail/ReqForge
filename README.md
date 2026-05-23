@@ -1,12 +1,12 @@
-# Forge
+# ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.20.6-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.7-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
-**Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
+**From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
-A complete product development methodology for AI coding assistants: Claude Code, Cursor, OpenCode.
+**Open-source Agent Harness** for Claude Code, Cursor, and OpenCode — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
 
-> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** OpenSpec excels at **one brownfield change at a time** (CLI + `changes/` + slash commands). **Forge** covers the **full product pipeline** (idea → Spec → Plan → TDD build → review → release) and adds hooks, memory, evolution, and multi-client adapters. Brownfield deltas use `/change-manager` (OpenSpec-aligned). [Full comparison →](core/docs/openspec-comparison.md)
+> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** OpenSpec excels at **one brownfield change at a time** (CLI + `changes/` + slash commands). **ReqForge** covers the **full product pipeline** and adds harness machinery (hooks, parallel review, feedback loop). Brownfield deltas use `/change-manager` (OpenSpec-aligned). [Full comparison →](core/docs/openspec-comparison.md)
 
 **No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
 
@@ -18,7 +18,7 @@ flowchart LR
     Idea[Idea / change request]
   end
 
-  subgraph forge [Forge Harness]
+  subgraph forge [ReqForge Harness]
     Spec[product-spec-builder]
     Chg[change-manager]
     Plan[dev-planner]
@@ -56,6 +56,9 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.20.7 — 2026-05-23
+- **Positioning**: Hero = requirements → product; subline = Agent Harness; brand **ReqForge** in README titles.
 
 ### v1.20.6 — 2026-05-23
 - **Discoverability**: OpenSpec diff + architecture diagram at README top; `pnpm` script to sync GitHub About/topics from `.github/repo-metadata.json`.
@@ -624,7 +627,7 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm validate-skill:bash` | Bash validate-skill.sh (requires WSL/Git Bash); add `--score` for 32-point rubric |
 | `pnpm create-skill <name>` | Scaffold new Skill from name (`--minimal` or `--full`) |
 | `pnpm apply-loadout <loadout> <client>` | Merge loadout (full/web-app/cli-tool/minimal) hooks into settings; `--dry-run` to preview |
-| `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json` (needs `GITHUB_TOKEN`) |
+| `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json`; put token in `.env.local` as `GITHUB_TOKEN=` (see `.env.local.example`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
 | `pnpm forge-install <client> --target <dir>` | Install adapter into a user project |

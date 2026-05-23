@@ -1,10 +1,12 @@
-# Forge
+# ReqForge
 
-> Product Development Framework for AI Coding Assistants — from fuzzy ideas to shippable products, with full AI-assisted guidance.
+> From requirements to shippable products (primary). Open-source Agent Harness for Claude Code, Cursor, OpenCode (mechanism).
 
 ## One-Line Definition
 
-Forge is an **Agent Harness** — a system of constraints, guidance, and feedback that makes AI coding assistants produce verifiable, high-quality output. Harness = Guides (feedforward) + Sensors (feedback) + Steering Loop (evolution).
+**ReqForge** leads with the outcome: requirements → Spec → Plan → Build → Review → Release.
+
+Under the hood it is an **Agent Harness** — constraints, guidance, and feedback (skills, hooks, memory, evolution) so AI output stays verifiable. Harness = Guides (feedforward) + Sensors (feedback) + Steering Loop (evolution).
 
 ## Problem It Solves
 

@@ -1,7 +1,7 @@
 {
   "name": "reqforge",
-  "version": "1.20.6",
-  "description": "Agent Harness for AI coding assistants: idea → Spec → Plan → Build. Claude Code, Cursor, OpenCode.",
+  "version": "1.20.7",
+  "description": "ReqForge — From requirements to shippable products. Agent Harness for Claude Code, Cursor, OpenCode.",
   "repository": {
     "type": "git",
     "url": "https://github.com/zxpmail/ReqForge.git"

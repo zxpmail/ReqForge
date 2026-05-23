@@ -1,11 +1,11 @@
 # CONTEXT
 
 ## 当前正在做什么
-- v1.20.6：GitHub 可发现性（README 架构图/OpenSpec 一句、repo-metadata 脚本）本地待提交
+- v1.20.7：品牌双定位（需求→产品 + Harness），README 统一 ReqForge（本地待提交）
 
 ## 上次停在哪个位置
-- 已推送 `91cc442`（v1.20.5）
+- 已推送 `1e1dcd5`（v1.20.6）；GitHub About 已由用户脚本同步成功
 
 ## 近期关键决定和原因
-- About/Topics 用 `.github/repo-metadata.json` + `pnpm set-github-metadata`（需 PAT）同步到 GitHub
+- 对外：主「需求→产品」，副「Agent Harness」；不改仓库名 zxpmail/ReqForge
 
