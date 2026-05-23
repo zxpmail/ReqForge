@@ -1,0 +1,41 @@
+{
+  "name": "cli-tool",
+  "version": "1.0.0",
+  "description": "CLI tool development — lean toolchain without design skills",
+  "skills": [
+    "product-spec-builder",
+    "dev-planner",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "release-builder",
+    "feedback-writer",
+    "evolution-engine"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "code-reviewer-types",
+    "feedback-observer",
+    "evolution-runner",
+    "test-writer",
+    "planner"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "auto-push",
+    "stop-gate",
+    "detect-feedback-signal",
+    "mark-review-needed",
+    "check-evolution",
+    "memory-check",
+    "context-compaction",
+    "check-sync",
+    "check-handoff",
+    "hallucination-gate"
+  ],
+  "mcp_servers": [],
+  "settings_extends": "settings.json"
+}

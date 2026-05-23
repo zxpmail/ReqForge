@@ -18,6 +18,10 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ## What's New
 
+### v1.19 — 2026-05-23
+- **Loadout mechanism**: Reusable bundles of skills, agents, hooks, and MCP servers for different project types. 4 built-in loadouts: `full`, `web-app`, `cli-tool`, `minimal`. Validated by `loadout.schema.json`. Synced to all adapters via `pnpm sync`.
+- **loadout.schema.json**: JSON Schema v7 validation for loadout definitions (required fields: name, version, description, skills, agents, hooks).
+
 ### v1.18 — 2026-05-23
 - **skill.json metadata**: All 11 skills now ship with machine-readable `skill.json` (name, version, triggers, prerequisites, agents, hooks). Validated by `validate-skill.sh` via Node/Python. JSON Schema at `core/skills/skill.schema.json`.
 - **Commands layer**: 7 user-invokable skills now have `commands/<name>.md` with YAML frontmatter + phased workflows (Goal → Actions → Acceptance). CLAUDE.md [Skill Dispatch] references commands for step-by-step procedures.
@@ -278,7 +282,7 @@ More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 │  ├─ test-writer        Generate tests for tools/scripts     │
 │  └─ planner            Analyze Spec, split phases, plan     │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 11 (Guides / Feedforward Control)                 │ ← Guidance Layer
+│  Skills × 11 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
 ├─────────────────────────────────────────────────────────────┤
 │  Hooks + Review Loop (Sensors / Feedback Control)           │ ← Inspection Layer
@@ -442,6 +446,7 @@ Forge/
 ├── core/                      # Shared core content
 │   ├── skills/                # 11 skill definitions, each in its own directory
 │   ├── agents/                # 9 Sub-agent definitions
+│   ├── loadouts/              # Reusable skill/agent/hook bundles
 │   ├── templates/             # Document templates
 │   │   └── memory/            # Three-tier memory + session handoff templates
 │   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)

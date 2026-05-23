@@ -2,6 +2,13 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.19] - 2026-05-23
+### Added
+- **Loadout mechanism**: `core/loadouts/` with `loadout.schema.json` and 4 built-in loadouts (`full`, `web-app`, `cli-tool`, `minimal`). Each loadout is a reusable bundle of skills, agents, hooks, and MCP server recommendations.
+- **Sync support**: `core/loadouts/` added to sync map for all 3 adapters.
+### Changed
+- `scripts/sync.ts`: added `core/loadouts` → adapter loadouts mapping.
+
 ## [v1.18] - 2026-05-23
 ### Added
 - **skill.json metadata**: All 11 skills ship with machine-readable `skill.json` (name, version, triggers, prerequisites, agents, hooks). JSON Schema at `core/skills/skill.schema.json`.

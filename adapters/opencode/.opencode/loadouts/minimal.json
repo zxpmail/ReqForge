@@ -1,0 +1,25 @@
+{
+  "name": "minimal",
+  "version": "1.0.0",
+  "description": "Minimal loadout — quick prototyping with spec, build, and review only",
+  "skills": [
+    "product-spec-builder",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "feedback-writer"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "feedback-observer"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "stop-gate",
+    "detect-feedback-signal",
+    "memory-check",
+    "hallucination-gate"
+  ],
+  "mcp_servers": []
+}

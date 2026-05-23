@@ -18,6 +18,10 @@
 
 ## 近期更新
 
+### v1.19 — 2026-05-23
+- **Loadout 机制**：可复用的技能/Agent/钩子/MCP 服务器捆绑包，适配不同项目类型。内置 4 个 loadout：`full`、`web-app`、`cli-tool`、`minimal`。`loadout.schema.json` 做校验，`pnpm sync` 同步到所有适配器。
+- **loadout.schema.json**：JSON Schema v7 校验，定义必需字段（name、version、description、skills、agents、hooks）。
+
 ### v1.18 — 2026-05-23
 - **skill.json 元数据**：全部 11 个 Skill 新增机器可读的 `skill.json`（名称、版本、触发条件、前置依赖、关联 Agent、钩子）。`validate-skill.sh` 通过 Node/Python 自动校验。JSON Schema 在 `core/skills/skill.schema.json`。
 - **Commands 命令层**：7 个可调用的 Skill 新增 `commands/<name>.md`，含 YAML 前导元数据 + 分阶段工作流（目标 → 行动 → 验收标准）。CLAUDE.md [Skill Dispatch] 引用命令层获取分步流程。
@@ -278,7 +282,7 @@ my-app/
 │  ├─ test-writer        为工具/脚本生成测试                   │
 │  └─ planner            分析 Spec，拆分 Phase，制定计划        │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 11（引导/前馈控制）                                │ ← 引导层
+│  Skills × 11 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
 │  在 Agent 行动前注入方法论和标准                              │
 ├─────────────────────────────────────────────────────────────┤
 │  钩子 + 审查循环（传感器/反馈控制）                          │ ← 检查层
@@ -440,6 +444,7 @@ Forge/
 ├── core/                      # 核心共享内容
 │   ├── skills/                # 11 个 Skill 定义，每个独立目录
 │   ├── agents/                # 9 个 Sub-Agent 定义
+│   ├── loadouts/              # 可复用的技能/Agent/钩子捆绑包
 │   ├── templates/             # 文档模板
 │   │   └── memory/            # 三层记忆 + 会话交接模板
 │   ├── hooks/                 # 钩子脚本 (.sh/.bat/.ps1)

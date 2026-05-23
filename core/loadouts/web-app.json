@@ -1,0 +1,59 @@
+{
+  "name": "web-app",
+  "version": "1.0.0",
+  "description": "Web application development — full spec-to-release pipeline with design and review",
+  "skills": [
+    "product-spec-builder",
+    "design-brief-builder",
+    "design-maker",
+    "dev-planner",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "release-builder",
+    "feedback-writer",
+    "evolution-engine"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "code-reviewer-design",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "code-reviewer-types",
+    "feedback-observer",
+    "evolution-runner",
+    "test-writer",
+    "planner"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "auto-push",
+    "stop-gate",
+    "detect-feedback-signal",
+    "mark-review-needed",
+    "check-evolution",
+    "memory-check",
+    "context-compaction",
+    "check-sync",
+    "check-handoff",
+    "hallucination-gate"
+  ],
+  "mcp_servers": [
+    {
+      "name": "Pencil",
+      "description": "UI prototyping from text prompts",
+      "required": false
+    },
+    {
+      "name": "Figma",
+      "description": "Design-to-code with component extraction",
+      "required": false
+    },
+    {
+      "name": "Playwright",
+      "description": "UI interaction testing during code-review",
+      "required": false
+    }
+  ]
+}

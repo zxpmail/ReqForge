@@ -22,6 +22,7 @@ const ADAPTERS: Record<string, Record<string, string>> = {
     "core/templates": ".claude/templates",
     "core/feedback": ".claude/feedback",
     "core/hooks": ".claude/hooks",
+    "core/loadouts": ".claude/loadouts",
   },
   "cursor": {
     "core/skills": ".cursor/rules/skills",
@@ -29,6 +30,7 @@ const ADAPTERS: Record<string, Record<string, string>> = {
     "core/templates": ".cursor/rules/templates",
     "core/feedback": ".cursor/rules/feedback",
     "core/hooks": ".cursor/rules/hooks",
+    "core/loadouts": ".cursor/rules/loadouts",
   },
   "opencode": {
     "core/skills": ".opencode/skills",
@@ -36,6 +38,7 @@ const ADAPTERS: Record<string, Record<string, string>> = {
     "core/templates": ".opencode/templates",
     "core/feedback": ".opencode/feedback",
     "core/hooks": ".opencode/hooks",
+    "core/loadouts": ".opencode/loadouts",
   },
 };
 
