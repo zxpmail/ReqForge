@@ -6,7 +6,7 @@
 
 ## 上次停在哪个位置
 
-- 已完成 P0：`core/docs/skill-evolution-comparison.md`（EmbodiSkill + SkillEvolver 对照；P1/P2 明确暂缓）
+- 已推送 `5d0a62f`：P0 `skill-evolution-comparison.md`（EmbodiSkill + SkillEvolver；P1/P2 暂缓）
 
 ## 近期关键决定
 
