@@ -10,7 +10,7 @@ description: Used when the user adds a feature or incrementally changes an exist
 
 [Not For]
     - First-time Product-Spec from scratch -> use /product-spec-builder instead
-    - Whole Spec rewrite without a change folder -> use /product-spec-builder iteration mode
+    - Whole Spec rewrite (major iteration, no single feature scope) -> use /product-spec-builder iteration mode on Product-Spec.md directly
     - Bug fixes only -> use /bug-fixer instead
     - Release packaging -> use /release-builder instead
 
@@ -54,6 +54,7 @@ description: Used when the user adds a feature or incrementally changes an exist
 
 [Gotchas]
     **Skipping propose**: "Just code it" -> still create minimal proposal.md + specs.md so archive and review have a baseline.
+    **product-spec-builder overlap**: Do not let product-spec-builder create `changes/` — only this skill creates that folder. It may still edit Product-Spec.md during propose when merging requirements.
     **Orphan changes/**: Folders left un-archived for weeks -> list active changes on session start; nag to verify or archive.
     **Spec drift**: Merging specs.md into Product-Spec.md twice or not at all -> archive checklist must include CHANGELOG + Spec section update.
     **Whole-repo dev-builder**: apply must pass change scope (files/tasks from changes/<name>/ only), not entire DEV-PLAN backlog.
@@ -79,7 +80,7 @@ description: Used when the user adds a feature or incrementally changes an exist
 
     [Phase: apply]
         1. Load all files under `changes/<change-name>/`.
-        2. If tasks.md empty or placeholder -> invoke /dev-planner (iteration mode) to fill tasks.md and update DEV-PLAN.md for this change only.
+        2. If tasks.md empty or placeholder -> invoke /dev-planner (change-scoped) to fill tasks.md; may add DEV-PLAN.md entries for this change only.
         3. Recommend new session; then invoke /dev-builder for scoped Tasks only.
         4. After each Task: /code-review as per dev-builder loop.
         5. Mark tasks.md checkboxes as work completes.

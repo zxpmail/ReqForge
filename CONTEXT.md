@@ -1,10 +1,10 @@
 # CONTEXT
 
 ## 当前正在做什么
-- v1.20.1 审计修复已落地（CLAUDE 路由、verify 模板、loadout 说明、CHANGELOG）
+- v1.20.2：P0 Spec/change-manager 分工 + P1 审查默认 simple + commands 瘦身（本地未提交）
 
 ## 上次停在哪个位置
-- 待 `pnpm sync` 后提交推送
+- 已推送 `120cf69`（v1.20.1 审计）
 
 ## 近期关键决定和原因
-- change-manager 仅 full/web-app loadout；cli-tool/minimal 在 description 与 README 写明不含
+- `changes/` 仅 change-manager 创建；product-spec-builder 大改 Spec、中等功能转交 change-manager

@@ -19,6 +19,8 @@ Evolution proposals from evolution-runner must be presented to the user for indi
 
 ## Parallel Code Review Pattern
 
+**Default**: If `change_complexity` is omitted, treat as **simple** — `code-reviewer` runs a quick aggregator pass only (no parallel specialists).
+
 For moderate/complex changes, `code-reviewer` dispatches 4 specialized agents concurrently:
 
 1. **code-reviewer-design** — Checks spec compliance, architecture consistency, pattern drift. Outputs `spec_gap`, `pattern_drift`, `architecture_violation`, `naming`, `duplication`, `complexity` findings.

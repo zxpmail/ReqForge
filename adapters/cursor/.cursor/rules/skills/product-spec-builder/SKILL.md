@@ -71,12 +71,12 @@ description: Used when the user says they want to build a product, application, 
     **Accepting vague requirements**: "users will like it", "good UX", "modern design" → these are not requirements. Keep pressing until you get specifics. If you stop at vague, the Spec will be unimplementable.
     **Over-scoping**: Every "nice to have" the user mentions is scope creep unless explicitly cut. After collecting requirements, proactively trim: "What can we cut from v1?"
     **Missing conflict detection**: In iteration mode, failing to detect conflicts between new and existing requirements. Always cross-reference the existing Spec before finalizing changes.
+    **Duplicating change-manager**: Creating `changes/<name>/` in iteration mode. That folder is owned by `/change-manager` — this skill only updates Product-Spec.md directly or hands off to change-manager.
 
 [Output Artifacts]
     - **Product-Spec.md** — Product Requirements Document (created in 0-to-1 mode, updated in iteration mode)
     - **Product-Spec-CHANGELOG.md** — Requirements Changelog (appended in iteration mode)
-    - **changes/\<change-name\>/proposal.md** — Change Proposal (created in iteration mode)
-    - **changes/\<change-name\>/specs.md** — Change Specifications (created in iteration mode)
+    - **changes/** — NOT created by this skill. Scoped features use `/change-manager` only (see [Workflow (Iteration Mode)] routing).
 
 [Output Style]
     **Tone**:
@@ -491,23 +491,14 @@ description: Used when the user says they want to build a product, application, 
         - After modification, the user won't say "that's not what I meant"
 
     [Document Update Phase]
-        Goal: Create change artifacts, update Product Spec and record changes
+        Goal: Update Product Spec and record changes — route scoped work to change-manager
 
-        Step 1: Create change artifacts
-            Name the directory after the change content (e.g., add-ai-recommend), create under changes/:
-            ```
-            changes/<change-name>/
-            ├── proposal.md       # Change Proposal: describes change motivation and objectives
-            ├── specs.md          # Change Specifications: specific requirement details (filled by this skill)
-            ├── design.md         # Design Decisions: technical or UI solutions (filled by other skills)
-            └── tasks.md          # Task Breakdown: implementation steps (filled by other skills)
-            ```
-
-            Initial content for each file:
-            - proposal.md: records the user's original requirement and change motivation
-            - specs.md: fills in the confirmed specific requirement details
-            - design.md: create empty file, annotate "to be filled during design phase"
-            - tasks.md: create empty file, annotate "to be filled during development planning phase"
+        Step 1: Route by change type (do not create `changes/` here)
+            | Change type | Action |
+            |-------------|--------|
+            | **Major** (core flow, layout, new AI capability) | Edit Product-Spec.md in place + CHANGELOG |
+            | **Moderate** (one scoped feature, single deliverable) | Invoke `/change-manager propose <kebab-name>` with interview answers; stop — change-manager owns `changes/` |
+            | **Minor** (copy, options, style) | Small direct edits to Product-Spec.md + CHANGELOG |
 
         Step 2: Understand existing document structure
             Load the existing Spec file
@@ -552,8 +543,9 @@ description: Used when the user says they want to build a product, application, 
             4. **Present**: When done with auto-cleanup, present remaining issues to user
                Only after user confirms all issues are resolved can you conclude.
 
-        Step 7: Archive (triggered by other skills)
-            When the full change cycle completes, dev-builder moves changes/<change-name>/ to changes/archive/<change-name>/.
+        Step 7: Archive
+            If this iteration used `/change-manager`, archive is `/change-manager archive <name>` — not dev-builder.
+            If only Product-Spec.md was edited in place (major/minor), no `changes/` folder — skip archive.
 
     [Iteration Mode - Questioning Depth Criteria]
         **Change Type Determination Logic** (check in order):

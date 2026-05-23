@@ -565,7 +565,9 @@ Soft completion declarations:
             12. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
                 - risk score "low" → change_complexity="simple" (skip parallel agents, quick check only)
                 - risk score "medium" or "high" → change_complexity="moderate" or "complex"
-            13. Dispatch code-reviewer with `affected_files` and `change_complexity` set. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
+            13. Dispatch code-reviewer with `affected_files` and `change_complexity` set.
+                **Default `change_complexity`**: `simple` unless the Task touches multiple modules, new public APIs, auth/payments/data migration, or dep-graph risk is medium/high — then use `moderate` or `complex`.
+                code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
             14. Confirmed spec/completeness issues (design agent, confidence ≥ 0.6) -> dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
             15. Confirmed bug/security/type issues -> dispatch feedback-observer with trigger_reason="review_quality_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
             16. Review passes (no confirmed HIGH issues) -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit

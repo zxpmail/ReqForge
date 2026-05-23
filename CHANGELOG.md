@@ -2,6 +2,13 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.2] - 2026-05-23
+### Changed
+- **P0 — Spec vs change-manager**: product-spec-builder iteration no longer creates `changes/`; moderate scoped features route to `/change-manager`. Sole owner of `changes/` documented in both skills.
+- **P1 — Review default simple**: code-review / code-reviewer / dev-builder default `change_complexity=simple`; parallel 4-agent review only when escalated.
+- **P1 — Thin commands**: product-spec-builder, change-manager, code-review, dev-builder `commands/*.md` are index-only (details in SKILL.md).
+- **Product-Spec.md**: Template market and Dashboard moved to Roadmap (not shipped).
+
 ## [v1.20.1] - 2026-05-23
 ### Added
 - **openhuman-comparison.md**: Forge vs OpenHuman positioning; optional memory backends documented in `memory-system.md`.

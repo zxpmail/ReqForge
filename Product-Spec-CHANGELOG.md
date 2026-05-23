@@ -1,5 +1,11 @@
 # 变更记录
 
+## [v1.20.2] - 2026-05-23
+### 变更
+- product-spec-builder 迭代不再创建 `changes/`；中等 scoped 功能转 `/change-manager`
+- 代码审查默认 `change_complexity=simple`
+- 模板市场、Dashboard 移至路线图（未实现）
+
 ## [v1.20.0] - 2026-05-23
 ### 新增
 - **change-manager Skill**：存量项目 `changes/<name>/` 四阶段变更流（propose/apply/verify/archive）

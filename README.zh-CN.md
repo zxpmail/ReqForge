@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -17,6 +17,11 @@
 ---
 
 ## 近期更新
+
+### v1.20.2 — 2026-05-23
+- **Spec 与 change-manager 分工**：迭代模式不再创建 `changes/`，单次功能走 `/change-manager`；大改仍直接改 Product-Spec.md。
+- **审查默认轻量**：默认 `change_complexity=simple`，仅复杂变更才并行 4 Agent。
+- **Commands 瘦身**：主要 slash 命令改为索引，详情在 SKILL.md。
 
 ### v1.20.1 — 2026-05-23
 - **审计修复**：`CLAUDE.md` 对进行中 `changes/` 路由到 `/change-manager`；Mission 增加存量变更步骤；新增 `change-verify-template.md`。

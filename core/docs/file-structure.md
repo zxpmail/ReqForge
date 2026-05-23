@@ -10,7 +10,7 @@ project/
 │   ├── project-memory.md             # Long-term: architecture, constraints, pitfalls
 │   ├── decisions-log.md              # Mid-term: Architecture Decision Records
 │   └── task-history.md               # Short-term: recent task summaries (max 30)
-├── changes/                           # Change artifacts (proposal/specs/design/tasks per iteration)
+├── changes/                           # Change artifacts (/change-manager only; not product-spec-builder)
 │   └── archive/                       # Archived implemented changes — see /change-manager
 ├── <project-name>/                    # Project code (subfolder named after project)
 │   ├── src/

@@ -1,6 +1,6 @@
 {
   "name": "reqforge",
-  "version": "1.20.1",
+  "version": "1.20.2",
   "description": "Open-source product development framework for AI coding assistants (Claude Code/Cursor/OpenCode)",
   "scripts": {
     "sync": "ts-node scripts/sync.ts",

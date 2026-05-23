@@ -99,8 +99,9 @@ flowchart TD
 ```
 
 - **0→1**：Product-Spec → DEV-PLAN → dev-builder（不必先建 change 目录）
-- **1→N 功能**：优先 `change-manager`，保持 `changes/` 可追溯
-- **大改 Spec**：仍可用 product-spec-builder 迭代模式；完成后用 change-manager archive 收口
+- **1→N 功能（单次 scoped 功能）**：`/change-manager propose` — **仅** change-manager 创建 `changes/`
+- **大改 Spec（major 迭代）**：product-spec-builder 直接改 Product-Spec.md，不走 `changes/`
+- **中等 scoped 功能**：product-spec-builder 访谈后 **转交** change-manager，不在 spec-builder 里建 `changes/`
 
 ---
 

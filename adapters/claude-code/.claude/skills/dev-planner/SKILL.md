@@ -77,7 +77,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
 [Output Artifacts]
     - **DEV-PLAN.md** — Phased development plan (created in generation mode, updated in iteration mode)
-    - **changes/\<change-name\>/tasks.md** — Task breakdown (filled in iteration mode)
+    - **changes/\<change-name\>/tasks.md** — Task breakdown (filled when `/change-manager apply` invokes dev-planner for that change only — not by product-spec-builder iteration)
 
 [Analysis Dimension Checklist]
     When analyzing the Product Spec, the following dimensions must be covered (not necessarily in order, adjust flexibly based on project characteristics):

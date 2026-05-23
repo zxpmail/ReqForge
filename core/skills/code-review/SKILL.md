@@ -179,7 +179,9 @@ description: Used when the user wants to review code, check quality, verify feat
         - Task review (triggered by dev-builder per-Task review) -> current Task's delivery checklist
 
     [Step 2: Parallel Agent Dispatch] (for moderate/complex changes)
-        For simple changes (typo fix, single-file rename, comment-only), skip to [Step 3].
+        **Default**: If `change_complexity` is omitted, treat as **simple** (quick aggregator pass only).
+        Escalate to moderate/complex only when caller sets it, or change touches multiple modules / new APIs / security-sensitive code.
+        For simple changes (typo fix, single-file rename, comment-only, default), skip to [Step 3].
         For moderate/complex changes, dispatch 4 specialized agents concurrently:
         - **code-reviewer-design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
         - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks

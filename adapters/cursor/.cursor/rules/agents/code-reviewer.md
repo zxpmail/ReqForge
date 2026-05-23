@@ -17,6 +17,8 @@ color: red
 [Task]
     After receiving dispatch from the main Agent, coordinate parallel specialized review agents and aggregate their findings:
 
+    **Default** when `change_complexity` is omitted: **simple** (quick quality check only).
+
     If change_complexity is "simple", skip the parallel agent dispatch and proceed directly to a quick code quality check.
 
     For moderate/complex changes:
