@@ -18,3 +18,22 @@ When `memory/` directory does not exist, create it from templates during first `
 ## Memory vs Feedback
 - Memory (`memory/`) = "what we know and decided" — context preservation across sessions
 - Feedback (`.claude/feedback/`) = "what went wrong and how to improve" — evolution fuel for Skills
+
+## Optional external memory backends
+
+Forge defaults to project-scoped Markdown in `memory/`. Some teams also use a **cross-tool personal memory** layer (e.g. [OpenHuman](https://github.com/tinyhumansai/openhuman) Memory Tree, or [agentmemory](https://github.com/rohitg00/agentmemory) as documented by OpenHuman).
+
+| Layer | Typical store | Authority |
+|-------|---------------|-----------|
+| Product truth | `Product-Spec.md`, `changes/*/specs.md` | Requirements and acceptance criteria |
+| Project memory | `memory/*.md` | Architecture, ADRs, recent tasks |
+| Personal / cross-project (optional) | agentmemory, OpenHuman vault, etc. | Preferences, long-lived context |
+
+**Rules when combining:**
+
+1. **Spec wins** — external memory must not override acceptance criteria in Product-Spec or active `changes/`.
+2. **Write boundaries** — dev-builder updates `memory/` after Tasks; do not mirror full Spec into external stores.
+3. **No secret leakage** — credentials and tokens stay in env/config, never in memory files or external backends.
+4. **Compression** — if summarizing tool output before it enters the model (OpenHuman-style TokenJuice), preserve paths, stack traces, and requirement IDs. See [openhuman-comparison.md](./openhuman-comparison.md).
+
+Forge does not ship SQLite, Obsidian sync, or OAuth auto-fetch — document integration in your Product-Spec or `changes/<name>/design.md` if the product needs them.

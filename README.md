@@ -21,6 +21,7 @@ A complete product development methodology for AI coding assistants: Claude Code
 ### v1.20.0 — 2026-05-23
 - **change-manager Skill**: For projects that already have `Product-Spec.md` — one feature per `changes/<name>/` folder with **propose → apply → verify → archive** (OpenSpec-aligned). Templates + `/change-manager` command; implementation still delegates to `/dev-planner` and `/dev-builder`.
 - **openspec-comparison.md**: When to use Forge vs OpenSpec CLI, artifact mapping, and workflow diagram — [core/docs/openspec-comparison.md](core/docs/openspec-comparison.md).
+- **openhuman-comparison.md**: Forge vs OpenHuman (memory, context compression, what not to copy) — [core/docs/openhuman-comparison.md](core/docs/openhuman-comparison.md).
 - **12 Skills**: `change-manager` wired into `full` / `web-app` loadouts and all adapter bundles via `pnpm sync`.
 
 ### v1.19.1 — 2026-05-23
@@ -289,7 +290,7 @@ Forge does **not** modify your `package.json` unless you ask the agent to add de
 > 2. Or `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. Or env `FORGE_MODE=yolo`
 
-More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Brownfield vs OpenSpec: [openspec-comparison.md](core/docs/openspec-comparison.md).
+More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [openspec-comparison.md](core/docs/openspec-comparison.md) · [openhuman-comparison.md](core/docs/openhuman-comparison.md).
 
 ---
 
@@ -565,6 +566,17 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm forge-install <client> --target <dir>` | Install adapter into a user project |
 
 Always run `pnpm sync` after changing `core/skills`, `core/agents`, `core/hooks`, etc. — otherwise the `check-sync` hook will warn about adapter drift.
+
+---
+
+## Research & comparisons
+
+External harnesses reviewed for positioning (not dependencies):
+
+| Project | Focus | Forge doc |
+|---------|--------|-----------|
+| [OpenSpec](https://github.com/Fission-AI/OpenSpec) | Spec-driven `changes/` + CLI | [openspec-comparison.md](core/docs/openspec-comparison.md) — absorbed via `/change-manager` |
+| [OpenHuman](https://github.com/tinyhumansai/openhuman) | Personal AI runtime, Memory Tree, integrations | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — optional memory backends, context rules |
 
 ---
 

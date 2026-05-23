@@ -21,6 +21,7 @@
 ### v1.20.0 — 2026-05-23
 - **change-manager Skill**：已有 `Product-Spec.md` 的存量项目，每个功能一个 `changes/<name>/` 目录，走 **提议 → 实现 → 验收 → 归档**（对齐 OpenSpec 思路）。含模板与 `/change-manager` 命令；编码仍由 `/dev-planner`、`/dev-builder` 执行。
 - **openspec-comparison.md**：Forge 与 OpenSpec CLI 的定位对照、工件映射与选型说明 — [core/docs/openspec-comparison.md](core/docs/openspec-comparison.md)。
+- **openhuman-comparison.md**：Forge 与 OpenHuman 对照（记忆、上下文压缩、不宜照搬项）— [core/docs/openhuman-comparison.md](core/docs/openhuman-comparison.md)。
 - **12 个 Skill**：`change-manager` 已加入 `full` / `web-app` loadout，经 `pnpm sync` 同步到三端适配器。
 
 ### v1.19.1 — 2026-05-23
@@ -289,7 +290,7 @@ my-app/
 > 2. 或 `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. 或环境变量 `FORGE_MODE=yolo`
 
-更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。存量变更与 OpenSpec 对照：[openspec-comparison.md](core/docs/openspec-comparison.md)。
+更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。对照文档：[openspec-comparison.md](core/docs/openspec-comparison.md) · [openhuman-comparison.md](core/docs/openhuman-comparison.md)。
 
 ---
 
@@ -563,6 +564,17 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目 |
 
 修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
+
+---
+
+## 参考与对照
+
+已调研的外部 Harness（非依赖）：
+
+| 项目 | 侧重 | Forge 文档 |
+|------|------|------------|
+| [OpenSpec](https://github.com/Fission-AI/OpenSpec) | 规格驱动 `changes/` + CLI | [openspec-comparison.md](core/docs/openspec-comparison.md) — 已吸收为 `/change-manager` |
+| [OpenHuman](https://github.com/tinyhumansai/openhuman) | 个人 AI 运行时、Memory Tree、集成 | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — 可选记忆后端与上下文规则 |
 
 ---
 
