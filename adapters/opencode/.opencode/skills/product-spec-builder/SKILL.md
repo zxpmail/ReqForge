@@ -305,7 +305,32 @@ description: Used when the user says they want to build a product, application, 
             - Edge cases: What happens when a required external service is down? What about empty states?
             - Implicit defaults: "simple interface" — simple for whom? Power user or complete beginner?
 
-        Step 2: Present ambiguities to user
+        Step 2: Socratic challenge round
+            Before moving to detailed requirements, challenge the user's assumptions with targeted Socratic questions:
+
+            **Why this approach?**
+            - "Why solve it this way instead of [alternative approach]?"
+            - "Is this feature solving a real user need, or is it what you think users want?"
+            - "If this feature didn't exist, would the product still work? If yes, should we cut it from v1?"
+
+            **Why now?**
+            - "Why is this the right time to build this? What changed?"
+            - "Is there a simpler version that could validate demand first?"
+            - "What's the minimum version of this feature that delivers 80% of the value?"
+
+            **What if wrong?**
+            - "What assumptions are we making that could prove false?"
+            - "If we're wrong about [key assumption], what's the fallback?"
+            - "What would a competitor say is the flaw in this design?"
+
+            **What's the real problem?**
+            - "The user says they want X. But what problem is X actually solving?"
+            - "Is X the best solution to that problem, or just the most obvious one?"
+            - "If you had unlimited resources but had to solve this without adding features, what would you do?"
+
+            Apply 2-4 challenges per round. The goal is not to be adversarial, but to expose hidden assumptions before they become expensive rework. If the user's answers are solid, move on. If they hedge or reveal uncertainty, drill deeper.
+
+        Step 3: Present ambiguities to user
             Present 2-4 targeted questions per round. Format:
 
             ```
@@ -324,12 +349,12 @@ description: Used when the user says they want to build a product, application, 
             (Choose or tell me your own answer.)
             ```
 
-        Step 3: Resolve
+        Step 4: Resolve
             - For each question, get a clear answer before moving on
             - If the user says "I don't know" → offer 2-3 options with trade-offs
             - Record answers as explicit Spec entries so they are not forgotten
 
-        Step 4: Boundary documentation
+        Step 5: Boundary documentation
             After resolving ambiguities, document the boundaries explicitly:
             - In-scope: [confirmed features]
             - Out-of-scope for v1: [explicitly cut features]

@@ -546,13 +546,20 @@ Soft completion declarations:
             4. If design tool MCP is connected, find the design page corresponding to this Task through the design tool, read the exact values for that page and its components. Re-read for each Task, don't rely on memory
             5. Clarify the delivery goal for this Task: what functionality to implement, what visual result to achieve
 
+            Worktree isolation (before coding):
+            6. **Worktree**: If `git` is available, create an isolated worktree for this Task before any code changes:
+               - Create a new worktree: `git worktree add .claude/worktrees/<task-name> <base-branch>`
+               - All code changes happen in the worktree, not the main branch
+               - This prevents cross-task file contamination — each Task starts clean
+               - If already in a worktree (`GIT_DIR != GIT_COMMON_DIR`), skip creation — already isolated
+
             Coding (TDD approach):
-            6. **RED**: First write a test, describe the expected behavior. Confirm the test fails (proving the test is valid)
-            7. **GREEN**: Write the minimal code to make the test pass
-            8. Implement strictly following reference documents, code component by component against design values
+            7. **RED**: First write a test, describe the expected behavior. Confirm the test fails (proving the test is valid)
+            8. **GREEN**: Write the minimal code to make the test pass
+            9. Implement strictly following reference documents, code component by component against design values
 
             After development — cross-reference validation + Review loop:
-            9. **REFACTOR**: Refactor and optimize code, run tests to confirm still green
+            10. **REFACTOR**: Refactor and optimize code, run tests to confirm still green
             10. Read actual code values, verify item by item against design values, correct any deviations
             11. Cross-reference Product-Spec.md to confirm functional behavior matches description
             12. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
@@ -562,7 +569,12 @@ Soft completion declarations:
             14. Stage 1 fails (missing functionality) -> dispatch feedback-observer with trigger_reason="review_stage1_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
             15. Stage 2 fails (code quality) -> dispatch feedback-observer with trigger_reason="review_stage2_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
             16. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
-            17. Proceed to the next Task
+            17. **Cleanup worktree**: If a worktree was created in step 6, remove it after merge:
+                - `git worktree remove .claude/worktrees/<task-name>`
+                - If the worktree directory was created outside git (no `git worktree add` was used), just `rm -rf` it
+            18. Proceed to the next Task
+
+            **Task Time Limit**: Each Task should take ≤15 minutes of coding. If a Task exceeds this, it's too large — split it into smaller Tasks. Large Tasks accumulate risk and make rollback expensive.
 
             **Memory Update Step** (mandatory after every Task completion):
             - Append to `memory/task-history.md`: date, phase, type (feat/fix/refactor), description, changed files, notes

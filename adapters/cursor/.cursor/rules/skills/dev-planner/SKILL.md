@@ -37,6 +37,12 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     **Appropriate Granularity Principle**: Phases that are too large can't be completed, too small have high management overhead. One Phase should correspond to one independently verifiable functional unit, typically 1-3 core deliverables.
 
+    **Task Time Budget Principle**: Each Task within a Phase should be completable in ≤15 minutes of coding. If a Task would take longer, split it into smaller Tasks. Guidelines:
+    - One page/component/feature per Task — do not group unrelated changes
+    - Each Task has a single clear deliverable (a working test, a single API endpoint, one UI component)
+    - Large Tasks accumulate risk: harder to review, harder to roll back, easier to drift from spec
+    - When in doubt, split — small Tasks compose into complete Phases; oversized Tasks fragment into incomplete work
+
     **Explicit File Path Principle**: Each Phase must list the specific file paths to be created or modified. "Implement chat feature" is not a plan — "create src/components/views/chat-view.tsx and src/hooks/use-chat.ts" is a plan.
 
     **No Placeholder Principle**: Every word in the Plan must be specific enough that anyone picking up this Plan can start working immediately.
@@ -137,6 +143,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - Too large signals: delivery checklist exceeds 5 items, key files exceed 10, involves 3+ unrelated features
     - Too small signals: delivery checklist has only 1 very simple item, key files are only 1-2
     - Appropriate signals: delivery checklist 2-4 items, key files 3-8, features have internal cohesion
+    - **Task time test**: Estimate the coding time for the largest single Task in this Phase. If it exceeds 15 minutes, the Phase is too coarse — split the oversized Task into its own Phase or break it into smaller Tasks
 
     **Risk-First Method**
     Identify the highest technical risk parts of the project (new frameworks, complex integrations, uncertain APIs), schedule them in early Phases:
