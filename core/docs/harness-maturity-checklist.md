@@ -81,5 +81,6 @@
 - [superpowers-comparison.md](./superpowers-comparison.md) — engineering discipline
 - [context7-comparison.md](./context7-comparison.md) — library docs injection (optional MCP partner)
 - [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) — AGENT魔方七层 ↔ ReqForge
+- [skill-evolution-comparison.md](./skill-evolution-comparison.md) — EmbodiSkill / SkillEvolver ↔ ReqForge（P1/P2 暂缓）
 - [memory-system.md](./memory-system.md) — three-tier memory
 - [behavior-boundaries.md](./behavior-boundaries.md) — what Forge must not do
