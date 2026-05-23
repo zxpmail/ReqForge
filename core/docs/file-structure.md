@@ -11,7 +11,7 @@ project/
 │   ├── decisions-log.md              # Mid-term: Architecture Decision Records
 │   └── task-history.md               # Short-term: recent task summaries (max 30)
 ├── changes/                           # Change artifacts (proposal/specs/design/tasks per iteration)
-│   └── archive/                       # Archived implemented changes
+│   └── archive/                       # Archived implemented changes — see /change-manager
 ├── <project-name>/                    # Project code (subfolder named after project)
 │   ├── src/
 │   ├── package.json
@@ -38,6 +38,7 @@ project/
     └── skills/
         ├── product-spec-builder/      # Requirements gathering
         │   └── commands/              # Phased command workflow (user-invokable skills)
+        ├── change-manager/            # Brownfield change: propose → apply → verify → archive
         ├── design-brief-builder/      # Design brief
         ├── design-maker/              # Design mockups
         ├── dev-planner/               # Development planning

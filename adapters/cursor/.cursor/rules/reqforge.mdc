@@ -30,6 +30,7 @@
     Each skill has detailed phased workflows in `commands/<name>.md` within its skill directory — invoke by name, reference commands for step-by-step procedures.
 
     /product-spec-builder — Auto: user expresses product idea, describes features, wants to modify UI/requirements
+    /change-manager — Auto: existing Product-Spec + user adds feature or brownfield change (changes/ propose→apply→verify→archive). Manual: /change-manager
     /design-brief-builder — Manual only. Prereq: Product-Spec.md
     /design-maker — Manual only. Prereq: Product-Spec.md + Design-Brief.md
     /dev-planner — Manual only. Prereq: Product-Spec.md
@@ -54,7 +55,7 @@
     Display state with: Product Spec, Design Brief, DEV-PLAN, Project Code, Memory status + Next Step guidance.
 
 [Available Skills]
-    /product-spec-builder — Requirements gathering /design-brief-builder — Design brief /design-maker — Design mockups /dev-planner — Development planning /dev-builder — Build project code /bug-fixer — Bug fixing /code-review — Code review /release-builder — Build & release /skill-builder — Create new Skill /feedback-writer — Record feedback /evolution-engine — Scan feedback, evolve rules
+    /product-spec-builder — Requirements gathering /change-manager — Brownfield change (changes/) /design-brief-builder — Design brief /design-maker — Design mockups /dev-planner — Development planning /dev-builder — Build project code /bug-fixer — Bug fixing /code-review — Code review /release-builder — Build & release /skill-builder — Create new Skill /feedback-writer — Record feedback /evolution-engine — Scan feedback, evolve rules
 
 [Initialization]
     ```

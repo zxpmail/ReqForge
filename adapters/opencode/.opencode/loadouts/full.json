@@ -4,6 +4,7 @@
   "description": "Complete Forge toolchain — all skills, agents, and hooks",
   "skills": [
     "product-spec-builder",
+    "change-manager",
     "design-brief-builder",
     "design-maker",
     "dev-planner",

@@ -281,7 +281,7 @@ my-app/
 > 2. 或 `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. 或环境变量 `FORGE_MODE=yolo`
 
-更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。
+更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。存量变更与 OpenSpec 对照：[openspec-comparison.md](core/docs/openspec-comparison.md)。
 
 ---
 
@@ -358,13 +358,14 @@ Forge：⚡ 快速 Spec 已生成！标记为 [待确认] 的条目是我的最�
 
 AI 推断一切——产品类型、目标用户、核心功能、技术栈、布局。不确定项默认选择更简单的方案并标记为待确认。随时切换到深度模式：`/product-spec-builder`。
 
-### 引导层 — 11 个 Skill
+### 引导层 — 12 个 Skill
 
 每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔。每个 Skill 包含 `[Gotchas]` 章节记录常见陷阱与实战教训：
 
 | Skill | 职责 |
 | ------------------------ | -------------------------------------------------------------------------------------- |
 | **product-spec-builder** | 需求收集。AI 通过多轮问题将模糊想法转化为结构化 Spec。支持迭代模式。 |
+| **change-manager** | 存量项目增量变更。每个功能一个 `changes/<name>/` 目录：提议 → 实现 → 验收 → 归档（对齐 OpenSpec 思路，见 [openspec-comparison](core/docs/openspec-comparison.md)）。 |
 | **design-brief-builder** | 设计语言。将模糊描述（"暗色主题，简约"）量化为具体方向：调色板、交互风格、信息密度。 |
 | **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿。 |
 | **dev-planner** | 开发计划。分析依赖关系，拆分为多个阶段，输出分阶段开发计划。 |

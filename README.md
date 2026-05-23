@@ -281,7 +281,7 @@ Forge does **not** modify your `package.json` unless you ask the agent to add de
 > 2. Or `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. Or env `FORGE_MODE=yolo`
 
-More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
+More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Brownfield vs OpenSpec: [openspec-comparison.md](core/docs/openspec-comparison.md).
 
 ---
 
@@ -358,13 +358,14 @@ Forge: ⚡ Quick Spec generated! Items marked [待确认] are my best guesses.
 
 AI infers everything — product type, target users, core features, tech stack, layout. Uncertain items default to the simpler option and are marked for your review. Switch to deep-dive mode anytime with `/product-spec-builder`.
 
-### Guidance Layer — 11 Skills
+### Guidance Layer — 12 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
 
 | Skill                    | Responsibility                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **product-spec-builder** | Requirements gathering. AI interviews you through multi-round questioning to turn vague ideas into structured specs. Supports iterative mode.          |
+| **change-manager**       | Brownfield changes. One feature per `changes/<name>/` folder: propose → apply → verify → archive (OpenSpec-aligned; see [openspec-comparison](core/docs/openspec-comparison.md)). |
 | **design-brief-builder** | Design language. Quantifies vague descriptions ("dark theme, minimal") into concrete direction: color palette, interaction style, information density. |
 | **design-maker**         | Design prototyping. Generates full page mockups through Pencil or Figma MCP.                                                                           |
 | **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
