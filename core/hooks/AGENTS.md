@@ -21,3 +21,9 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 - Include a comment header explaining: trigger, purpose, and expected output format
 - Keep hooks under 100 lines — complex logic belongs in `scripts/` at repo root
 - Return actionable messages — "Compilation failed: src/utils.ts:12 — Type 'string' is not assignable to 'number'" not just "failed"
+- Prefer composite hooks (`memory-guard`) in loadouts when multiple scripts share the same trigger — delegate to legacy scripts inside the composite
+
+### Composite hooks
+| Name | Trigger | Delegates to |
+|------|---------|----------------|
+| `memory-guard` | PostToolUse | `context-compaction`, `check-handoff` |

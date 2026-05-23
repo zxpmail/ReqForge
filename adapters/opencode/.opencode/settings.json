@@ -13,7 +13,7 @@
       "run": "sh .opencode/hooks/mark-review-needed.sh && sh .opencode/hooks/memory-check.sh"
     },
     "PostToolUse": {
-      "run": "sh .opencode/hooks/context-compaction.sh && sh .opencode/hooks/check-handoff.sh"
+      "run": "sh .opencode/hooks/memory-guard.sh"
     },
     "OnInit": {
       "run": "sh .opencode/hooks/check-evolution.sh"

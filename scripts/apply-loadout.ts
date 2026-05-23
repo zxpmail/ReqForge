@@ -62,6 +62,12 @@ const HOOK_REGISTRY: Record<
     bat: "memory-check.bat",
     combineWith: ["mark-review-needed"],
   },
+  "memory-guard": {
+    event: "PostToolUse",
+    sh: "memory-guard.sh",
+    bat: "memory-guard.bat",
+  },
+  /** @deprecated Use memory-guard in loadouts; scripts kept for direct invoke */
   "context-compaction": {
     event: "PostToolUse",
     sh: "context-compaction.sh",

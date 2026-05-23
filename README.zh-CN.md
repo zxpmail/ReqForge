@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.4-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.5-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -17,6 +17,9 @@
 ---
 
 ## 近期更新
+
+### v1.20.5 — 2026-05-23
+- **memory-guard**：PostToolUse 合并归档与交接提示（默认 8 个钩子）。
 
 ### v1.20.4 — 2026-05-23
 - **SKILL 瘦身**：`dev-builder`、`product-spec-builder` 细则迁入 `references/`，主 SKILL 控制在 500 行以内。
@@ -226,7 +229,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### 步骤 3 — 启用钩子（Claude Code / Cursor）
 
-钩子在工具调用前、提交、编辑、会话启动等时机自动运行。默认 `settings.json` 注册 **9 个钩子**（含 `hallucination-gate`；`auto-push` 可选）。复制 `.claude/` 或 `.cursor/` 后：
+钩子在工具调用前、提交、编辑、会话启动等时机自动运行。默认 `settings.json` 注册 **8 个钩子**（含 `hallucination-gate`；`auto-push` 可选）。复制 `.claude/` 或 `.cursor/` 后：
 
 | 平台 | 操作 |
 |------|------|
@@ -269,7 +272,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 my-app/
 ├── .claude/                    # 或 .cursor/ 或 .opencode/  ← 适配层
 │   ├── CLAUDE.md               # 控制文件（OpenCode 为 AGENTS.md）
-│   ├── settings.json           # 9 个钩子（含 hallucination-gate；auto-push 可选）
+│   ├── settings.json           # 8 个钩子（含 hallucination-gate；auto-push 可选）
 │   ├── skills/                 # 12 个 Skill + commands/
 │   ├── agents/                 # 10 个 Sub-Agent
 │   ├── hooks/                  # .sh + .bat 钩子脚本
@@ -434,7 +437,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
   └─ 通过 → 提交（按需推送）→ Task 完成
 ```
 
-默认适配器内置 **9 个**钩子（ReqForge 仓库另有 `check-sync`，见下方说明）：
+默认适配器内置 **8 个**钩子（ReqForge 仓库另有 `check-sync`，见下方说明）：
 
 | 钩子 | 触发时机 | 动作 |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -445,8 +448,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | mark-review-needed | 文件编辑后 | 标记需要审查的变更 |
 | check-evolution | 会话启动时 | 检查反馈积累 |
 | memory-check | 文件编辑后 | 如果代码变更则提醒更新记忆 |
-| context-compaction | 工具调用后 | 自动归档超过 30 条的旧 task-history 条目，防止上下文腐败 |
-| check-handoff | 工具调用后 | 当上下文运行时间较长时建议生成会话交接文档 |
+| memory-guard | 工具调用后 | 归档超长 task-history + 提示生成交接文档 |
 
 > **说明**：`check-sync`（检测 core/ 与 adapters/ 不同步）仅存在于 ReqForge 仓库的 `core/hooks/`，不会随适配器安装到用户项目。
 

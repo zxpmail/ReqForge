@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.4-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.5-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
@@ -17,6 +17,9 @@ A complete product development methodology for AI coding assistants: Claude Code
 ---
 
 ## What's New
+
+### v1.20.5 — 2026-05-23
+- **memory-guard**: PostToolUse bundles context-compaction + check-handoff (8 default hooks).
 
 ### v1.20.4 — 2026-05-23
 - **SKILL slimming**: `dev-builder` and `product-spec-builder` detail moved to `references/`; main SKILL files stay under 500 lines.
@@ -226,7 +229,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### Step 3 — Enable hooks (Claude Code & Cursor)
 
-Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` registers **9 hooks** (including `PreToolUse` → `hallucination-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
+Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` registers **8 hooks** (including `PreToolUse` → `hallucination-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
 
 | Platform | Action |
 |----------|--------|
@@ -269,7 +272,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
-│   ├── settings.json           # 9 hooks wired (incl. hallucination-gate; auto-push optional)
+│   ├── settings.json           # 8 hooks wired (incl. hallucination-gate; auto-push optional)
 │   ├── skills/                 # 12 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
@@ -434,7 +437,7 @@ Feature complete → code-reviewer parallel review
   └─ pass → commit (push when ready) → Task done
 ```
 
-Nine hook scripts fire automatically in shipped adapters (plus `check-sync` in the ReqForge repo only — see note below):
+Eight hook scripts fire automatically in shipped adapters (plus `check-sync` in the ReqForge repo only — see note below):
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -445,8 +448,7 @@ Nine hook scripts fire automatically in shipped adapters (plus `check-sync` in t
 | mark-review-needed     | After file edit    | Mark changes as needing review          |
 | check-evolution        | On session start   | Check feedback accumulation             |
 | memory-check           | After file edit    | Remind to update memory if code changed |
-| context-compaction     | After tool use     | Auto-archive old task-history entries beyond 30 to prevent context rot |
-| check-handoff          | After tool use     | Suggest session handoff generation when context is running long |
+| memory-guard           | After tool use     | Archive old task-history (>30 rows) + suggest session handoff |
 
 > **Note**: `check-sync` (detects core/ vs adapters/ divergence) ships only in the ReqForge repo's `core/hooks/` — not in installed adapter bundles.
 

@@ -13,7 +13,7 @@
       "run": "sh .cursor/rules/hooks/mark-review-needed.sh && sh .cursor/rules/hooks/memory-check.sh"
     },
     "PostToolUse": {
-      "run": "sh .cursor/rules/hooks/context-compaction.sh && sh .cursor/rules/hooks/check-handoff.sh"
+      "run": "sh .cursor/rules/hooks/memory-guard.sh"
     },
     "OnInit": {
       "run": "sh .cursor/rules/hooks/check-evolution.sh"

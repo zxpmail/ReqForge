@@ -2,6 +2,10 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.5] - 2026-05-23
+### Changed
+- **memory-guard hook**: `PostToolUse` runs `memory-guard` (wraps `context-compaction` + `check-handoff`). `memory-check` stays on `AfterCommand`. Default hook count 9→8. Legacy scripts retained for direct invoke.
+
 ## [v1.20.4] - 2026-05-23
 ### Changed
 - **SKILL progressive disclosure**: `dev-builder` and `product-spec-builder` oversized sections moved to `references/`; main SKILL.md under 500 lines (validate-skill warning cleared).

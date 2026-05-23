@@ -13,7 +13,7 @@
       "run": "sh .claude/hooks/mark-review-needed.sh && sh .claude/hooks/memory-check.sh"
     },
     "PostToolUse": {
-      "run": "sh .claude/hooks/context-compaction.sh && sh .claude/hooks/check-handoff.sh"
+      "run": "sh .claude/hooks/memory-guard.sh"
     },
     "OnInit": {
       "run": "sh .claude/hooks/check-evolution.sh"

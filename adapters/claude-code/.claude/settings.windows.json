@@ -13,7 +13,7 @@
       "run": ".claude\\hooks\\mark-review-needed.bat && .claude\\hooks\\memory-check.bat"
     },
     "PostToolUse": {
-      "run": ".claude\\hooks\\context-compaction.bat && .claude\\hooks\\check-handoff.bat"
+      "run": ".claude\\hooks\\memory-guard.bat"
     },
     "PostCommit": {
       "run": ".claude\\hooks\\auto-push.bat"

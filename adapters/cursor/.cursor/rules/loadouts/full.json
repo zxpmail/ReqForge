@@ -35,8 +35,7 @@
     "mark-review-needed",
     "check-evolution",
     "memory-check",
-    "context-compaction",
-    "check-handoff",
+    "memory-guard",
     "hallucination-gate"
   ],
   "mcp_servers": [],
