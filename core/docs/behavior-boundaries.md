@@ -28,3 +28,9 @@ All actions are classified into three levels. This applies regardless of YOLO mo
 
 ## YOLO Mode
 In YOLO mode, 🟢 and 🟡 actions proceed automatically. 🔴 Red actions ALWAYS require confirmation, even in YOLO mode. There is no override for red boundaries.
+
+## Related docs
+
+- Workflow & brownfield changes: [openspec-comparison.md](./openspec-comparison.md), `/change-manager` skill
+- Memory & optional external backends: [memory-system.md](./memory-system.md), [openhuman-comparison.md](./openhuman-comparison.md)
+- File layout: [file-structure.md](./file-structure.md)

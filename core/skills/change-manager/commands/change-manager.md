@@ -36,7 +36,7 @@ Unified incremental change workflow. Full procedure in SKILL.md. Inspired by [Op
 - Walk `tasks.md` checklist item by item with proof (command output, not verbal)
 - Run compile + smoke test for affected features
 - Optional: `/code-review` scoped to change files
-- Write or update `changes/<name>/verify.md` with pass/fail summary
+- Write or update `changes/<name>/verify.md` from `templates/change-verify-template.md` with pass/fail summary
 - **Acceptance**: verify.md shows pass; no unchecked critical items
 
 ## Phase: archive

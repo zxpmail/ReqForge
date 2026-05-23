@@ -1,7 +1,7 @@
 {
   "name": "minimal",
   "version": "1.0.0",
-  "description": "Minimal loadout — quick prototyping with spec, build, and review only",
+  "description": "Minimal loadout — quick prototyping with spec, build, and review only. Omits change-manager and dev-planner; not for brownfield changes/ workflow",
   "skills": [
     "product-spec-builder",
     "dev-builder",

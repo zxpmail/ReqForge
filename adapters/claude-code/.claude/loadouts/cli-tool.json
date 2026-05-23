@@ -1,7 +1,7 @@
 {
   "name": "cli-tool",
   "version": "1.0.0",
-  "description": "CLI tool development — lean toolchain without design skills",
+  "description": "CLI tool development — lean toolchain without design skills. Omits change-manager; use full/web-app loadout or add change-manager skill manually for brownfield changes/",
   "skills": [
     "product-spec-builder",
     "dev-planner",

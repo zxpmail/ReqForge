@@ -2,6 +2,15 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.1] - 2026-05-23
+### Added
+- **openhuman-comparison.md**: Forge vs OpenHuman positioning; optional memory backends documented in `memory-system.md`.
+- **change-verify-template.md**: Template for `changes/<name>/verify.md` in change-manager.
+### Changed
+- **CLAUDE.md**: Mission step for brownfield `/change-manager`; Project State Detection routes active `changes/` folders.
+- **Loadout docs**: `cli-tool` / `minimal` explicitly omit change-manager (use `full` or `web-app` for brownfield).
+- **behavior-boundaries.md**: Cross-links to comparison docs; README architecture diagram 12 Skills.
+
 ## [v1.20.0] - 2026-05-23
 ### Added
 - **change-manager Skill**: Brownfield workflow for existing projects with `Product-Spec.md` — `changes/<name>/` with propose → apply → verify → archive; templates for proposal, specs, design, tasks; command `/change-manager`.

@@ -10,7 +10,8 @@
     5. **Implementation** → invoke dev-builder, build project code
     6. **Bug Fixing** → invoke bug-fixer, diagnose and fix issues (on demand)
     7. **Code Review** → invoke code-review, audit quality and fix (on demand)
-    8. **Release** → invoke release-builder, package or deploy (on demand)
+    8. **Brownfield change** (optional) → when Product-Spec.md exists and user adds one scoped feature, invoke change-manager (changes/ propose→apply→verify→archive)
+    9. **Release** → invoke release-builder, package or deploy (on demand)
 [General Rules]
     - **Feedback auto-record**: After any failure (compile error, review failure, test failure), dispatch feedback-observer before retrying. Same for user corrections.
     - **Continuous observation**: When the user gives corrections, feedback, or improvement suggestions, dispatch feedback-observer sub-agent to record it. Don't rely on the main Agent's self-awareness.
@@ -49,10 +50,12 @@
     - Has Product-Spec + DEV-PLAN, no code → Plan complete, guide to /dev-builder
     - Has Product-Spec + code, no DEV-PLAN → suggest /dev-planner
     - Has Product-Spec + DEV-PLAN + code → in development, continue developing
+    - Has active `changes/<name>/` (not under `changes/archive/`) → guide /change-manager apply or verify; do not start unrelated dev-builder Phases until change is archived or user defers
+    - Has Product-Spec + user asks for new feature (no active change folder) → prefer /change-manager propose before whole-repo dev-builder
 
     Memory check: if memory/ exists → read all three files. If not + code exists → flag for /dev-builder. If not + no code → not needed.
 
-    Display state with: Product Spec, Design Brief, DEV-PLAN, Project Code, Memory status + Next Step guidance.
+    Display state with: Product Spec, active changes/ (if any), Design Brief, DEV-PLAN, Project Code, Memory status + Next Step guidance.
 
 [Available Skills]
     /product-spec-builder — Requirements gathering /change-manager — Brownfield change (changes/) /design-brief-builder — Design brief /design-maker — Design mockups /dev-planner — Development planning /dev-builder — Build project code /bug-fixer — Bug fixing /code-review — Code review /release-builder — Build & release /skill-builder — Create new Skill /feedback-writer — Record feedback /evolution-engine — Scan feedback, evolve rules

@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -17,6 +17,11 @@
 ---
 
 ## 近期更新
+
+### v1.20.1 — 2026-05-23
+- **审计修复**：`CLAUDE.md` 对进行中 `changes/` 路由到 `/change-manager`；Mission 增加存量变更步骤；新增 `change-verify-template.md`。
+- **CHANGELOG**：补记 `openhuman-comparison.md`。
+- **Loadout**：`cli-tool` / `minimal` 刻意不含 change-manager；存量变更请用 `full` 或 `web-app`。
 
 ### v1.20.0 — 2026-05-23
 - **change-manager Skill**：已有 `Product-Spec.md` 的存量项目，每个功能一个 `changes/<name>/` 目录，走 **提议 → 实现 → 验收 → 归档**（对齐 OpenSpec 思路）。含模板与 `/change-manager` 命令；编码仍由 `/dev-planner`、`/dev-builder` 执行。
@@ -224,6 +229,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 - **默认安装** ≈ `full` loadout（`settings.json` 含全部钩子）。
 - **精简钩子**（贡献者，在 Forge 克隆目录）：`pnpm apply-loadout minimal claude-code` 将更轻的钩子集写入 adapter 的 `settings.json`；加 `--dry-run` 可预览。
 - Loadout 是**参考清单**——skills/agents 已随适配层复制，loadout 用于了解各场景包含什么。
+- **存量变更**（`/change-manager`）：仅 `full`、`web-app` 包含；`cli-tool`、`minimal` 不含——CLI 项目需改用 loadout 或手动复制 `change-manager` Skill。
 
 ### 步骤 4 — 在 AI 客户端中首次使用
 
@@ -316,7 +322,7 @@ my-app/
 │  ├─ test-writer        为工具/脚本生成测试                   │
 │  └─ planner            分析 Spec，拆分 Phase，制定计划        │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 11 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
+│  Skills × 12 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
 │  在 Agent 行动前注入方法论和标准                              │
 ├─────────────────────────────────────────────────────────────┤
 │  钩子 + 审查循环（传感器/反馈控制）                          │ ← 检查层

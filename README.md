@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.20.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
@@ -17,6 +17,11 @@ A complete product development methodology for AI coding assistants: Claude Code
 ---
 
 ## What's New
+
+### v1.20.1 — 2026-05-23
+- **Audit fixes**: CLAUDE.md routes active `changes/` to `/change-manager`; Mission includes brownfield step; `change-verify-template.md` added.
+- **CHANGELOG**: Documents `openhuman-comparison.md` (shipped in prior commit).
+- **Loadouts**: `cli-tool` / `minimal` omit change-manager by design — use `full` or `web-app` for brownfield.
 
 ### v1.20.0 — 2026-05-23
 - **change-manager Skill**: For projects that already have `Product-Spec.md` — one feature per `changes/<name>/` folder with **propose → apply → verify → archive** (OpenSpec-aligned). Templates + `/change-manager` command; implementation still delegates to `/dev-planner` and `/dev-builder`.
@@ -224,6 +229,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 - **Default install** ≈ `full` loadout (all hooks in `settings.json`).
 - **Trim hooks** (contributors, from Forge clone): `pnpm apply-loadout minimal claude-code` merges a lighter hook set into adapter `settings.json`. Add `--dry-run` to preview.
 - Loadouts are **reference manifests** — skills/agents are already copied; use loadouts to understand what each bundle includes.
+- **Brownfield** (`/change-manager`): included in `full` and `web-app` only; `cli-tool` and `minimal` omit it — copy the skill from `core/skills/change-manager/` or switch loadout if you need `changes/` on a CLI project.
 
 ### Step 4 — First run in your AI client
 
@@ -316,7 +322,7 @@ More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 │  ├─ test-writer        Generate tests for tools/scripts     │
 │  └─ planner            Analyze Spec, split phases, plan     │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 11 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
+│  Skills × 12 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
 ├─────────────────────────────────────────────────────────────┤
 │  Hooks + Review Loop (Sensors / Feedback Control)           │ ← Inspection Layer

@@ -48,7 +48,8 @@ description: Used when the user adds a feature or incrementally changes an exist
         ├── change-proposal-template.md
         ├── change-specs-template.md
         ├── change-design-template.md
-        └── change-tasks-template.md
+        ├── change-tasks-template.md
+        └── change-verify-template.md
     ```
 
 [Gotchas]
