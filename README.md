@@ -18,6 +18,16 @@ A complete product development methodology for AI coding assistants: Claude Code
 
 ## What's New
 
+### v1.18 — 2026-05-23
+- **skill.json metadata**: All 11 skills now ship with machine-readable `skill.json` (name, version, triggers, prerequisites, agents, hooks). Validated by `validate-skill.sh` via Node/Python. JSON Schema at `core/skills/skill.schema.json`.
+- **Commands layer**: 7 user-invokable skills now have `commands/<name>.md` with YAML frontmatter + phased workflows (Goal → Actions → Acceptance). CLAUDE.md [Skill Dispatch] references commands for step-by-step procedures.
+- **Parallel agent code review**: 4 specialized review agents (design, bug, security, types) run concurrently, each returning structured findings with confidence scores (0.0-1.0). Aggregator applies thresholding (≥0.6 confirmed, 0.3-0.6 suspected, <0.3 suppressed) with cross-agent boost. Replaces the old serial two-stage review.
+- **Hallucination Gate**: PreToolUse hook verifies Write/Edit target directories exist before allowing file creation, preventing path hallucinations.
+- **Project state injection**: `check-evolution.sh` now detects Product-Spec/DEV-PLAN/Code presence on session start and injects routing guidance as `additionalContext`.
+- **validate-skill.sh — skill.json validation**: Added existence check + required field validation (name, version, description, triggers.auto/manual/command).
+- **sub-agent-orchestration.md**: Documented parallel review pattern with all 4 specialist agents and aggregation rules.
+- Propagated to all 3 adapters (claude-code, cursor, opencode) via `pnpm sync`.
+
 ### v1.17 — 2026-05-22
 - **Decidable Activation — [Not For] section**: All 11 skills now include a `[Not For]` section specifying when NOT to use the skill and what to use instead. Added as a required section in validate-skill.sh. Updated skill-template.md.
 - **Three-Layer Diagnostic Model**: bug-fixer now goes beyond root cause to ask: Symptom → Design Flaw → Principle Violation. Every fix report includes all three layers to prevent recurrence, not just patch the symptom.
@@ -259,9 +269,10 @@ More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 │  ├─ decisions-log.md   Mid-term: ADRs, technical decisions  │
 │  └─ task-history.md    Short-term: recent task summaries     │
 ├─────────────────────────────────────────────────────────────┤
-│  Sub-Agents × 6 (Context Firewall)                          │ ← Execution Layer
+│  Sub-Agents × 9 (Context Firewall)                          │ ← Execution Layer
 │  ├─ implementer        Code + compile verify + self-check   │
-│  ├─ code-reviewer      Two-stage review + complexity gate   │
+│  ├─ code-reviewer      Parallel dispatch + confidence aggregation   │
+│  ├─ code-reviewer-*  4 specialists (design, bug, security, types)│
 │  ├─ feedback-observer  Capture failures + user corrections  │
 │  ├─ evolution-runner   Scan feedback accumulation           │
 │  ├─ test-writer        Generate tests for tools/scripts     │
@@ -330,7 +341,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 | **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
 | **dev-builder**          | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop.                                                   |
 | **bug-fixer**            | Four-stage systematic debugging. Don't guess, don't try blindly: gather evidence → analyze patterns → hypothesize → fix.                               |
-| **code-review**          | Two-stage review. Stage 1 checks Spec compliance, Stage 2 checks code quality. Stage 1 must pass before Stage 2.                                       |
+| **code-review**          | Parallel agent review — 4 specialists (design, bug, security, types) with confidence-scored aggregation (≥0.6 confirmed, 0.3-0.6 suspected).               |
 | **release-builder**      | Build & deploy. Built-in privacy audit and smoke testing.                                                                                              |
 | **feedback-writer**      | Records user corrections and feedback as structured files. Feeds the evolution engine with data.                                                       |
 | **evolution-engine**     | Scans accumulated feedback, identifies patterns (3+ occurrences), generates proposals to upgrade rules or optimize skills.                             |
@@ -417,7 +428,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 5. **Development plan** — Invoke /dev-planner, outputs DEV-PLAN.md
 6. **Build** — Invoke /dev-builder, works through each Task in each Phase
 7. **Memory auto-update** — After each Task, project memory is updated automatically
-8. **Auto-review** — code-reviewer two-stage review
+8. **Auto-review** — code-reviewer parallel agent review + confidence aggregation
 9. **Auto-fix** — Failed review triggers bug-fixer automatically
 10. **Commit & push** — Review passes → auto commit + push
 11. **Phase verification** — Cross-Task integration check + compile + functional test
@@ -430,7 +441,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 Forge/
 ├── core/                      # Shared core content
 │   ├── skills/                # 11 skill definitions, each in its own directory
-│   ├── agents/                # 6 Sub-agent definitions
+│   ├── agents/                # 9 Sub-agent definitions
 │   ├── templates/             # Document templates
 │   │   └── memory/            # Three-tier memory + session handoff templates
 │   ├── hooks/                 # Hook scripts (.sh/.bat/.ps1)
