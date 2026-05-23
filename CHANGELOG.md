@@ -2,6 +2,63 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.18] - 2026-05-23
+### Added
+- **skill.json metadata**: All 11 skills ship with machine-readable `skill.json` (name, version, triggers, prerequisites, agents, hooks). JSON Schema at `core/skills/skill.schema.json`.
+- **Commands layer**: 7 skills get `commands/<name>.md` with YAML frontmatter + phased workflows (Goal → Actions → Acceptance).
+- **Parallel agent code review**: 4 specialized agents (design, bug, security, types) run concurrently with confidence-scored aggregation (≥0.6 confirmed, 0.3-0.6 suspected, <0.3 suppressed). Cross-agent boost for corroborated findings.
+- **Hallucination Gate**: PreToolUse hook validates Write/Edit target directories exist before file creation.
+- **Project state injection**: `check-evolution.sh` detects Spec/Plan/Code state on session start and injects routing guidance.
+- **validate-skill.sh — skill.json validation**: Existence check + required fields (name, version, description, triggers.auto/manual/command).
+### Changed
+- Sub-Agent count 6→9 (4 new specialist code reviewers)
+- code-review SKILL.md: serial two-stage review → parallel agent dispatch + confidence aggregation
+- code-reviewer agent v2.0: parallel dispatch workflow, aggregation rules, cross-agent boost
+- sub-agent-orchestration.md: documented parallel review pattern
+- AGENTS.md (both core/agents/ and core/skills/): added skill.json + commands requirements
+### Fixed
+- validate-skill.sh python3/node fallback: Windows Store python3 shim no longer breaks validation
+
+## [v1.17] - 2026-05-22
+### Added
+- **Decidable Activation — [Not For] section**: All 11 skills include `[Not For]` specifying when NOT to use the skill.
+- **Three-Layer Diagnostic Model**: bug-fixer reports Symptom → Design Flaw → Principle Violation layers.
+- **Numeric Quality Rubric**: skill-builder 16-item, 32-point scoring system (ship threshold ≥ 24).
+- **create-skill.sh scaffold**: CLI tool to scaffold new skills from name.
+### Changed
+- validate-skill.sh: [Not For] is now a required section.
+- skill-template.md: updated with [Not For] section.
+
+## [v1.16] - 2026-05-21
+### Added
+- **Harness Engineering principles**: Tool AI-fication Priority, Substitute Don't Mock, Environment-First, Minimum Runnable Subset, Scripted Verification.
+- **Machine Gates**: Hallucination Gate, Sloppiness Gate, Overstepping Gate — enforceable via lint/test/hook/CI.
+- **Iron Rules**: 8 baseline non-negotiable rules (knowledge offloading, no prompt magic, real files, guardrails).
+- **llms.txt**: AI-searchable project summary for LLM discoverability.
+- **Per-directory AGENTS.md**: Local MUST/MUST NOT/SHOULD rules for each core/ subdirectory.
+- **validate-skill.sh**: Formal SKILL.md spec validator (frontmatter, sections, naming, file size, placeholders).
+- **Claude Code adapter rules migration**: AGENTS.md → `.claude/rules/*.md` with path-scoped `globs` frontmatter.
+- **Gotchas in all 11 skills**: Domain-specific failure points documented.
+- **CLI best practices in CLAUDE.md**: /model, /compact, /context, /sandbox usage guidance.
+### Changed
+- dev-builder: "SDK-First" → "Glue Code First" priority chain.
+- evolution-engine: Generator/Optimizer recursion principle — the engine that evolves rules should itself be evolvable.
+- `[Anti-Rationalization Checklist]` → `[Gotchas: Anti-Rationalization]` in dev-builder, code-review, bug-fixer.
+- code-review: cross-session audit principle for complex reviews.
+- feedback template: `prompt_remediation` field for reusable prevention prompts.
+### Fixed
+- All 11 skills validated: 11 missing-section errors and 19 warnings fixed across design-maker, evolution-engine, feedback-writer, bug-fixer, code-review, dev-builder, dev-planner.
+
+## [v1.15] - 2026-05-20
+### Added
+- Dependency graph: `scripts/dependency-graph.ts` for file-level import analysis and blast-radius.
+- Dedicated AGENTS.md template for OpenCode (constraint-focused: tech stack, behavior boundaries, hard constraints).
+### Changed
+- Exact version pinning: every dependency pinned to `major.minor.patch` — no ranges, no `latest`.
+- dev-builder code review loop: passes `affected_files` from blast-radius to code-reviewer.
+### Fixed
+- OpenCode control file: now uses dedicated AGENTS.md template instead of CLAUDE.md clone.
+
 ## [v1.14.2] - 2026-05-20
 ### Added
 - **forge-install**: `scripts/install.ts` copies adapter bundles into user projects (`pnpm forge-install <client> [--target dir] [--force]`)
