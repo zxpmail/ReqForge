@@ -80,7 +80,7 @@ description: Auto-triggers on session init, or manually triggered when the user 
         No signals -> Return "no evolution suggestions"
 
 [Proposal Format]
-    Each proposal MUST include **falsifiable verification** (AHE-style observability — see [agent-harness-seven-layer-map.md](../../docs/agent-harness-seven-layer-map.md)):
+    Each proposal MUST include **falsifiable verification** (AHE-style observability — see [agent-harness-seven-layer-map](https://github.com/zxpmail/ReqForge/blob/main/core/docs/agent-harness-seven-layer-map.md)):
 
     - **Predicted effect**: which failure class should decrease (e.g. hallucinated paths, skipped tests, wrong API usage)
     - **Verify by**: how to check after applying (e.g. "zero feedback with tag X in next 5 runs", "pnpm test", "grep SKILL for new rule")

@@ -18,6 +18,7 @@
     "pre-commit-check",
     "phase-exit-guard",
     "stop-gate",
+    "retry-gate",
     "detect-feedback-signal",
     "memory-check",
     "hallucination-gate"

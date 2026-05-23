@@ -162,7 +162,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     **Context7 Library IDs** (when user has Context7 MCP or `ctx7` CLI):
     - For each major third-party dependency in the Tech Stack table, resolve and record **Context7 Library ID** (`/org/project`) in DEV-PLAN.md
     - Use `resolve-library-id` with the planned version in the query when version-specific docs matter
-    - If Context7 is unavailable, leave ID as `—` and rely on WebSearch; see [context7-comparison.md](../../docs/context7-comparison.md)
+    - If Context7 is unavailable, leave ID as `—` and rely on WebSearch; see [context7-comparison](https://github.com/zxpmail/ReqForge/blob/main/core/docs/context7-comparison.md)
 
     **Confirmation Strategy**
     dev-planner does not require extensive conversation like product-spec-builder. Only confirm with the user in the following situations:

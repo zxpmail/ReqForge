@@ -2,13 +2,12 @@
 
 ## 当前正在做什么
 
-- v1.22.1 已写完（七层对照 + phase-exit-guard + 进化可验证提案），待提交推送
+- v1.22.2 完整性修补（Windows settings、retry-gate 文档、10 钩子、GitHub 文档链）
 
 ## 上次停在哪个位置
 
-- v1.22.0 已推送 `ed822ab`
+- 已推送 `ac7f41f`（v1.22.1）
 
-## 近期关键决定和原因
+## 近期关键决定
 
-- AGENT魔方七层映射进 `agent-harness-seven-layer-map.md`；Ralph 续命用 `.forge/phase-exit-block` + 钩子，不解析整份 DEV-PLAN
-- 默认钩子 9 个（含 phase-exit-guard）
+- 默认 10 个钩子；对照文档仅在仓库 `core/docs/`，Skill 用 GitHub 绝对 URL

@@ -46,7 +46,7 @@
     3. Align with pinned versions in DEV-PLAN / `package.json`; mention version in `query` when docs are version-sensitive
     4. If Context7 returns nothing or MCP is offline → fall back to **Online Search Strategy**; mark uncertain APIs `[待确认]` and log in `memory/decisions-log.md`
 
-    See [context7-comparison.md](../../../docs/context7-comparison.md). ReqForge does not ship Context7 — user runs `npx ctx7 setup` in their environment.
+    See [context7-comparison](https://github.com/zxpmail/ReqForge/blob/main/core/docs/context7-comparison.md). ReqForge does not ship Context7 — user runs `npx ctx7 setup` in their environment.
 
     **Online Search Strategy**
     The following scenarios require WebSearch before coding (or when Context7 is unavailable):

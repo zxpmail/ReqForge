@@ -2,10 +2,19 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.22.2] - 2026-05-23
+### Added
+- **retry-gate** in all loadouts and `apply-loadout` registry (was in `settings.json` since prior commit).
+### Changed
+- **settings.windows.json** (repo + claude-code + cursor): align with Unix — `phase-exit-guard`, `retry-gate`; remove default `PostCommit` auto-push.
+- README / README.zh-CN / `llms.txt`: **10** default hooks; document `retry-gate`; note `core/docs/` on GitHub for adapter-only installs.
+- Skill doc links to `core/docs/*` use GitHub URLs (work when only adapter bundle is copied).
+
 ## [v1.22.1] - 2026-05-23
 ### Added
 - **agent-harness-seven-layer-map.md**: AGENT魔方「七层 Harness」↔ ReqForge mapping (teaching skeleton vs product pipeline).
 - **phase-exit-guard** hook: blocks agent stop while `.forge/phase-exit-block` exists (Ralph-style Phase completion); wired in all loadouts + adapter settings.
+- **retry-gate** (shipped in `b9f5dfc`): `.forge/.retry-counter.json` escalation blocks proceed; dev-builder / bug-fixer retry limits.
 ### Changed
 - **dev-builder** `phase-completion-assessment`: when/how to write/remove `.forge/phase-exit-block`.
 - **evolution-engine**: proposals require **Predicted effect** + **Verify by** (observability-driven evolution).

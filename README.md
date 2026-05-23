@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.22.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.22.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -27,7 +27,7 @@ flowchart LR
     Build[dev-builder]
     Rev[code-review / bug-fixer]
     Rel[release-builder]
-    Hooks[9 hooks + evolution]
+    Hooks[10 hooks + evolution]
     Mem[memory/ 3-tier]
   end
 
@@ -59,6 +59,9 @@ flowchart LR
 
 ## What's New
 
+### v1.22.2 — 2026-05-23
+- **Completeness**: Windows `settings.windows.json` aligned; `retry-gate` in loadouts/docs; 10-hook count; GitHub URLs for `core/docs` in Skills.
+
 ### v1.22.1 — 2026-05-23
 - **Seven-layer Harness map** + **phase-exit-guard** hook (Ralph-style Phase stop); evolution proposals need predicted effect + verify-by.
 
@@ -82,7 +85,7 @@ flowchart LR
 - **Discoverability**: OpenSpec diff + architecture diagram at README top; `pnpm` script to sync GitHub About/topics from `.github/repo-metadata.json`.
 
 ### v1.20.5 — 2026-05-23
-- **memory-guard**: PostToolUse bundles context-compaction + check-handoff (8 default hooks).
+- **memory-guard**: PostToolUse bundles context-compaction + check-handoff (10 default hooks).
 
 ### v1.20.4 — 2026-05-23
 - **SKILL slimming**: `dev-builder` and `product-spec-builder` detail moved to `references/`; main SKILL files stay under 500 lines.
@@ -292,7 +295,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### Step 3 — Enable hooks (Claude Code & Cursor)
 
-Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` registers **8 hooks** (including `PreToolUse` → `hallucination-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
+Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` registers **10 hooks** (including `hallucination-gate`, `phase-exit-guard`, `retry-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
 
 | Platform | Action |
 |----------|--------|
@@ -335,7 +338,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
-│   ├── settings.json           # 8 hooks wired (incl. hallucination-gate; auto-push optional)
+│   ├── settings.json           # 10 hooks (Unix .sh); copy settings.windows.json on Windows
 │   ├── skills/                 # 12 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
@@ -500,7 +503,9 @@ Feature complete → code-reviewer parallel review
   └─ pass → commit (push when ready) → Task done
 ```
 
-Eight hook scripts fire automatically in shipped adapters (plus `check-sync` in the ReqForge repo only — see note below):
+Ten hook scripts fire automatically in shipped adapters (plus `check-sync` in the ReqForge repo only — see note below):
+
+> **Comparison docs** (`core/docs/*-comparison.md`, seven-layer map) live in the [ReqForge GitHub repo](https://github.com/zxpmail/ReqForge/tree/main/core/docs) — not inside adapter bundles. Clone the repo or browse online; Skill links use those URLs.
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -508,6 +513,7 @@ Eight hook scripts fire automatically in shipped adapters (plus `check-sync` in 
 | pre-commit-check       | Before commit      | Block commit if compilation fails       |
 | phase-exit-guard       | Before agent stops | Block stop while `.forge/phase-exit-block` exists (incomplete Phase) |
 | stop-gate              | Before agent stops | Block stop if code hasn't been reviewed |
+| retry-gate             | Before agent stops | Block when `.forge/.retry-counter.json` is `escalated` (max retries)   |
 | detect-feedback-signal | On user message    | Auto-detect correction signals          |
 | mark-review-needed     | After file edit    | Mark changes as needing review          |
 | check-evolution        | On session start   | Check feedback accumulation             |

@@ -27,6 +27,7 @@
     "pre-commit-check",
     "phase-exit-guard",
     "stop-gate",
+    "retry-gate",
     "detect-feedback-signal",
     "mark-review-needed",
     "check-evolution",

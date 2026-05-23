@@ -7,16 +7,13 @@
       "run": "core\\hooks\\pre-commit-check.bat"
     },
     "BeforeCommand": {
-      "run": "core\\hooks\\stop-gate.bat && core\\hooks\\detect-feedback-signal.bat"
+      "run": "core\\hooks\\phase-exit-guard.bat && core\\hooks\\stop-gate.bat && core\\hooks\\retry-gate.bat && core\\hooks\\detect-feedback-signal.bat"
     },
     "AfterCommand": {
       "run": "core\\hooks\\mark-review-needed.bat && core\\hooks\\memory-check.bat"
     },
     "PostToolUse": {
-      "run": "core\\hooks\\memory-guard.bat && core\\hooks\\check-sync.bat"
-    },
-    "PostCommit": {
-      "run": "core\\hooks\\auto-push.bat"
+      "run": "core\\hooks\\memory-guard.bat"
     },
     "OnInit": {
       "run": "core\\hooks\\check-evolution.bat"

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.22.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.22.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -27,7 +27,7 @@ flowchart LR
     Build[dev-builder]
     Rev[code-review / bug-fixer]
     Rel[release-builder]
-    Hooks[9 个钩子 + 进化]
+    Hooks[10 个钩子 + 进化]
     Mem[memory/ 三层记忆]
   end
 
@@ -59,6 +59,9 @@ flowchart LR
 
 ## 近期更新
 
+### v1.22.2 — 2026-05-23
+- **补齐**：Windows 配置与 Unix 一致；`retry-gate` 写入 loadout/文档；钩子计为 10 个；Skill 内文档链到 GitHub。
+
 ### v1.22.1 — 2026-05-23
 - **Harness 七层对照** + **phase-exit-guard**（Phase 未完成阻止退出）；进化提案需写预期效果与验证方式。
 
@@ -82,7 +85,7 @@ flowchart LR
 - **可发现性**：README 顶部 OpenSpec 对照 + 架构图；可用脚本把 About/Topics 同步到 GitHub。
 
 ### v1.20.5 — 2026-05-23
-- **memory-guard**：PostToolUse 合并归档与交接提示（默认 8 个钩子）。
+- **memory-guard**：PostToolUse 合并归档与交接提示（默认 10 个钩子）。
 
 ### v1.20.4 — 2026-05-23
 - **SKILL 瘦身**：`dev-builder`、`product-spec-builder` 细则迁入 `references/`，主 SKILL 控制在 500 行以内。
@@ -292,7 +295,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### 步骤 3 — 启用钩子（Claude Code / Cursor）
 
-钩子在工具调用前、提交、编辑、会话启动等时机自动运行。默认 `settings.json` 注册 **8 个钩子**（含 `hallucination-gate`；`auto-push` 可选）。复制 `.claude/` 或 `.cursor/` 后：
+钩子在工具调用前、提交、编辑、会话启动等时机自动运行。默认 `settings.json` 注册 **10 个钩子**（含 `hallucination-gate`、`phase-exit-guard`、`retry-gate`；`auto-push` 可选）。复制 `.claude/` 或 `.cursor/` 后：
 
 | 平台 | 操作 |
 |------|------|
@@ -335,7 +338,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 my-app/
 ├── .claude/                    # 或 .cursor/ 或 .opencode/  ← 适配层
 │   ├── CLAUDE.md               # 控制文件（OpenCode 为 AGENTS.md）
-│   ├── settings.json           # 8 个钩子（含 hallucination-gate；auto-push 可选）
+│   ├── settings.json           # 10 个钩子（Unix 用 .sh）；Windows 请复制 settings.windows.json
 │   ├── skills/                 # 12 个 Skill + commands/
 │   ├── agents/                 # 10 个 Sub-Agent
 │   ├── hooks/                  # .sh + .bat 钩子脚本
@@ -500,7 +503,9 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
   └─ 通过 → 提交（按需推送）→ Task 完成
 ```
 
-默认适配器内置 **8 个**钩子（ReqForge 仓库另有 `check-sync`，见下方说明）：
+默认适配器内置 **10 个**钩子（ReqForge 仓库另有 `check-sync`，见下方说明）：
+
+> **对照文档**（`core/docs/*-comparison.md`、七层对照）在 [ReqForge  GitHub 仓库](https://github.com/zxpmail/ReqForge/tree/main/core/docs)，不在适配器包里；Skill 内链接指向该地址。
 
 | 钩子 | 触发时机 | 动作 |
 | ---------------------- | ------------------ | --------------------------------------- |
@@ -508,6 +513,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | pre-commit-check | 提交前 | 编译失败则阻止提交 |
 | phase-exit-guard | Agent 停止前 | 存在 `.forge/phase-exit-block` 时阻止停止（Phase 未验收） |
 | stop-gate | Agent 停止前 | 代码未审查则阻止停止 |
+| retry-gate | Agent 停止前 | `.forge/.retry-counter.json` 为 `escalated` 时阻止继续（重试耗尽） |
 | detect-feedback-signal | 用户消息时 | 自动检测纠正信号 |
 | mark-review-needed | 文件编辑后 | 标记需要审查的变更 |
 | check-evolution | 会话启动时 | 检查反馈积累 |

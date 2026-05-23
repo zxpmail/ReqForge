@@ -41,7 +41,7 @@ ReqForge **额外**（Superpowers 不覆盖或较弱）：
 - **设计层**：`design-brief-builder`、`design-maker`（可选）
 - **存量变更**：`/change-manager`（对齐 OpenSpec 工件，非 Superpowers 核心叙事）
 - **进化层**：`feedback/` + `evolution-engine`（重复失败 → 规则升级提案）
-- **机器门**：`hallucination-gate`、`pre-commit-check`、`memory-guard` 等 8 个默认钩子
+- **机器门**：`hallucination-gate`、`pre-commit-check`、`phase-exit-guard`、`retry-gate`、`memory-guard` 等 10 个默认钩子
 - **项目记忆**：`memory/` 三层 Markdown（跨 session，可版本管理）
 - **多客户端**：`core/` + `adapters/`（claude-code / cursor / opencode）同步，用户项目零 npm
 

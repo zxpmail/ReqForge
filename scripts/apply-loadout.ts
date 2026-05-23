@@ -47,19 +47,25 @@ const HOOK_REGISTRY: Record<
     event: "BeforeCommand",
     sh: "phase-exit-guard.sh",
     bat: "phase-exit-guard.bat",
-    combineWith: ["stop-gate", "detect-feedback-signal"],
+    combineWith: ["stop-gate", "retry-gate", "detect-feedback-signal"],
   },
   "stop-gate": {
     event: "BeforeCommand",
     sh: "stop-gate.sh",
     bat: "stop-gate.bat",
-    combineWith: ["phase-exit-guard", "detect-feedback-signal"],
+    combineWith: ["phase-exit-guard", "retry-gate", "detect-feedback-signal"],
+  },
+  "retry-gate": {
+    event: "BeforeCommand",
+    sh: "retry-gate.sh",
+    bat: "retry-gate.bat",
+    combineWith: ["phase-exit-guard", "stop-gate", "detect-feedback-signal"],
   },
   "detect-feedback-signal": {
     event: "BeforeCommand",
     sh: "detect-feedback-signal.sh",
     bat: "detect-feedback-signal.bat",
-    combineWith: ["stop-gate"],
+    combineWith: ["phase-exit-guard", "stop-gate", "retry-gate"],
   },
   "mark-review-needed": {
     event: "AfterCommand",

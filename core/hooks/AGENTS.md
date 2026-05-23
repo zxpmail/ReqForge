@@ -28,6 +28,7 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 |------|---------|---------|
 | `phase-exit-guard` | BeforeCommand | Block stop while `.forge/phase-exit-block` exists (Ralph-style Phase completion) |
 | `stop-gate` | BeforeCommand | Block stop when code changed but not reviewed |
+| `retry-gate` | BeforeCommand | Block proceed when `.forge/.retry-counter.json` is `escalated` (max retries exceeded) |
 
 ### Composite hooks
 | Name | Trigger | Delegates to |
