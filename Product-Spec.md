@@ -34,14 +34,14 @@
   - `feedback-observer` → 反馈记录（追踪模型版本，检测规则过时）
   - `evolution-runner` → 进化扫描
   - `test-writer` → 自动生成测试
-  对应 Skill：`product-spec-builder`（需求）、`dev-planner`（计划）、`dev-builder`（实现）等，Skill 与 Sub-Agent 分工明确。
+  对应 Skill：`product-spec-builder`（需求）、`change-manager`（存量增量变更）、`dev-planner`（计划）、`dev-builder`（实现）等，Skill 与 Sub-Agent 分工明确。
 - **开放架构**：核心内容一份存放，各 AI 客户端分别做适配层，维护一份核心，多端同步更新。每个技能独立目录，自带 SKILL.md，可组合、可插拔、可扩展。
 - **项目进度自动检测**：框架自动检测当前项目进度（哪个阶段完成了，哪个阶段没做），引导用户进入下一步，不用用户自己记。
 - **evolution 进化引擎**：记录用户反馈，重复出现的经验自动升级为框架规则，框架用得越多越聪明。
 - **三层记忆体系**：项目记忆分三层（长期架构事实、中期决策记录、短期任务历史），版本控制存储在 `memory/` 目录，跨 session 保持上下文，解决 AI 失忆问题。
 - **红绿灯行为边界**：所有操作分为 🟢 自主执行、🟡 需确认、🔴 严禁无确认三级，YOLO 模式下 🔴 操作仍需确认，防止 AI 越界。
 - **强制 TDD 纪律**：开发阶段严格要求 RED-GREEN-REFACTOR 循环，提高代码质量。
-- **增量变更管理**：每个变更 proposal 独立文件夹（proposal + specs + design + tasks），迭代历史清晰可追溯。
+- **增量变更管理**：每个变更独立文件夹 `changes/<name>/`（proposal + specs + design + tasks + verify），由 `/change-manager` 统一 propose → apply → verify → archive；归档至 `changes/archive/`。对照说明见 `core/docs/openspec-comparison.md`。
 - **快速初始化模式**：用户一句话描述项目，AI 推断最小可用 Spec，不确定项标记 [待确认]，降低首次使用门槛。
 - **依赖图分析**：内置文件级依赖图工具，自动追踪代码间引用关系，变更时计算 blast-radius 影响范围，用数据驱动 complexity gate 决策，指导 code-reviewer 精准审查。
 - **入门铁律**：框架强制遵守的 8 条底线规则，不可跳过、不可变通：
@@ -122,7 +122,7 @@
 | 开发计划 | DEV-PLAN.md | 必需 |
 | 项目记忆 | memory/project-memory.md, decisions-log.md, task-history.md | 自动生成（首次 /dev-builder 时） |
 | 框架配置 | .claude/CLAUDE.md / .opencode/AGENTS.md, .claude/EVOLUTION.md | 自动生成 |
-| 增量变更 | changes/<change-name>/ | 可选（迭代变更时） |
+| 增量变更 | changes/<change-name>/（verify.md） | 可选；`/change-manager` |
 
 ### Forge 仓库目录结构（开源仓库本身））
 
@@ -134,6 +134,7 @@ Forge/
 │   ├── templates/             # 文档模板（Product-Spec, DEV-PLAN, 记忆模板等）
 │   │   └── memory/            # 三层记忆模板 + handoff 交接模板
 │   ├── hooks/                 # 钩子脚本（stop-gate, memory-check 等）
+│   ├── docs/                  # 行为边界、记忆、Sub-Agent、openspec-comparison 等
 │   └── feedback/              # 反馈目录
 ├── adapters/
 │   ├── claude-code/           # Claude Code 适配（.claude/ 目录结构）
@@ -160,6 +161,8 @@ user-project/
 │   └── task-history.md        # 短期：近期任务摘要（最多30条）
 ├── Product-Spec.md            # 用户产品需求文档（用户项目根目录）
 ├── DEV-PLAN.md                # 开发计划
+├── changes/                   # 可选：存量功能增量（/change-manager）
+│   └── archive/
 └── ...                        # 用户项目代码
 ```
 
@@ -168,7 +171,7 @@ user-project/
 - 流程方法论：**废才** - 完整产品开发从0到1流程
 - 开放多客户端：**oh-my-openagent** - 不绑定单一平台
 - 技能化架构：**superpowers** - 每个技能独立可插拔，强制 TDD
-- CLI + 增量变更：**OpenSpec** - 一键初始化，artifact-guided 迭代 workflow
+- CLI + 增量变更：**OpenSpec** - artifact-guided 迭代；Forge 用 `/change-manager` + `changes/` 对齐同类流程（见 openspec-comparison.md）
 - 提示词工程：**awesome-chatgpt-prompts** - 每个技能是一份精心调校的提示词，社区贡献
 - 多角色分工：**OpenAI Symphony** - 不同阶段由专门的 Sub-Agent 负责，各尽其职
 - 记忆体系 + PDCA 闭环：**ai-coding-ok** - 三层记忆解决 AI 失忆，红绿灯行为边界约束 AI 越界

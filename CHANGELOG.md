@@ -2,6 +2,14 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.20.0] - 2026-05-23
+### Added
+- **change-manager Skill**: Brownfield workflow for existing projects with `Product-Spec.md` — `changes/<name>/` with propose → apply → verify → archive; templates for proposal, specs, design, tasks; command `/change-manager`.
+- **openspec-comparison.md**: Forge vs [OpenSpec](https://github.com/Fission-AI/OpenSpec) positioning, artifact mapping, and when to use `/change-manager`.
+### Changed
+- **12 Skills** (was 11): `change-manager` included in `full` and `web-app` loadouts; `CLAUDE.md` dispatch updated.
+- README / README.zh-CN: What's New, workflow, install tree, repo structure, version badge; `llms.txt`, `DEV-PLAN.md`, `file-structure.md` aligned.
+
 ## [v1.19.1] - 2026-05-23
 ### Fixed
 - **Hallucination Gate wired**: `PreToolUse` registered in all adapter `settings.json` / `settings.windows.json`; hook reads `tool_name` from stdin JSON (was `tool` only).

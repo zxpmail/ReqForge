@@ -20,14 +20,19 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 4. **Implementation** → `/dev-builder` → project code (one Phase per invocation)
 5. **Review & Release** → `/code-review`, `/bug-fixer`, `/release-builder`
 
+### Brownfield (existing Product-Spec)
+
+`/change-manager` — one feature per `changes/<name>/`: propose → apply → verify → archive. See `core/docs/openspec-comparison.md` vs OpenSpec CLI.
+
 ### Core Architecture
 
-- **11 Skills** — Independent methodology modules (product-spec-builder, dev-builder, bug-fixer, code-review, etc.). Each includes `[First Principles]`, `[Gotchas]`, and `[Anti-Rationalization Checklist]`.
-- **6 Sub-Agents** — Context-isolated workers (implementer, code-reviewer, feedback-observer, evolution-runner, test-writer, planner). Fresh instance per task, no inherited context.
-- **10 Hooks** — Automatic enforcement (pre-commit-check, auto-push, stop-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, context-compaction, check-sync, check-handoff).
+- **12 Skills** — Independent methodology modules (product-spec-builder, change-manager, dev-builder, bug-fixer, code-review, etc.). Each includes `[First Principles]`, `[Gotchas]`, and command layers where applicable.
+- **10 Sub-Agents** — Context-isolated workers (implementer, planner, code-reviewer + 4 specialists, feedback-observer, evolution-runner, test-writer). Fresh instance per task.
+- **10 Hooks** — Automatic enforcement (pre-commit-check, auto-push, stop-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, context-compaction, check-handoff, hallucination-gate).
 - **3-Tier Memory** — project-memory.md (permanent architecture facts), decisions-log.md (ADR records), task-history.md (30-entry rolling log).
 - **Evolution Loop** — feedback-observer records failures → evolution-engine detects patterns (3+ occurrences) → generates rule upgrade proposals → skill-builder implements.
 - **Dependency Graph** — `scripts/dependency-graph.ts` for file-level blast-radius analysis before code changes.
+- **Loadouts** — `full`, `web-app`, `cli-tool`, `minimal` bundles of skills/agents/hooks.
 
 ### Key Principles
 
@@ -49,18 +54,6 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 
 One-command install: `pnpm forge-install <client> --target <dir>`
 
-## Quick Start
+Sync after editing core: `pnpm sync`
 
-```bash
-git clone https://github.com/zxpmail/ReqForge.git
-cd ReqForge
-pnpm forge-install claude-code --target /path/to/your/project
-```
-
-No npm install required to use the framework. Node.js + pnpm only needed for contributors running `pnpm test`, `pnpm sync`, `pnpm dep-graph`.
-
-## Repository
-
-- GitHub: https://github.com/zxpmail/ReqForge
-- License: MIT
-- Language: English + Chinese (README.zh-CN.md)
+Version: v1.20.0

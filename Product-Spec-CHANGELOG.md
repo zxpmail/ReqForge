@@ -1,5 +1,15 @@
 # 变更记录
 
+## [v1.20.0] - 2026-05-23
+### 新增
+- **change-manager Skill**：存量项目 `changes/<name>/` 四阶段变更流（propose/apply/verify/archive）
+- **openspec-comparison.md**：Forge 与 OpenSpec 对照文档
+
+### 变更
+- Skill 总数 11 → 12；增量变更章节与 `/change-manager` 对齐
+
+---
+
 ## [v1.14] - 2026-05-19
 ### 新增
 - 依赖图分析成为核心功能：内置文件级依赖图工具，变更时计算 blast-radius 影响范围，数据驱动 complexity gate 决策

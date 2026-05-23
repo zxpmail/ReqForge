@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.19.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
@@ -11,12 +11,17 @@ A complete product development methodology for AI coding assistants: Claude Code
 | Section | Description |
 |---------|-------------|
 | [Installation & Usage](#installation--usage) | Clone, copy adapters, hooks, first run |
-| [Workflow](#workflow) | Spec → Plan → Build → Release |
+| [Workflow](#workflow) | Spec → Plan → Build → Release (brownfield: `/change-manager`) |
 | [Framework Development](#framework-development) | Tests, sync, dependency graph (contributors) |
 
 ---
 
 ## What's New
+
+### v1.20.0 — 2026-05-23
+- **change-manager Skill**: For projects that already have `Product-Spec.md` — one feature per `changes/<name>/` folder with **propose → apply → verify → archive** (OpenSpec-aligned). Templates + `/change-manager` command; implementation still delegates to `/dev-planner` and `/dev-builder`.
+- **openspec-comparison.md**: When to use Forge vs OpenSpec CLI, artifact mapping, and workflow diagram — [core/docs/openspec-comparison.md](core/docs/openspec-comparison.md).
+- **12 Skills**: `change-manager` wired into `full` / `web-app` loadouts and all adapter bundles via `pnpm sync`.
 
 ### v1.19.1 — 2026-05-23
 - **Hallucination Gate wired**: All adapter `settings.json` register `PreToolUse` → `hallucination-gate`; hook reads `tool_name` from stdin JSON; Windows `.bat` uses Node parsing.
@@ -230,6 +235,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 | Requirements | `/product-spec-builder` | `Product-Spec.md` |
 | Design brief (optional) | `/design-brief-builder` | `Design-Brief.md` |
 | Dev plan | `/dev-planner` | `DEV-PLAN.md` |
+| Brownfield feature (existing Spec) | `/change-manager propose <name>` → apply → verify → archive | `changes/<name>/` → `changes/archive/` |
 | Implementation | `/dev-builder` | Code + `memory/` (auto-created) |
 | Bug fix | Describe the bug (auto-triggers `/bug-fixer`) | Fix + review loop |
 | Release | `/release-builder` | Build / deploy checklist |
@@ -245,7 +251,7 @@ my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
 │   ├── settings.json           # 10 hooks wired (incl. hallucination-gate)
-│   ├── skills/                 # 11 Skill definitions + commands/
+│   ├── skills/                 # 12 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
 │   ├── loadouts/               # full | web-app | cli-tool | minimal
@@ -255,6 +261,8 @@ my-app/
 ├── Product-Spec.md             # after /product-spec-builder
 ├── DEV-PLAN.md                 # after /dev-planner
 ├── Design-Brief.md             # optional
+├── changes/                    # optional — brownfield iterations (/change-manager)
+│   └── archive/
 ├── memory/                     # auto-created on first /dev-builder
 │   ├── project-memory.md
 │   ├── decisions-log.md
@@ -479,14 +487,15 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 10. **Commit & push** — Review passes → auto commit + push
 11. **Phase verification** — Cross-Task integration check + compile + functional test
 12. **Iterate** — Request changes in conversation; auto-update Spec → Plan → code → review
-13. **Release** — Invoke /release-builder
+13. **Brownfield feature** (optional, when Spec already exists) — `/change-manager propose <name>` → fill `changes/<name>/` → apply (dev-planner/dev-builder scoped) → verify → archive
+14. **Release** — Invoke /release-builder
 
 ## Repository Structure
 
 ```
 Forge/
 ├── core/                      # Shared core content
-│   ├── skills/                # 11 skill definitions, each in its own directory
+│   ├── skills/                # 12 skill definitions, each in its own directory
 │   ├── agents/                # 10 Sub-agent definitions
 │   ├── loadouts/              # Reusable skill/agent/hook bundles
 │   ├── templates/             # Document templates

@@ -5,12 +5,12 @@
 
 ---
 
-## 当前进度（v1.19.1）
+## 当前进度（v1.20.0）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
 | 1 项目骨架 | ✅ 完成 | `core/`、`adapters/`、`scripts/` |
-| 2 核心技能 | ✅ 完成 | 11 个 Skill + skill.json + 7 个 commands 层 |
+| 2 核心技能 | ✅ 完成 | 12 个 Skill（含 change-manager）+ skill.json + commands 层 |
 | 3 Sub-agent | ✅ 完成 | 10 个 Agent（含 4 个专项 reviewer、planner、test-writer） |
 | 4 文档模板 | ✅ 完成 | 含 memory / agents 模板 |
 | 5 Claude Code 适配 | ✅ 完成 | |
@@ -21,6 +21,7 @@
 | 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/` |
 | 11 Loadout 机制 | ✅ 完成 | `core/loadouts/` 4 个内置 loadout |
 | 12 并行代码审查 | ✅ 完成 | 4 专项 reviewer + 聚合器 |
+| 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
 
 **验证命令**：`pnpm install` → `pnpm test` → `pnpm build` → `pnpm sync`
 

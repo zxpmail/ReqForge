@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.19.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.20.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -11,12 +11,17 @@
 | 章节 | 说明 |
 |------|------|
 | [安装与使用](#安装与使用) | 克隆、复制适配层、钩子、首次运行 |
-| [工作流程](#工作流程) | 需求 → 计划 → 开发 → 发布 |
+| [工作流程](#工作流程) | 需求 → 计划 → 开发 → 发布（存量项目用 `/change-manager`） |
 | [框架开发与维护](#框架开发与维护) | 测试、同步、依赖图（贡献者） |
 
 ---
 
 ## 近期更新
+
+### v1.20.0 — 2026-05-23
+- **change-manager Skill**：已有 `Product-Spec.md` 的存量项目，每个功能一个 `changes/<name>/` 目录，走 **提议 → 实现 → 验收 → 归档**（对齐 OpenSpec 思路）。含模板与 `/change-manager` 命令；编码仍由 `/dev-planner`、`/dev-builder` 执行。
+- **openspec-comparison.md**：Forge 与 OpenSpec CLI 的定位对照、工件映射与选型说明 — [core/docs/openspec-comparison.md](core/docs/openspec-comparison.md)。
+- **12 个 Skill**：`change-manager` 已加入 `full` / `web-app` loadout，经 `pnpm sync` 同步到三端适配器。
 
 ### v1.19.1 — 2026-05-23
 - **幻觉门已接入**：全部适配器 `settings.json` 注册 `PreToolUse` → `hallucination-gate`；钩子脚本修正为读取 `tool_name`；Windows 版改用 Node 解析 JSON。
@@ -230,6 +235,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 | 需求收集 | `/product-spec-builder` | `Product-Spec.md` |
 | 设计规范（可选） | `/design-brief-builder` | `Design-Brief.md` |
 | 开发计划 | `/dev-planner` | `DEV-PLAN.md` |
+| 存量功能增量（已有 Spec） | `/change-manager propose <名称>` → apply → verify → archive | `changes/<名称>/` → `changes/archive/` |
 | 编码实现 | `/dev-builder` | 代码 + 自动创建 `memory/` |
 | Bug 修复 | 描述问题（可自动触发 `/bug-fixer`） | 修复 + 审查闭环 |
 | 构建发布 | `/release-builder` | 打包 / 部署检查清单 |
@@ -245,7 +251,7 @@ my-app/
 ├── .claude/                    # 或 .cursor/ 或 .opencode/  ← 适配层
 │   ├── CLAUDE.md               # 控制文件（OpenCode 为 AGENTS.md）
 │   ├── settings.json           # 10 个钩子（含 hallucination-gate）
-│   ├── skills/                 # 11 个 Skill + commands/
+│   ├── skills/                 # 12 个 Skill + commands/
 │   ├── agents/                 # 10 个 Sub-Agent
 │   ├── hooks/                  # .sh + .bat 钩子脚本
 │   ├── loadouts/               # full | web-app | cli-tool | minimal
@@ -255,6 +261,8 @@ my-app/
 ├── Product-Spec.md             # /product-spec-builder 之后
 ├── DEV-PLAN.md                 # /dev-planner 之后
 ├── Design-Brief.md             # 可选
+├── changes/                    # 可选 — 存量迭代（/change-manager）
+│   └── archive/
 ├── memory/                     # 首次 /dev-builder 时自动创建
 │   ├── project-memory.md
 │   ├── decisions-log.md
@@ -479,14 +487,15 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 10. **提交和推送** — 审查通过后自动提交 + 推送
 11. **阶段验证** — 跨 Task 集成检查 + 编译 + 功能测试
 12. **迭代** — 在对话中请求变更；自动更新 Spec → Plan → 代码 → 审查
-13. **发布** — 调用 /release-builder
+13. **存量功能**（可选，已有 Spec）— `/change-manager propose <名称>` → 填写 `changes/<名称>/` → apply（限定范围的 dev-planner/dev-builder）→ verify → archive
+14. **发布** — 调用 /release-builder
 
 ## 仓库结构
 
 ```
 Forge/
 ├── core/                      # 核心共享内容
-│   ├── skills/                # 11 个 Skill 定义，每个独立目录
+│   ├── skills/                # 12 个 Skill 定义，每个独立目录
 │   ├── agents/                # 10 个 Sub-Agent 定义
 │   ├── loadouts/              # 可复用的技能/Agent/钩子捆绑包
 │   ├── templates/             # 文档模板
