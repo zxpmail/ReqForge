@@ -78,5 +78,6 @@
 
 - [openspec-comparison.md](./openspec-comparison.md) — scoped changes
 - [superpowers-comparison.md](./superpowers-comparison.md) — engineering discipline
+- [context7-comparison.md](./context7-comparison.md) — library docs injection (optional MCP partner)
 - [memory-system.md](./memory-system.md) — three-tier memory
 - [behavior-boundaries.md](./behavior-boundaries.md) — what Forge must not do

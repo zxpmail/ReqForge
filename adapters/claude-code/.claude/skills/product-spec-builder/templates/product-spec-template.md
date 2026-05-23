@@ -45,12 +45,12 @@ This template is used to generate a structurally complete Product Spec document.
 
 ## Technical Direction
 
-| Dimension | Choice | Rationale |
-|------|------|------|
-| Product Type | <Web / Desktop / CLI / Mobile> | <Why this platform> |
-| Recommended Tech Stack | <e.g., Next.js + TypeScript + Tailwind> | <Why this stack> |
-| Data Storage | <Local / Cloud / Hybrid> | <Based on product requirements> |
-| Deployment | <Static hosting / Server / Desktop installer / App Store> | <Based on product type> |
+| Dimension | Choice | Rationale | Context7 ID (optional) |
+|------|------|------|------------------------|
+| Product Type | <Web / Desktop / CLI / Mobile> | <Why this platform> | — |
+| Recommended Tech Stack | <e.g., Next.js + TypeScript + Tailwind> | <Why this stack> | e.g. `/vercel/next.js` |
+| Data Storage | <Local / Cloud / Hybrid> | <Based on product requirements> | — |
+| Deployment | <Static hosting / Server / Desktop installer / App Store> | <Based on product type> | — |
 
 ## Technical Notes (Optional)
 <If the following topics are involved, provide details:>
@@ -161,12 +161,12 @@ Two-column layout: left input area at 40%, right output area at 60%.
 
 ## Technical Direction
 
-| Dimension | Choice | Rationale |
-|------|------|------|
-| Product Type | Web | Creative tool, needs easy sharing and collaboration, no system permissions required |
-| Recommended Tech Stack | Next.js + TypeScript + Tailwind | Full-stack framework, supports API routes for AI service calls, SSR benefits SEO |
-| Data Storage | Local (LocalStorage) | No login needed at MVP stage, reduces complexity |
-| Deployment | Static hosting (Vercel) | Zero maintenance, auto-deploy, free tier is sufficient |
+| Dimension | Choice | Rationale | Context7 ID (optional) |
+|------|------|------|------------------------|
+| Product Type | Web | Creative tool, needs easy sharing and collaboration, no system permissions required | — |
+| Recommended Tech Stack | Next.js + TypeScript + Tailwind | Full-stack framework, supports API routes for AI service calls, SSR benefits SEO | `/vercel/next.js` |
+| Data Storage | Local (LocalStorage) | No login needed at MVP stage, reduces complexity | — |
+| Deployment | Static hosting (Vercel) | Zero maintenance, auto-deploy, free tier is sufficient | — |
 
 ## Technical Notes
 
@@ -225,6 +225,7 @@ Two-column layout: left input area at 40%, right output area at 60%.
 7. **Technical Direction**:
    - Product type + recommended tech stack + rationale, presented in a table
    - Also include data storage method and deployment method in the table
+   - **Context7 ID (optional)**: for main frameworks/SDKs, note `/org/project` if known — dev-planner copies into DEV-PLAN Tech Stack
    - This serves as input for dev-planner and dev-builder
 
 8. **Technical Notes** (Optional):

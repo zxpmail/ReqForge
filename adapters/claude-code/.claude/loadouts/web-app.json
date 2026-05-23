@@ -52,6 +52,11 @@
       "name": "Playwright",
       "description": "UI interaction testing during code-review",
       "required": false
+    },
+    {
+      "name": "Context7",
+      "description": "Version-specific library docs (resolve-library-id + query-docs). Setup: npx ctx7 setup or https://github.com/upstash/context7",
+      "required": false
     }
   ]
 }

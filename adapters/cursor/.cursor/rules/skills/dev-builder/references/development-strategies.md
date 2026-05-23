@@ -39,12 +39,22 @@
     - Use Design-Brief.md as the primary reference
     - If no Design-Brief -> use Product-Spec.md text description as reference
 
+    **Library Docs Strategy (Context7 — preferred for dependencies)**
+    When Context7 MCP or `ctx7` CLI is available, use it **before** generic WebSearch for third-party library/API work:
+    1. Read DEV-PLAN.md **Tech Stack** — if **Context7 Library ID** is set (e.g. `/vercel/next.js`), call `query-docs` with that ID and a task-specific `query`
+    2. If only the package name is known → `resolve-library-id` (`libraryName` + `query`) → `query-docs`
+    3. Align with pinned versions in DEV-PLAN / `package.json`; mention version in `query` when docs are version-sensitive
+    4. If Context7 returns nothing or MCP is offline → fall back to **Online Search Strategy**; mark uncertain APIs `[待确认]` and log in `memory/decisions-log.md`
+
+    See [context7-comparison.md](../../../docs/context7-comparison.md). ReqForge does not ship Context7 — user runs `npx ctx7 setup` in their environment.
+
     **Online Search Strategy**
-    The following scenarios require WebSearch before coding:
-    1. Using external libraries/APIs -> confirm current version usage and API signatures
+    The following scenarios require WebSearch before coding (or when Context7 is unavailable):
+    1. Using external libraries/APIs -> confirm current version usage and API signatures (prefer Context7 when installed)
     2. Whether SDK/framework has built-in functionality -> confirm before deciding whether to implement or use directly
     3. Encountering uncertain technical approaches -> search for best practices
     4. Unfamiliar error messages -> search for others' solutions
+    5. Competitors, design trends, forum threads -> WebSearch only (not Context7's scope)
 
     **Tech Stack Selection Strategy** (used in initialization mode)
     Configure the project according to the DEV-PLAN.md tech stack table. If DEV-PLAN does not specify:

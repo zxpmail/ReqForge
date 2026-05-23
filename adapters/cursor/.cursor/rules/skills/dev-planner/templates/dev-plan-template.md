@@ -59,9 +59,9 @@ This template is used to generate a phased development plan. dev-builder reads t
 
 ## Tech Stack
 
-| Layer | Technology | Version | Notes |
-|------|------|------|------|
-| [Layer name] | [Technology name] | [Version number] | [Rationale or purpose] |
+| Layer | Technology | Version | Context7 Library ID (optional) | Notes |
+|------|------|------|-------------------------------|------|
+| [Layer name] | [Technology name] | [Version number] | e.g. `/vercel/next.js` or — | [Rationale or purpose] |
 
 ## Database Tables (If Any)
 
@@ -142,14 +142,14 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 
 ## Tech Stack
 
-| Layer | Technology | Version | Notes |
-|------|------|------|------|
-| Desktop Framework | Electron | 40.x | Cross-platform desktop shell |
-| Frontend | Next.js + React | 15.x | Full-stack framework |
-| UI | Tailwind CSS | 4.x | Utility-first CSS |
-| AI Engine | Claude API (@anthropic-ai/sdk) | latest | Core AI capability |
-| Database | SQLite (better-sqlite3) | latest | Local persistence, WAL mode |
-| Package Manager | pnpm | 10.x | Fast, disk-efficient |
+| Layer | Technology | Version | Context7 Library ID (optional) | Notes |
+|------|------|------|-------------------------------|------|
+| Desktop Framework | Electron | 40.x | — | Cross-platform desktop shell |
+| Frontend | Next.js + React | 15.x | `/vercel/next.js` | Full-stack framework |
+| UI | Tailwind CSS | 4.x | — | Utility-first CSS |
+| AI Engine | Claude API (@anthropic-ai/sdk) | latest | — | Core AI capability |
+| Database | SQLite (better-sqlite3) | latest | — | Local persistence, WAL mode |
+| Package Manager | pnpm | 10.x | — | Fast, disk-efficient |
 
 ## Database Tables
 
@@ -192,7 +192,8 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
    - Minimum requirement: compiles + starts + new features work
    - Recommended: existing features are not broken
 5. **Tech Stack Table**:
-   - Include version numbers (latest stable version verified via WebSearch)
+   - Include version numbers (latest stable version verified via WebSearch or Context7 when MCP is available)
+   - **Context7 Library ID**: fill for major third-party libs dev-builder will call (`/org/project`); use `—` for internal or trivial deps
    - Notes column should include rationale or purpose
 6. **Database Tables**:
    - Note which Phase creates each table

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.21.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.22.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -8,7 +8,7 @@
 
 **Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md)
 
-> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md)
+> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md)
 
 **No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
 
@@ -58,6 +58,9 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.22.0 — 2026-05-23
+- **Context7**: comparison doc, library-docs strategy in dev-builder, Context7 ID columns in Spec/Plan templates, optional MCP in `web-app` loadout.
 
 ### v1.21.0 — 2026-05-23
 - **Harness maturity checklist**: P0/P1/P2 self-assessment + README positioning (OS analogy, shippable product scope).

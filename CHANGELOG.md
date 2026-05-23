@@ -2,6 +2,16 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.22.0] - 2026-05-23
+### Added
+- **context7-comparison.md**: vs [upstash/context7](https://github.com/upstash/context7) — stack with ReqForge; optional CLAUDE.md rule snippet.
+- **Library Docs Strategy** in `dev-builder/references/development-strategies.md` (Context7 before WebSearch for dependencies).
+- **Context7 Library ID** column in Product-Spec Technical Direction and DEV-PLAN Tech Stack templates.
+### Changed
+- `dev-planner` SKILL: resolve Context7 IDs when MCP/CLI available.
+- `web-app` loadout: optional Context7 MCP entry.
+- README / README.zh-CN: Context7 callout + link.
+
 ## [v1.21.0] - 2026-05-23
 ### Added
 - **harness-maturity-checklist.md**: P0/P1/P2 self-assessment for harness readiness; positioning vs consumer scheduled-automation products.

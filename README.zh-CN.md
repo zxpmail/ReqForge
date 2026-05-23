@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.21.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.22.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -8,7 +8,7 @@
 
 **一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md)
 
-> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md)
+> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md) · **和 [Context7](https://github.com/upstash/context7)？** 库文档注入；建议与 ReqForge **叠加**。[Context7 →](core/docs/context7-comparison.md)
 
 **使用框架无需 npm install** — 将适配目录复制到项目根目录，打开 AI 客户端即可。仅在本仓库贡献或运行 `scripts/` 时才需要 Node.js + pnpm。
 
@@ -58,6 +58,9 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.22.0 — 2026-05-23
+- **Context7**：对照文档、dev-builder 库文档策略、Spec/Plan 的 Context7 ID 列、`web-app` 可选 MCP。
 
 ### v1.21.0 — 2026-05-23
 - **Harness 成熟度清单**：P0/P1/P2 自检 + README 定位（OS 比喻、可发布产品边界）。
