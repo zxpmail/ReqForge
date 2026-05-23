@@ -35,7 +35,6 @@
     "check-evolution",
     "memory-check",
     "context-compaction",
-    "check-sync",
     "check-handoff",
     "hallucination-gate"
   ],

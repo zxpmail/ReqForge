@@ -11,7 +11,7 @@ description: Used when the user says "this feature is broken", "getting an error
 [Invocation Context]
     bug-fixer may be called in two scenarios:
     1. User directly reports a bug -> main Agent invokes bug-fixer -> after fix, suggest user run /code-review to verify
-    2. code-review Stage 2 fails (code quality issues) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review starting from Stage 1
+    2. code-review finds confirmed bug/security/type issues (confidence ≥ 0.6) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review
 
 [Not For]
     - Feature requests or new functionality -> use /dev-builder instead

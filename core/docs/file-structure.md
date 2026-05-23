@@ -18,16 +18,26 @@ project/
 │   └── ...
 ├── .gitignore
 └── .claude/
-    ├── CLAUDE.md                      # Control file (this file)
+    ├── CLAUDE.md                      # Control file (dispatch map)
+    ├── settings.json                  # Hook registration (includes PreToolUse hallucination-gate)
     ├── agents/
     │   ├── implementer.md             # Implementer Sub-Agent
-    │   ├── code-reviewer.md           # Reviewer Sub-Agent
+    │   ├── planner.md                 # Architecture + Phase splitting
+    │   ├── code-reviewer.md           # Review aggregator (parallel dispatch)
+    │   ├── code-reviewer-design.md    # Spec/UI compliance reviewer
+    │   ├── code-reviewer-bug.md       # Bug pattern reviewer
+    │   ├── code-reviewer-security.md  # Security reviewer
+    │   ├── code-reviewer-types.md     # Type safety reviewer
     │   ├── feedback-observer.md       # Feedback observer Sub-Agent
-    │   └── evolution-runner.md        # Evolution engine Sub-Agent
+    │   ├── evolution-runner.md        # Evolution engine Sub-Agent
+    │   └── test-writer.md             # Test generation Sub-Agent
+    ├── hooks/                         # Inspection layer scripts (.sh + .bat)
+    ├── loadouts/                      # Reusable skill/agent/hook bundles
     ├── EVOLUTION.md                   # Evolution engine
     ├── feedback/                      # Lessons learned
     └── skills/
         ├── product-spec-builder/      # Requirements gathering
+        │   └── commands/              # Phased command workflow (user-invokable skills)
         ├── design-brief-builder/      # Design brief
         ├── design-maker/              # Design mockups
         ├── dev-planner/               # Development planning
@@ -39,3 +49,5 @@ project/
         ├── feedback-writer/           # Record user feedback
         └── evolution-engine/          # Evolution engine scanning
 ```
+
+**ReqForge self-development**: The framework repo also has `core/` (source of truth) and `adapters/` (client bundles). Run `pnpm sync` after editing `core/` to propagate to adapters. The `check-sync` hook exists only in `core/hooks/` for this workflow — it is not shipped to end-user projects.

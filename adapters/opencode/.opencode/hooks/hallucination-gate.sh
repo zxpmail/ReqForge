@@ -7,7 +7,7 @@
 # Only blocks obvious hallucinations — not style or convention preferences
 
 INPUT=$(cat)
-TOOL_NAME=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool||'')}catch(e){console.log('')}})" 2>/dev/null)
+TOOL_NAME=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_name||j.tool||'')}catch(e){console.log('')}})" 2>/dev/null)
 FILE_PATH=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.file_path||j.tool_input?.path||'')}catch(e){console.log('')}})" 2>/dev/null)
 
 # Only validate Write/Edit/Bash tools

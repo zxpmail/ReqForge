@@ -26,15 +26,15 @@
 **核心功能**
 
 - **完整开发流程定义**：框架内置标准流程 → 需求收集 → 设计规范 → 开发计划 → 项目开发 → Bug 修复 → 代码审查 → 构建发布，每个阶段都有清晰的任务、输出和验收标准。
-- **多角色 Sub-Agent 分工**：借鉴 Symphony 思想，不同阶段由专门的 Sub-Agent 负责：
-  - `product-spec-builder` → 需求收集
-  - `planner` → 架构设计 + 任务拆分
+- **多角色 Sub-Agent 分工**：借鉴 Symphony 思想，Skill 负责流程引导，Sub-Agent 负责隔离执行：
+  - `planner` → 架构设计 + Phase 拆分
   - `implementer` → 编码实现
-  - `code-reviewer` → 代码审查（含 complexity gate + blast-radius 分析，小改跳过 Stage 1）
+  - `code-reviewer` → 聚合并行审查结果（含 complexity gate + blast-radius 分析，小改跳过并行 Agent）
+  - `code-reviewer-design` / `code-reviewer-bug` / `code-reviewer-security` / `code-reviewer-types` → 并行专项审查
   - `feedback-observer` → 反馈记录（追踪模型版本，检测规则过时）
   - `evolution-runner` → 进化扫描
   - `test-writer` → 自动生成测试
-  每个角色专注一件事，产出质量更高。
+  对应 Skill：`product-spec-builder`（需求）、`dev-planner`（计划）、`dev-builder`（实现）等，Skill 与 Sub-Agent 分工明确。
 - **开放架构**：核心内容一份存放，各 AI 客户端分别做适配层，维护一份核心，多端同步更新。每个技能独立目录，自带 SKILL.md，可组合、可插拔、可扩展。
 - **项目进度自动检测**：框架自动检测当前项目进度（哪个阶段完成了，哪个阶段没做），引导用户进入下一步，不用用户自己记。
 - **evolution 进化引擎**：记录用户反馈，重复出现的经验自动升级为框架规则，框架用得越多越聪明。

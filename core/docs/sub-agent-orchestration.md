@@ -12,6 +12,8 @@
 | implementer | .claude/agents/implementer.md | dev-builder | Code + compile verify + self-check |
 | feedback-observer | .claude/agents/feedback-observer.md | feedback-writer | Record user feedback |
 | evolution-runner | .claude/agents/evolution-runner.md | evolution-engine | Scan feedback + generate evolution proposals |
+| planner | .claude/agents/planner.md | dev-planner | Architecture design + Phase splitting |
+| test-writer | .claude/agents/test-writer.md | dev-builder | Generate Vitest tests for scripts/utilities |
 
 Evolution proposals from evolution-runner must be presented to the user for individual confirmation/skip.
 

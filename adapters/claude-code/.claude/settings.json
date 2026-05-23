@@ -1,5 +1,8 @@
 {
   "hooks": {
+    "PreToolUse": {
+      "run": "sh .claude/hooks/hallucination-gate.sh"
+    },
     "PreCommit": {
       "run": "sh .claude/hooks/pre-commit-check.sh"
     },

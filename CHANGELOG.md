@@ -2,6 +2,19 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.19.1] - 2026-05-23
+### Fixed
+- **Hallucination Gate wired**: `PreToolUse` registered in all adapter `settings.json` / `settings.windows.json`; hook reads `tool_name` from stdin JSON (was `tool` only).
+- **Parallel review docs aligned**: `code-review/SKILL.md`, `dev-builder/SKILL.md`, `bug-fixer/SKILL.md`, README workflow diagram, and `reqforge-dev-build.mdc` now match parallel agent review (removed stale two-stage Stage 1/2 language).
+- **Confidence scale unified**: code-review SKILL uses 0.0–1.0 thresholds (≥0.6 confirmed, 0.3–0.6 suspected) matching agents/commands.
+- **Missing commands layer**: Added `commands/*.md` for design-brief-builder, design-maker, evolution-engine, feedback-writer.
+- **Loadout check-sync**: Removed `check-sync` from user-facing loadouts (ReqForge-repo-only hook).
+- **Version alignment**: `package.json`, README badge, `DEV-PLAN.md` updated to v1.19.1; Product-Spec and `core/docs/` agent lists corrected (10 agents).
+### Added
+- **`scripts/validate-skill.mjs`**: Cross-platform SKILL.md validator (default `pnpm validate-skill`).
+- **`scripts/apply-loadout.ts`**: Print/validate loadout bundles; merge hook registrations into adapter settings.
+- **Windows hallucination-gate.bat**: Node-based JSON parsing (replaces broken string parsing).
+
 ## [v1.19] - 2026-05-23
 ### Added
 - **Loadout mechanism**: `core/loadouts/` with `loadout.schema.json` and 4 built-in loadouts (`full`, `web-app`, `cli-tool`, `minimal`). Each loadout is a reusable bundle of skills, agents, hooks, and MCP server recommendations.
@@ -18,7 +31,7 @@ All notable changes to Forge are documented here.
 - **Project state injection**: `check-evolution.sh` detects Spec/Plan/Code state on session start and injects routing guidance.
 - **validate-skill.sh — skill.json validation**: Existence check + required fields (name, version, description, triggers.auto/manual/command).
 ### Changed
-- Sub-Agent count 6→9 (4 new specialist code reviewers)
+- Sub-Agent count 6→10 (4 new specialist code reviewers + existing planner/test-writer)
 - code-review SKILL.md: serial two-stage review → parallel agent dispatch + confidence aggregation
 - code-reviewer agent v2.0: parallel dispatch workflow, aggregation rules, cross-agent boost
 - sub-agent-orchestration.md: documented parallel review pattern

@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.14.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.19.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **Product Development Framework** — From fuzzy ideas to shippable products, with full AI-assisted guidance.
 
@@ -360,17 +360,19 @@ Every Task gets a **fresh Sub-Agent instance**. No reuse, no inherited context. 
 Code isn't done until it's reviewed:
 
 ```
-Feature complete → code-reviewer two-stage review
-  ├─ Stage 1 pass → Stage 2
-  ├─ Stage 1 fail → re-implement → re-review
-  └─ Stage 2 pass → commit + push → Task done
-  └─ Stage 2 fail → bug-fixer fix → re-review
+Feature complete → code-reviewer parallel review
+  ├─ change_complexity="simple" → quick quality check
+  ├─ moderate/complex → 4 agents in parallel (design, bug, security, types)
+  ├─ confirmed spec gaps → re-implement → re-review
+  └─ confirmed quality issues → bug-fixer fix → re-review
+  └─ pass → commit + push → Task done
 ```
 
-Ten hook scripts fire automatically at critical nodes:
+Eleven hook scripts fire automatically at critical nodes:
 
 | Hook                   | Trigger            | Action                                  |
 | ---------------------- | ------------------ | --------------------------------------- |
+| hallucination-gate     | Before tool use    | Block Write/Edit to non-existent dirs   |
 | pre-commit-check       | Before commit      | Block commit if compilation fails       |
 | auto-push              | After commit       | Auto-push to remote                     |
 | stop-gate              | Before agent stops | Block stop if code hasn't been reviewed |
@@ -379,8 +381,9 @@ Ten hook scripts fire automatically at critical nodes:
 | check-evolution        | On session start   | Check feedback accumulation             |
 | memory-check           | After file edit    | Remind to update memory if code changed |
 | context-compaction     | After tool use     | Auto-archive old task-history entries beyond 30 to prevent context rot |
-| check-sync             | After tool use     | Detect core/ vs adapters/ divergence and remind to run pnpm sync |
 | check-handoff          | After tool use     | Suggest session handoff generation when context is running long |
+
+> **Note**: `check-sync` (detects core/ vs adapters/ divergence) ships only in the ReqForge repo's `core/hooks/` — not in installed adapter bundles.
 
 ### Evolution Layer — Steering Loop
 

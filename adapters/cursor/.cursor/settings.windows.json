@@ -1,5 +1,8 @@
 {
   "hooks": {
+    "PreToolUse": {
+      "run": ".cursor\\rules\\hooks\\hallucination-gate.bat"
+    },
     "PreCommit": {
       "run": ".cursor\\rules\\hooks\\pre-commit-check.bat"
     },

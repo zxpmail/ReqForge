@@ -1,6 +1,6 @@
 # Forge
 
-[![version](https://img.shields.io/badge/version-v1.14.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.19.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **产品开发框架** — 从模糊想法到可交付产品，全程 AI 辅助引导。
 
@@ -73,7 +73,7 @@
 ### v1.13 — 2026-05-19
 - **Planner Sub-Agent**：专用于架构设计和 Phase 拆分的独立 Agent，与 implementer 上下文解耦
 - **Session Handoff 会话交接**：`handoff-template.md` + `check-handoff` 钩子，在上下文重置前生成会话摘要，防止进度丢失
-- **Complexity Gate 复杂度门**：`code-reviewer` 对 `change_complexity="simple"` 跳过 Stage 1，审查深度与变更范围匹配
+- **Complexity Gate 复杂度门**：`code-reviewer` 对 `change_complexity="simple"` 跳过并行 Agent，仅做快速质量检查
 - **模型版本追踪**：`feedback-observer` 记录每次反馈的模型版本，使进化引擎能检测过时规则
 
 ### v1.10–1.12 — 2026-05-19
@@ -361,14 +361,18 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 ```
 功能完成 → code-reviewer 并行 Agent 审查
-  ├─ 全部通过 → 提交 + 推送 → Task 完成
-  └─ 发现问题 → bug-fixer 修复 → 重新审查
+  ├─ change_complexity="simple" → 快速质量检查
+  ├─ moderate/complex → 4 个专项 Agent 并行（design、bug、security、types）
+  ├─ 确认规格缺失 → 补实现 → 重新审查
+  └─ 确认质量问题 → bug-fixer 修复 → 重新审查
+  └─ 通过 → 提交 + 推送 → Task 完成
 ```
 
-十个钩子脚本在关键节点自动触发：
+十一个钩子脚本在关键节点自动触发：
 
 | 钩子 | 触发时机 | 动作 |
 | ---------------------- | ------------------ | --------------------------------------- |
+| hallucination-gate | 工具调用前 | Write/Edit 目标目录不存在则阻止 |
 | pre-commit-check | 提交前 | 编译失败则阻止提交 |
 | auto-push | 提交后 | 自动推送到远程 |
 | stop-gate | Agent 停止前 | 代码未审查则阻止停止 |
@@ -377,8 +381,9 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | check-evolution | 会话启动时 | 检查反馈积累 |
 | memory-check | 文件编辑后 | 如果代码变更则提醒更新记忆 |
 | context-compaction | 工具调用后 | 自动归档超过 30 条的旧 task-history 条目，防止上下文腐败 |
-| check-sync | 工具调用后 | 检测 core/ 与 adapters/ 不同步并提醒运行 pnpm sync |
 | check-handoff | 工具调用后 | 当上下文运行时间较长时建议生成会话交接文档 |
+
+> **说明**：`check-sync`（检测 core/ 与 adapters/ 不同步）仅存在于 ReqForge 仓库的 `core/hooks/`，不会随适配器安装到用户项目。
 
 ### 进化层 — 转向循环
 

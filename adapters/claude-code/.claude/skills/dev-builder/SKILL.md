@@ -355,7 +355,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     Skipping Code Review:
     - "Small change, no review needed" -> Every code change goes through review, regardless of size
     - "Just fixed a typo" -> Typo fixes also get committed, compilation verification still required before commit
-    - **Complexity Gate**: For truly simple changes (typo fix, single-file rename, comment-only), set change_complexity="simple" when dispatching code-reviewer to skip Stage 1. This is NOT skipping review — it's matching the review depth to the change scope.
+    - **Complexity Gate**: For truly simple changes (typo fix, single-file rename, comment-only), set change_complexity="simple" when dispatching code-reviewer to skip parallel agent dispatch and run a quick quality check only. This is NOT skipping review — it's matching the review depth to the change scope.
 
     Skipping Session Handoff:
     - "Context isn't that full yet" -> By the time it feels full, it's too late. Generate handoff early.
@@ -563,12 +563,12 @@ Soft completion declarations:
             10. Read actual code values, verify item by item against design values, correct any deviations
             11. Cross-reference Product-Spec.md to confirm functional behavior matches description
             12. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
-                - risk score "low" → change_complexity="simple" (skip Stage 1)
+                - risk score "low" → change_complexity="simple" (skip parallel agents, quick check only)
                 - risk score "medium" or "high" → change_complexity="moderate" or "complex"
             13. Dispatch code-reviewer with `affected_files` and `change_complexity` set. code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
-            14. Stage 1 fails (missing functionality) -> dispatch feedback-observer with trigger_reason="review_stage1_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
-            15. Stage 2 fails (code quality) -> dispatch feedback-observer with trigger_reason="review_stage2_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
-            16. Both stages pass -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
+            14. Confirmed spec/completeness issues (design agent, confidence ≥ 0.6) -> dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing] -> fill in the implementation -> re-dispatch code-reviewer
+            15. Confirmed bug/security/type issues -> dispatch feedback-observer with trigger_reason="review_quality_fail", current_skill="dev-builder", ai_action=[quality issue] -> call bug-fixer to fix -> re-dispatch code-reviewer
+            16. Review passes (no confirmed HIGH issues) -> TaskUpdate mark complete -> execute `echo clean > ../../.needs-review` to clear review status -> **update memory files** -> commit
             17. **Cleanup worktree**: If a worktree was created in step 6, remove it after merge:
                 - `git worktree remove .claude/worktrees/<task-name>`
                 - If the worktree directory was created outside git (no `git worktree add` was used), just `rm -rf` it

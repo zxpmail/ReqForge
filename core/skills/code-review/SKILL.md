@@ -31,7 +31,7 @@ description: Used when the user wants to review code, check quality, verify feat
     **Zero Trust Claims**: Do not accept vague conclusions like "already implemented" or "roughly matches." Every feature either has a code implementation (with file path and line number) or it does not.
     **Evidence is King**: Saying "passed" must be accompanied by compilation output, API responses, or value comparison results. A "passed" without evidence equals not having reviewed at all.
     **Leave No Stone Unturned**: Every single functional requirement in the Spec must be checked. Sweeping statements like "the rest looks normal" are not acceptable.
-    **Confidence-Based Reporting**: Every finding must include a confidence score (0-100%). Only findings ≥ 80% confidence are reported as confirmed issues. Findings below 80% are reported as "suspected issues" with the reason for uncertainty. This reduces noise and prevents speculative conclusions from blocking progress.
+    **Confidence-Based Reporting**: Every finding must include a confidence score (0.0–1.0). Only findings with confidence ≥ 0.6 are reported as confirmed issues. Findings between 0.3 and 0.6 are reported as "suspected issues" with the reason for uncertainty. Findings below 0.3 are suppressed as noise.
     **Cross-Session Audit**: Important reviews (entire Phase completion, security audit, architecture change) should be performed in a fresh sub-agent session. Reviewing code in the same session where it was written creates self-confirmation bias — the model tends to validate its own assumptions. When `change_complexity` is "complex" or "moderate", flag the review as requiring isolation.
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
@@ -44,10 +44,10 @@ description: Used when the user wants to review code, check quality, verify feat
     - X Never say "roughly matches" or "basically done" — either it matches or it does not
     - X Never skip any Spec item
     - X Never trust your own previous review conclusion (re-verify every time)
-    - X Never report findings without a confidence score — every conclusion must be tagged [100%], [≥80%], or [<80%]
+    - X Never report findings without a confidence score — every conclusion must be tagged [≥0.6 confirmed], [0.3–0.6 suspected], or suppressed [<0.3]
     - V Every checkmark is accompanied by specific evidence
     - V Every crossmark cites the Spec original text + actual code discrepancy
-    - V Findings < 80% confidence are reported as "suspected" not "confirmed", with explicit uncertainty reason
+    - V Findings with confidence 0.3–0.6 are reported as "suspected" not "confirmed", with explicit uncertainty reason
     - V Security issues are highlighted separately, not mixed in with functional issues
 
     **Typical Expressions**:
@@ -62,12 +62,12 @@ description: Used when the user wants to review code, check quality, verify feat
     ```
 
 [Output Artifacts]
-    - **Review report** (screen output) — two-stage review results, including functional completeness, UI consistency, code quality, security scan, etc.
+    - **Review report** (screen output) — parallel agent review results with aggregated findings: functional completeness, UI consistency, code quality, security scan, etc.
 
 [Review Dimension Checklist]
-    Review is executed in two stages. Stage 2 only runs after Stage 1 passes. If Stage 1 has HIGH priority issues, stop at Stage 1 and do not proceed to Stage 2.
+    For moderate/complex changes, review runs via 4 parallel specialized agents (see [Workflow] Step 2). Each agent owns a dimension set below. For simple changes (`change_complexity="simple"`), the aggregator runs a quick quality pass only.
 
-    --- Stage 1: Spec Compliance (Did you build the right thing?) ---
+    --- code-reviewer-design (Spec & UI) ---
 
     [Functional Completeness]
         Check every functional requirement in Product-Spec.md one by one:
@@ -88,33 +88,22 @@ description: Used when the user wants to review code, check quality, verify feat
         - Compare: layout, components, colors, spacing, interaction states
         - If Design-Brief.md exists -> cross-reference color direction, information density, interaction style
 
-    --- Stage 2: Code Quality (Did you build it well?) ---
-    Only execute Stage 2 after Stage 1 has fully passed. If Stage 1 has HIGH priority issues, the report should note "Stage 2 not executed, please fix Stage 1 issues first."
-
-    [Code Quality]
-        - Naming conventions: PascalCase components, camelCase functions/variables, kebab-case files
-        - Type safety: no any, no @ts-ignore, no as unknown as X
-        - File size: flag files exceeding 300 lines
-        - Single responsibility: is one file doing too many things?
-        - Duplicate code: is there common logic that could be extracted?
-        - Error handling: do async operations have catches? Do user actions have error messages?
-
-    [Security Scan] (mandatory)
-        grep for the following patterns:
-        - Hardcoded credentials: API Key, Token, plaintext passwords
-        - Dangerous functions: eval(), dangerouslySetInnerHTML, innerHTML
-        - SQL injection: string-concatenated SQL statements
-        - Path leakage: code containing developer's local absolute paths (/Users/example/, C:\Users\example\)
-        - Environment variables: whether VITE_-prefixed variables expose sensitive information
-        - Dependency vulnerabilities: npm audit results
-
     [Spec Drift Detection] (mandatory)
         Check if the code contains features not described in the Spec:
-        - Extra pages/routes
-        - API endpoints not mentioned in the Spec
-        - Extra database tables or fields
-        - Out-of-scope UI components
+        - Extra pages/routes, API endpoints, database tables or fields, out-of-scope UI components
         - Mark as "Spec Drift" — could be a good extension or scope creep
+
+    --- code-reviewer-bug (Bug patterns) ---
+        Null pointer dereferences, race conditions, resource leaks, incorrect async handling, unhandled promise rejections.
+
+    --- code-reviewer-security (Security) ---
+        grep for: hardcoded credentials, eval(), dangerouslySetInnerHTML, innerHTML, SQL injection patterns, path leakage, env var exposure, npm audit critical issues.
+
+    --- code-reviewer-types (Type safety) ---
+        `any` usage, `@ts-ignore`, unsafe type assertions, null safety gaps, missing union variants, unhandled edge cases.
+
+    --- Aggregator (code-reviewer) ---
+        Merge all agent findings, apply confidence thresholding (≥0.6 confirmed, 0.3–0.6 suspected, <0.3 suppressed), deduplicate, run `tsc --noEmit`.
 
 [Gotchas]
     **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.

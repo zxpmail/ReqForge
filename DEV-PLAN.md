@@ -5,20 +5,22 @@
 
 ---
 
-## 当前进度（v1.14.2）
+## 当前进度（v1.19.1）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
 | 1 项目骨架 | ✅ 完成 | `core/`、`adapters/`、`scripts/` |
-| 2 核心技能 | ✅ 完成 | 11 个 Skill |
-| 3 Sub-agent | ✅ 完成 | 6 个 Agent（含 planner、test-writer） |
+| 2 核心技能 | ✅ 完成 | 11 个 Skill + skill.json + 7 个 commands 层 |
+| 3 Sub-agent | ✅ 完成 | 10 个 Agent（含 4 个专项 reviewer、planner、test-writer） |
 | 4 文档模板 | ✅ 完成 | 含 memory / agents 模板 |
 | 5 Claude Code 适配 | ✅ 完成 | |
-| 6 同步脚本 | ✅ 完成 | `scripts/sync.ts`（工具函数内联，无单独 utils.ts） |
+| 6 同步脚本 | ✅ 完成 | `scripts/sync.ts` |
 | 7 Cursor 适配 | ✅ 完成 | |
-| 8 OpenCode 适配 | ✅ 完成 | 主控为 `AGENTS.md`，非 CLAUDE.md |
+| 8 OpenCode 适配 | ✅ 完成 | 主控为 `AGENTS.md` |
 | 9 README 收尾 | ✅ 完成 | 中英文 README + CHANGELOG |
 | 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/` |
+| 11 Loadout 机制 | ✅ 完成 | `core/loadouts/` 4 个内置 loadout |
+| 12 并行代码审查 | ✅ 完成 | 4 专项 reviewer + 聚合器 |
 
 **验证命令**：`pnpm install` → `pnpm test` → `pnpm build` → `pnpm sync`
 

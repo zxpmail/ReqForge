@@ -19,7 +19,7 @@ Full skill definition: `.cursor/rules/skills/dev-builder/SKILL.md`
 1. **Before coding**: Load reference docs — read task description from DEV-PLAN, feature description from Product-Spec.md, design direction from Design-Brief.md
 2. **TDD**: Write test first (RED) → minimal code to pass (GREEN) → refactor (REFACTOR)
 3. **After coding**: Cross-reference against Spec, verify design values, check feature completeness
-4. **Code review**: Two-stage review (compliance + quality)
+4. **Code review**: Parallel specialized agents (or quick check for simple changes)
 5. **Memory update**: Append to task-history.md (mandatory). If decision made → decisions-log.md. If architecture changed → project-memory.md.
 6. **Commit**: Atomic commit after each Task. Must compile (`tsc --noEmit` zero errors) before commit.
 
