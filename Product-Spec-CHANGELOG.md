@@ -1,5 +1,31 @@
 # 变更记录
 
+## [v1.23.0] - 2026-05-24
+### 新增
+- **forge-smoke** 发版守门（9→10 项含 test-demo 黄金路径）、**loadout-scenarios.md**、**platform-compliance.md**
+- **test-demo/**：Spec/Plan → todo-cli 示范产物 + `pnpm test-demo-golden-path`（维护者/CI 守门，非用户 CLI）
+- 对照文档：**RTK**、**nanochat**（Harness 纪律参照）
+
+### 变更
+- DEV-PLAN：维护者文档与架构 Phase 分附录；路线图（未排期）与 Phase 1–13 完成态分离
+
+## [v1.22.2] - 2026-05-23
+### 变更
+- 默认钩子 **10 个**（含 **retry-gate**）；Windows settings 与 Unix 对齐
+- Skill 内 `core/docs/` 链接改为 GitHub 绝对 URL（仅复制 adapter 时仍可访问）
+
+## [v1.22.1] - 2026-05-23
+### 新增
+- **phase-exit-guard**：Phase 未收尾时阻止 Agent 停止（`.forge/phase-exit-block`）
+- **agent-harness-seven-layer-map.md**（教学七层 ↔ ReqForge）
+### 变更
+- **evolution-engine**：提案须含 **Predicted effect** + **Verify by**
+
+## [v1.22.0] - 2026-05-23
+### 新增
+- **Context7** 叠加：context7-comparison.md、Plan/Spec 模板 Context7 Library ID 列、dev-builder 库文档策略
+- **web-app** loadout 可选 Context7 MCP
+
 ## [v1.20.2] - 2026-05-23
 ### 变更
 - product-spec-builder 迭代不再创建 `changes/`；中等 scoped 功能转 `/change-manager`

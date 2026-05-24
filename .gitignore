@@ -15,16 +15,18 @@ Thumbs.db
 *.swp
 *.swo
 
-# Change artifact directories (track except .gitkeep)
+# Change artifact directories
+# - Active workspaces under changes/<name>/ stay untracked (WIP)
+# - Archived changes under changes/archive/<name>/ ARE tracked for history
 changes/*
 !changes/.gitkeep
 !changes/archive/
-changes/archive/*
-!changes/archive/.gitkeep
+!changes/archive/**
 
 # Forge local config
 .forge/config
 
 # Worktrees (ephemeral test environments)
 .claude/worktrees/
+.claude/settings.local.json
 .gstack/

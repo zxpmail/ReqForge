@@ -6,8 +6,8 @@
 
 ## 上次停在哪个位置
 
-- 已 push `66a23eb`：test-demo/todo-cli 文档澄清（产物非框架 CLI）
-- DEV-PLAN：「待办（架构）」改为「路线图（未排期）」，test-demo 黄金路径标 ✅
+- 已 push `9c73506`：DEV-PLAN 路线图措辞
+- 本地待 push：Product-Spec-CHANGELOG v1.22–v1.23、EVOLUTION 主控文件措辞、changes/archive git 跟踪、settings.local 移出版本库
 
 ## 架构与 Harness（产品本身）
 

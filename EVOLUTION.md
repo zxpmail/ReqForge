@@ -25,7 +25,7 @@
     Failures (compile errors, review fails, verification fails) and user corrections are recorded automatically via feedback-observer with auto-inferred Skill scores. Every failure generates scored data — not just text. This scored data is the fuel that makes Level 2+ possible.
 
     **Level 2: Rule Graduation**
-    Feedback repeats 3+ times -> evolution-runner proposes promoting to formal rules in SKILL.md or CLAUDE.md.
+    Feedback repeats 3+ times -> evolution-runner proposes promoting to formal rules in SKILL.md or the **main control file** (CLAUDE.md / AGENTS.md / reqforge.mdc).
 
     **Level 3: Skill Optimization**
     Feedback scores from a particular Skill remain consistently low -> evolution-runner proposes adjusting that Skill.

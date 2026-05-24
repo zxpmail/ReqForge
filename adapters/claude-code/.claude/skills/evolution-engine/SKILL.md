@@ -32,7 +32,7 @@ description: Auto-triggers on session init, or manually triggered when the user 
     **Web-First**: When proposing a new Skill or rule, WebSearch for existing best practices and community patterns. Don't invent from scratch what already has a well-known solution.
 
 [Gotchas]
-    **Premature graduation**: One feedback entry does not make a pattern. The 3-occurrence threshold exists for a reason — graduating too early means bloating CLAUDE.md with one-off issues. Wait for the data.
+    **Premature graduation**: One feedback entry does not make a pattern. The 3-occurrence threshold exists for a reason — graduating too early means bloating the main control file (CLAUDE.md / AGENTS.md / reqforge.mdc) with one-off issues. Wait for the data.
     **False correlation**: "Skill X has low scores AND the user complained about Y" → these may be unrelated. Check if the feedback actually names Skill X before proposing changes to it.
     **Ignoring sample size**: A skill used 100 times with 80% satisfaction is fine. A skill used 5 times with 60% satisfaction is noise. Always check the denominator before acting on a score.
     **Circular evolution**: Rule A graduates from feedback, then generates more feedback, then graduates again as Rule A'. This is the ratchet spinning without progress. After graduating a rule, skip that pattern for N cycles.
