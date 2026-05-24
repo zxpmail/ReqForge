@@ -21,7 +21,7 @@
 | 2 | **Tool / path guardrails** | Agent cannot write to non-existent dirs; destructive ops gated | `hallucination-gate`, `pre-commit-check` hooks |
 | 3 | **Context management** | Long sessions compact or hand off without silent loss | `memory-guard`, `memory/` 3-tier, `context-compaction` |
 | 4 | **State persistence** | Decisions and task progress survive sessions | `memory/project-memory.md`, `task-history.md`, `decisions-log.md` |
-| 5 | **Validation loop** | Tests, lint, or typecheck before “done” | `dev-builder` TDD, `pre-commit-check`, Sloppiness Gate in `CLAUDE.md` |
+| 5 | **Validation loop** | Tests, lint, or typecheck before “done” | `dev-builder` TDD, `pre-commit-check`, Sloppiness Gate in `CLAUDE.md`; framework repo: `pnpm forge-smoke` (7 smokes) |
 | 6 | **Error → rule** | Same mistake not repeated blindly | `feedback/` + `evolution-engine` (proposals include predicted effect + verify-by), `detect-feedback-signal` |
 | 6b | **Phase exit guard** | Agent cannot stop while Phase acceptance open | `phase-exit-guard` + `.forge/phase-exit-block` — see [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) |
 

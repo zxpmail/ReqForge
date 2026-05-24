@@ -640,6 +640,7 @@ pnpm install          # Dev dependencies (TypeScript, Vitest, etc.)
 pnpm test             # Unit tests (22 cases)
 pnpm build            # Compile scripts/ to dist/
 pnpm sync             # Sync core/ → adapters/
+pnpm forge-smoke      # Release gate: 7 smokes (~3s) — skills, loadouts, adapter sync, hooks
 pnpm validate-skill   # Validate core/skills/ (cross-platform .mjs; add --strict)
 pnpm apply-loadout full claude-code  # Write loadout hooks to adapter settings
 pnpm dep-graph build  # Build dependency graph → .forge/graph.json
@@ -648,6 +649,7 @@ pnpm dep-graph stats  # Print graph statistics
 
 | Command | Description |
 |---------|-------------|
+| `pnpm forge-smoke` | Release gate: 7 static smokes + validate-skill (~3s); CI runs on push/PR to `core/`, `adapters/` |
 | `pnpm test:watch` | Run tests in watch mode |
 | `pnpm validate-skill:bash` | Bash validate-skill.sh (requires WSL/Git Bash); add `--score` for 32-point rubric |
 | `pnpm create-skill <name>` | Scaffold new Skill from name (`--minimal` or `--full`) |

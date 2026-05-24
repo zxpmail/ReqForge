@@ -14,6 +14,7 @@
     "sync": "ts-node scripts/sync.ts",
     "forge-install": "ts-node scripts/install.ts",
     "dep-graph": "ts-node scripts/dependency-graph.ts",
+    "forge-smoke": "node scripts/forge-smoke/run-all.mjs",
     "validate-skill": "node scripts/validate-skill.mjs",
     "validate-skill:bash": "bash scripts/validate-skill.sh",
     "apply-loadout": "ts-node scripts/apply-loadout.ts",

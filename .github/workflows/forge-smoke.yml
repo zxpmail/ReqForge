@@ -1,0 +1,35 @@
+# forge-smoke — ReqForge release gate (static + validate-skill)
+# No cron schedules — push/PR only (see core/docs/platform-compliance.md when added)
+name: forge-smoke
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "core/**"
+      - "adapters/**"
+      - "scripts/forge-smoke/**"
+      - "scripts/validate-skill.mjs"
+      - "CLAUDE.md"
+      - "package.json"
+  pull_request:
+    paths:
+      - "core/**"
+      - "adapters/**"
+      - "scripts/forge-smoke/**"
+      - "scripts/validate-skill.mjs"
+      - "CLAUDE.md"
+      - "package.json"
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Run forge-smoke
+        run: node scripts/forge-smoke/run-all.mjs
