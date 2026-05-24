@@ -6,7 +6,7 @@
 
 ## 上次停在哪个位置
 
-- 新增 [nanochat-comparison.md](core/docs/nanochat-comparison.md) 与 README/七层对照交叉引用（本地，未 commit）
+- 已 push `1d80b6e`：nanochat-comparison.md + README/七层对照交叉引用
 
 ## 架构与 Harness（产品本身）
 
