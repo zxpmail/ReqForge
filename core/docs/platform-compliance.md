@@ -1,12 +1,11 @@
 # Platform Compliance — GitHub & OSS
 
-> **Purpose**: Transparent policies for contributors and platform reviewers (GitHub Trust & Safety, automated classifiers). ReqForge is a **local Agent Harness** — it does not run a central service, store user secrets, or proxy third-party LLM APIs.
+> **Scope**: **Repository maintainer policy** — CI, fork, secrets. Not Harness architecture or user-project runtime design.
+> ReqForge is a **local Agent Harness** — it does not run a central service, store user secrets, or proxy third-party LLM APIs. Transparent policies for contributors and platform reviewers (GitHub Trust & Safety, automated classifiers).
 
 Related: [harness-maturity-checklist.md](./harness-maturity-checklist.md) · [forge-smoke CI](../../.github/workflows/forge-smoke.yml)
 
 ---
-
-## 1 · What ReqForge does **not** do
 
 | Concern | ReqForge stance |
 |---------|-----------------|

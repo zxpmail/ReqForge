@@ -1,8 +1,9 @@
 # Loadout Scenarios — Which Bundle When?
 
-> **Loadouts are orthogonal bundles** — skills, agents, and hooks you can mix by copying files or switching hook sets. This doc maps **what you want to do** → **which built-in loadout** → **which Skills to invoke first**.
->
+> **Scope**: User/maintainer **selection guide** — not Harness architecture. The loadout **mechanism** (JSON bundles, hooks) is Phase 11 / `core/loadouts/`.
 > Files: `core/loadouts/{full,web-app,cli-tool,minimal}.json` · apply hooks: `pnpm apply-loadout <name> <client>`
+
+**Loadouts are orthogonal bundles** — skills, agents, and hooks you can mix by copying files or switching hook sets. This doc maps **what you want to do** → **which built-in loadout** → **which Skills to invoke first**.
 
 ---
 
