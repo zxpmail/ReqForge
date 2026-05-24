@@ -5,7 +5,7 @@
 
 ---
 
-## 当前进度（v1.20.4）
+## 当前进度（v1.23.0）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
@@ -22,10 +22,13 @@
 | 11 Loadout 机制 | ✅ 完成 | `core/loadouts/` 4 个内置 loadout |
 | 12 并行代码审查 | ✅ 完成 | 4 专项 reviewer + 聚合器 |
 | 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
+| 14 forge-smoke 守门 | ✅ 完成 | `scripts/forge-smoke/` 9 smokes + `.github/workflows/forge-smoke.yml` |
+| 15 Loadout 场景文档 | ✅ 完成 | `core/docs/loadout-scenarios.md` + `scenarios[]` |
+| 16 平台合规文档 | ✅ 完成 | `core/docs/platform-compliance.md` + workflow 合规 smoke |
 
-**验证命令**：`pnpm install` → `pnpm test` → `pnpm build` → `pnpm sync`
+**验证命令**：`pnpm install` → `pnpm test` → `pnpm forge-smoke` → `pnpm build` → `pnpm sync`
 
-**待办（未来）**：`adapters/gemini-cli/`、模板市场、Dashboard Web UI
+**待办（未来）**：`adapters/gemini-cli/`、模板市场、Dashboard Web UI；Skill 进化 P1/P2（feedback 归因、skill-bypass 清单）
 
 ---
 
@@ -231,8 +234,49 @@
 
 **验收标准**：
 - `pnpm test` 全部通过
+- `pnpm forge-smoke` 全部通过（框架仓库发版前）
 - `pnpm build` 编译通过
 - `package.json` 无 `^` 范围依赖
+
+---
+
+## Phase 14: forge-smoke 发版守门
+
+**交付内容**：
+- `scripts/forge-smoke/` — 9 项静态 smoke（skills、loadouts、adapter sync、hooks、templates、machine gates、platform compliance、workflows）
+- `pnpm forge-smoke` 入口 + GitHub Actions（push/PR，path 过滤，无 cron）
+
+**关键文件**：
+- `scripts/forge-smoke/run-all.mjs` — 总入口
+- `.github/workflows/forge-smoke.yml` — CI
+
+**验收标准**：
+- 本地 `pnpm forge-smoke` 9/9 通过
+- CI 仅在合规 trigger 下运行；workflow 变更也会触发 CI
+
+---
+
+## Phase 15: Loadout 场景文档
+
+**交付内容**：
+- `core/docs/loadout-scenarios.md` — 场景 → loadout → Skill 路径
+- 内置 loadout JSON 增加 `scenarios[]`；schema 列为必填
+
+**验收标准**：
+- README Step 3b 链到场景文档
+- `loadouts-valid` smoke 校验 scenarios 引用
+
+---
+
+## Phase 16: 平台合规文档
+
+**交付内容**：
+- `core/docs/platform-compliance.md` — GitHub/OSS 策略（无中心密钥、fork 用途、禁止 cron CI）
+- forge-smoke 检查 workflow 无 schedule/cron
+
+**验收标准**：
+- README / llms.txt 链到合规文档
+- 新增 workflow 若含 cron 则 smoke 失败
 
 ---
 
