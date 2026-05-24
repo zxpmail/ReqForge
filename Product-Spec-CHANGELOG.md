@@ -1,5 +1,13 @@
 # 变更记录
 
+## [v1.25.0] - 2026-05-25
+### 新增
+- Harness 硬化：forge-bootstrap、PreToolUse 确认链、implementer-session、skill-fixtures / forge-smoke 12 项
+- product-spec-builder：`pm-frameworks-*`（MIT / pm-skills 摘编）、CoT 访谈模板
+
+### 变更
+- 框架版本号 **v1.25.0**（package.json、README 徽章）
+
 ## [v1.24.0] - 2026-05-24
 ### 新增
 - Karpathy 对照文档：**autoresearch**、**llm-council**、**jobs**、**llm-wiki**（gist）

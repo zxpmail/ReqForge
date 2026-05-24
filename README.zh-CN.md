@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.24.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.25.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,13 +60,11 @@ flowchart LR
 
 ## 近期更新
 
-### Harness 硬化（2026-05-24，v1.24.0 之后）
-- **会话引导**：每次会话注入 `forge-bootstrap.md`；**product-spec**、**dev-planner**、**dev-builder** 含 HARD-GATE。
-- **机器门**：PreToolUse 在写入业务代码前检查 `Product-Spec.md`、`.forge/spec-confirmed.json`、`DEV-PLAN.md`、`.forge/plan-confirmed.json`、`.forge/implementer-session.json`（仅 implementer 子 Agent 可写应用代码）。
-- **执行隔离**：dev-builder 每 Task 必须 **implementer** 子 Agent + **worktree**；`tests/skill-fixtures` + forge-smoke **12** 项（含 skill-bypass）。
-- **进化**：feedback 支持 `failure_class` 与 RED 一行；进化提案需 RED / GREEN / Verify-by。
-- **PM 框架（product-spec）**：可选参考 [pm-skills](https://github.com/phuryn/pm-skills)（MIT 摘编）— 机会方案树、JTBD 价值主张、假设验证、竞品简报；Spec 模板增加对应可选章节。
-- **思维链（CoT）**：`conversation-strategy` 模板、implementer 写代码前推理、bug-fixer 诊断清单、forge-bootstrap 第 9 条铁律；**无需**用户每条消息写「先想想看」。
+### v1.25.0 — 2026-05-25
+- **Harness 硬化**：`forge-bootstrap` 会话铁律；PreToolUse 五段链；**HARD-GATE**；implementer + worktree；forge-smoke **12** 项。
+- **PM 框架（product-spec）**：可选 [pm-skills](https://github.com/phuryn/pm-skills)（MIT 摘编）— OST、JTBD、假设、竞品；见 [需求深度](#需求深度pm-框架与思维链cot)。
+- **思维链（CoT）**：需求访谈、implementer、bug-fixer、bootstrap 第 9 条；无需用户手写「先想想看」。
+- **进化**：`failure_class`；进化提案 RED / GREEN / Verify-by。
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy 对照文档**：[autoresearch](core/docs/autoresearch-comparison.md)、[llm-council](core/docs/llm-council-comparison.md)、[jobs](core/docs/jobs-comparison.md)、[llm-wiki gist](core/docs/llm-wiki-comparison.md) — 方法论映射到 Forge Skill，非照搬代码。
@@ -494,7 +492,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **PM 框架** | 机会方案树、JTBD 价值主张、假设表、竞品简报 — 摘编自 [pm-skills](https://github.com/phuryn/pm-skills)（MIT） | `core/skills/product-spec-builder/references/pm-frameworks-*.md` → `Product-Spec.md` 可选章节 |
 | **思维链（CoT）** | 先分步推理再给结论（选型、边界、自质疑）；分析与实现分轮 | `conversation-strategy.md`；implementer 写代码前、bug-fixer 清单、forge-bootstrap 第 9 条 |
 
-**不必**每条消息写「先想想看」— 由 Skill 与会话铁律自动约束。见 [近期更新 → Harness 硬化](#harness-硬化2026-05-24v1240-之后)。
+**不必**每条消息写「先想想看」— 由 Skill 与会话铁律自动约束。见 [近期更新 → v1.25.0](#v1250--2026-05-25)。
 
 ### 引导层 — 12 个 Skill
 

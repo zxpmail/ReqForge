@@ -4,17 +4,18 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.25.0] - 2026-05-25
+
 ### Added
-- **Harness hardening (Superpowers-aligned)**: `forge-bootstrap` session iron laws; `product-spec-builder` / `dev-planner` HARD-GATE; evolution Skill TDD quartet + `failure_class`; `tests/skill-fixtures` + forge-smoke; mandatory implementer + worktree; `.forge/*-confirmed.json` + `implementer-session.json` PreToolUse chain; `drift-map-template.md`; forge-smoke `skill-bypass` (P2); `validate-skill` requires `[HARD-GATE]` on spec/plan/build skills.
+- **Harness hardening (Superpowers-aligned)**: `forge-bootstrap` session iron laws; `product-spec-builder` / `dev-planner` HARD-GATE; evolution Skill TDD quartet + `failure_class`; `tests/skill-fixtures` + forge-smoke **12** smokes; mandatory implementer + worktree; `.forge/*-confirmed.json` + `implementer-session.json` PreToolUse chain; `drift-map-template.md`; forge-smoke `skill-bypass` (P2); `validate-skill` requires `[HARD-GATE]` on spec/plan/build skills.
 - **product-spec-builder PM frameworks** (MIT-adapted from [pm-skills](https://github.com/phuryn/pm-skills)): optional OST, JTBD value prop, assumptions, competitive briefs + Spec template sections.
 - **Chain-of-Thought (CoT)**: `conversation-strategy` templates; implementer step 0b + `reasoning_summary`; `bug-fixer` diagnostic checklist; forge-bootstrap Iron Law 9 (no user magic phrase required).
 - **release-builder**: Finishing Branch Checklist (merge / PR / keep / discard). **bug-fixer**: Phase-1-before-fix cross-ref to systematic debugging.
 
 ### Changed
 - `hallucination-gate` now runs full `spec-before-code-gate.mjs` (Spec, confirmations, Plan, implementer session). `feedback-observer` auto `failure_class` heuristics (P1-lite).
-- README / README.zh-CN / DEV-PLAN / test-demo README: `pnpm forge-smoke` documented as **12** smokes (~15–30s); framework sections no longer say 9–10.
-- README / README.zh-CN / `llms.txt`: document pm-skills-inspired PM frameworks and CoT under Harness hardening / product-spec-builder.
-- README / README.zh-CN: add **Requirements depth** section + Workflow steps for PM/CoT and spec confirmation (visible outside What's New only).
+- README / README.zh-CN / `llms.txt`: PM frameworks + CoT; **Requirements depth** section; Workflow spec-confirmation steps; version **v1.25.0**.
+- DEV-PLAN / test-demo README: `pnpm forge-smoke` documented as **12** smokes (~15–30s).
 
 ## [v1.24.0] - 2026-05-24
 ### Added

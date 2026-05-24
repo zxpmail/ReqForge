@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.24.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.25.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -60,13 +60,11 @@ flowchart LR
 
 ## What's New
 
-### Harness hardening (2026-05-24, post-v1.24.0)
-- **Session bootstrap**: `forge-bootstrap.md` injected every session; **HARD-GATE** on product-spec, dev-planner, dev-builder.
-- **Machine gates**: PreToolUse blocks app code until `Product-Spec.md`, `.forge/spec-confirmed.json`, `DEV-PLAN.md`, `.forge/plan-confirmed.json`, and `.forge/implementer-session.json` (implementer-only).
-- **Execution**: dev-builder requires **implementer** sub-agent + **worktree** per Task; `tests/skill-fixtures` + forge-smoke **12** items (incl. skill-bypass).
-- **Evolution**: feedback `failure_class` + RED line; evolution proposals require RED/GREEN/Verify-by.
-- **PM frameworks (product-spec)**: Optional references adapted from [pm-skills](https://github.com/phuryn/pm-skills) (MIT) — OST, JTBD value prop, assumptions, competitive briefs; extra Spec sections in `product-spec-template.md`.
-- **Chain-of-Thought (CoT)**: Structured “think step-by-step, then conclude” in `conversation-strategy`, implementer pre-code step, `bug-fixer` diagnostic checklist, forge-bootstrap Iron Law 9 — no user magic phrase required.
+### v1.25.0 — 2026-05-25
+- **Harness hardening**: `forge-bootstrap` session iron laws; PreToolUse chain (Spec → confirmations → Plan → implementer session); **HARD-GATE** on product-spec, dev-planner, dev-builder; implementer + worktree per Task; forge-smoke **12** items.
+- **PM frameworks (product-spec)**: Optional [pm-skills](https://github.com/phuryn/pm-skills)-inspired references (MIT) — OST, JTBD, assumptions, competitors; see [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought).
+- **Chain-of-Thought (CoT)**: Step-by-step reasoning before conclusions in spec interviews, implementer, bug-fixer, bootstrap Iron Law 9.
+- **Evolution**: `failure_class` + RED/GREEN/Verify-by on evolution proposals.
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy comparisons**: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md) — methodology mapped to Forge Skills, not copied wholesale.
@@ -494,7 +492,7 @@ Beyond the interview flow, **product-spec-builder** ships optional references (n
 | **PM frameworks** | OST, JTBD value prop, assumption table, competitive brief — adapted from [pm-skills](https://github.com/phuryn/pm-skills) (MIT) | `core/skills/product-spec-builder/references/pm-frameworks-*.md` → optional sections in `Product-Spec.md` |
 | **Chain-of-Thought (CoT)** | Think step-by-step before conclusions (tech choice, edge cases, self-critique); analysis vs implementation split | `conversation-strategy.md`; also implementer pre-code step, bug-fixer checklist, forge-bootstrap Iron Law 9 |
 
-You do **not** need to type “think first” in every message — the Skill and session bootstrap apply the structure. See [What's New → Harness hardening](#harness-hardening-2026-05-24-post-v1240).
+You do **not** need to type “think first” in every message — the Skill and session bootstrap apply the structure. See [What's New → v1.25.0](#v1250--2026-05-25).
 
 ### Guidance Layer — 12 Skills
 
