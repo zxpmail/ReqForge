@@ -9,7 +9,8 @@
 - **Harness 硬化已闭环**（本地提交 `3068927` `582f29a` `2590a1e` `86e8e0e`；标记文件链、P2 skill-bypass、文档已提交）
 - PreToolUse 五段链：Spec → spec-confirmed → DEV-PLAN → plan-confirmed → implementer-session
 - forge-smoke **12** 项；中英文 README + DEV-PLAN 已对齐
-- **product-spec-builder**：`references/pm-frameworks-*`（OST/JTBD/假设/竞品）；**CoT** 已写入 conversation-strategy、implementer、bug-fixer、forge-bootstrap（1–4）
+- **product-spec-builder**：pm-frameworks + CoT（1–4）；`9b0d9c8` 去重 CoT 段 + CHANGELOG Unreleased
+- **待 push**：本地领先 origin **2** 提交（`2937035`、`9b0d9c8`）
 
 ## 架构与 Harness（产品本身）
 
