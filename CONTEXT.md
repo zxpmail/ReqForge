@@ -2,11 +2,11 @@
 
 ## 当前正在做什么
 
-- 无进行中任务（llm-council 对照已落地，forge-smoke 10/10）
+- 无进行中任务
 
 ## 上次停在哪个位置
 
-- llm-council 对照落地：对照文档 + code-review Council 轻量版 + product-spec Step 7；`pnpm sync` + forge-smoke 10/10（**本地未 push**）
+- 已 push `e5ca061`：llm-council 对照 + code-review Council + product-spec Step 7
 - 已 push `8347c05`：autoresearch 对照
 
 ## 架构与 Harness（产品本身）
