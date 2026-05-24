@@ -6,9 +6,7 @@
 
 ## 上次停在哪个位置
 
-- autoresearch 对照落地完成：对照文档 + dev-planner Primary metric + dev-builder Spec/Plan 只读与 Task 微循环；`pnpm sync` + `pnpm forge-smoke` 10/10
-- 已 push `b1774b7`：审查项（CHANGELOG、EVOLUTION 主控文件、changes/archive 跟踪、settings.local）
-- **本地未 push**：autoresearch 本轮改动
+- 已 push `a71b517`：autoresearch 对照 + Primary metric + dev-builder 微循环
 
 ## 架构与 Harness（产品本身）
 
