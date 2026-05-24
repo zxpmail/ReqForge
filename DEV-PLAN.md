@@ -1,7 +1,7 @@
 # Development Plan — Forge
 
-> 本文件记录 Forge **Harness 架构**的开发阶段（Phase 1–13）、当前进度和剩余工作。
-> **维护者文档与合规**（loadout 选型、平台政策）见附录 B；**框架仓库测试**（forge-smoke）见附录 A，对应 Phase 10 的延伸，仍非 Harness 架构。
+> 本文件记录 Forge **Harness 架构**的开发阶段（Phase 1–13）、当前进度和**未排期路线图**。
+> **维护者文档与合规**（loadout 选型、平台政策）见附录 B；**框架仓库测试**（forge-smoke、test-demo）见附录 A，对应 Phase 10 的延伸，仍非 Harness 架构。
 > 新 session 启动时应首先阅读此文件，了解项目状态后再继续开发。
 
 ---
@@ -26,21 +26,34 @@
 
 **架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync`
 
-**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（静态 smoke，见附录 A）
+**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（10 项 smoke，含 test-demo 黄金路径，见附录 A）
 
-**待办（架构）**：`adapters/gemini-cli/`、模板市场、Dashboard Web UI；Skill 进化 P1/P2（feedback 归因、skill-bypass 清单）
+### 路线图（未排期 · 非 v1.23.0 欠账）
+
+以下项在 [Product-Spec.md](Product-Spec.md) 中列为远期方向，**不属于 Phase 1–13 交付范围**；未立项前勿与「架构未完成」混淆。
+
+| 项 | 说明 | 状态 |
+|----|------|------|
+| `adapters/gemini-cli/` | 第 4 个 AI 客户端适配 | 未排期 |
+| 模板市场 | 产品脚手架一键初始化 | 未排期 |
+| Dashboard Web UI | 可视化进度与变更 | 未排期 |
+| Skill 进化 P1/P2 | feedback 归因、skill-bypass 清单 | **刻意暂缓**（P0 文档已完成） |
+| test-demo 黄金路径 | Spec/Plan → todo-cli 守门 | **✅ 已接入**（`pnpm test-demo-golden-path`、forge-smoke #10） |
+
+**框架仓库本身不需要**：根目录 `Design-Brief.md`、`memory/`、`changes/`（活跃变更）——这些属于**用户业务项目**的常见工件，空着是正常的。
 
 ---
 
-## 附录 A：框架仓库测试 — forge-smoke（非架构）
+## 附录 A：框架仓库测试 — forge-smoke + test-demo（非架构）
 
-> v1.23.0。Phase 10 的**静态 smoke 延伸**：验证目录齐、adapter 同步、loadout 引用、文档章节、CI 无 cron。  
-> 详表：[scripts/forge-smoke/README.md](scripts/forge-smoke/README.md)
+> v1.23.0+。Phase 10 的**静态 smoke 延伸**：验证目录齐、adapter 同步、loadout 引用、文档章节、CI 无 cron；**test-demo 黄金路径**验证已提交的 Spec/Plan/代码产物仍可 build/test/跑 CLI（不重新生成 demo）。  
+> 详表：[scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [test-demo/README.md](test-demo/README.md)
 
 | 命令 | 与 Vitest 分工 |
 |------|----------------|
 | `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts` 等**逻辑**单元测试（22 项） |
-| `pnpm forge-smoke` | **结构/一致性**静态检查（10 项 smoke + 内嵌 validate-skill，含 test-demo 黄金路径） |
+| `pnpm forge-smoke` | **结构/一致性**静态检查（10 项 smoke + validate-skill，含 test-demo 黄金路径） |
+| `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke #10） |
 
 发版前建议：`pnpm test` → `pnpm forge-smoke` → `pnpm sync`（若改过 core）。
 
