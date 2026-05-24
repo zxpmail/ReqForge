@@ -14,13 +14,21 @@
 {
   "file": "path/to/file.ts",
   "line": 42,
-  "severity": "high|medium|low",
-  "confidence": 0.0-1.0,
+  "severity": 1,
+  "impact": 1,
+  "confidence": 1,
+  "risk_rank": 1,
   "category": "spec_gap|pattern_drift|architecture_violation|naming_convention|duplication|complexity",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
 }
 ```
+
+**Scoring (jobs-style rubric, 1–5 each)**:
+- **severity**: 5 = Spec must-have / security blocker; 3 = quality debt; 1 = nit
+- **impact**: 5 = Primary metric or whole module; 3 = multi-file; 1 = single line
+- **confidence**: 5 = direct evidence; 3 = likely; 1 = speculative (aggregator may suppress)
+- **risk_rank** = severity × impact × confidence (computed by reviewer; max 125)
 
 **Procedure**:
 1. Read affected files and baseline docs (Product-Spec.md, DEV-PLAN.md if available)
@@ -31,8 +39,8 @@
    - **Naming conventions**: PascalCase components, camelCase functions, kebab-case files
    - **Duplication**: Similar code blocks that should be extracted
    - **Complexity**: Files >300 lines, deep nesting, excessive conditionals
-3. Score each finding by confidence (0.0-1.0)
-4. Return findings array (empty if none found)
+3. Score each finding: severity, impact, confidence (1–5) and **risk_rank = S×I×C**
+4. Return findings array sorted by **risk_rank** descending (empty if none found)
 
 **Context isolation**: No inherited state from previous tasks. Fresh analysis per invocation.
 

@@ -23,6 +23,7 @@
 | Stage 1：并行首答 | 4 专项 `code-reviewer-*` 并行；Spec Step 7 四视角评审 | **已落地（轻量）** |
 | Stage 2：匿名互评 | 审查去 implementer 上下文；aggregator **meta-review** suspected | **已落地（轻量）** |
 | Stage 3：Chairman | `code-reviewer` **综合结论** + Must-fix/Should-fix/Insight | **已落地** |
+| Risk rank (jobs) | severity×impact×confidence → sort | **已落地** — [jobs-comparison.md](./jobs-comparison.md) |
 | Tab 并排 UI | 无 — 结构化 Markdown 报告 | 不做 |
 | 多模型 OpenRouter | 用户客户端选模型 | **不做** |
 

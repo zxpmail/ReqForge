@@ -34,8 +34,9 @@ Each agent returns structured findings with confidence score (0.0-1.0). The aggr
 - **Confidence >= 0.6** → confirmed finding
 - **Confidence 0.3-0.6** → suspected finding (downgraded)
 - **Confidence < 0.3** → suppressed (noise)
-- Cross-agent boost: same file+line flagged by ≥2 agents at ≥0.6 → boost +0.1 (max 1.0)
-- **Meta-review**: aggregator re-evaluates suspected (0.3–0.6) findings — promote, keep, or suppress
+- Cross-agent boost: same file+line flagged by ≥2 agents at confirmed level → risk_rank × 1.1 (cap 125)
+- **Meta-review**: aggregator re-evaluates suspected (0.3–0.6 or confidence_5=3) findings
+- **Risk rank**: severity × impact × confidence (1–5 each); sort confirmed by risk_rank — see [jobs-comparison.md](./jobs-comparison.md)
 - **Chairman output**: 综合结论 + Must-fix / Should-fix / Insight buckets
 
 ## Spec Quality Council (product-spec-builder Step 7)

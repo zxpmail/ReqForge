@@ -39,6 +39,8 @@ description: Used when the user wants to review code, check quality, verify feat
     - **Meta-review**: After parallel agents return, the aggregator re-evaluates every **suspected** finding (confidence 0.3–0.6): promote to confirmed, keep suspected, or suppress — lightweight substitute for full peer review of reviews.
     - **Chairman synthesis**: End every report with **综合结论** (ship / fix-first / blocked) plus **Must-fix / Should-fix / Insight** buckets — not only an issue list.
 
+    **Risk ranking (jobs-style rubric)**: See [jobs-comparison.md](../../docs/jobs-comparison.md). Each finding uses **severity / impact / confidence** (1–5) and **risk_rank = S×I×C**. Aggregator sorts confirmed findings by risk_rank; Top items drive Must-fix vs Should-fix.
+
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
 [Output Style]
@@ -109,7 +111,8 @@ description: Used when the user wants to review code, check quality, verify feat
         `any` usage, `@ts-ignore`, unsafe type assertions, null safety gaps, missing union variants, unhandled edge cases.
 
     --- Aggregator (code-reviewer) ---
-        Merge all agent findings, apply confidence thresholding (≥0.6 confirmed, 0.3–0.6 suspected, <0.3 suppressed), deduplicate, run `tsc --noEmit`.
+        Merge all agent findings. Each finding MUST include severity, impact, confidence (1–5) and **risk_rank = S×I×C**.
+        Sort confirmed findings by risk_rank descending. Apply confidence thresholding (≥0.6 or confidence_5 ≥ 4), deduplication, cross-agent risk_rank boost, meta-review on suspected, Must-fix/Should-fix/Insight buckets. Run `tsc --noEmit`.
 
 [Gotchas]
     **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.
@@ -194,7 +197,7 @@ description: Used when the user wants to review code, check quality, verify feat
         - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
         - **code-reviewer-security**: OWASP Top 10, credential leaks, injection, XSS
         - **code-reviewer-types**: Type safety, nullability, any/ts-ignore, edge cases
-        Each agent returns structured findings with confidence scores (0.0-1.0).
+        Each agent returns structured findings with **severity, impact, confidence (1–5), risk_rank**, and evidence.
 
     [Step 3: Scan Code Implementation]
         Traverse the project code directory
@@ -204,14 +207,18 @@ description: Used when the user wants to review code, check quality, verify feat
     [Step 4: Aggregation & Confidence Scoring]
         Collect findings from all specialized agents. Apply aggregation rules:
 
-        **Confidence thresholding**:
-        - Confidence >= 0.6 -> include as confirmed finding
-        - Confidence 0.3-0.6 -> downgrade to "suspected"
-        - Confidence < 0.3 -> suppress (noise)
+        **Risk ranking (primary sort key)**:
+        - Recompute **risk_rank** = severity × impact × confidence (1–5) if any field missing
+        - Sort confirmed findings by **risk_rank** descending
 
-        **Deduplication**: same file + same line range + same category -> keep highest confidence
+        **Confidence thresholding** (legacy 0.0–1.0 or 1–5):
+        - confidence >= 0.6 OR confidence_5 >= 4 -> confirmed
+        - confidence 0.3-0.6 OR confidence_5 == 3 -> suspected -> meta-review
+        - confidence < 0.3 OR confidence_5 <= 2 -> suppress (security may override)
 
-        **Cross-agent boost**: if two agents flag the same file+line at >= 0.6, boost by 0.1 (max 1.0)
+        **Deduplication**: same file + same line range + same category -> keep highest risk_rank
+
+        **Cross-agent boost**: same file+line from >=2 agents at confirmed level -> risk_rank × 1.1 (cap 125)
 
         **Meta-review (suspected only)**: For each suspected finding, aggregator asks: (1) is there file:line evidence?, (2) does Spec require this?, (3) would a specialist agree? Promote to confirmed (>=0.6), keep suspected, or suppress (<0.3).
 
@@ -232,8 +239,8 @@ description: Used when the user wants to review code, check quality, verify feat
 
          ---
 
-         **Confirmed Issues (X)** (confidence >= 60%)
-         - [category] [file:line] — description — [agent name] — [confidence%]
+         **Confirmed Issues (X)** — sorted by **risk_rank** (high → low)
+         - [risk_rank] [category] [file:line] — description — S/I/C — [agent] — [Must-fix|Should-fix|Insight]
 
          **Suspected Issues (X)** (confidence 30-60%, flagged for manual review)
          - [category] [file:line] — description — uncertainty reason — [confidence%]

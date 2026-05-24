@@ -84,6 +84,7 @@
 - [nanochat-comparison.md](./nanochat-comparison.md) — golden path / fast-loop discipline (methodology reference)
 - [autoresearch-comparison.md](./autoresearch-comparison.md) — Primary metric + Spec/Plan lock + Task micro-cycle
 - [llm-council-comparison.md](./llm-council-comparison.md) — code-review council + spec Step 7
+- [jobs-comparison.md](./jobs-comparison.md) — risk_rank + PROJECT-HEALTH + LLM-judge Spec
 - [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) — AGENT魔方七层 ↔ ReqForge
 - [skill-evolution-comparison.md](./skill-evolution-comparison.md) — EmbodiSkill / SkillEvolver ↔ ReqForge（P1/P2 暂缓）
 - [memory-system.md](./memory-system.md) — three-tier memory

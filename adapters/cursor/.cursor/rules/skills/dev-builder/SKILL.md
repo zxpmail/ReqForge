@@ -317,7 +317,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
             1. Count messages in this session or estimate context usage. If near token limits or the session has been long, generate `memory/handoff.md` using the handoff template at `core/templates/memory/handoff-template.md`
             2. The handoff document must include: current Phase completed, next Phase name, key decisions (ADRs), known issues, changed files
-            3. Suggest `/clear` to the user after handoff is generated
+            3. Update **PROJECT-HEALTH.md** at project root (user projects only — see [Phase Completion Assessment] PROJECT-HEALTH step). One-screen status for the next session.
+            4. Suggest `/clear` to the user after handoff is generated
 
             This preserves progress and prevents the "lost memory" problem when context resets.
 

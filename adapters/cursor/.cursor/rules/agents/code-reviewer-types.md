@@ -11,13 +11,17 @@
 {
   "file": "path/to/file.ts",
   "line": 42,
-  "severity": "high|medium|low",
-  "confidence": 0.0-1.0,
+  "severity": 1,
+  "impact": 1,
+  "confidence": 1,
+  "risk_rank": 1,
   "category": "any_type|type_assertion|null_unsafe|missing_union|unhandled_case|broad_param|missing_generic",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
 }
 ```
+
+**Scoring (1–5 each)**: severity, impact, confidence. **risk_rank = severity × impact × confidence**.
 
 **Procedure**:
 1. Read all affected files
@@ -30,8 +34,8 @@
    - Unhandled edge cases (empty arrays, null inputs, undefined props)
    - Overly broad parameter types (`string` when union is appropriate)
    - Missing generic constraints
-3. Score each finding by confidence (0.0-1.0)
-4. Return findings array (empty if none found)
+3. Score severity, impact, confidence (1–5); **risk_rank = S×I×C**
+4. Return findings array sorted by **risk_rank** descending (empty if none found)
 
 **Context isolation**: No inherited state from previous tasks. Fresh analysis per invocation.
 

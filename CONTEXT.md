@@ -2,12 +2,12 @@
 
 ## 当前正在做什么
 
-- 无进行中任务
+- 无进行中任务（jobs 对照已落地，forge-smoke 10/10）
 
 ## 上次停在哪个位置
 
-- 已 push `e5ca061`：llm-council 对照 + code-review Council + product-spec Step 7
-- 已 push `8347c05`：autoresearch 对照
+- jobs 对照落地：对照文档 + risk_rank + PROJECT-HEALTH + Spec LLM-judge 段；sync + smoke 10/10（**本地未 push**）
+- 已 push `9be7c0d`：llm-council 对照
 
 ## 架构与 Harness（产品本身）
 
@@ -22,6 +22,7 @@
 | Product-Spec / DEV-PLAN | 应有 | 有（描述框架本身） |
 | Design-Brief | 可选 | **通常不需要** |
 | memory/ | dev-builder 后创建 | **通常不需要** |
+| PROJECT-HEALTH.md | Phase 完成后更新 | **通常不需要** |
 | changes/ | brownfield 时用 | **通常为空** |
 
 ## 测试（框架仓库 · 非架构）
@@ -33,5 +34,5 @@
 ## 维护者文档（非架构 · 非测试）
 
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [platform-compliance.md](core/docs/platform-compliance.md)
-- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md) · [autoresearch-comparison.md](core/docs/autoresearch-comparison.md) · [llm-council-comparison.md](core/docs/llm-council-comparison.md)
+- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md) · [autoresearch-comparison.md](core/docs/autoresearch-comparison.md) · [llm-council-comparison.md](core/docs/llm-council-comparison.md) · [jobs-comparison.md](core/docs/jobs-comparison.md)
 - [test-demo/README.md](test-demo/README.md) — 黄金路径；`todo-cli/` 为 Spec+Plan 产物（无独立用途）

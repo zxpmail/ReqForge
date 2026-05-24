@@ -57,19 +57,29 @@ color: red
     7. **Compilation Result**: tsc --noEmit output
 
 [Confidence Scoring & Aggregation]
-    **Per-finding confidence** is assigned by each specialized agent:
+    **Per-finding rubric (jobs-style, 1–5 each)** — each specialized agent MUST emit:
+    - **severity** (1–5): Spec/security blocker → 5; quality debt → 3; nit → 1
+    - **impact** (1–5): Primary metric / whole module → 5; single file → 1–3
+    - **confidence** (1–5): direct file:line evidence → 5; speculative → 1–2
+    - **risk_rank** = severity × impact × confidence (integer, max 125)
+
+    **Legacy mapping** (when agent returns 0.0–1.0 confidence only): confidence_5 = max(1, round(confidence × 5)); treat high/medium/low severity as 5/3/1.
+
+    **Per-finding confidence (0.0–1.0)** — optional parallel to 1–5 scale:
     - 0.8-1.0: Strong evidence (direct code match, clear violation)
     - 0.6-0.8: Good evidence (likely issue, minor uncertainty)
     - 0.3-0.6: Weak evidence (pattern match but incomplete context)
     - 0.0-0.3: Speculative (suppressed)
 
     **Aggregation rules**:
-    1. Confidence >= 0.6 → include as confirmed finding
-    2. Confidence 0.3-0.6 → downgrade to "suspected"
-    3. Confidence < 0.3 → suppress
-    4. Deduplicate: same file + same line range + same category → keep highest confidence entry
-    5. If two agents flag the same file+line at >= 0.6, boost confidence by 0.1 (capped at 1.0)
-    6. **Meta-review**: re-evaluate each suspected finding; promote to confirmed if evidence supports
+    1. Recompute **risk_rank** if missing: severity × impact × confidence (1–5 fields)
+    2. Sort all confirmed findings by **risk_rank** descending — Top 10 drive 综合结论
+    3. confidence_5 ≤ 2 → treat as suspected unless meta-review promotes
+    4. confidence (0.0–1.0) >= 0.6 OR confidence_5 >= 4 → include as confirmed finding
+    5. confidence 0.3–0.6 or confidence_5 == 3 → suspected → meta-review
+    6. confidence < 0.3 or confidence_5 ≤ 2 → suppress unless security category
+    7. Deduplicate: same file + same line range + same category → keep highest risk_rank
+    8. If two agents flag the same file+line at confirmed level, boost risk_rank by 10% (cap 125)
 
 [Handoff Protocol]
     **Data passed by main Agent**:
@@ -114,8 +124,8 @@ color: red
 
          **Agent Coverage**: design ✅ | bug ✅ | security ✅ | types ✅
 
-         **Confirmed Issues (X)** (confidence >= 60%)
-         - [category] [file:line] — description — agent attribution — [confidence%]
+         **Confirmed Issues (X)** — sorted by **risk_rank** (S×I×C)
+         - [risk_rank] [category] [file:line] — description — S/I/C — agent — [bucket: Must-fix|Should-fix|Insight]
 
          **Suspected Issues (X)** (after meta-review)
          - [category] [file:line] — description — uncertainty reason — [confidence%]

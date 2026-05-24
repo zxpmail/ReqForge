@@ -12,13 +12,17 @@
 {
   "file": "path/to/file.ts",
   "line": 42,
-  "severity": "high|medium|low",
-  "confidence": 0.0-1.0,
+  "severity": 1,
+  "impact": 1,
+  "confidence": 1,
+  "risk_rank": 1,
   "category": "null_safety|null_pointer|race_condition|resource_leak|logic_error|error_handling",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
 }
 ```
+
+**Scoring (1–5 each)**: severity (5 = crash/data loss), impact (blast radius), confidence (evidence strength). **risk_rank = severity × impact × confidence**.
 
 **Procedure**:
 1. Read all affected files
@@ -30,8 +34,8 @@
    - Inadequate error handling (empty catch blocks, swallowed errors)
    - Async issues (unhandled promise rejections, missing awaits)
    - State mutation bugs (unintended side effects)
-3. Score each finding by confidence (0.0-1.0)
-4. Return findings array (empty if none found)
+3. Score severity, impact, confidence (1–5); **risk_rank = S×I×C**
+4. Return findings array sorted by **risk_rank** descending (empty if none found)
 
 **Context isolation**: No inherited state from previous tasks. Fresh analysis per invocation.
 

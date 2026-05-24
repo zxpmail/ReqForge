@@ -64,6 +64,7 @@
     **After All Pass**:
     - Report results to the user (with evidence)
     - Remove `.forge/phase-exit-block` if present
+    - **PROJECT-HEALTH.md** (user projects only): Create or update at project root from `core/templates/PROJECT-HEALTH-template.md` (via adapter templates path). Fill: date, Phase N, Primary metric result, Spec coverage X/Y, last test command output summary, top 3 risk_rank items from last review if any, last 5 rows from `memory/task-history.md`, next Phase name. Skip for ReqForge framework repo itself.
     - Archive: scan the changes/ directory, check if any change artifacts related to this Phase's delivery checklist exist. If yes and all are fully implemented, move changes/<change-name>/ to changes/archive/<change-name>/
     - User confirms -> Phase complete
     - Phase completion cannot be confirmed without passing

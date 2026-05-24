@@ -43,6 +43,18 @@ This template is used to generate a structurally complete Product Spec document.
 |---------|---------|---------|
 | <Capability type> | <What it does> | <Where it is triggered> |
 
+### LLM-as-Judge features (if any scoring, ranking, or classification)
+
+> Required when the product uses LLM to score, rank, or classify items (jobs-style rubric). Skip this subsection if no such feature.
+
+| Field | Requirement |
+|-------|-------------|
+| Output format | Structured JSON per item: `{ "score": <number>, "rationale": "<2-3 sentences>" }` plus schema version / prompt id |
+| Scale | Define numeric scale with **anchor examples** (e.g. 0–10 with what 0, 5, 10 mean) |
+| Disclaimer (product copy) | Scores are **estimates**, not predictions; do not promise job loss, revenue, or legal outcomes |
+| Re-run policy | Changing the rubric re-runs scoring only — does not require regenerating unrelated code |
+| Human override | User can edit or dismiss a score; audit log optional [TBD] |
+
 ## Technical Direction
 
 | Dimension | Choice | Rationale |
