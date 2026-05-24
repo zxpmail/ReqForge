@@ -6,6 +6,7 @@ updated: YYYY-MM-DD
 occurrences: 1
 graduated: false
 source_skill: [skill-name or N/A]
+failure_class: [skill-defect | execution-lapse | unset]   # Required when recording — routes evolution (see feedback-writer)
 scores:                        # Optional — only fill after Skill execution
   accuracy: [1-5]
   coverage: [1-5]
@@ -22,5 +23,7 @@ prompt_remediation: "[Optional — reusable prompt fragment to prevent this issu
 **Context**: [Under what circumstances it occurred]
 
 **Lesson / Recommendation**: [What was learned, what to do differently]
+
+**RED (for Skill TDD / evolution)**: [Without rule X, Agent did Y — one sentence]
 
 **Prompt Remediation**: [Optional — a ready-to-use prompt or constraint that, when included in the Skill's invocation prompt, prevents this failure from recurring. E.g., "Before selecting a database, explicitly confirm: does the data need to survive a server restart?"]

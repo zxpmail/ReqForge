@@ -6,8 +6,8 @@
 
 ## 上次停在哪个位置
 
+- **A+B+E 落地**：`forge-bootstrap.md` + `check-evolution` 会话注入；`product-spec-builder` HARD-GATE + 借口表；`evolution-engine` Skill TDD 四件套 + `failure_class` 路由；`feedback-writer` / 模板标签
 - 已 push `ee178d5`：README / README.zh-CN 补全 **What's New → v1.24.0** 段
-- 已 push `17cbcfe`：jobs 对照 + risk_rank + PROJECT-HEALTH
 
 ## 架构与 Harness（产品本身）
 

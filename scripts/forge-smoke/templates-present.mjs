@@ -25,6 +25,10 @@ const REQUIRED = [
     rel: "core/templates/memory/project-memory-template.md",
     markers: ["Project Memory"],
   },
+  {
+    rel: "core/templates/forge-bootstrap.md",
+    markers: ["Session Iron Laws", "HARD-GATE", "Skill before action"],
+  },
 ];
 
 for (const { rel, markers } of REQUIRED) {

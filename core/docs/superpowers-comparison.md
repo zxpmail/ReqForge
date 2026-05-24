@@ -143,7 +143,9 @@ flowchart TD
 
 ## 建议从 Superpowers 继续借鉴（未完全复制）
 
-- **Rationalization 表** — 已部分在 `dev-builder` `references/anti-rationalization.md`；可对照 Superpowers 新 Skill Periodic 同步
+- **Rationalization 表** — `dev-builder/references/anti-rationalization.md`；`product-spec-builder/references/hard-gate-rationalization.md`（HARD-GATE）
+- **Session Bootstrap 硬度** — `core/templates/forge-bootstrap.md` + `check-evolution` Part 0 注入（v1.24+）
+- **Skill 进化 TDD** — `evolution-engine` RED/GREEN/Predicted effect/Verify by 四件套；`feedback` `failure_class` 路由
 - **finishing-a-development-branch** — 与 `release-builder` 的 PR/合并清单可对齐
 - **systematic-debugging** — 与 `bug-fixer` 三层模型交叉审查
 

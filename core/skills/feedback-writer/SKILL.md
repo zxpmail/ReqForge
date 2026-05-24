@@ -28,6 +28,22 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
     **Scored Feedback**: Every feedback entry must have Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
     **Context Completeness**: A feedback entry without context (what the AI did, what the correct behavior is, which Skill was in use) is noise — it can't drive evolution.
 
+[Failure Classification]
+    Every feedback entry SHOULD set `failure_class` in frontmatter (enables evolution-engine routing — see evolution-engine [Failure-Class Routing]):
+
+    | Value | When to use | Evolution should target |
+    |-------|-------------|-------------------------|
+    | `skill-defect` | Skill text is missing, wrong, or outdated; Agent followed Skill but guidance failed | `SKILL.md`, `references/`, rule graduation |
+    | `execution-lapse` | Skill already states the correct behavior; Agent skipped steps, ignored HARD-GATE, or hooks did not fire | `forge-bootstrap.md`, hooks, `CLAUDE.md` dispatch — **not** duplicate prose across Skills |
+    | `unset` | Cannot tell yet — add one sentence in body explaining ambiguity | evolution-engine infers; prefer `unset` over guessing |
+
+    **How to decide**:
+    - User says "the Skill says X but you didn't do X" → `execution-lapse`
+    - User says "the Skill never mentioned X" or "workflow is wrong" → `skill-defect`
+    - Same failure after Skill was updated and user confirmed → often `execution-lapse` (bootstrap/hook)
+
+    **Skill TDD input for evolution**: In the body, include a short **RED** line: "Without rule Y, Agent did Z" — feeds evolution-engine RED observation field.
+
 [Observation Dimensions]
     The following 5 types of signals trigger feedback recording:
 

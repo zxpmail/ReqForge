@@ -13,5 +13,5 @@ Entry: `/product-spec-builder` or describe product idea. **Full workflow → `SK
 |-------|------------------|------------|
 | Discovery | 0-to-1 startup | One-paragraph concept agreed |
 | Detail / Interview | Questioning phases | Spec sections fillable without guessing |
-| Spec write | Document generation | Product-Spec.md confirmed |
+| Spec write | Document generation | Product-Spec.md confirmed (HARD-GATE lifts only after explicit user confirm) |
 | Iteration | `[Workflow (Iteration Mode)]` | Major/minor → edit Spec; moderate scoped feature → **`/change-manager propose`** (do not create `changes/` here) |

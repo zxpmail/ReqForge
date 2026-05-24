@@ -43,6 +43,17 @@ description: Used when the user says they want to build a product, application, 
     - When recommending solutions to the user → WebSearch to confirm feasibility and current best practices
     - When uncertain → search first, don't answer from memory
 
+[HARD-GATE]
+    **Until `Product-Spec.md` is saved AND the user explicitly confirms it** (0-to-1) or confirms the iteration delta (Iteration Mode):
+
+    - **MUST NOT** invoke `/dev-planner` or `/dev-builder`
+    - **MUST NOT** create or edit application source under `src/`, `app/`, `lib/`, `packages/`
+    - **MUST NOT** treat "rough agreement in chat" as confirmation — user must confirm the written Spec (or changelog delta)
+
+    Session-start iron laws reinforce this via `templates/forge-bootstrap.md` (injected by `check-evolution` hook).
+
+    Rationalizations and responses → `references/hard-gate-rationalization.md`
+
 [Skills]
     - **Requirements Elicitation**: Guide the user to express their ideas through open-ended questions, capture key information
     - **Drill-Down Questioning**: Follow up on vague descriptions with detailed questions — do not accept "roughly", "maybe", "probably"
@@ -64,6 +75,7 @@ description: Used when the user says they want to build a product, application, 
     ├── references/                        # 渐进披露：访谈策略、0-to-1、迭代工作流
     │   ├── requirements-dimensions.md
     │   ├── conversation-strategy.md
+    │   ├── hard-gate-rationalization.md   # HARD-GATE 借口反制
     │   ├── workflow-0-to-1.md
     │   └── workflow-iteration.md
     └── templates/
