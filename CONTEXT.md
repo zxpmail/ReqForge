@@ -2,11 +2,11 @@
 
 ## 当前正在做什么
 
-- 无进行中任务（jobs 对照已落地，forge-smoke 10/10）
+- 无进行中任务
 
 ## 上次停在哪个位置
 
-- jobs 对照落地：对照文档 + risk_rank + PROJECT-HEALTH + Spec LLM-judge 段；sync + smoke 10/10（**本地未 push**）
+- 已 push `17cbcfe`：jobs 对照 + risk_rank + PROJECT-HEALTH + Spec LLM-judge
 - 已 push `9be7c0d`：llm-council 对照
 
 ## 架构与 Harness（产品本身）
