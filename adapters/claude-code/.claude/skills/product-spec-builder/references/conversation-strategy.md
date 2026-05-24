@@ -95,55 +95,8 @@
     - Revise Spec or scope if a weakness is blocking for v1
 
     **Template D — Analysis vs implementation (two turns)**
-    - This turn: analysis only — **MUST NOT** invoke `/dev-builder` or edit app source
+    - This turn: analysis only — **MUST NOT** invoke `/dev-builder` or edit app source; state explicitly **no Product-Spec.md edits this turn** until user confirms direction
     - End with explicit ask: user confirms direction → then next turn may plan/build
-    - Aligns with HARD-GATE: chat agreement alone does not lift the gate
-
-[Chain of Thought (CoT)]
-    <!-- 思维链：推理型任务先显式推演再给结论，避免「第一反应」式浅答案（参见 product-spec-builder 访谈实践） -->
-
-    **When to use** (reasoning tasks — not simple lookups):
-    - Technical direction / stack / architecture trade-offs
-    - Feature scope with hidden boundary conditions (timezone, billing, i18n, idempotency)
-    - Resolving contradictions in user answers before writing Spec sections
-    - After drafting a major Spec section — self-critique before user confirm
-
-    **When to skip**: Quick Mode, factual WebSearch summaries, repeating back already-confirmed facts.
-
-    **Output format rule** (avoids 800-word reasoning burying the answer):
-    - Reasoning: short bullet points only
-    - **Conclusion**: one separate paragraph, bold the final recommendation or decision
-    - Analysis-only turns: state explicitly **no Spec file edits this turn** until user confirms direction
-
-    **Pattern A — Architecture / platform choice** (Clarifying or Refinement phase):
-    ```
-    Before recommending X vs Y:
-    1. Analyze state characteristics (update frequency, consumers, persistence)
-    2. Map each option to suitable scenarios
-    3. Match our concrete context (cite Spec facts)
-    4. Give ONE clear recommendation
-    5. State the single most important reason (one sentence only — forces a trade-off)
-    ```
-
-    **Pattern B — Boundary conditions before features** (before UI/flow detail):
-    ```
-    Before implementing [feature] in the Spec:
-    1. List ≥4 non-obvious edge cases (timezone, duplicates, cancelled users, race windows, etc.)
-    2. For each: handling recommendation
-    3. Then write Functional Requirements / User Flow with those cases covered
-    ```
-
-    **Pattern C — Self-critique after a proposal** (after offering a layout or feature set):
-    ```
-    You proposed [summary]. Now as critic:
-    - List the 3 largest weaknesses of this proposal
-    - For each: under what situation it fails
-    - Ask user which weakness matters most before locking Spec text
-    ```
-
-    **Pattern D — Split analysis from generation** (when user or Agent might jump to code/spec too early):
-    - Turn 1: CoT analysis only — end with "confirm direction before I update Product-Spec.md"
-    - Turn 2: After explicit user OK — edit Spec / proceed to Document Generation
     - Aligns with HARD-GATE: chat agreement alone does not lift the gate
 
     **Pair with PM frameworks**: OST / assumptions (`pm-frameworks-*.md`) define *what* to explore; CoT defines *how* to think before writing it into Spec.

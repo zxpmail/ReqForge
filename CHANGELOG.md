@@ -6,6 +6,8 @@ All notable changes to Forge are documented here.
 
 ### Added
 - **Harness hardening (Superpowers-aligned)**: `forge-bootstrap` session iron laws; `product-spec-builder` / `dev-planner` HARD-GATE; evolution Skill TDD quartet + `failure_class`; `tests/skill-fixtures` + forge-smoke; mandatory implementer + worktree; `.forge/*-confirmed.json` + `implementer-session.json` PreToolUse chain; `drift-map-template.md`; forge-smoke `skill-bypass` (P2); `validate-skill` requires `[HARD-GATE]` on spec/plan/build skills.
+- **product-spec-builder PM frameworks** (MIT-adapted from [pm-skills](https://github.com/phuryn/pm-skills)): optional OST, JTBD value prop, assumptions, competitive briefs + Spec template sections.
+- **Chain-of-Thought (CoT)**: `conversation-strategy` templates; implementer step 0b + `reasoning_summary`; `bug-fixer` diagnostic checklist; forge-bootstrap Iron Law 9 (no user magic phrase required).
 - **release-builder**: Finishing Branch Checklist (merge / PR / keep / discard). **bug-fixer**: Phase-1-before-fix cross-ref to systematic debugging.
 
 ### Changed

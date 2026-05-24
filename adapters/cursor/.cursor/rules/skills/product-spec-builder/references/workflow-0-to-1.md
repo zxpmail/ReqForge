@@ -19,6 +19,6 @@
 
     **渐进披露索引**
         - 维度清单 → `requirements-dimensions.md`
-        - 对话策略 → `conversation-strategy.md`
+        - 对话策略 + CoT → `conversation-strategy.md` [Chain of Thought]
         - PM 框架 → `pm-frameworks-*.md`
         - 迭代模式 → `workflow-iteration.md`

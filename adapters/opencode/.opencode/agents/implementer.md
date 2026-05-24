@@ -65,6 +65,7 @@ color: green
 
     **Data returned by Sub-Agent**:
     - status (enum) -- Execution status
+    - reasoning_summary (string | null) -- CoT bullets + conclusion from step 0b
     - implemented_items (object[]) -- Itemized delivery confirmation
     - compile_result (string) -- Compilation output
     - file_changes (string[]) -- File change list
