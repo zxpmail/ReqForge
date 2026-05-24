@@ -76,6 +76,11 @@ description: Used when the user says they want to build a product, application, 
     │   ├── requirements-dimensions.md
     │   ├── conversation-strategy.md
     │   ├── hard-gate-rationalization.md   # HARD-GATE 借口反制
+    │   ├── pm-frameworks-readme.md        # PM 框架索引（MIT / pm-skills 摘编）
+    │   ├── pm-frameworks-ost.md
+    │   ├── pm-frameworks-value-proposition.md
+    │   ├── pm-frameworks-assumptions.md
+    │   ├── pm-frameworks-competitive.md
     │   ├── workflow-0-to-1.md
     │   └── workflow-iteration.md
     └── templates/
@@ -214,11 +219,28 @@ description: Used when the user says they want to build a product, application, 
         Note: This creates only the decisions log. Full memory initialization (including project-memory.md and task-history.md) happens during the first /dev-builder invocation, when tech stack details are confirmed.
 
 [Workflow (0-to-1 Mode)]
+    [Optional: Product Discovery Phase]
+        Goal: When the idea is broad, structure discovery before feature/UI detail (pm-skills-inspired, MIT).
+
+        **When to run**: User has no clear outcome, asks for brainstorm/discovery, or jumps straight to features without problem clarity.
+        **When to skip**: Quick Mode, complete brief already provided, or user says proceed to Spec directly.
+
+        Step 0: Choose framework
+            Read `references/pm-frameworks-readme.md`.
+            Typical path: OST (`pm-frameworks-ost.md`) → assumptions (`pm-frameworks-assumptions.md`) → value prop (`pm-frameworks-value-proposition.md`).
+            Competitive scan (`pm-frameworks-competitive.md`) pairs with Exploration WebSearch.
+
+        Step 0b: Summarize for Spec
+            Capture outcome, top opportunities, top assumptions, and differentiation bullets for later Document Generation sections (Value Proposition, Success Metrics, Competitive Landscape, Key Assumptions).
+
+        **HARD-GATE unchanged**: Discovery does not replace written Product-Spec.md + explicit user confirm.
+
     [Requirements Exploration Phase]
         Goal: Get the user to pour out everything in their head
 
         Step 1: Catch the user
             Based on what the user has already expressed, first WebSearch for related competitors and market information
+            Structure findings with `references/pm-frameworks-competitive.md` when writing Competitive Landscape later
             Then start questioning directly — don't repeatedly ask "what do you want to build"
             If similar products are found, tell the user directly: "There are already X and Y doing similar things. How is yours different?"
 
@@ -339,6 +361,7 @@ description: Used when the user says they want to build a product, application, 
         Step 2: Fill
             Load templates/product-spec-template.md for template format
             Fill according to template format
+            Include optional PM sections when Discovery or interviews ran: Value Proposition (JTBD), Success Metrics, Competitive Landscape, Key Assumptions & Validation (see `references/pm-frameworks-*.md`)
             Mark areas where "Try to Satisfy" was not met as [TBD]
             Start feature descriptions with verbs
             Describe UI layout clearly: overall structure and details of each area

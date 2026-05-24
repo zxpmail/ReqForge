@@ -22,6 +22,31 @@ This template is used to generate a structurally complete Product Spec document.
 - **Who are the target users** (be specific, don't just say "users")
 - What is the core value
 
+## Value Proposition (JTBD, optional)
+<Use when 0-to-1 discovery ran; see references/pm-frameworks-value-proposition.md. Skip or mark [TBD] in Quick Mode.>
+
+| Segment | Who | Why (JTBD) | What Before | How (our product) | What After | Alternatives |
+|---------|-----|------------|-------------|-------------------|------------|--------------|
+| … | … | … | … | … | … | … |
+
+## Success Metrics (optional)
+<North Star + 2–4 input metrics; aligns with DEV-PLAN Phase Primary metric. Skip if unknown — [TBD].>
+
+| Metric | Type | Definition | Target (v1 or TBD) |
+|--------|------|------------|-------------------|
+| North Star | … | … | … |
+| Input 1 | … | … | … |
+
+## Competitive Landscape (optional)
+<5 competitors + differentiation; facts from WebSearch — see pm-frameworks-competitive.md. [待核实] if unverified.>
+
+## Key Assumptions & Validation (optional)
+<Top assumptions; see pm-frameworks-assumptions.md. Blockers must be resolved or scoped out of v1.>
+
+| ID | Assumption | Category | Confidence | Validation | Success criteria | Impact if wrong |
+|----|------------|----------|------------|------------|------------------|-----------------|
+| A1 | … | Value | low/medium/high | … | … | … |
+
 ## Use Cases
 <List 3-5 specific scenarios: who, under what circumstances, how it's used, what problem it solves>
 

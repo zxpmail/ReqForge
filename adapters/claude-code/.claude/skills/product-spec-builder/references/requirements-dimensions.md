@@ -27,6 +27,12 @@
     - Reference products: Any existing products to learn from? What to copy, what not to copy?
     - Priorities: What goes in phase one, what goes in phase two?
 
+    **Optional PM frameworks** (see `references/pm-frameworks-readme.md` — adapted from pm-skills MIT):
+    - Value proposition (6-part JTBD): Who / Why / Before / How / After / Alternatives
+    - Desired outcome & North Star metric (feeds DEV-PLAN Primary metric later)
+    - Top 3–5 risky assumptions + how to validate before or during v1
+    - Competitive landscape (5 competitors + differentiation) — facts via WebSearch
+
 [Information Sufficiency Criteria]
     A Product Spec can be generated when the following conditions are met:
 
