@@ -346,6 +346,8 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 
 **Quick Spec**: one sentence like *“A habit tracker with AI coaching”* — the agent can generate a minimal `Product-Spec.md` with `[待确认]` markers for you to refine.
 
+**Reference walkthrough**: [test-demo/](test-demo/) is a maintained golden path (Spec → Plan → todo-cli). Maintainers verify with `pnpm test-demo-golden-path` — see [test-demo/README.md](test-demo/README.md).
+
 ### After installation — what appears in your project
 
 ```
@@ -699,6 +701,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Which loadout when | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
 | GitHub Actions & fork policy | [platform-compliance.md](core/docs/platform-compliance.md) |
 | Release gate (contributors) | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
+| Golden path demo | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path` |
 
 ---
 

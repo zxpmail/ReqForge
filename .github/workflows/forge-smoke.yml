@@ -1,4 +1,4 @@
-# forge-smoke — ReqForge release gate (static + validate-skill)
+# forge-smoke — ReqForge release gate (static + validate-skill + test-demo golden path)
 # Triggers: push/PR only — no cron (see core/docs/platform-compliance.md)
 name: forge-smoke
 
@@ -10,6 +10,7 @@ on:
       - "adapters/**"
       - "scripts/forge-smoke/**"
       - "scripts/validate-skill.mjs"
+      - "test-demo/**"
       - ".github/workflows/**"
       - "CLAUDE.md"
       - "package.json"
@@ -19,6 +20,7 @@ on:
       - "adapters/**"
       - "scripts/forge-smoke/**"
       - "scripts/validate-skill.mjs"
+      - "test-demo/**"
       - ".github/workflows/**"
       - "CLAUDE.md"
       - "package.json"
@@ -32,6 +34,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Run forge-smoke
         run: node scripts/forge-smoke/run-all.mjs

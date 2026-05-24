@@ -1,0 +1,1 @@
+- [List sort order wrong](list-sort-order-wrong.md) — List command displayed todos in insertion order instead of newest-first by creation time as specified (occurrences: 1, type: ux_feedback)

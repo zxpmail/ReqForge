@@ -23,7 +23,7 @@
 | 端到端流水线 | 训练栈 6 阶段 | 产品栈 7+ Skill 阶段 |
 | 成功指标 | DCLM CORE、墙钟 Time-to-GPT-2 | Spec 验收、测试、verify、review |
 | 复杂度旋钮 | `--depth`（其余超参自动推导） | Loadout + Spec Quick/完整模式 |
-| 黄金路径 | `runs/speedrun.sh` 随主分支更新 | README Step 4 + 可选 `test-demo/` |
+| 黄金路径 | `runs/speedrun.sh` 随主分支更新 | [test-demo/](../../test-demo/) + `pnpm test-demo-golden-path`（见 [test-demo/README.md](../../test-demo/README.md)） |
 | 快环 / 满环 | d12 ~5min 实验 vs speedrun ~2–3h | Vitest/forge-smoke vs 完整 Phase |
 | 客观记录 | `dev/LEADERBOARD.md` + commit | `forge-smoke` CI + verify 证据 |
 | 评测定义 | `tasks/*.py` | `changes/*/specs.md` + DEV-PLAN 验收表 |
@@ -56,7 +56,7 @@ flowchart LR
 
 | nanochat 概念 | ReqForge 落点（已有或推荐） |
 |---------------|----------------------------|
-| `runs/speedrun.sh` | README Step 4；维护可跑 **`test-demo/`** 示例（黄金路径，非架构 Phase） |
+| `runs/speedrun.sh` | [test-demo/README.md](../../test-demo/README.md) + `pnpm test-demo-golden-path`；forge-smoke 第 10 项守门 |
 | d12 快环 | Phase 内先 `test`/`tsc`；`pnpm forge-smoke` / `pnpm test`（框架仓库） |
 | `--depth` 单旋钮 | [loadout-scenarios.md](./loadout-scenarios.md) 30 秒选型；product-spec-builder Quick 模式 |
 | `tasks/` 客观评测 | change-manager verify 模板 + DEV-PLAN 验收项 |
@@ -86,7 +86,7 @@ nanochat **不替代** 任何 Forge Skill；也不提供 LLM 训练能力。
 
 | 借鉴点 | 落点 |
 |--------|------|
-| 黄金路径永不过期 | 本文；README 研究表；`test-demo/` 作为 living demo（维护者责任） |
+| 黄金路径永不过期 | [test-demo/](../../test-demo/) + `forge-smoke` `test-demo-golden-path` |
 | 快环 before 满环 | dev-builder Phase 验收；change-verify 摘要 + 日志路径 |
 | 单旋钮降认知负担 | loadout-scenarios、Spec Quick 模式 |
 | 客观指标非感觉 | forge-smoke、harness-maturity-checklist |
@@ -125,7 +125,7 @@ nanochat **不替代** 任何 Forge Skill；也不提供 LLM 训练能力。
 | 训练自己的 ChatGPT（<$1000） | 用 **nanochat**，不用 ReqForge 替训练 |
 | 从想法做 Web/CLI 产品 | **ReqForge** 为主 |
 | 学 Harness 怎么设计 | 读 nanochat README + 本文 + [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) |
-| 维护 ReqForge 仓库 | `pnpm forge-smoke` = 框架侧 speedrun 守门 |
+| 维护 ReqForge 仓库 | `pnpm forge-smoke` = 框架侧 speedrun 守门（含 test-demo） |
 
 ---
 
@@ -135,4 +135,5 @@ nanochat **不替代** 任何 Forge Skill；也不提供 LLM 训练能力。
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md) — P0 验证环
 - [loadout-scenarios.md](./loadout-scenarios.md) — Loadout 单旋钮选型
 - [rtk-comparison.md](./rtk-comparison.md) — Shell 输出（可选伙伴）
+- [test-demo/README.md](../../test-demo/README.md) — 黄金路径 living demo
 - [platform-compliance.md](./platform-compliance.md) — OSS / 贡献政策

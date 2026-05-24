@@ -7,6 +7,8 @@ Related: [harness-maturity-checklist.md](./harness-maturity-checklist.md) · [fo
 
 ---
 
+## 1 · What ReqForge does **not** do
+
 | Concern | ReqForge stance |
 |---------|-----------------|
 | Central server | **No.** Skills/hooks/adapters copy into **your** project; execution stays in your AI client + your repo. |

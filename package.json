@@ -15,6 +15,7 @@
     "forge-install": "ts-node scripts/install.ts",
     "dep-graph": "ts-node scripts/dependency-graph.ts",
     "forge-smoke": "node scripts/forge-smoke/run-all.mjs",
+  "test-demo-golden-path": "node test-demo/run-golden-path.mjs",
     "validate-skill": "node scripts/validate-skill.mjs",
     "validate-skill:bash": "bash scripts/validate-skill.sh",
     "apply-loadout": "ts-node scripts/apply-loadout.ts",

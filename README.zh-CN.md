@@ -60,7 +60,7 @@ flowchart LR
 ## 近期更新
 
 ### v1.23.0 — 2026-05-24
-- **forge-smoke**：`pnpm forge-smoke` — 9 项静态发版守门（skills、loadouts、adapter 同步、hooks、模板、Machine Gates、平台合规、workflow）；GitHub Actions 仅 push/PR，无 cron。
+- **forge-smoke**：`pnpm forge-smoke` — 10 项静态发版守门（含 test-demo 黄金路径）；GitHub Actions 仅 push/PR，无 cron。
 - **loadout-scenarios.md**：场景 → loadout → 先调哪个 Skill；内置 loadout 增加 `scenarios[]`；README Step 3b 速查表。
 - **platform-compliance.md**：GitHub/OSS 合规（不存用户密钥、fork 用途、禁止 cron CI）；由 forge-smoke 的 workflow 检查强制执行。
 
@@ -345,6 +345,8 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 **Cursor**：`.cursor/rules/` 规则会自动加载；在对话中说明要执行的 Skill（如「执行 product-spec-builder」），或使用客户端自带的 Skill 入口。
 
 **快速 Spec**：一句话例如「带 AI 教练的习惯追踪 App」，可生成带 `[待确认]` 标记的最小 `Product-Spec.md`，再逐步完善。
+
+**对照示范**：仓库内 [test-demo/](../test-demo/) 为完整黄金路径（Spec → Plan → todo-cli），维护者用 `pnpm test-demo-golden-path` 验证；详见 [test-demo/README.md](../test-demo/README.md)。
 
 ### 安装后 — 项目中会出现的文件
 
@@ -652,7 +654,7 @@ pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
 pnpm test             # 运行单元测试（22 项）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
-pnpm forge-smoke      # 发版守门：9 项 smoke（约 3 秒）— skills、loadouts、合规、adapter 同步
+pnpm forge-smoke      # 发版守门：10 项 smoke（含 test-demo 黄金路径）
 pnpm validate-skill   # 校验 core/skills/（跨平台 .mjs，可加 --strict）
 pnpm apply-loadout full claude-code  # 将 loadout 钩子写入 adapter settings
 pnpm dep-graph build  # 构建项目依赖图 → .forge/graph.json
@@ -661,7 +663,7 @@ pnpm dep-graph stats  # 查看图统计
 
 | 命令 | 说明 |
 |------|------|
-| `pnpm forge-smoke` | 发版守门：9 项静态 smoke + validate-skill（约 3 秒）；push/PR 到 `core/`、`adapters/` 时 CI 自动跑 |
+| `pnpm forge-smoke` | 发版守门：10 项 smoke + validate-skill（含 test-demo）；push/PR 到 `core/`、`adapters/`、`test-demo/` 时 CI 自动跑 |
 | `pnpm test:watch` | 监听模式运行测试 |
 | `pnpm validate-skill:bash` | bash 版 validate-skill.sh（需 WSL/Git Bash）；加 `--score` 为 32 分评分表 |
 | `pnpm create-skill <名称>` | 从名称脚手架生成 Skill（`--minimal` 或 `--full`） |
@@ -697,6 +699,7 @@ pnpm dep-graph stats  # 查看图统计
 | 选哪个 loadout | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
 | GitHub Actions 与 fork 策略 | [platform-compliance.md](core/docs/platform-compliance.md) |
 | 发版守门（贡献者） | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
+| 黄金路径示范 | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path` |
 
 ---
 

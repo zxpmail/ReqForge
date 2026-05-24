@@ -40,7 +40,7 @@
 | 命令 | 与 Vitest 分工 |
 |------|----------------|
 | `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts` 等**逻辑**单元测试（22 项） |
-| `pnpm forge-smoke` | **结构/一致性**静态检查（9 项 smoke + 内嵌 validate-skill） |
+| `pnpm forge-smoke` | **结构/一致性**静态检查（10 项 smoke + 内嵌 validate-skill，含 test-demo 黄金路径） |
 
 发版前建议：`pnpm test` → `pnpm forge-smoke` → `pnpm sync`（若改过 core）。
 

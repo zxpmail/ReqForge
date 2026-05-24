@@ -6,13 +6,13 @@
 ## 运行
 
 ```bash
-pnpm forge-smoke          # 约 3 秒，9/9 为通过
+pnpm forge-smoke          # 约 15–30 秒，10/10 为通过（含 test-demo 黄金路径）
 node scripts/forge-smoke/run-all.mjs
 ```
 
 CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 
-## 9 项 smoke
+## 10 项 smoke
 
 | # | 脚本 | 测什么 |
 |---|------|--------|
@@ -25,6 +25,9 @@ CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 | 7 | `loadouts-valid.mjs` | 4 个 loadout JSON 合法、引用存在、`scenarios[]` 合法 |
 | 8 | `adapters-sync.mjs` | `core/skills` 与三端 adapter 技能目录名一致 |
 | 9 | `skills-complete.mjs` | 12 个 Skill + `validate-skill.mjs` 通过 |
+| 10 | `test-demo-golden-path.mjs` | `test-demo/` 黄金路径：Spec/Plan + todo-cli build/test/CLI 冒烟 |
+
+跳过第 10 项（离线/无 pnpm）：`SKIP_TEST_DEMO_GOLDEN=1 pnpm forge-smoke`
 
 每项在**独立子进程**运行，避免状态污染。
 
