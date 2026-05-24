@@ -1,0 +1,11 @@
+id: spec-before-code-01
+skill: product-spec-builder
+description: 无确认 Spec 前不得进入开发；SKILL 须含 HARD-GATE 与借口表
+expect_skill_contains:
+  - "[HARD-GATE]"
+  - "hard-gate-rationalization"
+  - "MUST NOT"
+  - "/dev-builder"
+expect_reference_contains:
+  - "HARD-GATE Rationalizations"
+  - "直接写代码"

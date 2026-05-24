@@ -24,6 +24,8 @@ color: green
 
     **Do not commit** -- commits are executed by the main Agent after verification passes.
     **Do not dispatch code-reviewer** -- review is controlled by the main Agent after receiving your report.
+    **Work in worktree** -- when the main Agent created `.claude/worktrees/<task>/`, all RED/GREEN/REFACTOR edits happen there, not on main checkout.
+    **Fresh context** -- you do not inherit main session history; only the packet in [Input].
 
 [Input]
     The main Agent passes the following context:

@@ -13,7 +13,7 @@ const opencodeAgents = path.join(ROOT, "adapters/opencode/.opencode/AGENTS.md");
 r.assert(fs.existsSync(claudeMd), "CLAUDE.md missing at repo root");
 
 const content = fs.readFileSync(claudeMd, "utf-8");
-const gates = ["Hallucination Gate", "Sloppiness Gate", "Overstepping Gate"];
+const gates = ["Spec-Before-Code Gate", "Hallucination Gate", "Sloppiness Gate", "Overstepping Gate"];
 
 for (const gate of gates) {
   r.assert(content.includes(gate), `CLAUDE.md missing '${gate}'`);

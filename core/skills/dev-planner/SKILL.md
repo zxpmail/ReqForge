@@ -54,10 +54,22 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - Not allowed: "implement related features" — list specific feature names and behaviors
     - Each Task description must be complete enough for an engineer without project context to read and execute
 
+[HARD-GATE]
+    **Until `DEV-PLAN.md` is saved AND the user explicitly confirms the plan**:
+
+    - **MUST NOT** invoke `/dev-builder`
+    - Chat agreement ("looks good") without reviewing the written DEV-PLAN does **not** lift this gate
+
+    **Prerequisites**: `Product-Spec.md` must exist — if missing, stop and route to `/product-spec-builder`.
+
+    Rationalizations → `references/plan-hard-gate-rationalization.md`
+
 [File Structure]
     ```
     dev-planner/
     ├── SKILL.md                           # Main Skill Definition (this file)
+    ├── references/
+    │   └── plan-hard-gate-rationalization.md
     └── templates/
         └── dev-plan-template.md           # DEV-PLAN.md Output Template
     ```
@@ -312,6 +324,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
         Step 4: Output file
             Save as DEV-PLAN.md
+            Present plan summary and ask user to **explicitly confirm** the written DEV-PLAN.md.
+            **HARD-GATE**: Only after explicit confirm may you mention `/dev-builder` as the next step.
 
         Step 5: Guide next steps
             "[x] DEV-PLAN.md has been generated!
@@ -319,7 +333,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
              File: DEV-PLAN.md
              Total N Phases, covering all X features in the Spec.
 
-             Next steps:
+             Next steps (after you confirm the plan above):
              - Call /dev-builder to start development by Phase
              - Or call /design-brief-builder first to determine visual direction (if not done yet)
              - Want to adjust Phase granularity or order? Just tell me."

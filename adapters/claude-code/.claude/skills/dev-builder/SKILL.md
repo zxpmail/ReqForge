@@ -59,6 +59,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     **Token Budget Awareness**: After each Task, proactively assess context usage. Running low on tokens? Suggest `/clear` + checkpoint commit before continuing. Don't let the context window silently fill with logs and search results until the model starts losing precision.
 
+    **Sub-Agent Isolation (MANDATORY)**: Per Task, RED/GREEN/REFACTOR implementation MUST run in a fresh `implementer` sub-agent — main session MUST NOT `Write`/`Edit` under `src/`, `app/`, `lib/`, `packages/`. Main session coordinates, reviews, commits. Details → `references/sub-agent-isolation.md`.
+
     **Tool-Call Offloading**: When a tool call returns large output (2,000+ lines of logs, full-file reads, extensive search results), store the output to a temporary file and keep only essential headers/footers in context. Reference the file path for later use rather than embedding the full content. This prevents context window waste and keeps responses actionable.
 
 [Output Style]
@@ -91,6 +93,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
         ├── development-rules-checklist.md
         ├── development-strategies.md
         ├── anti-rationalization.md
+        ├── sub-agent-isolation.md
         └── phase-completion-assessment.md
     ```
 
@@ -219,31 +222,33 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             5. Clarify the delivery goal for this Task: what functionality to implement, what visual result to achieve
 
             Worktree isolation (before coding):
-            6. **Worktree**: If `git` is available, create an isolated worktree for this Task before any code changes:
-               - Create a new worktree: `git worktree add .claude/worktrees/<task-name> <base-branch>`
-               - All code changes happen in the worktree, not the main branch
-               - This prevents cross-task file contamination — each Task starts clean
-               - If already in a worktree (`GIT_DIR != GIT_COMMON_DIR`), skip creation — already isolated
+            6. **Worktree (MANDATORY)**: Before any code changes, create an isolated worktree unless already inside one:
+               - `git worktree add .claude/worktrees/<task-name> <base-branch>`
+               - All implementation for this Task happens in the worktree — not on main checkout
+               - If `GIT_DIR != GIT_COMMON_DIR` → already in a worktree; skip create
+               - No git repo → document in task report; still MUST use implementer (no main-session app edits)
 
-            Coding (TDD approach):
-            7. **RED**: First write a test, describe the expected behavior. Confirm the test fails (proving the test is valid)
-            8. **GREEN**: Write the minimal code to make the test pass
-            9. Implement strictly following reference documents, code component by component against design values
+            Sub-agent implementation (TDD — steps 7–9 MUST NOT run in main session):
+            7. **Dispatch implementer** with isolated packet (see `references/sub-agent-isolation.md`). Implementer runs:
+               - **RED**: failing test first
+               - **GREEN**: minimal pass
+               - **REFACTOR**: keep green
+            8. Main session: receive implementer report; if `BLOCKED` or `NEEDS_CONTEXT` → resolve before review
+            9. Main session MUST NOT `Write`/`Edit` application source for this Task (steps 7–9 belong to implementer only)
 
-            After development — cross-reference validation + Review loop:
-            10. **REFACTOR**: Refactor and optimize code, run tests to confirm still green
-            10a. **Micro-cycle verify (≤10 min)**: Run the Task's targeted test/lint command; paste **command + pass/fail** in the same message. If the Phase has a **Primary metric**, note whether this Task moves it toward green. No micro-cycle evidence → Task not ready for review.
-            10. Read actual code values, verify item by item against design values, correct any deviations
-            11. Cross-reference Product-Spec.md to confirm functional behavior matches description
-            12. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
+            After implementer returns — cross-reference validation + Review loop:
+            10. **Micro-cycle verify (≤10 min)**: Run the Task's targeted test/lint command; paste **command + pass/fail** in the same message. If the Phase has a **Primary metric**, note whether this Task moves it toward green. No micro-cycle evidence → Task not ready for review.
+            11. Read actual code values, verify item by item against design values, correct any deviations (main session may fix only via re-dispatch implementer if code changes needed)
+            12. Cross-reference Product-Spec.md to confirm functional behavior matches description
+            13. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
                 - risk score "low" → change_complexity="simple" (skip parallel agents, quick check only)
                 - risk score "medium" or "high" → change_complexity="moderate" or "complex"
-            13. Dispatch code-reviewer with `affected_files` and `change_complexity` set.
+            14. Dispatch code-reviewer with `affected_files` and `change_complexity` set.
                 **Anonymous review packet**: Do not pass implementer task narrative or session messages — only Spec excerpts, checklist, diffs, and file contents.
                 **Default `change_complexity`**: `simple` unless the Task touches multiple modules, new public APIs, auth/payments/data migration, or dep-graph risk is medium/high — then use `moderate` or `complex`.
                 code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
 
-            13.5 **Retry gate check** (before processing review results):
+            14.5 **Retry gate check** (before processing review results):
                - Read `.forge/.retry-counter.json` (create with `{"state":"resolved","retries":0}` if absent)
                - If `state == "escalated"` -> STOP loop immediately. Present escalation options to user per [Retry Escalation]. Do NOT auto-retry.
                - If `state == "active"` and `retries >= max_retries` -> set `state="escalated"`, then escalate per [Retry Escalation]. Do NOT continue the auto-fix loop.
@@ -253,14 +258,14 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
                a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_spec_fail"`, set `state="active"`
                b. dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing]
                c. fill in the implementation
-               d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 13)
+               d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 14)
                e. If retry_count >= max_retries -> set state="escalated", escalate to user per [Retry Escalation]
 
             15. Confirmed bug/security/type issues:
                a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_quality_fail"`, set `state="active"`
                b. dispatch feedback-observer with trigger_reason="review_quality_fail", current_skill="dev-builder", ai_action=[quality issue]
                c. call bug-fixer to fix
-               d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 13)
+               d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 14)
                e. If retry_count >= max_retries -> set state="escalated", escalate to user per [Retry Escalation]
 
             16. Review passes (no confirmed HIGH issues):

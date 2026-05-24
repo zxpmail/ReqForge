@@ -1,0 +1,11 @@
+id: plan-before-build-01
+skill: dev-planner
+description: 无确认 DEV-PLAN 前不得 dev-builder
+expect_skill_contains:
+  - "[HARD-GATE]"
+  - "DEV-PLAN.md"
+  - "MUST NOT"
+  - "/dev-builder"
+expect_reference_contains:
+  - "plan-hard-gate-rationalization"
+  - "直接开写"

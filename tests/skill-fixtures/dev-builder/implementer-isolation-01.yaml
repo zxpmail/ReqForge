@@ -1,0 +1,11 @@
+id: implementer-isolation-01
+skill: dev-builder
+description: 每 Task 须 implementer 子 Agent，禁止主 session 写业务代码
+expect_skill_contains:
+  - "implementer"
+  - "MUST NOT"
+  - "Write"
+  - "worktree"
+expect_reference_contains:
+  - "Sub-Agent Isolation"
+  - "MANDATORY"

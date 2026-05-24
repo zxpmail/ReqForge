@@ -23,6 +23,11 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 - Return actionable messages — "Compilation failed: src/utils.ts:12 — Type 'string' is not assignable to 'number'" not just "failed"
 - Prefer composite hooks (`memory-guard`) in loadouts when multiple scripts share the same trigger — delegate to legacy scripts inside the composite
 
+### PreToolUse hooks
+| Name | Trigger | Purpose |
+|------|---------|---------|
+| `hallucination-gate` | PreToolUse | **Spec-Before-Code** (`scripts/hooks/spec-before-code-gate.mjs`) then path/parent-dir checks for Write/Edit |
+
 ### SessionStart hooks
 | Name | Trigger | Purpose |
 |------|---------|---------|
