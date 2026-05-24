@@ -22,13 +22,16 @@ color: red
     If change_complexity is "simple", skip the parallel agent dispatch and proceed directly to a quick code quality check.
 
     For moderate/complex changes:
-    1. Dispatch 4 specialized agents in parallel:
+    1. **Build anonymous review packet** — strip implementer session/task narrative; keep Spec excerpts, checklist, diffs, `file:line` evidence (see [llm-council-comparison.md](../../docs/llm-council-comparison.md))
+    2. Dispatch 4 specialized agents in parallel:
        - **code-reviewer-design**: Spec compliance, architecture consistency, pattern drift
        - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
        - **code-reviewer-security**: OWASP Top 10, credential leaks, injection, XSS
        - **code-reviewer-types**: Type safety, nullability, edge cases
-    2. Aggregate findings with confidence-based filtering
-    3. Produce unified report
+    3. Aggregate findings with confidence-based filtering
+    4. **Meta-review** suspected findings (0.3–0.6): promote, keep, or suppress
+    5. Classify confirmed items: **Must-fix / Should-fix / Insight**
+    6. Produce unified report with **综合结论** (ship / fix-first / blocked)
 
 [Input]
     The main Agent passes the following context:
@@ -47,9 +50,11 @@ color: red
 
     1. **Agent Findings Summary**: Per-agent finding counts (total, confirmed, suspected)
     2. **Confirmed Issues** (confidence >= 0.6): Deduplicated, with per-agent attribution
-    3. **Suspected Issues** (confidence 0.3-0.6): Flagged for manual review
-    4. **Priority**: HIGH / MEDIUM / LOW
-    5. **Compilation Result**: tsc --noEmit output
+    3. **Suspected Issues** (confidence 0.3-0.6): After meta-review — list only those still suspected
+    4. **综合结论**: Verdict (可合并 / 先修再审 / 阻塞) + Primary metric status + one-paragraph synthesis
+    5. **Must-fix / Should-fix / Insight** counts and top items
+    6. **Priority**: HIGH / MEDIUM / LOW
+    7. **Compilation Result**: tsc --noEmit output
 
 [Confidence Scoring & Aggregation]
     **Per-finding confidence** is assigned by each specialized agent:
@@ -64,6 +69,7 @@ color: red
     3. Confidence < 0.3 → suppress
     4. Deduplicate: same file + same line range + same category → keep highest confidence entry
     5. If two agents flag the same file+line at >= 0.6, boost confidence by 0.1 (capped at 1.0)
+    6. **Meta-review**: re-evaluate each suspected finding; promote to confirmed if evidence supports
 
 [Handoff Protocol]
     **Data passed by main Agent**:
@@ -111,8 +117,16 @@ color: red
          **Confirmed Issues (X)** (confidence >= 60%)
          - [category] [file:line] — description — agent attribution — [confidence%]
 
-         **Suspected Issues (X)** (confidence 30-60%, flagged for manual review)
+         **Suspected Issues (X)** (after meta-review)
          - [category] [file:line] — description — uncertainty reason — [confidence%]
+
+         **综合结论**
+         - Verdict: 可合并 / 先修再审 / 阻塞
+         - Primary metric: [if applicable]
+         - Synthesis: [one paragraph]
+
+         **Must-fix | Should-fix | Insight**
+         - [bucket] [file:line] — one line
 
          **Code Quality**
          - Large files, type issues, compilation result

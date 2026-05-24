@@ -1,7 +1,7 @@
 # Agent Harness 七层对照（ReqForge 映射）
 
 > 教学参考：[AGENT魔方 · 从零开始理解 Agent 番外篇：Harness 是什么？](https://bbs.huaweicloud.com/blogs/476342)（`Agent = Model + Harness`）  
-> 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Shell 输出压缩：[rtk-comparison.md](./rtk-comparison.md) · Harness 纪律参照：[nanochat-comparison.md](./nanochat-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
+> 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Shell 输出压缩：[rtk-comparison.md](./rtk-comparison.md) · Harness 纪律参照：[nanochat-comparison.md](./nanochat-comparison.md) · Council 评审：[llm-council-comparison.md](./llm-council-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
 
 ---
 
@@ -18,7 +18,7 @@
 | 1 | **工具 + 执行循环** | 模型只能说话，不能动手 | `dev-builder` Plan Mode → Task → 实现；TDD；`implementer` 子 Agent |
 | 2 | **记忆 + 规划** | 每次对话从零开始 | `memory/` 三层；`dev-planner` → `DEV-PLAN.md`；`CONTEXT.md`（用户项目） |
 | 3 | **Rules + Skills + MCP** | 不懂项目规范、不会调外部能力 | `CLAUDE.md` / 适配器规则；12 Skills + `references/` 渐进披露；loadout 可选 MCP（Context7、设计、Playwright） |
-| 4 | **SubAgent / Teams** | 单线程扛不住复杂任务 | `planner`、`implementer`；并行 4 专项 `code-review` |
+| 4 | **SubAgent / Teams** | 单线程扛不住复杂任务 | `planner`、`implementer`；并行 4 专项 `code-review`（**生成→评审→综合**，见 [llm-council-comparison.md](./llm-council-comparison.md)） |
 | 5 | **上下文压缩** | Context Rot，越长越糊 | `memory-guard`（compaction + handoff）；大输出 offload（`CLAUDE.md`）；可选叠加 [RTK](https://github.com/rtk-ai/rtk)（Shell 输出层，见 [rtk-comparison.md](./rtk-comparison.md)） |
 | 6 | **Hook 安全网** | 危险命令、未审查就停 | `hallucination-gate`、`pre-commit-check`、`stop-gate`、`phase-exit-guard` |
 | 7 | **续命（Ralph Loop）** | 到迭代上限但任务未完成 | `phase-exit-guard` + `.forge/phase-exit-block`（见下） |
@@ -46,7 +46,7 @@ ReqForge 做法（不解析整份 DEV-PLAN，避免误伤）：
 |------|------|
 | Product-Spec | 0-to-1 / Quick / 迭代模式 |
 | change-manager | 存量功能单次变更（OpenSpec 对齐） |
-| code-review | 简单默认 + 复杂并行 |
+| code-review | 简单默认 + 复杂并行 + Council 轻量（匿名包 / meta-review / 综合结论） |
 | release-builder | 发布边界 |
 | evolution-engine | 反馈 → 规则/Skill 升级（含可验证预测，见 SKILL） |
 

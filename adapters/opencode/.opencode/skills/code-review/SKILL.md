@@ -33,6 +33,12 @@ description: Used when the user wants to review code, check quality, verify feat
     **Leave No Stone Unturned**: Every single functional requirement in the Spec must be checked. Sweeping statements like "the rest looks normal" are not acceptable.
     **Confidence-Based Reporting**: Every finding must include a confidence score (0.0–1.0). Only findings with confidence ≥ 0.6 are reported as confirmed issues. Findings between 0.3 and 0.6 are reported as "suspected issues" with the reason for uncertainty. Findings below 0.3 are suppressed as noise.
     **Cross-Session Audit**: Important reviews (entire Phase completion, security audit, architecture change) should be performed in a fresh sub-agent session. Reviewing code in the same session where it was written creates self-confirmation bias — the model tends to validate its own assumptions. When `change_complexity` is "complex" or "moderate", flag the review as requiring isolation.
+
+    **Council-Style Review (llm-council discipline)**: See [llm-council-comparison.md](../../docs/llm-council-comparison.md).
+    - **Anonymous context**: Before dispatching specialized reviewers, strip implementer/session/task narrative from the review packet. Keep `file:line`, Spec excerpts, and diff content — reviewers judge code and evidence, not who wrote it.
+    - **Meta-review**: After parallel agents return, the aggregator re-evaluates every **suspected** finding (confidence 0.3–0.6): promote to confirmed, keep suspected, or suppress — lightweight substitute for full peer review of reviews.
+    - **Chairman synthesis**: End every report with **综合结论** (ship / fix-first / blocked) plus **Must-fix / Should-fix / Insight** buckets — not only an issue list.
+
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
 [Output Style]
@@ -182,6 +188,7 @@ description: Used when the user wants to review code, check quality, verify feat
         **Default**: If `change_complexity` is omitted, treat as **simple** (quick aggregator pass only).
         Escalate to moderate/complex only when caller sets it, or change touches multiple modules / new APIs / security-sensitive code.
         For simple changes (typo fix, single-file rename, comment-only, default), skip to [Step 3].
+        **Anonymous review packet** (moderate/complex): Remove implementer task description, session handoff, and "I just implemented…" narrative from inputs to specialized agents. Pass: Spec excerpts, DEV-PLAN checklist, affected files list, git diff or file contents, Design-Brief/MCP values. Do **not** pass author identity or prior assistant messages about the change.
         For moderate/complex changes, dispatch 4 specialized agents concurrently:
         - **code-reviewer-design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
         - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
@@ -206,7 +213,14 @@ description: Used when the user wants to review code, check quality, verify feat
 
         **Cross-agent boost**: if two agents flag the same file+line at >= 0.6, boost by 0.1 (max 1.0)
 
+        **Meta-review (suspected only)**: For each suspected finding, aggregator asks: (1) is there file:line evidence?, (2) does Spec require this?, (3) would a specialist agree? Promote to confirmed (>=0.6), keep suspected, or suppress (<0.3).
+
         **Compilation verification**: tsc --noEmit
+
+        **Actionability buckets** (confirmed + promoted findings):
+        - **Must-fix**: blocks Phase Primary metric, security, or Spec must-have
+        - **Should-fix**: quality/maintainability before Phase sign-off
+        - **Insight**: architecture/note; no immediate fix required
 
     [Step 5: Output Aggregated Review Report]
         Format:
@@ -242,6 +256,14 @@ description: Used when the user wants to review code, check quality, verify feat
          - Compilation result: tsc --noEmit [output]
 
          ---
+
+         **综合结论 (Chairman synthesis)**
+         - Verdict: **可合并 / 先修再审 / 阻塞**
+         - Primary metric (if DEV-PLAN Phase): [green / red + command evidence]
+         - One paragraph: biggest risk + recommended next action
+
+         **Must-fix (X)** | **Should-fix (X)** | **Insight (X)**
+         - List confirmed/promoted items under buckets (file:line — one line each)
 
          **Priority Classification**
          High: [core functionality missing, security issues — >= 60% confidence]

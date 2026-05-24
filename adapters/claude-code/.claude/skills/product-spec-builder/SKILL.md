@@ -373,6 +373,29 @@ description: Used when the user says they want to build a product, application, 
 
             Only after user confirms all issues are resolved can the workflow end. Do not deliver an unclean spec.
 
+        Step 7: Spec Quality Council (llm-council discipline)
+            Goal: Multi-perspective quality gate before Spec is final — complements Step 6 self-review with isolated role lenses.
+
+            **When**: After Step 6 user confirms all cleanup issues resolved (or Step 6 found zero remaining items).
+
+            Dispatch **4 parallel read-only perspectives** (same model, different role prompts — no multi-model router):
+            1. **Completeness** — Are all key dimensions covered (users, flows, data, AI, tech, edge cases)?
+            2. **Consistency** — Internal contradictions, conflicting requirements, duplicate scope?
+            3. **Feasibility** — Achievable with stated tech stack and team constraints?
+            4. **User lens** — Gaps from target user's job-to-be-done; missing pain points or success criteria?
+
+            Each perspective returns: findings with confidence (0.0–1.0), **blocking / needs-clarification / ok**.
+
+            **Chairman synthesis** (main Agent):
+            - Verdict: **可交付 / 待确认 / 阻塞**
+            - List blocking items first (must resolve before dev-planner)
+            - Merge duplicate findings across perspectives
+
+            If **阻塞** or unresolved **待确认** → return to user; do not mark Spec complete.
+            If **可交付** → workflow ends; user may invoke `/dev-planner`.
+
+            See [llm-council-comparison.md](../../docs/llm-council-comparison.md).
+
 [Workflow (Iteration Mode)]
     **Trigger Condition**: User proposes new features, requirement changes, or iterative ideas during development
 

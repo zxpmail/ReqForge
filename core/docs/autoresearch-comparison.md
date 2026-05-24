@@ -161,4 +161,5 @@ flowchart TB
 - [nanochat-comparison.md](./nanochat-comparison.md) — speedrun / test-demo
 - [openspec-comparison.md](./openspec-comparison.md) — changes/ 工件
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md) — falsifiable 验证环
+- [llm-council-comparison.md](./llm-council-comparison.md)
 - [test-demo/README.md](../../test-demo/README.md) — 黄金路径守门

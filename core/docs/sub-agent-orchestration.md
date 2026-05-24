@@ -23,6 +23,8 @@ Evolution proposals from evolution-runner must be presented to the user for indi
 
 For moderate/complex changes, `code-reviewer` dispatches 4 specialized agents concurrently:
 
+**Council-style packet (llm-council)**: Before dispatch, strip implementer session/task narrative from inputs. Pass Spec excerpts, checklist, diffs, and code only — see [llm-council-comparison.md](./llm-council-comparison.md).
+
 1. **code-reviewer-design** — Checks spec compliance, architecture consistency, pattern drift. Outputs `spec_gap`, `pattern_drift`, `architecture_violation`, `naming`, `duplication`, `complexity` findings.
 2. **code-reviewer-bug** — Detects bug patterns: null pointer dereferences, race conditions, resource leaks, incorrect async handling. Each finding includes severity (critical/major/minor).
 3. **code-reviewer-security** — Scans for OWASP Top 10: credential leaks, injection, XSS, path traversal, eval(), insecure deserialization.
@@ -33,6 +35,12 @@ Each agent returns structured findings with confidence score (0.0-1.0). The aggr
 - **Confidence 0.3-0.6** → suspected finding (downgraded)
 - **Confidence < 0.3** → suppressed (noise)
 - Cross-agent boost: same file+line flagged by ≥2 agents at ≥0.6 → boost +0.1 (max 1.0)
+- **Meta-review**: aggregator re-evaluates suspected (0.3–0.6) findings — promote, keep, or suppress
+- **Chairman output**: 综合结论 + Must-fix / Should-fix / Insight buckets
+
+## Spec Quality Council (product-spec-builder Step 7)
+
+After Final Validation, four read-only perspectives (completeness, consistency, feasibility, user lens) run in parallel; main Agent synthesizes **可交付 / 待确认 / 阻塞**. See [llm-council-comparison.md](./llm-council-comparison.md).
 
 ## Sub-Agent Isolation Principle
 - Each Task gets a fresh instance. Never reuse a previous Sub-Agent.

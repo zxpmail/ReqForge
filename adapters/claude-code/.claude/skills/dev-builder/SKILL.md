@@ -239,6 +239,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
                 - risk score "low" → change_complexity="simple" (skip parallel agents, quick check only)
                 - risk score "medium" or "high" → change_complexity="moderate" or "complex"
             13. Dispatch code-reviewer with `affected_files` and `change_complexity` set.
+                **Anonymous review packet**: Do not pass implementer task narrative or session messages — only Spec excerpts, checklist, diffs, and file contents.
                 **Default `change_complexity`**: `simple` unless the Task touches multiple modules, new public APIs, auth/payments/data migration, or dep-graph risk is medium/high — then use `moderate` or `complex`.
                 code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
 
