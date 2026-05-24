@@ -10,7 +10,7 @@
 - PreToolUse 五段链：Spec → spec-confirmed → DEV-PLAN → plan-confirmed → implementer-session
 - forge-smoke **12** 项；中英文 README + DEV-PLAN 已对齐
 - **product-spec-builder**：pm-frameworks + CoT（1–4）；`9b0d9c8` 去重 CoT 段 + CHANGELOG Unreleased
-- **版本 v1.25.0**（Harness 硬化 + pm-frameworks + CoT）；远程 `main` 见 CHANGELOG
+- **版本 v1.25.0**；GitHub Wiki 源稿：`docs/github-wiki/Home.md`（需手动贴到 wiki）
 
 ## 架构与 Harness（产品本身）
 
