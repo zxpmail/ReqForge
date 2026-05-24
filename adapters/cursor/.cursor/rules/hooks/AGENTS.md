@@ -23,6 +23,11 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 - Return actionable messages — "Compilation failed: src/utils.ts:12 — Type 'string' is not assignable to 'number'" not just "failed"
 - Prefer composite hooks (`memory-guard`) in loadouts when multiple scripts share the same trigger — delegate to legacy scripts inside the composite
 
+### SessionStart hooks
+| Name | Trigger | Purpose |
+|------|---------|---------|
+| `check-evolution` | SessionStart | **Part 0**: inject `forge-bootstrap.md` iron laws. **Part 1**: if `feedback/FEEDBACK-INDEX.md` has entries → mandatory evolution-runner. **Part 2**: Product-Spec / DEV-PLAN / code state + routing (incl. HARD-GATE hints). Resolves bootstrap + feedback paths for Claude, Cursor, OpenCode, and `core/` framework repo. |
+
 ### Stop / phase hooks
 | Name | Trigger | Purpose |
 |------|---------|---------|

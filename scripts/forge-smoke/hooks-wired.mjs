@@ -18,4 +18,8 @@ for (const hook of data.hooks) {
   r.assert(hookExists(hooksDir, hook), `full loadout hook '${hook}' missing in core/hooks/`);
 }
 
+const evolutionSh = fs.readFileSync(path.join(hooksDir, "check-evolution.sh"), "utf-8");
+r.assert(evolutionSh.includes("find_feedback_index"), "check-evolution.sh must resolve multi-client feedback paths");
+r.assert(evolutionSh.includes("find_bootstrap_file"), "check-evolution.sh must resolve forge-bootstrap");
+
 r.finish();

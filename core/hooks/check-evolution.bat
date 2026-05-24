@@ -9,7 +9,6 @@ setlocal enabledelayedexpansion
 set "PROJECT_DIR=%CLAUDE_PROJECT_DIR%"
 if "%PROJECT_DIR%"=="" set "PROJECT_DIR=%CD%"
 
-set "FEEDBACK_INDEX=%PROJECT_DIR%\.claude\feedback\FEEDBACK-INDEX.md"
 set "HOOK_DIR=%~dp0"
 if "%HOOK_DIR:~-1%"=="\" set "HOOK_DIR=%HOOK_DIR:~0,-1%"
 
@@ -21,12 +20,19 @@ if "%BOOTSTRAP_FILE%"=="" if exist "%PROJECT_DIR%\core\templates\forge-bootstrap
 if "%BOOTSTRAP_FILE%"=="" if exist "%HOOK_DIR%\..\templates\forge-bootstrap.md" set "BOOTSTRAP_FILE=%HOOK_DIR%\..\templates\forge-bootstrap.md"
 
 if not "%BOOTSTRAP_FILE%"=="" (
-  node -e "const fs=require('fs');const p=process.argv[1];const t=fs.readFileSync(p,'utf8').replace(/\s+/g,' ').trim();console.log(JSON.stringify({additionalContext:'Session Iron Laws (MANDATORY — forge-bootstrap): '+t}));" "%BOOTSTRAP_FILE%"
+  node -e "const fs=require('fs');const p=process.argv[1];const t=fs.readFileSync(p,'utf8').replace(/\s+/g,' ').trim();console.log(JSON.stringify({additionalContext:'Session Iron Laws (MANDATORY - forge-bootstrap): '+t}));" "%BOOTSTRAP_FILE%"
 ) else (
   echo {"additionalContext": "Session Iron Laws (MANDATORY): Skill before action. No /dev-builder or /dev-planner until Product-Spec.md saved and user confirmed. No app code under src|app|lib|packages until then. No /dev-builder without DEV-PLAN.md. Use /bug-fixer with repro + failing test. Hook blocks are hard stops. One Phase per /dev-builder invocation."}
 )
 
-if exist "%FEEDBACK_INDEX%" (
+set "FEEDBACK_INDEX="
+if exist "%PROJECT_DIR%\.claude\feedback\FEEDBACK-INDEX.md" set "FEEDBACK_INDEX=%PROJECT_DIR%\.claude\feedback\FEEDBACK-INDEX.md"
+if "%FEEDBACK_INDEX%"=="" if exist "%PROJECT_DIR%\.cursor\rules\feedback\FEEDBACK-INDEX.md" set "FEEDBACK_INDEX=%PROJECT_DIR%\.cursor\rules\feedback\FEEDBACK-INDEX.md"
+if "%FEEDBACK_INDEX%"=="" if exist "%PROJECT_DIR%\.opencode\feedback\FEEDBACK-INDEX.md" set "FEEDBACK_INDEX=%PROJECT_DIR%\.opencode\feedback\FEEDBACK-INDEX.md"
+if "%FEEDBACK_INDEX%"=="" if exist "%PROJECT_DIR%\core\feedback\FEEDBACK-INDEX.md" set "FEEDBACK_INDEX=%PROJECT_DIR%\core\feedback\FEEDBACK-INDEX.md"
+if "%FEEDBACK_INDEX%"=="" if exist "%HOOK_DIR%\..\feedback\FEEDBACK-INDEX.md" set "FEEDBACK_INDEX=%HOOK_DIR%\..\feedback\FEEDBACK-INDEX.md"
+
+if not "%FEEDBACK_INDEX%"=="" (
   set COUNT=0
   for /f "usebackq tokens=*" %%a in ("%FEEDBACK_INDEX%") do (
     set "LINE=%%a"
@@ -62,7 +68,7 @@ if "%HAS_SPEC%"=="0" (
 ) else if "%HAS_CODE%"=="0" (
   set "STATE_MSG=%STATE_MSG% Next: start building (use /dev-builder)."
 ) else (
-  set "STATE_MSG=%STATE_MSG% In development — continue with current phase or /dev-builder."
+  set "STATE_MSG=%STATE_MSG% In development - continue with current phase or /dev-builder."
 )
 
 node -e "console.log(JSON.stringify({additionalContext: process.argv[1]}));" "%STATE_MSG%"

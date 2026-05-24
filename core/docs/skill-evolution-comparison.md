@@ -94,20 +94,20 @@ flowchart TB
 
 ## 论文启示 vs 暂缓项（P0 / P1 / P2）
 
-用户决策：**只做 P0 文档；P1、P2 暂不实现。**
-
 | 优先级 | 内容 | 状态 |
 |--------|------|------|
-| **P0** | 本文：对照 + 选型 + 明确不做 | ✅ 当前文档 |
-| **P1** | `feedback-writer` 增加 `skill-defect` / `execution-lapse`；`evolution-engine` 按标签分流（改 Skill vs 改 hook/路由） | ⏸ 暂缓；见下「何时再考虑 P1」 |
+| **P0** | 本文：对照 + 选型 + 明确不做 | ✅ |
+| **P1-lite** | `failure_class` + RED 行 + evolution 四件套 + `feedback-observer` 分类 | ✅ v1.24+（`feedback-writer`、`evolution-engine`、`check-evolution` / `forge-bootstrap`） |
+| **P1-full** | 自动从轨迹推断 skill-defect vs execution-lapse（无人工标签） | ⏸ 暂缓 |
 | **P2** | `skill-bypass` 清单：Skill 存在但长期未触发 → 改 `triggers` / CLAUDE 路由 | ⏸ 暂缓 |
 
-### 何时再考虑 P1
+### P1-lite 使用说明
 
-- 同类失败 **≥3 次** 升格后，改 Skill 仍 **重复出现** 同一类问题；
-- 复盘发现多数是 **没跑 TDD / 没验收 / 跳过 dev-planner**，而非 Skill 文字错误。
+- 写 feedback 时设 `failure_class`；正文写 **RED** 一句（见 `feedback-topic-template.md`）
+- `evolution-engine` 按标签分流：execution-lapse → 优先 bootstrap/hooks，避免 Skill 正文膨胀
+- 仍依赖人工判断；误判时用 `unset` 并在 body 说明
 
-**人工替代（P1 未做前）**：写 feedback 时在正文注明「Skill 已覆盖，属执行偏差」或「Skill 缺步骤/过时」。
+### 何时再考虑 P1-full
 
 ### 何时再考虑 P2
 

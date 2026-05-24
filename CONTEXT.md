@@ -6,7 +6,8 @@
 
 ## 上次停在哪个位置
 
-- **A+B+E 落地**：`forge-bootstrap.md` + `check-evolution` 会话注入；`product-spec-builder` HARD-GATE + 借口表；`evolution-engine` Skill TDD 四件套 + `failure_class` 路由；`feedback-writer` / 模板标签
+- **A+B+E 落地**：`forge-bootstrap` + HARD-GATE + evolution Skill TDD（commit `3068927`）
+- **P0/P1 补全**：`CLAUDE.md` Session Iron Laws；`feedback-observer` 打标签；commands/索引/YOLO/文档/hooks AGENTS；`check-evolution` 多客户端 feedback 路径
 - 已 push `ee178d5`：README / README.zh-CN 补全 **What's New → v1.24.0** 段
 
 ## 架构与 Harness（产品本身）

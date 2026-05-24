@@ -144,8 +144,8 @@ description: Auto-triggers on session init, or manually triggered when the user 
     When FORGE_MODE=yolo, proposals are written to file instead of waiting for confirm/skip:
 
     **Proposal Output** -> Write `changes/proposals.md`:
-        All three proposal types in structured format.
-        Skip per-item confirm/skip. Return to main Agent as:
+        Same fields as [Proposal Format] for every item: RED observation, GREEN change, Predicted effect, Verify by, failure_class when known.
+        Omit proposals missing RED or Verify by. Skip per-item confirm/skip. Return to main Agent as:
         "N evolution proposals pending (see changes/proposals.md)"
 
 [Return Format]

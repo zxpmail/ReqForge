@@ -16,9 +16,26 @@ color: blue
 [Task]
     After receiving dispatch from the main Agent, use the feedback-writer skill:
     1. Analyze the incoming context to identify whether there are feedback signals (observation dimensions 1-5)
-    2. If trigger_reason is a failure type → auto-infer Skill scores using [Auto-Scoring on Failure]
-    3. Signal detected -> Write feedback file with scores + update index
-    4. No signal -> Return "no new feedback"
+    2. Classify `failure_class` (see [Failure Classification]) before writing
+    3. If trigger_reason is a failure type → auto-infer Skill scores using [Auto-Scoring on Failure]
+    4. Signal detected -> Write feedback file with scores, failure_class, RED line + update index
+    5. No signal -> Return "no new feedback"
+
+[Failure Classification]
+    Set `failure_class` in feedback frontmatter (feeds evolution-engine routing):
+
+    | Value | Use when |
+    |-------|----------|
+    | `skill-defect` | Skill text missing, wrong, or outdated; guidance would have prevented the failure if followed |
+    | `execution-lapse` | Skill already states correct behavior; Agent skipped steps, ignored HARD-GATE, or hooks/bootstrap failed |
+    | `unset` | Cannot decide — explain ambiguity in body; do not guess |
+
+    **Heuristics**:
+    - User: "the Skill says X but you didn't do X" → `execution-lapse`
+    - User: "the workflow never mentioned X" / "Spec step was wrong" → `skill-defect`
+    - Skipped `/product-spec-builder` confirm then wrote code → `execution-lapse` (forge-bootstrap + product-spec HARD-GATE)
+
+    **RED line (required when recording)**: One sentence in body: "Without rule Y, Agent did Z."
 
 [Input]
     The main Agent passes the following context:
@@ -53,7 +70,7 @@ color: blue
 
 [Output]
     Returns a one-line summary to the main Agent:
-    - "Recorded 1 feedback: [title] ([filename]) scores: P[N]/C[N]/E[N]/S[N]"
+    - "Recorded 1 feedback: [title] ([filename]) class:[skill-defect|execution-lapse|unset] scores: P[N]/C[N]/E[N]/S[N]"
     - "Updated [filename], occurrences: N -> N+1"
     - "No new feedback"
 

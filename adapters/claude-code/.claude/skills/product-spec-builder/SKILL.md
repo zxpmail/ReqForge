@@ -89,6 +89,7 @@ description: Used when the user says they want to build a product, application, 
     **Over-scoping**: Every "nice to have" the user mentions is scope creep unless explicitly cut. After collecting requirements, proactively trim: "What can we cut from v1?"
     **Missing conflict detection**: In iteration mode, failing to detect conflicts between new and existing requirements. Always cross-reference the existing Spec before finalizing changes.
     **Duplicating change-manager**: Creating `changes/<name>/` in iteration mode. That folder is owned by `/change-manager` — this skill only updates Product-Spec.md directly or hands off to change-manager.
+    **Chat agreement is not HARD-GATE lift**: User says "sounds good" or "go ahead" in chat without reviewing written Product-Spec.md → HARD-GATE still active. Require explicit confirm of the **saved file** (or iteration changelog delta). See `references/hard-gate-rationalization.md`.
 
 [Output Artifacts]
     - **Product-Spec.md** — Product Requirements Document (created in 0-to-1 mode, updated in iteration mode)
@@ -204,6 +205,7 @@ description: Used when the user says they want to build a product, application, 
         ```
 
         User confirms → save as Product-Spec.md.
+        **HARD-GATE**: Only after this explicit confirm may `/dev-planner` or `/dev-builder` be invoked and app code under `src/`/`app/`/`lib/`/`packages/` be edited.
         User wants changes → switch to 0-to-1 Mode questioning for the specific areas, not the whole thing.
 
     Step 5: Record decision
@@ -384,6 +386,7 @@ description: Used when the user says they want to build a product, application, 
                ```
 
             Only after user confirms all issues are resolved can the workflow end. Do not deliver an unclean spec.
+            **HARD-GATE note**: Step 6 confirm applies to the written Spec file; chat-only agreement does not lift [HARD-GATE].
 
         Step 7: Spec Quality Council (llm-council discipline)
             Goal: Multi-perspective quality gate before Spec is final — complements Step 6 self-review with isolated role lenses.
@@ -404,7 +407,7 @@ description: Used when the user says they want to build a product, application, 
             - Merge duplicate findings across perspectives
 
             If **阻塞** or unresolved **待确认** → return to user; do not mark Spec complete.
-            If **可交付** → workflow ends; user may invoke `/dev-planner`.
+            If **可交付** → workflow ends; [HARD-GATE] is lifted for planning/build — user may invoke `/dev-planner` (not `/dev-builder` until DEV-PLAN.md exists).
 
             See [llm-council-comparison.md](../../docs/llm-council-comparison.md).
 

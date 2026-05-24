@@ -6,7 +6,6 @@
 # All parts are hard triggers, not suggestions. The main Agent MUST process them.
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
-FEEDBACK_INDEX="$PROJECT_DIR/.claude/feedback/FEEDBACK-INDEX.md"
 HOOK_DIR="$(CDPATH= cd "$(dirname "$0")" && pwd)"
 
 # --- Resolve forge-bootstrap.md (framework repo, installed adapters, or hook-relative) ---
@@ -17,6 +16,22 @@ find_bootstrap_file() {
     "$PROJECT_DIR/.opencode/templates/forge-bootstrap.md" \
     "$PROJECT_DIR/core/templates/forge-bootstrap.md" \
     "$HOOK_DIR/../templates/forge-bootstrap.md"; do
+    if [ -f "$candidate" ]; then
+      echo "$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+# --- Resolve FEEDBACK-INDEX.md (Claude / Cursor / OpenCode / framework repo) ---
+find_feedback_index() {
+  for candidate in \
+    "$PROJECT_DIR/.claude/feedback/FEEDBACK-INDEX.md" \
+    "$PROJECT_DIR/.cursor/rules/feedback/FEEDBACK-INDEX.md" \
+    "$PROJECT_DIR/.opencode/feedback/FEEDBACK-INDEX.md" \
+    "$PROJECT_DIR/core/feedback/FEEDBACK-INDEX.md" \
+    "$HOOK_DIR/../feedback/FEEDBACK-INDEX.md"; do
     if [ -f "$candidate" ]; then
       echo "$candidate"
       return 0
@@ -38,14 +53,15 @@ emit_json_context() {
 # --- Part 0: Bootstrap iron laws (always first) ---
 BOOTSTRAP_FILE="$(find_bootstrap_file 2>/dev/null || true)"
 if [ -n "$BOOTSTRAP_FILE" ]; then
-  emit_json_context "Session Iron Laws (MANDATORY — forge-bootstrap): " "$(tr '\n' ' ' < "$BOOTSTRAP_FILE" | sed 's/  */ /g')"
+  emit_json_context "Session Iron Laws (MANDATORY - forge-bootstrap): " "$(tr '\n' ' ' < "$BOOTSTRAP_FILE" | sed 's/  */ /g')"
 else
   emit_json_context "Session Iron Laws (MANDATORY): " \
     "Skill before action. No /dev-builder or /dev-planner until Product-Spec.md saved and user confirmed. No app code under src|app|lib|packages until then. No /dev-builder without DEV-PLAN.md. Use /bug-fixer with repro + failing test. Hook blocks are hard stops. One Phase per /dev-builder invocation."
 fi
 
 # --- Part 1: Evolution check ---
-if [ -f "$FEEDBACK_INDEX" ]; then
+FEEDBACK_INDEX="$(find_feedback_index 2>/dev/null || true)"
+if [ -n "$FEEDBACK_INDEX" ]; then
   COUNT=0
   while IFS= read -r line; do
     case "$line" in
