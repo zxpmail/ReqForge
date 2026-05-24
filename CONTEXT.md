@@ -6,7 +6,7 @@
 
 ## 上次停在哪个位置
 
-- 已 push `553f156`：v1.24.0 llm-wiki 对照、OpenCode AGENTS.md 修复、memory Query filing
+- 已 push `ee178d5`：README / README.zh-CN 补全 **What's New → v1.24.0** 段
 - 已 push `17cbcfe`：jobs 对照 + risk_rank + PROJECT-HEALTH
 
 ## 架构与 Harness（产品本身）
