@@ -54,3 +54,5 @@ project/
 **ReqForge self-development**: The framework repo also has `core/` (source of truth) and `adapters/` (client bundles). Run `pnpm sync` after editing `core/` to propagate to adapters. The `check-sync` hook exists only in `core/hooks/` for this workflow — it is not shipped to end-user projects.
 
 **Loadout picker**: [loadout-scenarios.md](./loadout-scenarios.md) — which of `full` / `web-app` / `cli-tool` / `minimal` to use by scenario.
+
+**Platform compliance**: [platform-compliance.md](./platform-compliance.md) — GitHub Actions (no cron), fork intent, no central user secrets.

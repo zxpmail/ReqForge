@@ -15,6 +15,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 /** 由轻至重排列 */
 const SMOKES = [
+  "workflows-compliance",
+  "platform-compliance-doc",
   "machine-gates-doc",
   "templates-present",
   "agents-complete",

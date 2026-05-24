@@ -15,7 +15,7 @@
 | Build a **CLI or library** (no UI design skills) | **`cli-tool`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
 | **Quick prototype** or small script (minimal process) | **`minimal`** | `/product-spec-builder` (Quick mode) → `/dev-builder` |
 | **Fix a bug** only | Any (skills already copied) | `/bug-fixer` → `/code-review` |
-| **Evolve Harness rules** from feedback | **`full`** (or any with evolution hooks) | fix issue → feedback recorded → `/evolution-engine` |
+| **Evolve Harness rules** from feedback | **`full`** or **`web-app`** | fix issue → feedback recorded → `/evolution-engine` |
 | **Create a new Skill** for Forge | **`full`** | `/skill-builder` |
 | **Trim hook overhead** on a tiny repo | **`minimal`** + `pnpm apply-loadout minimal <client>` | same Skills, fewer hooks |
 
@@ -114,4 +114,5 @@ Need dev-planner + release + evolution?
 
 - [file-structure.md](./file-structure.md) — `core/loadouts/` layout
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md) — P0 validation including `pnpm forge-smoke`
+- [platform-compliance.md](./platform-compliance.md) — GitHub Actions policy (no cron)
 - README **Step 3b — Loadouts** — install and `apply-loadout`

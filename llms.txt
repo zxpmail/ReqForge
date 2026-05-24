@@ -34,7 +34,12 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 - **3-Tier Memory** — project-memory.md (permanent architecture facts), decisions-log.md (ADR records), task-history.md (30-entry rolling log).
 - **Evolution Loop** — feedback-observer records failures → evolution-engine detects patterns (3+ occurrences) → generates rule upgrade proposals → skill-builder implements.
 - **Dependency Graph** — `scripts/dependency-graph.ts` for file-level blast-radius analysis before code changes.
-- **Loadouts** — `full`, `web-app`, `cli-tool`, `minimal` bundles of skills/agents/hooks.
+- **Loadouts** — `full`, `web-app`, `cli-tool`, `minimal` bundles of skills/agents/hooks. Scenario picker: `core/docs/loadout-scenarios.md`.
+
+### Maintainer gates
+
+- `pnpm forge-smoke` — 9 static smokes (skills, loadouts, adapter sync, hooks, templates, machine gates, CI compliance). CI: `.github/workflows/forge-smoke.yml` (push/PR only, no cron).
+- Platform policy: `core/docs/platform-compliance.md`.
 
 ### Key Principles
 
@@ -58,6 +63,6 @@ One-command install: `pnpm forge-install <client> --target <dir>`
 
 Sync after editing core: `pnpm sync`
 
-Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`
+Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`
 
 Version: v1.22.2

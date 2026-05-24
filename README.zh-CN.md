@@ -647,7 +647,7 @@ pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
 pnpm test             # 运行单元测试（22 项）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
-pnpm forge-smoke      # 发版守门：7 项 smoke（约 3 秒）— skills、loadouts、adapter 同步、hooks
+pnpm forge-smoke      # 发版守门：9 项 smoke（约 3 秒）— skills、loadouts、合规、adapter 同步
 pnpm validate-skill   # 校验 core/skills/（跨平台 .mjs，可加 --strict）
 pnpm apply-loadout full claude-code  # 将 loadout 钩子写入 adapter settings
 pnpm dep-graph build  # 构建项目依赖图 → .forge/graph.json
@@ -656,7 +656,7 @@ pnpm dep-graph stats  # 查看图统计
 
 | 命令 | 说明 |
 |------|------|
-| `pnpm forge-smoke` | 发版守门：7 项静态 smoke + validate-skill（约 3 秒）；push/PR 到 `core/`、`adapters/` 时 CI 自动跑 |
+| `pnpm forge-smoke` | 发版守门：9 项静态 smoke + validate-skill（约 3 秒）；push/PR 到 `core/`、`adapters/` 时 CI 自动跑 |
 | `pnpm test:watch` | 监听模式运行测试 |
 | `pnpm validate-skill:bash` | bash 版 validate-skill.sh（需 WSL/Git Bash）；加 `--score` 为 32 分评分表 |
 | `pnpm create-skill <名称>` | 从名称脚手架生成 Skill（`--minimal` 或 `--full`） |
@@ -667,6 +667,8 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目 |
 
 修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
+
+**平台合规**（CI、fork、密钥）：[platform-compliance.md](core/docs/platform-compliance.md)。Workflow 仅允许 **push/PR** 触发，禁止 cron；由 `forge-smoke` 守门。
 
 ---
 
@@ -690,3 +692,7 @@ Forge 覆盖完整的产品开发流程，对模型的要求高于单一任务�
 ## 许可证
 
 MIT
+
+## 平台合规
+
+GitHub Actions、fork 用法与密钥策略：[core/docs/platform-compliance.md](core/docs/platform-compliance.md)。

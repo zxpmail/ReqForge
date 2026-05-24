@@ -3,7 +3,7 @@
   "title": "Forge Loadout Metadata",
   "description": "Schema for Forge loadout JSON files — reusable bundles of skills, agents, hooks, and MCP servers",
   "type": "object",
-  "required": ["name", "version", "description", "skills", "agents", "hooks"],
+  "required": ["name", "version", "description", "skills", "agents", "hooks", "scenarios"],
   "properties": {
     "name": {
       "type": "string",
