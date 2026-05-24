@@ -14,10 +14,12 @@
 - 默认 10 个钩子；对照文档在 `core/docs/`，Skill 用 GitHub 绝对 URL
 - Skill 进化：P0 文档已完成，P1/P2 仍暂缓
 
-## 维护者开发规范（v1.23.0 · 非架构）
+## 测试（框架仓库 · 非架构）
 
-> 以下属于**本仓库贡献/发版纪律**，与用户项目架构、Harness 七层无关。
+- **Vitest**：`pnpm test` — Phase 10 脚本单元测试（22 项）
+- **forge-smoke**：`pnpm forge-smoke` — 9 项静态 smoke（结构/sync/loadout/文档/CI）；见 `scripts/forge-smoke/README.md`
 
-- **发版守门**：`pnpm forge-smoke`（9 项 smoke + CI push/PR，禁止 cron）
-- **Loadout 选型文档**：`core/docs/loadout-scenarios.md`（帮用户选 bundle，不是 Loadout 机制本身）
-- **平台合规**：`core/docs/platform-compliance.md`（GitHub/OSS 策略，非产品设计）
+## 维护者文档（非架构 · 非测试）
+
+- [loadout-scenarios.md](core/docs/loadout-scenarios.md) — Loadout 选型指南
+- [platform-compliance.md](core/docs/platform-compliance.md) — GitHub/OSS 政策说明

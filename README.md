@@ -696,7 +696,7 @@ External harnesses reviewed for positioning (not dependencies):
 |-------|-----|
 | Which loadout when | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
 | GitHub Actions & fork policy | [platform-compliance.md](core/docs/platform-compliance.md) |
-| Release gate (contributors) | `pnpm forge-smoke` · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
+| Release gate (contributors) | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 
 ---
 

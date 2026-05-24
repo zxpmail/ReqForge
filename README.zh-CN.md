@@ -694,7 +694,7 @@ pnpm dep-graph stats  # 查看图统计
 |------|------|
 | 选哪个 loadout | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
 | GitHub Actions 与 fork 策略 | [platform-compliance.md](core/docs/platform-compliance.md) |
-| 发版守门（贡献者） | `pnpm forge-smoke` · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
+| 发版守门（贡献者） | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 
 ---
 

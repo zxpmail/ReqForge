@@ -1,7 +1,7 @@
 # Development Plan — Forge
 
 > 本文件记录 Forge **Harness 架构**的开发阶段（Phase 1–13）、当前进度和剩余工作。
-> **维护者发版规范**（forge-smoke、平台合规等）见文末附录，不计入架构 Phase。
+> **维护者文档与合规**（loadout 选型、平台政策）见附录 B；**框架仓库测试**（forge-smoke）见附录 A，对应 Phase 10 的延伸，仍非 Harness 架构。
 > 新 session 启动时应首先阅读此文件，了解项目状态后再继续开发。
 
 ---
@@ -19,28 +19,43 @@
 | 7 Cursor 适配 | ✅ 完成 | |
 | 8 OpenCode 适配 | ✅ 完成 | 主控为 `AGENTS.md` |
 | 9 README 收尾 | ✅ 完成 | 中英文 README + CHANGELOG |
-| 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/` |
+| 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/`；发版静态 smoke：`scripts/forge-smoke/`（见附录 A） |
 | 11 Loadout 机制 | ✅ 完成 | `core/loadouts/` 4 个内置 loadout（架构：bundle 定义） |
 | 12 并行代码审查 | ✅ 完成 | 4 专项 reviewer + 聚合器 |
 | 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
 
-**架构验证**：`pnpm install` → `pnpm test` → `pnpm build` → `pnpm sync`
+**架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync`
+
+**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（静态 smoke，见附录 A）
 
 **待办（架构）**：`adapters/gemini-cli/`、模板市场、Dashboard Web UI；Skill 进化 P1/P2（feedback 归因、skill-bypass 清单）
 
 ---
 
-## 附录：维护者开发规范（非架构 Phase）
+## 附录 A：框架仓库测试 — forge-smoke（非架构）
 
-> v1.23.0 新增。面向**本仓库贡献者/维护者**，与用户 Harness 架构、七层对照无关。
+> v1.23.0。Phase 10 的**静态 smoke 延伸**：验证目录齐、adapter 同步、loadout 引用、文档章节、CI 无 cron。  
+> 详表：[scripts/forge-smoke/README.md](scripts/forge-smoke/README.md)
 
-| 规范 | 入口 | 用途 |
-|------|------|------|
-| 发版守门 | `pnpm forge-smoke` · [forge-smoke.yml](.github/workflows/forge-smoke.yml) | 合并前静态检查（skills/loadouts/sync/hooks/CI 合规等） |
-| Loadout 选型 | [loadout-scenarios.md](core/docs/loadout-scenarios.md) | 文档：帮终端用户选 `full/web-app/cli-tool/minimal` |
-| 平台合规 | [platform-compliance.md](core/docs/platform-compliance.md) | GitHub Actions/fork/密钥策略；禁止 cron workflow |
+| 命令 | 与 Vitest 分工 |
+|------|----------------|
+| `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts` 等**逻辑**单元测试（22 项） |
+| `pnpm forge-smoke` | **结构/一致性**静态检查（9 项 smoke + 内嵌 validate-skill） |
 
-**发版前（维护者）**：在上述架构验证通过后，额外跑 `pnpm forge-smoke`。
+发版前建议：`pnpm test` → `pnpm forge-smoke` → `pnpm sync`（若改过 core）。
+
+---
+
+## 附录 B：维护者文档与合规（非架构 · 非测试）
+
+> 面向贡献者与平台审查；与用户 Harness、forge-smoke 测试套件无关。
+
+| 文档 | 用途 |
+|------|------|
+| [loadout-scenarios.md](core/docs/loadout-scenarios.md) | 帮终端用户选 `full/web-app/cli-tool/minimal` |
+| [platform-compliance.md](core/docs/platform-compliance.md) | GitHub Actions / fork / 密钥策略说明 |
+
+注：`workflows-compliance` smoke 会**检查** platform-compliance 文档与 workflow 是否一致，但合规文档本身不是测试代码。
 
 ## Phase 1: 项目骨架搭建 + 核心目录结构
 
