@@ -291,6 +291,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             - Append to `memory/task-history.md`: date, phase, type (feat/fix/refactor), description, changed files, notes
             - If a technical decision was made: append ADR-N to `memory/decisions-log.md`
             - If architecture facts or constraints changed: update `memory/project-memory.md`
+            - **Query filing (LLM Wiki discipline)**: trade-off discussions, rejected alternatives, or non-obvious rationale from this Task → must land in ADR or `project-memory.md`, not only in chat
             - This step is NOT optional. A Task is not complete until memory is updated.
 
             Always follow during coding:

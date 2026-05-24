@@ -1,5 +1,15 @@
 # 变更记录
 
+## [v1.24.0] - 2026-05-24
+### 新增
+- Karpathy 对照文档：**autoresearch**、**llm-council**、**jobs**、**llm-wiki**（gist）
+- **Primary metric**（dev-planner）、**code-review risk_rank**、**PROJECT-HEALTH.md**、Spec **LLM-as-Judge** 段、Council 式审查
+
+### 变更
+- **OpenCode**：`.opencode/AGENTS.md` 同步为与 `CLAUDE.md` 相同的 Forge 调度图（修复此前误用空 `agents-template`）
+- **forge-smoke**：校验 OpenCode AGENTS.md 含 Skill Dispatch 与 Machine Gates
+- **Product-Spec-CHANGELOG** 与 v1.22–v1.24 对齐
+
 ## [v1.23.0] - 2026-05-24
 ### 新增
 - **forge-smoke** 发版守门（9→10 项含 test-demo 黄金路径）、**loadout-scenarios.md**、**platform-compliance.md**

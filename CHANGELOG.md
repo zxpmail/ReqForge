@@ -4,6 +4,18 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.24.0] - 2026-05-24
+### Added
+- Comparison docs: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md).
+- **Primary metric** per DEV-PLAN Phase; dev-builder Spec/Plan read-only + Task micro-cycle; code-review **risk_rank** (S×I×C); **PROJECT-HEALTH-template.md**; product-spec **LLM-as-Judge** subsection; Spec Step 7 quality council.
+
+### Fixed
+- **OpenCode adapter**: `pnpm sync` now copies root `CLAUDE.md` → `.opencode/AGENTS.md` (was empty `agents-template.md`, breaking Forge dispatch).
+- **forge-smoke** `machine-gates-doc`: asserts OpenCode AGENTS.md mirrors Machine Gates + Skill Dispatch.
+
+### Changed
+- `memory-system.md`: LLM Wiki pattern cross-reference; query filing → ADR rule.
+
 ## [v1.23.0] - 2026-05-24
 ### Added
 - **forge-smoke** release gate: `pnpm forge-smoke` runs 9 static smokes (skills, loadouts, adapter sync, hooks, templates, machine gates, platform compliance, workflows); CI workflow `.github/workflows/forge-smoke.yml` on push/PR (no cron).

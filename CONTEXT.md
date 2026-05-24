@@ -6,8 +6,8 @@
 
 ## 上次停在哪个位置
 
-- 已 push `17cbcfe`：jobs 对照 + risk_rank + PROJECT-HEALTH + Spec LLM-judge
-- 已 push `9be7c0d`：llm-council 对照
+- 待 push v1.24.0：llm-wiki 对照、OpenCode AGENTS.md 修复、memory Query filing、machine-gates smoke
+- 已 push `17cbcfe`：jobs 对照 + risk_rank + PROJECT-HEALTH
 
 ## 架构与 Harness（产品本身）
 
@@ -34,5 +34,5 @@
 ## 维护者文档（非架构 · 非测试）
 
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [platform-compliance.md](core/docs/platform-compliance.md)
-- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md) · [autoresearch-comparison.md](core/docs/autoresearch-comparison.md) · [llm-council-comparison.md](core/docs/llm-council-comparison.md) · [jobs-comparison.md](core/docs/jobs-comparison.md)
+- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md) · [autoresearch-comparison.md](core/docs/autoresearch-comparison.md) · [llm-council-comparison.md](core/docs/llm-council-comparison.md) · [jobs-comparison.md](core/docs/jobs-comparison.md) · [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md)
 - [test-demo/README.md](test-demo/README.md) — 黄金路径；`todo-cli/` 为 Spec+Plan 产物（无独立用途）

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.23.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.24.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -8,7 +8,7 @@
 
 **Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md) · [Seven-layer map →](core/docs/agent-harness-seven-layer-map.md) · [Loadout scenarios →](core/docs/loadout-scenarios.md) · [Platform compliance →](core/docs/platform-compliance.md)
 
-> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md) · **vs [RTK](https://github.com/rtk-ai/rtk)?** Shell output compression; optional with ReqForge. [RTK →](core/docs/rtk-comparison.md) · **vs [nanochat](https://github.com/karpathy/nanochat)?** LLM training harness; Forge borrows golden-path / fast-loop discipline. [nanochat →](core/docs/nanochat-comparison.md) · **vs [autoresearch](https://github.com/karpathy/autoresearch)?** Scoped edit + fixed budget + single metric; Forge maps to Spec/Plan lock + Primary metric. [autoresearch →](core/docs/autoresearch-comparison.md) · **vs [llm-council](https://github.com/karpathy/llm-council)?** Multi-LLM peer review; Forge uses role-based council in code-review + spec Step 7. [llm-council →](core/docs/llm-council-comparison.md) · **vs [jobs](https://github.com/karpathy/jobs)?** BLS data + LLM rubric batch scoring (occupations, not job queues); Forge maps to risk_rank + PROJECT-HEALTH. [jobs →](core/docs/jobs-comparison.md) · **Skill self-evolution papers?** [EmbodiSkill](https://arxiv.org/abs/2605.10332) + [SkillEvolver](https://arxiv.org/abs/2605.10500) vs Forge feedback/evolution. [Skill evolution →](core/docs/skill-evolution-comparison.md)
+> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md) · **vs [RTK](https://github.com/rtk-ai/rtk)?** Shell output compression; optional with ReqForge. [RTK →](core/docs/rtk-comparison.md) · **vs [nanochat](https://github.com/karpathy/nanochat)?** LLM training harness; Forge borrows golden-path / fast-loop discipline. [nanochat →](core/docs/nanochat-comparison.md) · **vs [autoresearch](https://github.com/karpathy/autoresearch)?** Scoped edit + fixed budget + single metric; Forge maps to Spec/Plan lock + Primary metric. [autoresearch →](core/docs/autoresearch-comparison.md) · **vs [llm-council](https://github.com/karpathy/llm-council)?** Multi-LLM peer review; Forge uses role-based council in code-review + spec Step 7. [llm-council →](core/docs/llm-council-comparison.md) · **vs [jobs](https://github.com/karpathy/jobs)?** BLS data + LLM rubric batch scoring (occupations, not job queues); Forge maps to risk_rank + PROJECT-HEALTH. [jobs →](core/docs/jobs-comparison.md) · **vs [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)?** raw/wiki/schema + ingest/query/lint; Forge maps to memory/ + ADR filing. [llm-wiki →](core/docs/llm-wiki-comparison.md) · **Skill self-evolution papers?** [EmbodiSkill](https://arxiv.org/abs/2605.10332) + [SkillEvolver](https://arxiv.org/abs/2605.10500) vs Forge feedback/evolution. [Skill evolution →](core/docs/skill-evolution-comparison.md)
 
 **No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
 
@@ -296,7 +296,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\claude-code\.claude C:\pa
 Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to\my-app\.cursor
 ```
 
-> **OpenCode** uses `.opencode/AGENTS.md` as the control file (constraint format: tech stack, behavior boundaries, hard constraints) — not a copy of root `CLAUDE.md`.
+> **OpenCode** uses `.opencode/AGENTS.md` as the control file — **same Forge dispatch content as root `CLAUDE.md`** (filename follows OpenCode convention). User-project constraint templates live under `templates/agents-template.md`.
 
 ### Step 3 — Enable hooks (Claude Code & Cursor)
 
@@ -393,7 +393,7 @@ Forge does **not** modify your `package.json` unless you ask the agent to add de
 > 2. Or `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. Or env `FORGE_MODE=yolo`
 
-More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md) · [RTK](core/docs/rtk-comparison.md) · [nanochat](core/docs/nanochat-comparison.md) · [autoresearch](core/docs/autoresearch-comparison.md) · [llm-council](core/docs/llm-council-comparison.md) · [jobs](core/docs/jobs-comparison.md).
+More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md) · [RTK](core/docs/rtk-comparison.md) · [nanochat](core/docs/nanochat-comparison.md) · [autoresearch](core/docs/autoresearch-comparison.md) · [llm-council](core/docs/llm-council-comparison.md) · [jobs](core/docs/jobs-comparison.md) · [llm-wiki](core/docs/llm-wiki-comparison.md).
 
 ---
 
@@ -696,6 +696,7 @@ External harnesses reviewed for positioning (not dependencies):
 | [autoresearch](https://github.com/karpathy/autoresearch) | Autonomous LLM training experiments (scoped edit, val_bpb) | [autoresearch-comparison.md](core/docs/autoresearch-comparison.md) — Primary metric + Spec/Plan lock + Task micro-cycle |
 | [llm-council](https://github.com/karpathy/llm-council) | Multi-LLM peer review + Chairman synthesis | [llm-council-comparison.md](core/docs/llm-council-comparison.md) — code-review council + spec Step 7 |
 | [jobs](https://github.com/karpathy/jobs) | BLS occupation data + LLM rubric scoring (not task queues) | [jobs-comparison.md](core/docs/jobs-comparison.md) — risk_rank + PROJECT-HEALTH + Spec LLM-judge |
+| [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Persistent wiki: raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR filing discipline |
 
 **ReqForge maintainer docs** (not third-party comparisons):
 

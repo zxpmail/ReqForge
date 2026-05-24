@@ -37,3 +37,17 @@ Forge defaults to project-scoped Markdown in `memory/`. Some teams also use a **
 4. **Compression** — if summarizing tool output before it enters the model (OpenHuman-style TokenJuice or optional [RTK](https://github.com/rtk-ai/rtk)), preserve paths, stack traces, and requirement IDs. See [openhuman-comparison.md](./openhuman-comparison.md), [rtk-comparison.md](./rtk-comparison.md).
 
 Forge does not ship SQLite, Obsidian sync, or OAuth auto-fetch — document integration in your Product-Spec or `changes/<name>/design.md` if the product needs them.
+
+## LLM Wiki pattern (gist) ↔ Forge memory
+
+Karpathy's [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) describes **raw → compiled wiki → schema** with **ingest / query / lint**. Forge maps this to product delivery with **harder Spec authority**:
+
+| Wiki layer | Forge |
+|------------|-------|
+| raw (immutable) | `feedback/`, git history, user-provided sources |
+| wiki (LLM-maintained) | `memory/*.md`, `PROJECT-HEALTH.md` — **not** auto-rewritten Product-Spec |
+| schema | `CLAUDE.md` / `AGENTS.md`, Skills, hooks |
+
+**Query filing rule:** Important explorations (trade-offs, comparisons, lint findings) → append **ADR** to `memory/decisions-log.md` or update `project-memory.md`. Do **not** rely on chat history alone. Spec changes → `/change-manager` or user-approved `/product-spec-builder`, not dev-builder wiki-style edits.
+
+Full mapping: [llm-wiki-comparison.md](./llm-wiki-comparison.md).

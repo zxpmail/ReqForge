@@ -106,13 +106,8 @@ function main(): void {
       syncDir(srcPath, destPath);
     }
 
-    // Sync control file to adapter
-    if (adapter === "opencode") {
-      // AGENTS.md is constraint-focused, not a CLAUDE.md mirror
-      copyFile(path.join(ROOT, "core", "templates", "agents-template.md"), path.join(adapterDir, cfg.controlFile));
-    } else {
-      copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, cfg.controlFile));
-    }
+    // Sync control file to adapter (Forge dispatch map; OpenCode reads AGENTS.md, same content as CLAUDE.md)
+    copyFile(path.join(ROOT, "CLAUDE.md"), path.join(adapterDir, cfg.controlFile));
 
     // Sync EVOLUTION.md
     copyFile(path.join(ROOT, "EVOLUTION.md"), path.join(adapterDir, cfg.evolutionFile));

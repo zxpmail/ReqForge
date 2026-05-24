@@ -16,6 +16,7 @@ Related: [harness-maturity-checklist.md](./harness-maturity-checklist.md) · [fo
 | Proxy LLM / IDE vendors | **No.** Unlike reverse-proxy tooling, ReqForge does not relay inference traffic or bypass vendor quotas/ToS. |
 | Auto-push to git remotes | **Off by default** (removed from default hooks/loadouts v1.20.3). Enable only if you explicitly want it. |
 | Background jobs after chat | **Out of scope.** Schedules belong in **your application** (cron, queue), documented in Product-Spec — not in Forge hooks. |
+| Bulk `changes/` without archive | **Discouraged.** Brownfield work uses `changes/<name>/` → verify → `changes/archive/`; do not leave stale active change folders as a substitute for git branches. |
 
 ---
 
