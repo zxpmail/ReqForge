@@ -10,7 +10,7 @@
 - PreToolUse 五段链：Spec → spec-confirmed → DEV-PLAN → plan-confirmed → implementer-session
 - forge-smoke **12** 项；中英文 README + DEV-PLAN 已对齐
 - **product-spec-builder**：pm-frameworks + CoT（1–4）；`9b0d9c8` 去重 CoT 段 + CHANGELOG Unreleased
-- **待 push**：本地领先 origin **2** 提交（`2937035`、`9b0d9c8`）
+- README / README.zh-CN / llms.txt 已补 pm-frameworks + CoT 说明（待与文档 commit 一并 push）
 
 ## 架构与 Harness（产品本身）
 

@@ -64,6 +64,8 @@ flowchart LR
 - **机器门**：PreToolUse 在写入业务代码前检查 `Product-Spec.md`、`.forge/spec-confirmed.json`、`DEV-PLAN.md`、`.forge/plan-confirmed.json`、`.forge/implementer-session.json`（仅 implementer 子 Agent 可写应用代码）。
 - **执行隔离**：dev-builder 每 Task 必须 **implementer** 子 Agent + **worktree**；`tests/skill-fixtures` + forge-smoke **12** 项（含 skill-bypass）。
 - **进化**：feedback 支持 `failure_class` 与 RED 一行；进化提案需 RED / GREEN / Verify-by。
+- **PM 框架（product-spec）**：可选参考 [pm-skills](https://github.com/phuryn/pm-skills)（MIT 摘编）— 机会方案树、JTBD 价值主张、假设验证、竞品简报；Spec 模板增加对应可选章节。
+- **思维链（CoT）**：`conversation-strategy` 模板、implementer 写代码前推理、bug-fixer 诊断清单、forge-bootstrap 第 9 条铁律；**无需**用户每条消息写「先想想看」。
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy 对照文档**：[autoresearch](core/docs/autoresearch-comparison.md)、[llm-council](core/docs/llm-council-comparison.md)、[jobs](core/docs/jobs-comparison.md)、[llm-wiki gist](core/docs/llm-wiki-comparison.md) — 方法论映射到 Forge Skill，非照搬代码。
@@ -488,7 +490,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 | Skill | 职责 |
 | ------------------------ | -------------------------------------------------------------------------------------- |
-| **product-spec-builder** | 需求收集。AI 通过多轮问题将模糊想法转化为结构化 Spec。支持迭代模式。 |
+| **product-spec-builder** | 需求收集。多轮访谈产出 Product-Spec.md；可选 PM 框架（OST、JTBD、假设、竞品）与 CoT 模板（选型/边界/自质疑）。支持迭代与 Quick Mode。 |
 | **change-manager** | 存量项目增量变更。每个功能一个 `changes/<name>/` 目录：提议 → 实现 → 验收 → 归档（对齐 OpenSpec 思路，见 [openspec-comparison](core/docs/openspec-comparison.md)）。 |
 | **design-brief-builder** | 设计语言。将模糊描述（"暗色主题，简约"）量化为具体方向：调色板、交互风格、信息密度。 |
 | **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿。 |

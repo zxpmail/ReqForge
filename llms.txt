@@ -16,7 +16,7 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 
 ### 5-Stage Workflow
 
-1. **Requirements** → `/product-spec-builder` → Product-Spec.md
+1. **Requirements** → `/product-spec-builder` → Product-Spec.md (optional [pm-skills](https://github.com/phuryn/pm-skills)-inspired references: OST, JTBD, assumptions, competitors; CoT templates for reasoning before Spec lock)
 2. **Design Brief** → `/design-brief-builder` → Design-Brief.md (optional)
 3. **Development Plan** → `/dev-planner` → DEV-PLAN.md
 4. **Implementation** → `/dev-builder` → project code (one Phase per invocation)
@@ -38,7 +38,7 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 
 ### Maintainer gates
 
-- `pnpm forge-smoke` — 9 static smokes (skills, loadouts, adapter sync, hooks, templates, machine gates, CI compliance). CI: `.github/workflows/forge-smoke.yml` (push/PR only, no cron).
+- `pnpm forge-smoke` — 12 static smokes (~15–30s; skill-fixtures, skill-bypass, test-demo golden path). CI: `.github/workflows/forge-smoke.yml` (push/PR only, no cron).
 - Platform policy: `core/docs/platform-compliance.md`.
 
 ### Key Principles

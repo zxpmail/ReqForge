@@ -77,7 +77,7 @@ flowchart LR
 
 | Superpowers Skill（代表） | ReqForge 对应 | 说明 |
 |---------------------------|---------------|------|
-| brainstorming | `product-spec-builder`（0-to-1 / Quick） | ReqForge 产出完整 Product-Spec，不仅是设计澄清 |
+| brainstorming | `product-spec-builder`（0-to-1 / Quick） | 完整 Product-Spec；可选 `pm-frameworks-*`（MIT / pm-skills）与 CoT 访谈模板（`conversation-strategy`） |
 | writing-plans | `dev-planner` | DEV-PLAN Phase、技术栈、交付清单 |
 | executing-plans | `dev-builder`（Continuous 模式） | 一次 /dev-builder 一个 Phase，强制停止 |
 | subagent-driven-development | `dev-builder` + `implementer` | 每 Task 审查闭环；复杂审查走 code-reviewer 并行 |

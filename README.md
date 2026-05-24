@@ -64,6 +64,8 @@ flowchart LR
 - **Machine gates**: PreToolUse blocks app code until `Product-Spec.md`, `.forge/spec-confirmed.json`, `DEV-PLAN.md`, `.forge/plan-confirmed.json`, and `.forge/implementer-session.json` (implementer-only).
 - **Execution**: dev-builder requires **implementer** sub-agent + **worktree** per Task; `tests/skill-fixtures` + forge-smoke **12** items (incl. skill-bypass).
 - **Evolution**: feedback `failure_class` + RED line; evolution proposals require RED/GREEN/Verify-by.
+- **PM frameworks (product-spec)**: Optional references adapted from [pm-skills](https://github.com/phuryn/pm-skills) (MIT) — OST, JTBD value prop, assumptions, competitive briefs; extra Spec sections in `product-spec-template.md`.
+- **Chain-of-Thought (CoT)**: Structured “think step-by-step, then conclude” in `conversation-strategy`, implementer pre-code step, `bug-fixer` diagnostic checklist, forge-bootstrap Iron Law 9 — no user magic phrase required.
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy comparisons**: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md) — methodology mapped to Forge Skills, not copied wholesale.
@@ -488,7 +490,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 
 | Skill                    | Responsibility                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **product-spec-builder** | Requirements gathering. AI interviews you through multi-round questioning to turn vague ideas into structured specs. Supports iterative mode.          |
+| **product-spec-builder** | Requirements gathering. Multi-round interviews → Product-Spec.md; optional PM frameworks (OST, JTBD, assumptions, competitors) and CoT templates for trade-offs and edge cases. Iterative + Quick Mode. |
 | **change-manager**       | Brownfield changes. One feature per `changes/<name>/` folder: propose → apply → verify → archive (OpenSpec-aligned; see [openspec-comparison](core/docs/openspec-comparison.md)). |
 | **design-brief-builder** | Design language. Quantifies vague descriptions ("dark theme, minimal") into concrete direction: color palette, interaction style, information density. |
 | **design-maker**         | Design prototyping. Generates full page mockups through Pencil or Figma MCP.                                                                           |
