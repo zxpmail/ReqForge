@@ -59,6 +59,12 @@ flowchart LR
 
 ## 近期更新
 
+### Harness 硬化（2026-05-24，v1.24.0 之后）
+- **会话引导**：每次会话注入 `forge-bootstrap.md`；**product-spec**、**dev-planner**、**dev-builder** 含 HARD-GATE。
+- **机器门**：PreToolUse 在写入业务代码前检查 `Product-Spec.md`、`.forge/spec-confirmed.json`、`DEV-PLAN.md`、`.forge/plan-confirmed.json`、`.forge/implementer-session.json`（仅 implementer 子 Agent 可写应用代码）。
+- **执行隔离**：dev-builder 每 Task 必须 **implementer** 子 Agent + **worktree**；`tests/skill-fixtures` + forge-smoke **12** 项（含 skill-bypass）。
+- **进化**：feedback 支持 `failure_class` 与 RED 一行；进化提案需 RED / GREEN / Verify-by。
+
 ### v1.24.0 — 2026-05-24
 - **Karpathy 对照文档**：[autoresearch](core/docs/autoresearch-comparison.md)、[llm-council](core/docs/llm-council-comparison.md)、[jobs](core/docs/jobs-comparison.md)、[llm-wiki gist](core/docs/llm-wiki-comparison.md) — 方法论映射到 Forge Skill，非照搬代码。
 - **Harness 纪律**：DEV-PLAN 每 Phase **Primary metric**；dev-builder Spec/Plan 只读 + Task 微循环；code-review **risk_rank**（S×I×C）；**PROJECT-HEALTH-template.md**；product-spec **LLM-as-Judge** + Spec Step 7 质量 council。
@@ -660,7 +666,7 @@ pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
 pnpm test             # 运行单元测试（22 项）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
-pnpm forge-smoke      # 发版守门：10 项 smoke（含 test-demo 黄金路径）
+pnpm forge-smoke      # 发版守门：12 项 smoke（约 15–30 秒；含 skill-fixtures、skill-bypass、test-demo 黄金路径）
 pnpm validate-skill   # 校验 core/skills/（跨平台 .mjs，可加 --strict）
 pnpm apply-loadout full claude-code  # 将 loadout 钩子写入 adapter settings
 pnpm dep-graph build  # 构建项目依赖图 → .forge/graph.json
@@ -669,7 +675,7 @@ pnpm dep-graph stats  # 查看图统计
 
 | 命令 | 说明 |
 |------|------|
-| `pnpm forge-smoke` | 发版守门：10 项 smoke + validate-skill（含 test-demo）；push/PR 到 `core/`、`adapters/`、`test-demo/` 时 CI 自动跑 |
+| `pnpm forge-smoke` | 发版守门：12 项 smoke（#11 内含 validate-skill）；push/PR 到 `core/`、`adapters/`、`test-demo/` 时 CI 自动跑 |
 | `pnpm test:watch` | 监听模式运行测试 |
 | `pnpm validate-skill:bash` | bash 版 validate-skill.sh（需 WSL/Git Bash）；加 `--score` 为 32 分评分表 |
 | `pnpm create-skill <名称>` | 从名称脚手架生成 Skill（`--minimal` 或 `--full`） |

@@ -57,7 +57,7 @@ node test-demo/run-golden-path.mjs
 2. 在 `todo-cli/` 执行 `pnpm install` → `pnpm build` → `pnpm test`
 3. 在临时目录跑 CLI 冒烟：`add` → `list` → `complete` → `delete`（无需 AI API Key）
 
-**CI**：`forge-smoke` 第 10 项会调用本脚本。
+**CI**：`forge-smoke` 第 12 项会调用本脚本。
 
 普通用户 **不必** 进入 `todo-cli/` 或使用 `todo` 命令。
 

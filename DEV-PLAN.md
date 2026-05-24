@@ -26,7 +26,7 @@
 
 **架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync`
 
-**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（10 项 smoke，含 test-demo 黄金路径，见附录 A）
+**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（12 项 smoke，含 test-demo 黄金路径，见附录 A）
 
 ### 路线图（未排期 · 非 v1.23.0 欠账）
 
@@ -38,7 +38,7 @@
 | 模板市场 | 产品脚手架一键初始化 | 未排期 |
 | Dashboard Web UI | 可视化进度与变更 | 未排期 |
 | Skill 进化 P1/P2 | feedback 归因、skill-bypass 清单 | **刻意暂缓**（P0 文档已完成） |
-| test-demo 黄金路径 | Spec/Plan → todo-cli 守门 | **✅ 已接入**（`pnpm test-demo-golden-path`、forge-smoke #10） |
+| test-demo 黄金路径 | Spec/Plan → todo-cli 守门 | **✅ 已接入**（`pnpm test-demo-golden-path`、forge-smoke #12） |
 
 **框架仓库本身不需要**：根目录 `Design-Brief.md`、`memory/`、`changes/`（活跃变更）——这些属于**用户业务项目**的常见工件，空着是正常的。
 
@@ -52,8 +52,8 @@
 | 命令 | 与 Vitest 分工 |
 |------|----------------|
 | `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts` 等**逻辑**单元测试（22 项） |
-| `pnpm forge-smoke` | **结构/一致性**静态检查（10 项 smoke + validate-skill，含 test-demo 黄金路径） |
-| `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke #10） |
+| `pnpm forge-smoke` | **结构/一致性**静态检查（12 项 smoke；#11 含 validate-skill；#12 为 test-demo 黄金路径） |
+| `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke #12） |
 
 发版前建议：`pnpm test` → `pnpm forge-smoke` → `pnpm sync`（若改过 core）。
 

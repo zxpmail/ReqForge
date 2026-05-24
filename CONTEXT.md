@@ -8,7 +8,7 @@
 
 - **Harness 硬化已闭环**（本地提交 `3068927` `582f29a` `2590a1e` `86e8e0e`；标记文件链、P2 skill-bypass、文档已提交）
 - PreToolUse 五段链：Spec → spec-confirmed → DEV-PLAN → plan-confirmed → implementer-session
-- forge-smoke **12** 项（含 skill-fixtures、skill-bypass）
+- forge-smoke **12** 项；中英文 README + DEV-PLAN 文档数字已对齐
 
 ## 架构与 Harness（产品本身）
 
