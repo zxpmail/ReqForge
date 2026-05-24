@@ -2,6 +2,11 @@
   "name": "web-app",
   "version": "1.0.0",
   "description": "Web application development — full spec-to-release pipeline with design and review",
+  "scenarios": [
+    "greenfield-web",
+    "brownfield-web-feature",
+    "web-with-design"
+  ],
   "skills": [
     "product-spec-builder",
     "change-manager",

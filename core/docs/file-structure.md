@@ -32,7 +32,7 @@ project/
     │   ├── evolution-runner.md        # Evolution engine Sub-Agent
     │   └── test-writer.md             # Test generation Sub-Agent
     ├── hooks/                         # Inspection layer scripts (.sh + .bat)
-    ├── loadouts/                      # Reusable skill/agent/hook bundles
+    ├── loadouts/                      # Reusable skill/agent/hook bundles — see loadout-scenarios.md
     ├── EVOLUTION.md                   # Evolution engine
     ├── feedback/                      # Lessons learned
     └── skills/
@@ -52,3 +52,5 @@ project/
 ```
 
 **ReqForge self-development**: The framework repo also has `core/` (source of truth) and `adapters/` (client bundles). Run `pnpm sync` after editing `core/` to propagate to adapters. The `check-sync` hook exists only in `core/hooks/` for this workflow — it is not shipped to end-user projects.
+
+**Loadout picker**: [loadout-scenarios.md](./loadout-scenarios.md) — which of `full` / `web-app` / `cli-tool` / `minimal` to use by scenario.

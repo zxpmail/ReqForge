@@ -5,6 +5,7 @@ All notable changes to Forge are documented here.
 ## [Unreleased]
 ### Added
 - **forge-smoke** release gate: `pnpm forge-smoke` runs 7 static smokes (skills, loadouts, adapter sync, hooks, templates, machine gates, agents); CI workflow `.github/workflows/forge-smoke.yml` on push/PR (no cron).
+- **loadout-scenarios.md**: scenario → loadout → Skill path picker; optional `scenarios[]` tags on each built-in loadout JSON.
 
 ## [v1.22.2] - 2026-05-23
 ### Added

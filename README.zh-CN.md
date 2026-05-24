@@ -307,6 +307,15 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 适配层自带 **4 个 loadout 捆绑包**（`loadouts/` 目录）：`full`、`web-app`、`cli-tool`、`minimal`。每个 JSON 列出该场景推荐的 skills、agents、hooks。
 
+**不确定用哪个？** 见 **[loadout-scenarios.md](core/docs/loadout-scenarios.md)**（英文）— 场景 → loadout → 先调哪个 Skill。
+
+| 你想… | Loadout |
+|--------|---------|
+| 从零做 Web 应用（需求 → 设计 → 发布） | `web-app` |
+| 在已有项目上做一个功能 | `full` 或 `web-app` + `/change-manager` |
+| CLI / 库 / 后端工具 | `cli-tool` |
+| 快速原型 / 小脚本 | `minimal` |
+
 - **默认安装** ≈ `full` loadout（`settings.json` 含全部钩子）。
 - **精简钩子**（贡献者，在 Forge 克隆目录）：`pnpm apply-loadout minimal claude-code` 将更轻的钩子集写入 adapter 的 `settings.json`；加 `--dry-run` 可预览。
 - Loadout 是**参考清单**——skills/agents 已随适配层复制，loadout 用于了解各场景包含什么。

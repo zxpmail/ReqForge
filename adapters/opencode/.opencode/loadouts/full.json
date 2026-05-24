@@ -2,6 +2,12 @@
   "name": "full",
   "version": "1.0.0",
   "description": "Complete Forge toolchain — all skills, agents, and hooks",
+  "scenarios": [
+    "greenfield-any",
+    "brownfield-feature",
+    "skill-evolution",
+    "full-pipeline"
+  ],
   "skills": [
     "product-spec-builder",
     "change-manager",

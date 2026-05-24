@@ -52,6 +52,12 @@
     "settings_extends": {
       "type": "string",
       "description": "Base settings template this loadout extends (e.g., 'settings.windows.json')"
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "Kebab-case scenario tags for loadout-scenarios.md cross-reference",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "minItems": 1
     }
   }
 }

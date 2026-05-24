@@ -307,6 +307,15 @@ Hooks run before tool use, on commit, edit, session start, etc. Default `setting
 
 Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-tool`, `minimal`). Each JSON lists recommended skills, agents, and hooks for a project type.
 
+**Not sure which one?** See **[loadout-scenarios.md](core/docs/loadout-scenarios.md)** — scenario → loadout → first Skill command.
+
+| You want to… | Loadout |
+|--------------|---------|
+| New web app (spec → design → ship) | `web-app` |
+| One feature on existing code | `full` or `web-app` + `/change-manager` |
+| CLI / library | `cli-tool` |
+| Quick spike / script | `minimal` |
+
 - **Default install** ≈ `full` loadout (all hooks in `settings.json`).
 - **Trim hooks** (contributors, from Forge clone): `pnpm apply-loadout minimal claude-code` merges a lighter hook set into adapter `settings.json`. Add `--dry-run` to preview.
 - Loadouts are **reference manifests** — skills/agents are already copied; use loadouts to understand what each bundle includes.

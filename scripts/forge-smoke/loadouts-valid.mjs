@@ -54,6 +54,11 @@ for (const file of files) {
     r.assert(KEBAB.test(hook), `${base}: invalid hook name '${hook}'`);
     r.assert(hookExists(hooksDir, hook), `${base}: hook '${hook}' not found in core/hooks/`);
   }
+
+  r.assert(Array.isArray(data.scenarios) && data.scenarios.length > 0, `${base}: scenarios must be non-empty array`);
+  for (const scenario of data.scenarios) {
+    r.assert(KEBAB.test(scenario), `${base}: invalid scenario tag '${scenario}'`);
+  }
 }
 
 r.finish();

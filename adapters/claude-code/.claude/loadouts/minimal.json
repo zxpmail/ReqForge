@@ -2,6 +2,11 @@
   "name": "minimal",
   "version": "1.0.0",
   "description": "Minimal loadout — quick prototyping with spec, build, and review only. Omits change-manager and dev-planner; not for brownfield changes/ workflow",
+  "scenarios": [
+    "quick-prototype",
+    "bugfix-only",
+    "spike-script"
+  ],
   "skills": [
     "product-spec-builder",
     "dev-builder",
