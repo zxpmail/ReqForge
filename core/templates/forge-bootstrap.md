@@ -13,8 +13,10 @@ Hook block messages are **hard stops** — do not negotiate around them.
 6. **Bugs** — Use `/bug-fixer`; no fix without stable reproduction and a failing test (TDD).
 7. **Hooks are law** — PreToolUse chain: Spec → Spec confirm → Plan → Plan confirm → implementer session; plus `phase-exit-guard`, `stop-gate`, `retry-gate`, `pre-commit-check`. Blocking output = stop and comply.
 8. **Phase boundary** — One Phase per `/dev-builder` invocation; do not start the next Phase until the user invokes `/dev-builder` again.
+9. **Think before you conclude (CoT)** — For tasks that need judgment (architecture, root cause, i18n/billing edge cases, scope trade-offs): write brief reasoning bullets first, then a **bold conclusion**; do not jump to code or final Spec text from a guess. Simple lookups and already-confirmed facts do not need long CoT. If analysis is not finished, do not start implementation in the same turn. Templates: `product-spec-builder/references/conversation-strategy.md` [Chain of Thought]; `bug-fixer` [CoT Diagnostic Checklist]; implementer step 0b.
 
 ## Rationalization references
 
 - Spec / planning gates: `product-spec-builder/references/hard-gate-rationalization.md`
 - Build / verify / review: `dev-builder/references/anti-rationalization.md`
+- "Just give me the answer" on complex tasks: shallow guesses cost rework — use CoT bullets + one conclusion (Iron Law 9)

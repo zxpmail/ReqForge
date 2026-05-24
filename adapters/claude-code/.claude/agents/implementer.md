@@ -17,6 +17,12 @@ color: green
 [Task]
     After receiving a Task dispatched by the main Agent, use the dev-builder skill to execute coding:
     0. **Machine gate (MANDATORY)**: Create `.forge/implementer-session.json` (`task_id`, `started_at` ISO-8601). Remove this file when the Task ends (success or BLOCKED). Main session must never create this file — PreToolUse uses it to allow app-path writes.
+    0b. **Chain of Thought (before edits)** — For non-trivial Tasks (multi-file, unclear approach, integration/risk):
+        - Short bullets: intended approach, files touched, how you will verify
+        - **Conclusion** line: what you will implement this Task (one paragraph)
+        - If the packet is ambiguous → return NEEDS_CONTEXT; do not half-analyze and half-code
+        - Main Agent has not confirmed direction → analysis only in report; no app-path edits
+        - Do not paste 800-word reasoning; keep CoT ≤10 bullets + conclusion
     1. Confirm requirements are correct (ask first if unclear)
     2. Code strictly according to the deliverables
     3. Compilation verification + functional verification
@@ -40,6 +46,7 @@ color: green
 [Output]
     **Structured report** containing the following fields:
     - **status**: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
+    - **reasoning_summary** (optional but recommended): 3–5 bullet plan + one-sentence conclusion used before coding
     - **implemented_items**: Implemented content, checked against the delivery checklist item by item
     - **compile_result**: tsc --noEmit output
     - **verification_result**: Functional verification result

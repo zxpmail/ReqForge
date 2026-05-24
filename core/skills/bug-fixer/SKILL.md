@@ -159,6 +159,18 @@ description: Used when the user says "this feature is broken", "getting an error
         - "This bug is too simple, no need for the four-stage process" -> when you think it's simple is exactly when you are most likely to miss critical information
         - "It's an environment issue, no need to investigate" -> environment issues are bugs too; use the same systematic approach
 
+[CoT Diagnostic Checklist]
+    <!-- 显式推理清单；与四阶段并存，Stage 3 前完成。不必让用户写「先想想看」。 -->
+    Before proposing a fix (align with Phase 1 Before Fix):
+    1. List at least **5** plausible causes for the symptom (not just the first guess)
+    2. For each cause: how to verify (which file, log, test, repro step)
+    3. Order causes from most likely to least likely
+    4. Validate from #1 downward; **no fix code until top hypothesis is tested or ruled out**
+
+    **Reporting format** (Stages 1–3 progress updates):
+    - Short bullet reasoning; **one bold line**: current leading root-cause hypothesis
+    - Do not bury the conclusion under long prose
+
 [Debugging Strategy]
     Four-stage systematic debugging method. No stage-skipping allowed.
 
@@ -176,7 +188,8 @@ description: Used when the user says "this feature is broken", "getting an error
     - If Product-Spec.md is available -> confirm what the expected behavior is
 
     **Stage 3: Hypothesis Verification**
-    - Form 1-3 hypotheses based on evidence, ordered by likelihood
+    - Execute [CoT Diagnostic Checklist] (≥5 causes, verification steps, ordered; bold leading hypothesis in updates)
+    - Form 1-3 hypotheses based on evidence, ordered by likelihood (may narrow from the checklist)
     - Validate the most likely hypothesis with minimal changes (console.log, breakpoints, temporary comments)
     - Hypothesis validated -> proceed to Stage 4
     - Hypothesis refuted -> record the reason, validate the next hypothesis

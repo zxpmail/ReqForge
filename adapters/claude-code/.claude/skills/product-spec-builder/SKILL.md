@@ -135,7 +135,7 @@ description: Used when the user says they want to build a product, application, 
 
 [Conversation Strategy]
     开场、提问、方案与 AI/平台/技术引导、搜索与确认。
-    **对话阶段读取** references/conversation-strategy.md。
+    **对话阶段读取** references/conversation-strategy.md（含 [Chain of Thought]：选型/边界/自质疑模板，无需用户手写「先想想看」）。
 
 [Workflow (0-to-1 Mode)]
     从零到一完整阶段（探索 → 澄清 → 细化 → 生成 Spec）。
