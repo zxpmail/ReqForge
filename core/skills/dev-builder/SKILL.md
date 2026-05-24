@@ -49,6 +49,11 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     **Substitute, Don't Mock**: When local environment needs replacements for cloud services (database, queue, storage), use real substitute implementations (H2 for MySQL, in-memory queue for Kafka, local filesystem for S3), not mocks that return hardcoded data. Mocks pass locally but fail in production; real substitutes surface real issues.
     **Online-First**: Rely on real-time information, not outdated memory. Before using external libraries/APIs, prefer **Context7** (`query-docs` / `resolve-library-id`) when installed, then WebSearch; see [development-strategies.md](references/development-strategies.md) Library Docs Strategy and [context7-comparison](https://github.com/zxpmail/ReqForge/blob/main/core/docs/context7-comparison.md).
     **Verification Is Evidence (Hard Gate)**: A completion declaration must include the verification command and its output executed in the same message. "It's done" plus compilation output run in the same message is a valid declaration. "It's done" plus "I compiled it earlier" is an invalid declaration — must re-run. "It's done" with no verification command at all is also an invalid declaration. This is not a suggestion — it is a gate. No on-the-spot verification, no completion.
+
+    **Spec/Plan Read-Only (prepare.py boundary)**: During /dev-builder, treat **Product-Spec.md** and **DEV-PLAN.md** as read-only constraints — like autoresearch's locked `prepare.py`. Do **not** edit them to match implementation drift. Requirement or scope changes → stop and route to `/change-manager` (brownfield) or user-approved `/product-spec-builder` + `/dev-planner` (greenfield). See [autoresearch-comparison.md](../../docs/autoresearch-comparison.md).
+
+    **Task Micro-Cycle (≤10 min)**: After each Task's RED/GREEN/REFACTOR, run a **targeted** verification command within **10 minutes** of the code change and record **command + pass/fail** in the same message before code-reviewer. Aligns with autoresearch's fixed-budget loop and Superpowers TDD — Phase four-step verification remains the outer gate.
+
     **File Slimming**: Single file should not exceed 300 lines. If it does, split by responsibility. Three lines of simple code are better than one over-engineered abstraction.
     **AI Only for Judgment Tasks**: Deterministic logic (retries, status polling, numeric computation, string formatting) should be plain code, not AI-driven. AI context is expensive and wasted on trivial deterministic tasks. If a task can be expressed as a simple loop, condition, or arithmetic — write it in code, don't reason about it.
 
@@ -111,6 +116,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     **Plan-not-loaded**: Starting implementation without reading the current DEV-PLAN.md Phase → building the wrong thing. Always read DEV-PLAN.md first, confirm the Phase and Task, then code.
     **Skipping Environment-First**: Jumping into feature code before the project skeleton compiles and runs. No code on a broken foundation. The first task of any Phase should be making things runnable.
     **Phase scope creep**: "I'll just add this small improvement while I'm coding" → that's how Phases inflate and never finish. One Phase, one goal. Additional improvements go to the feedback channel or next Phase.
+    **Editing Spec/Plan during build**: Patching Product-Spec.md or DEV-PLAN.md to excuse implementation drift violates the prepare.py boundary. Route scope changes through change-manager or replan.
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
 
 [Anti-Rationalization Checklist]
@@ -179,8 +185,8 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             Execute [Dependency Check]
 
         Step 2: Load documents and code state
-            Read DEV-PLAN.md -> identify next Phase number. Read ONLY that Phase's delivery checklist and key files. Do NOT read other Phases — they are not your concern.
-            Read Product-Spec.md -> use as feature reference
+            Read DEV-PLAN.md -> identify next Phase number. Read ONLY that Phase's delivery checklist, **Primary metric**, and key files. Do NOT read other Phases — they are not your concern.
+            Read Product-Spec.md -> use as feature reference (**read-only** — do not edit during /dev-builder)
             If Design-Brief.md exists -> read visual direction
             If design tool MCP exists -> prepare to read
             Read memory/ files -> project-memory.md (architecture context), decisions-log.md (past decisions), task-history.md (recent work)
@@ -226,6 +232,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
             After development — cross-reference validation + Review loop:
             10. **REFACTOR**: Refactor and optimize code, run tests to confirm still green
+            10a. **Micro-cycle verify (≤10 min)**: Run the Task's targeted test/lint command; paste **command + pass/fail** in the same message. If the Phase has a **Primary metric**, note whether this Task moves it toward green. No micro-cycle evidence → Task not ready for review.
             10. Read actual code values, verify item by item against design values, correct any deviations
             11. Cross-reference Product-Spec.md to confirm functional behavior matches description
             12. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:

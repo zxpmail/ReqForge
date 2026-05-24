@@ -63,6 +63,6 @@ One-command install: `pnpm forge-install <client> --target <dir>`
 
 Sync after editing core: `pnpm sync`
 
-Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/context7-comparison.md`, `core/docs/rtk-comparison.md`, `core/docs/nanochat-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`
+Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/context7-comparison.md`, `core/docs/rtk-comparison.md`, `core/docs/nanochat-comparison.md`, `core/docs/autoresearch-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`
 
 Version: v1.23.0

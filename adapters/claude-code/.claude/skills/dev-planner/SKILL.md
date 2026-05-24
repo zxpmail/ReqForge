@@ -45,6 +45,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     **Explicit File Path Principle**: Each Phase must list the specific file paths to be created or modified. "Implement chat feature" is not a plan — "create src/components/views/chat-view.tsx and src/hooks/use-chat.ts" is a plan.
 
+    **Primary Metric Principle** (autoresearch-style): Each Phase must declare exactly **one** falsifiable **Primary metric** line (e.g. `pnpm test --filter X` exit 0). dev-builder treats it as the Phase keep/discard anchor — do not change mid-Phase without user-approved replan. Acceptance Criteria may list multiple checks; Primary metric is the single decision number.
+
     **No Placeholder Principle**: Every word in the Plan must be specific enough that anyone picking up this Plan can start working immediately.
     - Not allowed: TBD, "to be filled", "to be determined", "implement later"
     - Not allowed: "similar to Task N" — repeat the specific content, don't reference

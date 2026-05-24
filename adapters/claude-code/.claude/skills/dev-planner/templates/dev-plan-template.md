@@ -38,6 +38,9 @@ This template is used to generate a phased development plan. dev-builder reads t
 **Acceptance Criteria**:
 - [Compiles, starts, XX effect can be seen]
 
+**Primary metric** (one falsifiable line — unchanged for this Phase; autoresearch-style decision anchor):
+- [e.g. `pnpm test` exit 0 for modules touched; or API p95 < 200ms on fixture X]
+
 ---
 
 ## Phase 2: [Feature Name]
@@ -50,6 +53,9 @@ This template is used to generate a phased development plan. dev-builder reads t
 
 **Acceptance Criteria**:
 - [Verification criteria]
+
+**Primary metric** (one falsifiable line — unchanged for this Phase):
+- [e.g. targeted test command exit 0]
 
 ---
 
@@ -191,13 +197,16 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 4. **Acceptance Criteria**:
    - Minimum requirement: compiles + starts + new features work
    - Recommended: existing features are not broken
-5. **Tech Stack Table**:
+5. **Primary metric**:
+   - Exactly **one** quantifiable line per Phase (e.g. test command exit 0, latency bound, coverage on new files)
+   - dev-builder uses it as the keep/discard anchor for the Phase; do not change mid-Phase without user-approved replan
+6. **Tech Stack Table**:
    - Include version numbers (latest stable version verified via WebSearch or Context7 when MCP is available)
    - **Context7 Library ID**: fill for major third-party libs dev-builder will call (`/org/project`); use `—` for internal or trivial deps
    - Notes column should include rationale or purpose
-6. **Database Tables**:
+7. **Database Tables**:
    - Note which Phase creates each table
    - If a later Phase adds columns (migration), describe it in that Phase's deliverables
-7. **Phase Order**:
+8. **Phase Order**:
    - Infrastructure (skeleton/database/routing) -> core features -> supplementary features -> finishing touches (i18n/packaging/deployment)
    - Must not violate dependency relationships

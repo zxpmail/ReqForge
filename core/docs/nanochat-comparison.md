@@ -135,5 +135,6 @@ nanochat **不替代** 任何 Forge Skill；也不提供 LLM 训练能力。
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md) — P0 验证环
 - [loadout-scenarios.md](./loadout-scenarios.md) — Loadout 单旋钮选型
 - [rtk-comparison.md](./rtk-comparison.md) — Shell 输出（可选伙伴）
+- [autoresearch-comparison.md](./autoresearch-comparison.md) — 约束编辑 / Primary metric / 实验分支
 - [test-demo/README.md](../../test-demo/README.md) — 黄金路径 living demo
 - [platform-compliance.md](./platform-compliance.md) — OSS / 贡献政策

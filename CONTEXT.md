@@ -2,12 +2,13 @@
 
 ## 当前正在做什么
 
-- 无进行中任务
+- 无进行中任务（autoresearch 对照已落地，forge-smoke 10/10）
 
 ## 上次停在哪个位置
 
-- 已 push `9c73506`：DEV-PLAN 路线图措辞
-- 本地待 push：Product-Spec-CHANGELOG v1.22–v1.23、EVOLUTION 主控文件措辞、changes/archive git 跟踪、settings.local 移出版本库
+- autoresearch 对照落地完成：对照文档 + dev-planner Primary metric + dev-builder Spec/Plan 只读与 Task 微循环；`pnpm sync` + `pnpm forge-smoke` 10/10
+- 已 push `b1774b7`：审查项（CHANGELOG、EVOLUTION 主控文件、changes/archive 跟踪、settings.local）
+- **本地未 push**：autoresearch 本轮改动
 
 ## 架构与 Harness（产品本身）
 
@@ -33,5 +34,5 @@
 ## 维护者文档（非架构 · 非测试）
 
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [platform-compliance.md](core/docs/platform-compliance.md)
-- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md)
+- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md) · [autoresearch-comparison.md](core/docs/autoresearch-comparison.md)
 - [test-demo/README.md](test-demo/README.md) — 黄金路径；`todo-cli/` 为 Spec+Plan 产物（无独立用途）
