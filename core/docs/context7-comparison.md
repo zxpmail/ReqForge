@@ -134,3 +134,4 @@ If Context7 is unavailable, fall back to WebSearch and mark uncertain APIs [待�
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md) — P0 验证环、上下文管理
 - [superpowers-comparison.md](./superpowers-comparison.md) — TDD 与子 Agent
 - [rtk-comparison.md](./rtk-comparison.md) — Shell 输出压缩（与库文档正交）
+- [nanochat-comparison.md](./nanochat-comparison.md) — 黄金路径 / 快环（方法论参照）

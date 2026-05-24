@@ -6,7 +6,7 @@
 
 ## 上次停在哪个位置
 
-- 新增 [rtk-comparison.md](core/docs/rtk-comparison.md) 与 README/七层对照/verify 模板交叉引用（本地，未 push）
+- 新增 [nanochat-comparison.md](core/docs/nanochat-comparison.md) 与 README/七层对照交叉引用（本地，未 commit）
 
 ## 架构与 Harness（产品本身）
 
@@ -24,3 +24,4 @@
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) — Loadout 选型指南
 - [platform-compliance.md](core/docs/platform-compliance.md) — GitHub/OSS 政策说明
 - [rtk-comparison.md](core/docs/rtk-comparison.md) — RTK 可选叠加（Shell 输出压缩，非依赖）
+- [nanochat-comparison.md](core/docs/nanochat-comparison.md) — nanochat 方法论参照（黄金路径/快环，非依赖）

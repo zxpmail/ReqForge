@@ -1,7 +1,7 @@
 # ReqForge 与 RTK 对照
 
 > 参考：[rtk-ai/rtk](https://github.com/rtk-ai/rtk)（Rust Token Killer — CLI 代理，压缩常见 dev 命令输出，PreToolUse Hook 自动改写 Bash）  
-> 本文说明两者定位差异、**推荐叠加方式**，以及 ReqForge **不应自建** 的部分。与 [context7-comparison.md](./context7-comparison.md)、[openhuman-comparison.md](./openhuman-comparison.md)、[superpowers-comparison.md](./superpowers-comparison.md) 互补：Context7 对齐「库文档注入」；OpenHuman 对齐「记忆与跨会话上下文」；RTK 对齐「Shell 工具输出压缩」；Superpowers 对齐「TDD 与子 Agent 执行纪律」。
+> 本文说明两者定位差异、**推荐叠加方式**，以及 ReqForge **不应自建** 的部分。与 [context7-comparison.md](./context7-comparison.md)、[openhuman-comparison.md](./openhuman-comparison.md)、[superpowers-comparison.md](./superpowers-comparison.md)、[nanochat-comparison.md](./nanochat-comparison.md) 互补：Context7 对齐「库文档注入」；OpenHuman 对齐「记忆与跨会话上下文」；RTK 对齐「Shell 工具输出压缩」；Superpowers 对齐「TDD 与子 Agent 执行纪律」；nanochat 对齐「端到端黄金路径 / 快环纪律」（方法论参照）。
 
 ---
 

@@ -8,7 +8,7 @@
 
 **Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md) · [Seven-layer map →](core/docs/agent-harness-seven-layer-map.md) · [Loadout scenarios →](core/docs/loadout-scenarios.md) · [Platform compliance →](core/docs/platform-compliance.md)
 
-> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md) · **vs [RTK](https://github.com/rtk-ai/rtk)?** Shell output compression; optional with ReqForge. [RTK →](core/docs/rtk-comparison.md) · **Skill self-evolution papers?** [EmbodiSkill](https://arxiv.org/abs/2605.10332) + [SkillEvolver](https://arxiv.org/abs/2605.10500) vs Forge feedback/evolution. [Skill evolution →](core/docs/skill-evolution-comparison.md)
+> **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md) · **vs [RTK](https://github.com/rtk-ai/rtk)?** Shell output compression; optional with ReqForge. [RTK →](core/docs/rtk-comparison.md) · **vs [nanochat](https://github.com/karpathy/nanochat)?** LLM training harness; Forge borrows golden-path / fast-loop discipline. [nanochat →](core/docs/nanochat-comparison.md) · **Skill self-evolution papers?** [EmbodiSkill](https://arxiv.org/abs/2605.10332) + [SkillEvolver](https://arxiv.org/abs/2605.10500) vs Forge feedback/evolution. [Skill evolution →](core/docs/skill-evolution-comparison.md)
 
 **No npm install required to use the framework** — copy adapter files into your project and open your AI client. Node.js + pnpm are only needed if you contribute to this repo or run `scripts/`.
 
@@ -391,7 +391,7 @@ Forge does **not** modify your `package.json` unless you ask the agent to add de
 > 2. Or `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. Or env `FORGE_MODE=yolo`
 
-More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md) · [RTK](core/docs/rtk-comparison.md).
+More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents). Comparisons: [OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md) · [RTK](core/docs/rtk-comparison.md) · [nanochat](core/docs/nanochat-comparison.md).
 
 ---
 
@@ -690,6 +690,7 @@ External harnesses reviewed for positioning (not dependencies):
 | [Open Design](https://github.com/nexu-io/open-design) | Design artifacts, preview, design systems | [open-design-comparison.md](core/docs/open-design-comparison.md) — discovery/presets/anti-slop in design skills |
 | [OpenHuman](https://github.com/tinyhumansai/openhuman) | Personal AI runtime, Memory Tree, integrations | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — optional memory backends, context rules |
 | [RTK](https://github.com/rtk-ai/rtk) | Shell output compression (PreToolUse bash proxy) | [rtk-comparison.md](core/docs/rtk-comparison.md) — optional layer 5 partner; tee-style verify evidence |
+| [nanochat](https://github.com/karpathy/nanochat) | End-to-end LLM training harness (speedrun, leaderboard) | [nanochat-comparison.md](core/docs/nanochat-comparison.md) — golden path / fast-loop discipline (methodology only) |
 
 **ReqForge maintainer docs** (not third-party comparisons):
 

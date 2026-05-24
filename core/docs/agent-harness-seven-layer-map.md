@@ -1,7 +1,7 @@
 # Agent Harness 七层对照（ReqForge 映射）
 
 > 教学参考：[AGENT魔方 · 从零开始理解 Agent 番外篇：Harness 是什么？](https://bbs.huaweicloud.com/blogs/476342)（`Agent = Model + Harness`）  
-> 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Shell 输出压缩：[rtk-comparison.md](./rtk-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
+> 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Shell 输出压缩：[rtk-comparison.md](./rtk-comparison.md) · Harness 纪律参照：[nanochat-comparison.md](./nanochat-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
 
 ---
 
@@ -60,6 +60,7 @@ ReqForge 做法（不解析整份 DEV-PLAN，避免误伤）：
 | 做可发布产品 | ReqForge 全流程 |
 | 库 API 不写错 | 叠加 [Context7](https://github.com/upstash/context7) |
 | 长会话 shell 输出爆炸 | 叠加 [RTK](https://github.com/rtk-ai/rtk)（可选） |
+| 学 Harness 工程纪律（speedrun / 快环） | 读 [nanochat-comparison.md](./nanochat-comparison.md) |
 | 只写代码不管需求 | Superpowers 或裸 Context7 + 规则 |
 
 ---
@@ -69,4 +70,5 @@ ReqForge 做法（不解析整份 DEV-PLAN，避免误伤）：
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md)
 - [context7-comparison.md](./context7-comparison.md)
 - [rtk-comparison.md](./rtk-comparison.md)
+- [nanochat-comparison.md](./nanochat-comparison.md)
 - [superpowers-comparison.md](./superpowers-comparison.md)
