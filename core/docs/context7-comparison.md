@@ -1,7 +1,7 @@
 # ReqForge 与 Context7 对照
 
 > 参考：[upstash/context7](https://github.com/upstash/context7)（Up-to-date, version-specific library docs for LLMs — MCP + CLI/Skills）  
-> 本文说明两者定位差异、**推荐叠加方式**，以及 ReqForge **不应自建** 的部分。与 [openspec-comparison.md](./openspec-comparison.md)、[superpowers-comparison.md](./superpowers-comparison.md)、[openhuman-comparison.md](./openhuman-comparison.md) 互补。
+> 本文说明两者定位差异、**推荐叠加方式**，以及 ReqForge **不应自建** 的部分。与 [openspec-comparison.md](./openspec-comparison.md)、[superpowers-comparison.md](./superpowers-comparison.md)、[openhuman-comparison.md](./openhuman-comparison.md)、[rtk-comparison.md](./rtk-comparison.md) 互补。
 
 ---
 
@@ -133,3 +133,4 @@ If Context7 is unavailable, fall back to WebSearch and mark uncertain APIs [待�
 
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md) — P0 验证环、上下文管理
 - [superpowers-comparison.md](./superpowers-comparison.md) — TDD 与子 Agent
+- [rtk-comparison.md](./rtk-comparison.md) — Shell 输出压缩（与库文档正交）

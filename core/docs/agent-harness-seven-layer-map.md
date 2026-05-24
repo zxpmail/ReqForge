@@ -1,7 +1,7 @@
 # Agent Harness 七层对照（ReqForge 映射）
 
 > 教学参考：[AGENT魔方 · 从零开始理解 Agent 番外篇：Harness 是什么？](https://bbs.huaweicloud.com/blogs/476342)（`Agent = Model + Harness`）  
-> 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
+> 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Shell 输出压缩：[rtk-comparison.md](./rtk-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
 
 ---
 
@@ -19,7 +19,7 @@
 | 2 | **记忆 + 规划** | 每次对话从零开始 | `memory/` 三层；`dev-planner` → `DEV-PLAN.md`；`CONTEXT.md`（用户项目） |
 | 3 | **Rules + Skills + MCP** | 不懂项目规范、不会调外部能力 | `CLAUDE.md` / 适配器规则；12 Skills + `references/` 渐进披露；loadout 可选 MCP（Context7、设计、Playwright） |
 | 4 | **SubAgent / Teams** | 单线程扛不住复杂任务 | `planner`、`implementer`；并行 4 专项 `code-review` |
-| 5 | **上下文压缩** | Context Rot，越长越糊 | `memory-guard`（compaction + handoff）；大输出 offload（`CLAUDE.md`） |
+| 5 | **上下文压缩** | Context Rot，越长越糊 | `memory-guard`（compaction + handoff）；大输出 offload（`CLAUDE.md`）；可选叠加 [RTK](https://github.com/rtk-ai/rtk)（Shell 输出层，见 [rtk-comparison.md](./rtk-comparison.md)） |
 | 6 | **Hook 安全网** | 危险命令、未审查就停 | `hallucination-gate`、`pre-commit-check`、`stop-gate`、`phase-exit-guard` |
 | 7 | **续命（Ralph Loop）** | 到迭代上限但任务未完成 | `phase-exit-guard` + `.forge/phase-exit-block`（见下） |
 
@@ -59,6 +59,7 @@ ReqForge 做法（不解析整份 DEV-PLAN，避免误伤）：
 | 学会 Harness 原理 | AGENT魔方系列 + 本文对照 |
 | 做可发布产品 | ReqForge 全流程 |
 | 库 API 不写错 | 叠加 [Context7](https://github.com/upstash/context7) |
+| 长会话 shell 输出爆炸 | 叠加 [RTK](https://github.com/rtk-ai/rtk)（可选） |
 | 只写代码不管需求 | Superpowers 或裸 Context7 + 规则 |
 
 ---
@@ -67,4 +68,5 @@ ReqForge 做法（不解析整份 DEV-PLAN，避免误伤）：
 
 - [harness-maturity-checklist.md](./harness-maturity-checklist.md)
 - [context7-comparison.md](./context7-comparison.md)
+- [rtk-comparison.md](./rtk-comparison.md)
 - [superpowers-comparison.md](./superpowers-comparison.md)

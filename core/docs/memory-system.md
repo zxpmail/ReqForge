@@ -34,6 +34,6 @@ Forge defaults to project-scoped Markdown in `memory/`. Some teams also use a **
 1. **Spec wins** — external memory must not override acceptance criteria in Product-Spec or active `changes/`.
 2. **Write boundaries** — dev-builder updates `memory/` after Tasks; do not mirror full Spec into external stores.
 3. **No secret leakage** — credentials and tokens stay in env/config, never in memory files or external backends.
-4. **Compression** — if summarizing tool output before it enters the model (OpenHuman-style TokenJuice), preserve paths, stack traces, and requirement IDs. See [openhuman-comparison.md](./openhuman-comparison.md).
+4. **Compression** — if summarizing tool output before it enters the model (OpenHuman-style TokenJuice or optional [RTK](https://github.com/rtk-ai/rtk)), preserve paths, stack traces, and requirement IDs. See [openhuman-comparison.md](./openhuman-comparison.md), [rtk-comparison.md](./rtk-comparison.md).
 
 Forge does not ship SQLite, Obsidian sync, or OAuth auto-fetch — document integration in your Product-Spec or `changes/<name>/design.md` if the product needs them.

@@ -33,4 +33,5 @@ In YOLO mode, 🟢 and 🟡 actions proceed automatically. 🔴 Red actions ALWA
 
 - Workflow & brownfield changes: [openspec-comparison.md](./openspec-comparison.md), `/change-manager` skill
 - Memory & optional external backends: [memory-system.md](./memory-system.md), [openhuman-comparison.md](./openhuman-comparison.md)
+- Shell output compression (optional): [rtk-comparison.md](./rtk-comparison.md) — RTK Hook 仅覆盖 Bash；Read/Grep/用户粘贴不自动压缩
 - File layout: [file-structure.md](./file-structure.md)

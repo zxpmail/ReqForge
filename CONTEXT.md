@@ -6,7 +6,7 @@
 
 ## 上次停在哪个位置
 
-- 本地 `9918bf1`：CONTEXT/DEV-PLAN 同步（待 push）；远程最新 `e7c1245`（v1.23.0 README/CHANGELOG）
+- 新增 [rtk-comparison.md](core/docs/rtk-comparison.md) 与 README/七层对照/verify 模板交叉引用（本地，未 push）
 
 ## 架构与 Harness（产品本身）
 
@@ -23,3 +23,4 @@
 
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) — Loadout 选型指南
 - [platform-compliance.md](core/docs/platform-compliance.md) — GitHub/OSS 政策说明
+- [rtk-comparison.md](core/docs/rtk-comparison.md) — RTK 可选叠加（Shell 输出压缩，非依赖）
