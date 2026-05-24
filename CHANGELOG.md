@@ -14,6 +14,7 @@ All notable changes to Forge are documented here.
 - `hallucination-gate` now runs full `spec-before-code-gate.mjs` (Spec, confirmations, Plan, implementer session). `feedback-observer` auto `failure_class` heuristics (P1-lite).
 - README / README.zh-CN / DEV-PLAN / test-demo README: `pnpm forge-smoke` documented as **12** smokes (~15–30s); framework sections no longer say 9–10.
 - README / README.zh-CN / `llms.txt`: document pm-skills-inspired PM frameworks and CoT under Harness hardening / product-spec-builder.
+- README / README.zh-CN: add **Requirements depth** section + Workflow steps for PM/CoT and spec confirmation (visible outside What's New only).
 
 ## [v1.24.0] - 2026-05-24
 ### Added

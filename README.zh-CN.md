@@ -53,6 +53,7 @@ flowchart LR
 |------|------|
 | [安装与使用](#安装与使用) | 克隆、复制适配层、钩子、首次运行 |
 | [工作流程](#工作流程) | 需求 → 计划 → 开发 → 发布（存量项目用 `/change-manager`） |
+| [需求深度](#需求深度pm-框架与思维链cot) | product-spec-builder 的 PM 框架 + CoT |
 | [框架开发与维护](#框架开发与维护) | 测试、同步、`pnpm forge-smoke`、依赖图（贡献者） |
 
 ---
@@ -484,6 +485,17 @@ Forge：⚡ 快速 Spec 已生成！标记为 [待确认] 的条目是我的最�
 
 AI 推断一切——产品类型、目标用户、核心功能、技术栈、布局。不确定项默认选择更简单的方案并标记为待确认。随时切换到深度模式：`/product-spec-builder`。
 
+### 需求深度：PM 框架与思维链（CoT）
+
+除访谈流程外，**product-spec-builder** 内置可选参考（无需再装 65 个 pm-skills）：
+
+| 层次 | 内容 | 位置 |
+|------|------|------|
+| **PM 框架** | 机会方案树、JTBD 价值主张、假设表、竞品简报 — 摘编自 [pm-skills](https://github.com/phuryn/pm-skills)（MIT） | `core/skills/product-spec-builder/references/pm-frameworks-*.md` → `Product-Spec.md` 可选章节 |
+| **思维链（CoT）** | 先分步推理再给结论（选型、边界、自质疑）；分析与实现分轮 | `conversation-strategy.md`；implementer 写代码前、bug-fixer 清单、forge-bootstrap 第 9 条 |
+
+**不必**每条消息写「先想想看」— 由 Skill 与会话铁律自动约束。见 [近期更新 → Harness 硬化](#harness-硬化2026-05-24v1240-之后)。
+
 ### 引导层 — 12 个 Skill
 
 每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔。每个 Skill 包含 `[Gotchas]` 章节记录常见陷阱与实战教训：
@@ -597,8 +609,8 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 
 ## 工作流程
 
-1. **描述你的想法** — 告诉 AI 你想构建什么；product-spec-builder 通过访谈帮你理清思路（或使用快速模式一句话开始）
-2. **生成 Spec** — 输出 Product-Spec.md
+1. **描述你的想法** — `/product-spec-builder` 多轮访谈（或快速模式一句话）。想法模糊时，可选 **PM 发现**（OST、假设）与 **CoT** 模板，先理清再写 Spec，不写业务代码。
+2. **生成 Spec** — 输出 `Product-Spec.md`（可含 JTBD、指标、竞品、假设等可选章节）→ 用户确认 → `.forge/spec-confirmed.json`
 3. **设计简报（可选）** — 调用 /design-brief-builder
 4. **设计稿（可选）** — 调用 /design-maker
 5. **开发计划** — 调用 /dev-planner，输出 DEV-PLAN.md

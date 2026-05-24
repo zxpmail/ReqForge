@@ -53,6 +53,7 @@ flowchart LR
 |---------|-------------|
 | [Installation & Usage](#installation--usage) | Clone, copy adapters, hooks, first run |
 | [Workflow](#workflow) | Spec → Plan → Build → Release (brownfield: `/change-manager`) |
+| [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought) | PM frameworks (pm-skills) + CoT templates in product-spec-builder |
 | [Framework Development](#framework-development) | Tests, sync, `pnpm forge-smoke`, dependency graph (contributors) |
 
 ---
@@ -484,6 +485,17 @@ Forge: ⚡ Quick Spec generated! Items marked [待确认] are my best guesses.
 
 AI infers everything — product type, target users, core features, tech stack, layout. Uncertain items default to the simpler option and are marked for your review. Switch to deep-dive mode anytime with `/product-spec-builder`.
 
+### Requirements depth: PM frameworks & Chain-of-Thought
+
+Beyond the interview flow, **product-spec-builder** ships optional references (no extra Skills to install):
+
+| Layer | What | Where |
+|-------|------|--------|
+| **PM frameworks** | OST, JTBD value prop, assumption table, competitive brief — adapted from [pm-skills](https://github.com/phuryn/pm-skills) (MIT) | `core/skills/product-spec-builder/references/pm-frameworks-*.md` → optional sections in `Product-Spec.md` |
+| **Chain-of-Thought (CoT)** | Think step-by-step before conclusions (tech choice, edge cases, self-critique); analysis vs implementation split | `conversation-strategy.md`; also implementer pre-code step, bug-fixer checklist, forge-bootstrap Iron Law 9 |
+
+You do **not** need to type “think first” in every message — the Skill and session bootstrap apply the structure. See [What's New → Harness hardening](#harness-hardening-2026-05-24-post-v1240).
+
 ### Guidance Layer — 12 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
@@ -597,8 +609,8 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 
 ## Workflow
 
-1. **Describe your idea** — Tell AI what you want to build; product-spec-builder interviews you to clarify (or use Quick Mode for one-sentence start)
-2. **Generate spec** — Outputs Product-Spec.md
+1. **Describe your idea** — `/product-spec-builder` interviews you (or Quick Mode for one sentence). For fuzzy ideas, optional **PM discovery** (OST, assumptions) and **CoT** templates improve Spec quality before any code.
+2. **Generate spec** — Outputs `Product-Spec.md` (may include optional JTBD, metrics, competitors, assumptions sections) → user confirms → `.forge/spec-confirmed.json`
 3. **Design brief (optional)** — Invoke /design-brief-builder
 4. **Design mockups (optional)** — Invoke /design-maker
 5. **Development plan** — Invoke /dev-planner, outputs DEV-PLAN.md
