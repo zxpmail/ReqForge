@@ -346,7 +346,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 **快速 Spec**：一句话例如「带 AI 教练的习惯追踪 App」，可生成带 `[待确认]` 标记的最小 `Product-Spec.md`，再逐步完善。
 
-**对照示范**：仓库内 [test-demo/](../test-demo/) 为完整黄金路径（Spec → Plan → todo-cli），维护者用 `pnpm test-demo-golden-path` 验证；详见 [test-demo/README.md](../test-demo/README.md)。
+**对照示范**：仓库内 [test-demo/](../test-demo/) 展示 Spec + Plan 经 Forge 后的 **示范代码**（`todo-cli/`）；**不是**框架 CLI，无需安装使用。维护者用 `pnpm test-demo-golden-path` 验证流程可交付 —— 见 [test-demo/README.md](../test-demo/README.md)。
 
 ### 安装后 — 项目中会出现的文件
 
@@ -699,7 +699,7 @@ pnpm dep-graph stats  # 查看图统计
 | 选哪个 loadout | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
 | GitHub Actions 与 fork 策略 | [platform-compliance.md](core/docs/platform-compliance.md) |
 | 发版守门（贡献者） | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
-| 黄金路径示范 | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path` |
+| 黄金路径示范 | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path`（`todo-cli/` 为 Spec+Plan 产物，非框架 CLI） |
 
 ---
 

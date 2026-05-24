@@ -26,4 +26,4 @@
 - [platform-compliance.md](core/docs/platform-compliance.md) — GitHub/OSS 政策说明
 - [rtk-comparison.md](core/docs/rtk-comparison.md) — RTK 可选叠加（Shell 输出压缩，非依赖）
 - [nanochat-comparison.md](core/docs/nanochat-comparison.md) — nanochat 方法论参照
-- [test-demo/README.md](test-demo/README.md) — 黄金路径 living demo
+- [test-demo/README.md](test-demo/README.md) — 黄金路径；`todo-cli/` 为 Spec+Plan 产物（无独立用途）

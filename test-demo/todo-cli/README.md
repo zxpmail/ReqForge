@@ -1,5 +1,10 @@
 # Todo CLI
 
+> **⚠ 示范产物，非 ReqForge 组件**  
+> 本目录是 [Product-Spec.md](../Product-Spec.md) + [DEV-PLAN.md](../DEV-PLAN.md) 经 ReqForge（`/dev-builder`）实现的 **示例输出**。  
+> **没有独立产品用途** —— 不参与 `forge-install`，维护者仅用于 `pnpm test-demo-golden-path` 回归。  
+> 使用 Forge 请看仓库根 [README](../../README.zh-CN.md) Step 1–4，而非安装本 CLI。
+
 A lightweight CLI todo list tool for developers. Per-project task tracking in the terminal with AI-powered automatic categorization.
 
 ## Features
