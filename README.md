@@ -59,8 +59,14 @@ flowchart LR
 
 ## What's New
 
+### v1.24.0 — 2026-05-24
+- **Karpathy comparisons**: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md) — methodology mapped to Forge Skills, not copied wholesale.
+- **Harness discipline**: Primary metric per DEV-PLAN Phase; dev-builder Spec/Plan read-only + Task micro-cycle; code-review **risk_rank** (S×I×C); **PROJECT-HEALTH-template.md**; product-spec **LLM-as-Judge** + Spec Step 7 quality council.
+- **OpenCode fix**: `pnpm sync` copies root `CLAUDE.md` → `.opencode/AGENTS.md` (was empty template — Skill Dispatch broken). `forge-smoke` `machine-gates-doc` guards OpenCode parity.
+- **Memory**: LLM Wiki pattern cross-ref in `memory-system.md`; dev-builder **Query filing** — important conclusions → ADR / project-memory, not chat-only.
+
 ### v1.23.0 — 2026-05-24
-- **forge-smoke**: `pnpm forge-smoke` — 9 static release-gate smokes (skills, loadouts, adapter sync, hooks, templates, machine gates, platform compliance, workflows); GitHub Actions on push/PR only (no cron).
+- **forge-smoke**: `pnpm forge-smoke` — 10 static release-gate smokes (includes test-demo golden path); GitHub Actions on push/PR only (no cron).
 - **loadout-scenarios.md**: scenario → loadout → first Skill command; `scenarios[]` tags on built-in loadouts; README Step 3b quick picker.
 - **platform-compliance.md**: GitHub/OSS policy (no central secrets, fork intent, no cron CI); enforced by forge-smoke workflow guards.
 
@@ -172,7 +178,7 @@ flowchart LR
 
 ### v1.14 — 2026-05-19
 - **Exact version pinning**: Every dependency pinned to `major.minor.patch` — no ranges, no `latest`
-- **Dedicated AGENTS.md template**: OpenCode gets a constraint-focused format (tech stack, behavior boundaries, hard constraints), not a CLAUDE.md clone
+- **Dedicated AGENTS.md template**: OpenCode user-project constraints use `templates/agents-template.md` (v1.24.0: adapter control file `.opencode/AGENTS.md` mirrors root `CLAUDE.md` via `pnpm sync`)
 - **Dependency graph**: `scripts/dependency-graph.ts` — file-level import graph for blast-radius analysis. `pnpm dep-graph build | affected | risk | stats`. Integrated into dev-builder review loop: code-reviewer receives `affected_files` for focused review
 
 ### v1.13 — 2026-05-19

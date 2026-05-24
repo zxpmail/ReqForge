@@ -59,6 +59,12 @@ flowchart LR
 
 ## 近期更新
 
+### v1.24.0 — 2026-05-24
+- **Karpathy 对照文档**：[autoresearch](core/docs/autoresearch-comparison.md)、[llm-council](core/docs/llm-council-comparison.md)、[jobs](core/docs/jobs-comparison.md)、[llm-wiki gist](core/docs/llm-wiki-comparison.md) — 方法论映射到 Forge Skill，非照搬代码。
+- **Harness 纪律**：DEV-PLAN 每 Phase **Primary metric**；dev-builder Spec/Plan 只读 + Task 微循环；code-review **risk_rank**（S×I×C）；**PROJECT-HEALTH-template.md**；product-spec **LLM-as-Judge** + Spec Step 7 质量 council。
+- **OpenCode 修复**：`pnpm sync` 将根目录 `CLAUDE.md` 同步到 `.opencode/AGENTS.md`（此前为空模板，Skill 调度失效）；`forge-smoke` `machine-gates-doc` 守门 OpenCode 与 Claude 一致。
+- **记忆体系**：`memory-system.md` 增加 LLM Wiki 对照；dev-builder **Query filing** — 重要结论写入 ADR / project-memory，不单留对话。
+
 ### v1.23.0 — 2026-05-24
 - **forge-smoke**：`pnpm forge-smoke` — 10 项静态发版守门（含 test-demo 黄金路径）；GitHub Actions 仅 push/PR，无 cron。
 - **loadout-scenarios.md**：场景 → loadout → 先调哪个 Skill；内置 loadout 增加 `scenarios[]`；README Step 3b 速查表。
@@ -172,7 +178,7 @@ flowchart LR
 
 ### v1.14 — 2026-05-19
 - **精确版本锁定**：每个依赖锁定到 `major.minor.patch`——无范围、无 `latest`
-- **专属 AGENTS.md 模板**：OpenCode 使用约束文件格式（技术栈、行为边界、硬约束），非 CLAUDE.md 克隆
+- **专属 AGENTS.md 模板**：OpenCode 用户项目约束见 `templates/agents-template.md`（v1.24.0：适配层主控 `.opencode/AGENTS.md` 经 `pnpm sync` 与根目录 `CLAUDE.md` 一致）
 - **依赖图分析**：`scripts/dependency-graph.ts` — 文件级导入图，支持 blast-radius 影响范围分析。`pnpm dep-graph build | affected | risk | stats`。已集成到 dev-builder 审查循环，code-reviewer 接收 `affected_files` 精准定位审查范围
 
 ### v1.13 — 2026-05-19
