@@ -1,12 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.22.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.23.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
 **开源 Agent Harness** — 适配 Claude Code、Cursor、OpenCode：用 Skill、钩子、记忆与进化约束模型，产出可验证、可回滚，而不只靠对话。
 
-**一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md) · [七层对照 →](core/docs/agent-harness-seven-layer-map.md)
+**一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md) · [七层对照 →](core/docs/agent-harness-seven-layer-map.md) · [Loadout 场景选型 →](core/docs/loadout-scenarios.md) · [平台合规 →](core/docs/platform-compliance.md)
 
 > **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md) · **和 [Context7](https://github.com/upstash/context7)？** 库文档注入；建议与 ReqForge **叠加**。[Context7 →](core/docs/context7-comparison.md) · **Skill 自进化论文？** [EmbodiSkill](https://arxiv.org/abs/2605.10332) / [SkillEvolver](https://arxiv.org/abs/2605.10500) 与 Forge 对照。[Skill 进化 →](core/docs/skill-evolution-comparison.md)
 
@@ -53,11 +53,16 @@ flowchart LR
 |------|------|
 | [安装与使用](#安装与使用) | 克隆、复制适配层、钩子、首次运行 |
 | [工作流程](#工作流程) | 需求 → 计划 → 开发 → 发布（存量项目用 `/change-manager`） |
-| [框架开发与维护](#框架开发与维护) | 测试、同步、依赖图（贡献者） |
+| [框架开发与维护](#框架开发与维护) | 测试、同步、`pnpm forge-smoke`、依赖图（贡献者） |
 
 ---
 
 ## 近期更新
+
+### v1.23.0 — 2026-05-24
+- **forge-smoke**：`pnpm forge-smoke` — 9 项静态发版守门（skills、loadouts、adapter 同步、hooks、模板、Machine Gates、平台合规、workflow）；GitHub Actions 仅 push/PR，无 cron。
+- **loadout-scenarios.md**：场景 → loadout → 先调哪个 Skill；内置 loadout 增加 `scenarios[]`；README Step 3b 速查表。
+- **platform-compliance.md**：GitHub/OSS 合规（不存用户密钥、fork 用途、禁止 cron CI）；由 forge-smoke 的 workflow 检查强制执行。
 
 ### v1.22.2 — 2026-05-23
 - **补齐**：Windows 配置与 Unix 一致；`retry-gate` 写入 loadout/文档；钩子计为 10 个；Skill 内文档链到 GitHub。
@@ -682,6 +687,14 @@ pnpm dep-graph stats  # 查看图统计
 | [Superpowers](https://github.com/obra/superpowers) | Skill + TDD + 子 Agent 驱动开发 | [superpowers-comparison.md](core/docs/superpowers-comparison.md) — 技能化/TDD 已融入 dev-builder |
 | [Open Design](https://github.com/nexu-io/open-design) | 设计稿、预览、Design System 库 | [open-design-comparison.md](core/docs/open-design-comparison.md) — 问卷/五预设/反 slop 已进 design Skill |
 | [OpenHuman](https://github.com/tinyhumansai/openhuman) | 个人 AI 运行时、Memory Tree、集成 | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — 可选记忆后端与上下文规则 |
+
+**ReqForge 维护者文档**（非第三方对照）：
+
+| 主题 | 文档 |
+|------|------|
+| 选哪个 loadout | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
+| GitHub Actions 与 fork 策略 | [platform-compliance.md](core/docs/platform-compliance.md) |
+| 发版守门（贡献者） | `pnpm forge-smoke` · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 
 ---
 

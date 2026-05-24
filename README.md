@@ -1,12 +1,12 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.22.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.23.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
 **Open-source Agent Harness** for Claude Code, Cursor, and OpenCode — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
 
-**Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md) · [Seven-layer map →](core/docs/agent-harness-seven-layer-map.md)
+**Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md) · [Seven-layer map →](core/docs/agent-harness-seven-layer-map.md) · [Loadout scenarios →](core/docs/loadout-scenarios.md) · [Platform compliance →](core/docs/platform-compliance.md)
 
 > **vs [OpenSpec](https://github.com/Fission-AI/OpenSpec)?** One change at a time. **ReqForge** = **requirements → product** + Harness. [OpenSpec →](core/docs/openspec-comparison.md) · **vs [Superpowers](https://github.com/obra/superpowers)?** TDD/subagents vs full pipeline. [Superpowers →](core/docs/superpowers-comparison.md) · **vs [Open Design](https://github.com/nexu-io/open-design)?** OD = mockups/preview; ReqForge = Spec→code (absorbs discovery checklist). [Open Design →](core/docs/open-design-comparison.md) · **vs [Context7](https://github.com/upstash/context7)?** Library docs injection; use **with** ReqForge. [Context7 →](core/docs/context7-comparison.md) · **Skill self-evolution papers?** [EmbodiSkill](https://arxiv.org/abs/2605.10332) + [SkillEvolver](https://arxiv.org/abs/2605.10500) vs Forge feedback/evolution. [Skill evolution →](core/docs/skill-evolution-comparison.md)
 
@@ -53,11 +53,16 @@ flowchart LR
 |---------|-------------|
 | [Installation & Usage](#installation--usage) | Clone, copy adapters, hooks, first run |
 | [Workflow](#workflow) | Spec → Plan → Build → Release (brownfield: `/change-manager`) |
-| [Framework Development](#framework-development) | Tests, sync, dependency graph (contributors) |
+| [Framework Development](#framework-development) | Tests, sync, `pnpm forge-smoke`, dependency graph (contributors) |
 
 ---
 
 ## What's New
+
+### v1.23.0 — 2026-05-24
+- **forge-smoke**: `pnpm forge-smoke` — 9 static release-gate smokes (skills, loadouts, adapter sync, hooks, templates, machine gates, platform compliance, workflows); GitHub Actions on push/PR only (no cron).
+- **loadout-scenarios.md**: scenario → loadout → first Skill command; `scenarios[]` tags on built-in loadouts; README Step 3b quick picker.
+- **platform-compliance.md**: GitHub/OSS policy (no central secrets, fork intent, no cron CI); enforced by forge-smoke workflow guards.
 
 ### v1.22.2 — 2026-05-23
 - **Completeness**: Windows `settings.windows.json` aligned; `retry-gate` in loadouts/docs; 10-hook count; GitHub URLs for `core/docs` in Skills.
@@ -684,6 +689,14 @@ External harnesses reviewed for positioning (not dependencies):
 | [Superpowers](https://github.com/obra/superpowers) | Skills + TDD + subagent-driven development | [superpowers-comparison.md](core/docs/superpowers-comparison.md) — skill/TDD discipline absorbed in dev-builder |
 | [Open Design](https://github.com/nexu-io/open-design) | Design artifacts, preview, design systems | [open-design-comparison.md](core/docs/open-design-comparison.md) — discovery/presets/anti-slop in design skills |
 | [OpenHuman](https://github.com/tinyhumansai/openhuman) | Personal AI runtime, Memory Tree, integrations | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — optional memory backends, context rules |
+
+**ReqForge maintainer docs** (not third-party comparisons):
+
+| Topic | Doc |
+|-------|-----|
+| Which loadout when | [loadout-scenarios.md](core/docs/loadout-scenarios.md) |
+| GitHub Actions & fork policy | [platform-compliance.md](core/docs/platform-compliance.md) |
+| Release gate (contributors) | `pnpm forge-smoke` · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 
 ---
 

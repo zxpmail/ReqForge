@@ -65,4 +65,4 @@ Sync after editing core: `pnpm sync`
 
 Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`
 
-Version: v1.22.2
+Version: v1.23.0
