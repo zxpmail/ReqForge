@@ -1,25 +1,23 @@
 #!/usr/bin/env node
 /**
- * spec-before-code-gate.mjs — PreToolUse：无 Product-Spec.md 时禁止写入应用代码目录
- * 由 core/hooks/hallucination-gate.sh|.bat 调用；stdin 为工具 JSON，阻塞时 stdout 输出 decision JSON
+ * spec-before-code-gate.mjs — PreToolUse 应用代码写入链式机器门
+ * 1) Product-Spec.md 存在
+ * 2) .forge/spec-confirmed.json（用户已确认 Spec）
+ * 3) DEV-PLAN.md 存在
+ * 4) .forge/plan-confirmed.json（用户已确认 Plan）
+ * 5) .forge/implementer-session.json（implementer 子 Agent 活跃会话）
  */
 import fs from "fs";
 import path from "path";
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
-function readStdin() {
-  return new Promise((resolve) => {
-    let data = "";
-    process.stdin.setEncoding("utf8");
-    process.stdin.on("data", (chunk) => {
-      data += chunk;
-    });
-    process.stdin.on("end", () => resolve(data));
-  });
-}
+const MARKERS = {
+  specConfirmed: path.join(projectDir, ".forge", "spec-confirmed.json"),
+  planConfirmed: path.join(projectDir, ".forge", "plan-confirmed.json"),
+  implementerSession: path.join(projectDir, ".forge", "implementer-session.json"),
+};
 
-/** 框架/元数据路径，无 Spec 也允许写 */
 const ALLOW_PREFIXES = [
   "core/",
   "adapters/",
@@ -29,7 +27,6 @@ const ALLOW_PREFIXES = [
   "docs/",
   "memory/",
   "changes/",
-  ".forge/",
   ".github/",
   "node_modules/",
   "feedback/",
@@ -46,36 +43,49 @@ const ALLOW_PREFIXES = [
 const APP_DIR_RE = /^(src|app|lib|packages)(\/|$)/;
 const WORKTREE_APP_RE = /(?:^|\/)(?:\.claude\/worktrees|worktrees)\/[^/]+\/(src|app|lib|packages)(\/|$)/;
 
+function readStdin() {
+  return new Promise((resolve) => {
+    let data = "";
+    process.stdin.setEncoding("utf8");
+    process.stdin.on("data", (c) => {
+      data += c;
+    });
+    process.stdin.on("end", () => resolve(data));
+  });
+}
+
 function normalizeRel(filePath) {
-  const abs = path.isAbsolute(filePath)
-    ? filePath
-    : path.join(projectDir, filePath);
+  const abs = path.isAbsolute(filePath) ? filePath : path.join(projectDir, filePath);
   let rel = path.relative(projectDir, abs).replace(/\\/g, "/");
   if (rel.startsWith("../")) return filePath.replace(/\\/g, "/");
   return rel.replace(/^\.\//, "");
 }
 
-function isAllowedWithoutSpec(rel) {
-  const base = path.basename(rel);
-  if (/^Product-Spec\.md$/i.test(base) || /^DEV-PLAN\.md$/i.test(base) || /^Design-Brief\.md$/i.test(base)) {
-    return true;
-  }
-  if (/\.(md|json|yaml|yml|txt)$/i.test(base) && !APP_DIR_RE.test(rel) && !WORKTREE_APP_RE.test(rel)) {
-    if (!rel.includes("/worktrees/")) return true;
-  }
+function isFrameworkPath(rel) {
+  if (rel.startsWith(".forge/")) return true;
   for (const prefix of ALLOW_PREFIXES) {
     if (rel === prefix.slice(0, -1) || rel.startsWith(prefix)) return true;
   }
-  if (rel.startsWith(".claude/") && !WORKTREE_APP_RE.test(rel)) {
-    if (!rel.includes("/worktrees/")) return true;
+  if (rel.startsWith(".claude/") && !WORKTREE_APP_RE.test(rel) && !rel.includes("/worktrees/")) {
+    return true;
+  }
+  return false;
+}
+
+function isArtifactPath(rel) {
+  const base = path.basename(rel);
+  if (/^Product-Spec\.md$/i.test(base) || /^DEV-PLAN\.md$/i.test(base) || /^Design-Brief\.md$/i.test(base)) {
+    return true;
   }
   return false;
 }
 
 function isApplicationPath(rel) {
-  if (APP_DIR_RE.test(rel)) return true;
-  if (WORKTREE_APP_RE.test(rel)) return true;
-  return false;
+  return APP_DIR_RE.test(rel) || WORKTREE_APP_RE.test(rel);
+}
+
+function block(tool, rel, reason) {
+  console.log(JSON.stringify({ decision: "block", reason: `${reason} Cannot ${tool} '${rel}'.` }));
 }
 
 async function main() {
@@ -95,18 +105,45 @@ async function main() {
   const filePath = payload.tool_input?.file_path || payload.tool_input?.path || "";
   if (!filePath) return;
 
-  const specFile = path.join(projectDir, "Product-Spec.md");
-  if (fs.existsSync(specFile)) return;
-
   const rel = normalizeRel(filePath);
-  if (isAllowedWithoutSpec(rel)) return;
+  if (isFrameworkPath(rel) || isArtifactPath(rel)) return;
   if (!isApplicationPath(rel)) return;
 
-  const reason =
-    `Spec-Before-Code Gate: Product-Spec.md is missing. Cannot ${tool} application code at '${rel}'. ` +
-    "Run /product-spec-builder and save a confirmed Product-Spec.md first.";
+  const specFile = path.join(projectDir, "Product-Spec.md");
+  const planFile = path.join(projectDir, "DEV-PLAN.md");
 
-  console.log(JSON.stringify({ decision: "block", reason }));
+  if (!fs.existsSync(specFile)) {
+    block(tool, rel, "Spec-Before-Code Gate: Product-Spec.md is missing. Run /product-spec-builder first.");
+    return;
+  }
+  if (!fs.existsSync(MARKERS.specConfirmed)) {
+    block(
+      tool,
+      rel,
+      "Spec-Before-Code Gate: Spec not confirmed. Save Product-Spec.md and complete user confirm (writes .forge/spec-confirmed.json).",
+    );
+    return;
+  }
+  if (!fs.existsSync(planFile)) {
+    block(tool, rel, "Plan-Before-Build Gate: DEV-PLAN.md is missing. Run /dev-planner first.");
+    return;
+  }
+  if (!fs.existsSync(MARKERS.planConfirmed)) {
+    block(
+      tool,
+      rel,
+      "Plan-Before-Build Gate: Plan not confirmed. Save DEV-PLAN.md and complete user confirm (writes .forge/plan-confirmed.json).",
+    );
+    return;
+  }
+  if (!fs.existsSync(MARKERS.implementerSession)) {
+    block(
+      tool,
+      rel,
+      "Implementer Gate: No active implementer session (.forge/implementer-session.json). Dispatch implementer sub-agent per dev-builder Task; implementer creates marker at task start.",
+    );
+    return;
+  }
 }
 
 main().catch(() => process.exit(0));

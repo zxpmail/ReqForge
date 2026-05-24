@@ -29,6 +29,14 @@ const REQUIRED = [
     rel: "core/templates/forge-bootstrap.md",
     markers: ["Session Iron Laws", "HARD-GATE", "Skill before action"],
   },
+  {
+    rel: "core/templates/forge-markers/README.md",
+    markers: ["spec-confirmed.json", "implementer-session.json"],
+  },
+  {
+    rel: "core/feedback/templates/drift-map-template.md",
+    markers: ["跑偏地图", "failure_class"],
+  },
 ];
 
 for (const { rel, markers } of REQUIRED) {

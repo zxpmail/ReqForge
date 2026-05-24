@@ -1,0 +1,5 @@
+{
+  "started_at": "YYYY-MM-DDTHH:mm:ssZ",
+  "task_id": "task-slug",
+  "agent": "implementer"
+}

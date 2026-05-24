@@ -25,6 +25,9 @@ changes/*
 
 # Forge local config
 .forge/config
+.forge/spec-confirmed.json
+.forge/plan-confirmed.json
+.forge/implementer-session.json
 
 # Worktrees (ephemeral test environments)
 .claude/worktrees/

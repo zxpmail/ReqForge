@@ -6,13 +6,13 @@
 ## 运行
 
 ```bash
-pnpm forge-smoke          # 约 15–30 秒，11/11 为通过（含 test-demo 黄金路径）
+pnpm forge-smoke          # 约 15–30 秒，12/12 为通过（含 test-demo 黄金路径）
 node scripts/forge-smoke/run-all.mjs
 ```
 
 CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 
-## 11 项 smoke
+## 12 项 smoke
 
 | # | 脚本 | 测什么 |
 |---|------|--------|
@@ -23,12 +23,13 @@ CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 | 5 | `agents-complete.mjs` | `full` loadout 引用的 agent 均在 `core/agents/` |
 | 6 | `hooks-wired.mjs` | `full` loadout 10 个 hook 在 `core/hooks/` 有实现 |
 | 7 | `skill-fixtures.mjs` | `tests/skill-fixtures/` 静态探针对照 SKILL 正文 |
-| 8 | `loadouts-valid.mjs` | 4 个 loadout JSON 合法、引用存在、`scenarios[]` 合法 |
-| 9 | `adapters-sync.mjs` | `core/skills` 与三端 adapter 技能目录名一致 |
-| 10 | `skills-complete.mjs` | 12 个 Skill + `validate-skill.mjs` 通过 |
-| 11 | `test-demo-golden-path.mjs` | `test-demo/` 黄金路径：Spec/Plan + todo-cli build/test/CLI 冒烟 |
+| 8 | `skill-bypass.mjs` | 带 command 的 Skill 在 `CLAUDE.md` Dispatch 可发现（P2 静态） |
+| 9 | `loadouts-valid.mjs` | 4 个 loadout JSON 合法、引用存在、`scenarios[]` 合法 |
+| 10 | `adapters-sync.mjs` | `core/skills` 与三端 adapter 技能目录名一致 |
+| 11 | `skills-complete.mjs` | 12 个 Skill + `validate-skill.mjs` 通过 |
+| 12 | `test-demo-golden-path.mjs` | `test-demo/` 黄金路径：Spec/Plan + todo-cli build/test/CLI 冒烟 |
 
-跳过第 11 项（离线/无 pnpm）：`SKIP_TEST_DEMO_GOLDEN=1 pnpm forge-smoke`
+跳过第 12 项（离线/无 pnpm）：`SKIP_TEST_DEMO_GOLDEN=1 pnpm forge-smoke`
 
 每项在**独立子进程**运行，避免状态污染。
 

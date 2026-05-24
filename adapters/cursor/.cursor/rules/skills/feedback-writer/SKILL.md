@@ -126,6 +126,7 @@ description: Called by the feedback-observer sub-agent when the user corrects AI
     Index file: ../../feedback/FEEDBACK-INDEX.md
     Index template: ../../feedback/templates/feedback-index-template.md
     Content template: ../../feedback/templates/feedback-topic-template.md
+    Drift map (optional, ≥3 repeats before evolution): ../../feedback/templates/drift-map-template.md
 
 [Return Format]
     Return to the main Agent after execution: - New record: "Recorded 1 feedback: [title] ([filename])" - Updated existing: "Updated [filename], occurrences: N -> N+1" - No signal: "No new feedback"

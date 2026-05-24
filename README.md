@@ -59,6 +59,12 @@ flowchart LR
 
 ## What's New
 
+### Harness hardening (2026-05-24, post-v1.24.0)
+- **Session bootstrap**: `forge-bootstrap.md` injected every session; **HARD-GATE** on product-spec, dev-planner, dev-builder.
+- **Machine gates**: PreToolUse blocks app code until `Product-Spec.md`, `.forge/spec-confirmed.json`, `DEV-PLAN.md`, `.forge/plan-confirmed.json`, and `.forge/implementer-session.json` (implementer-only).
+- **Execution**: dev-builder requires **implementer** sub-agent + **worktree** per Task; `tests/skill-fixtures` + forge-smoke **12** items (incl. skill-bypass).
+- **Evolution**: feedback `failure_class` + RED line; evolution proposals require RED/GREEN/Verify-by.
+
 ### v1.24.0 — 2026-05-24
 - **Karpathy comparisons**: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md) — methodology mapped to Forge Skills, not copied wholesale.
 - **Harness discipline**: Primary metric per DEV-PLAN Phase; dev-builder Spec/Plan read-only + Task micro-cycle; code-review **risk_rank** (S×I×C); **PROJECT-HEALTH-template.md**; product-spec **LLM-as-Judge** + Spec Step 7 quality council.

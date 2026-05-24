@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+### Added
+- **Harness hardening (Superpowers-aligned)**: `forge-bootstrap` session iron laws; `product-spec-builder` / `dev-planner` HARD-GATE; evolution Skill TDD quartet + `failure_class`; `tests/skill-fixtures` + forge-smoke; mandatory implementer + worktree; `.forge/*-confirmed.json` + `implementer-session.json` PreToolUse chain; `drift-map-template.md`; forge-smoke `skill-bypass` (P2); `validate-skill` requires `[HARD-GATE]` on spec/plan/build skills.
+- **release-builder**: Finishing Branch Checklist (merge / PR / keep / discard). **bug-fixer**: Phase-1-before-fix cross-ref to systematic debugging.
+
+### Changed
+- `hallucination-gate` now runs full `spec-before-code-gate.mjs` (Spec, confirmations, Plan, implementer session). `feedback-observer` auto `failure_class` heuristics (P1-lite).
+
 ## [v1.24.0] - 2026-05-24
 ### Added
 - Comparison docs: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md).

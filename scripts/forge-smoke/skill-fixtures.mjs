@@ -75,5 +75,7 @@ r.assert(fixtureCount >= 3, `expected >= 3 fixtures, got ${fixtureCount}`);
 
 const specGate = fs.readFileSync(path.join(ROOT, "scripts", "hooks", "spec-before-code-gate.mjs"), "utf-8");
 r.assert(specGate.includes("Product-Spec.md"), "spec-before-code-gate.mjs must check Product-Spec.md");
+r.assert(specGate.includes("spec-confirmed.json"), "spec-before-code-gate.mjs must check spec-confirmed marker");
+r.assert(specGate.includes("implementer-session.json"), "spec-before-code-gate.mjs must check implementer-session marker");
 
 r.finish();

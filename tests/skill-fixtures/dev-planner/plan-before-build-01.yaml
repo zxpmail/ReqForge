@@ -3,6 +3,7 @@ skill: dev-planner
 description: 无确认 DEV-PLAN 前不得 dev-builder
 expect_skill_contains:
   - "[HARD-GATE]"
+  - "plan-confirmed.json"
   - "DEV-PLAN.md"
   - "MUST NOT"
   - "/dev-builder"

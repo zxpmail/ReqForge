@@ -34,6 +34,7 @@ description: Used when the user says "this feature is broken", "getting an error
     - **Dependency Graph** (`dep-graph`) -> if available, run `pnpm dep-graph affected <file>` to scope the blast radius before debugging
 
 [First Principles]
+    **Phase 1 Before Fix (Superpowers systematic-debugging)**: No fix proposal until stable reproduction and data-flow tracing are documented. Symptom-only patches are failures — align with TDD: failing test first, then fix.
     **No Guessing, No Experiments**: No conclusions without evidence. Collect first, analyze first, hypothesize first, then verify. Do not rush to change code when you see an error.
     **One at a Time**: Change one thing at a time. Verify after the change, confirm it works, then proceed. Changing multiple things at once makes it impossible to know which change was the real fix.
     **Modification Discipline**: Fixing a bug is still changing code. Assess the impact before changing. Regression-test after the fix. Fixing A must not break B.

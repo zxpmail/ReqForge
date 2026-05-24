@@ -7,11 +7,12 @@ Hook block messages are **hard stops** — do not negotiate around them.
 
 1. **Skill before action** — Match the task to a Skill; open its `SKILL.md` Workflow before `Write`/`Edit`/Bash on project application code.
 2. **Truth sources** — If `Product-Spec.md` / `DEV-PLAN.md` exist, read the relevant sections before implementation work.
-3. **HARD-GATE — no spec, no code** — Until `Product-Spec.md` is saved **and** the user explicitly confirms it, do **not** invoke `/dev-builder` or `/dev-planner`; do **not** create or edit application source under `src/`, `app/`, `lib/`, `packages/`.
-4. **HARD-GATE — no plan, no build** — Until `DEV-PLAN.md` exists and the current Phase is identified, do **not** invoke `/dev-builder`.
-5. **Bugs** — Use `/bug-fixer`; no fix without stable reproduction and a failing test (TDD).
-6. **Hooks are law** — `phase-exit-guard`, `stop-gate`, `retry-gate`, `hallucination-gate` (includes **Spec-Before-Code** when no `Product-Spec.md`), `pre-commit-check`: blocking output means stop and comply.
-7. **Phase boundary** — One Phase per `/dev-builder` invocation; do not start the next Phase until the user invokes `/dev-builder` again.
+3. **HARD-GATE — no spec, no code** — Until `Product-Spec.md` is saved **and** `.forge/spec-confirmed.json` exists (user confirmed), do **not** invoke `/dev-builder` or `/dev-planner`; do **not** create or edit application source under `src/`, `app/`, `lib/`, `packages/`.
+4. **HARD-GATE — no plan, no build** — Until `DEV-PLAN.md` exists **and** `.forge/plan-confirmed.json` exists, do **not** invoke `/dev-builder`.
+5. **Implementer gate** — Application code writes require `.forge/implementer-session.json` (only **implementer** sub-agent creates it per Task). Main session coordinates only.
+6. **Bugs** — Use `/bug-fixer`; no fix without stable reproduction and a failing test (TDD).
+7. **Hooks are law** — PreToolUse chain: Spec → Spec confirm → Plan → Plan confirm → implementer session; plus `phase-exit-guard`, `stop-gate`, `retry-gate`, `pre-commit-check`. Blocking output = stop and comply.
+8. **Phase boundary** — One Phase per `/dev-builder` invocation; do not start the next Phase until the user invokes `/dev-builder` again.
 
 ## Rationalization references
 

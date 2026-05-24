@@ -205,6 +205,7 @@ description: Used when the user says they want to build a product, application, 
         ```
 
         User confirms → save as Product-Spec.md.
+        **Machine gate marker (MANDATORY)**: Create `.forge/` if needed. Write `.forge/spec-confirmed.json` (`confirmed_at` ISO-8601, `spec_path`: `Product-Spec.md`). PreToolUse blocks app code until this file exists.
         **HARD-GATE**: Only after this explicit confirm may `/dev-planner` or `/dev-builder` be invoked and app code under `src/`/`app/`/`lib/`/`packages/` be edited.
         User wants changes → switch to 0-to-1 Mode questioning for the specific areas, not the whole thing.
 
@@ -407,9 +408,12 @@ description: Used when the user says they want to build a product, application, 
             - Merge duplicate findings across perspectives
 
             If **阻塞** or unresolved **待确认** → return to user; do not mark Spec complete.
-            If **可交付** → workflow ends; [HARD-GATE] is lifted for planning/build — user may invoke `/dev-planner` (not `/dev-builder` until DEV-PLAN.md exists).
+            If **可交付** → workflow ends; write `.forge/spec-confirmed.json` if not already written; [HARD-GATE] is lifted for planning/build — user may invoke `/dev-planner` (not `/dev-builder` until DEV-PLAN.md exists).
 
             See [llm-council-comparison.md](../../docs/llm-council-comparison.md).
+
+[Machine Gate Markers]
+    After **explicit user confirm** of Product-Spec.md (0-to-1 Step 4, Step 6/7, or Iteration Mode delta confirm), MUST write `.forge/spec-confirmed.json`. Template: `core/templates/forge-markers/spec-confirmed.template.json`.
 
 [Workflow (Iteration Mode)]
     **Trigger Condition**: User proposes new features, requirement changes, or iterative ideas during development
@@ -503,6 +507,7 @@ description: Used when the user says they want to build a product, application, 
 
             4. **Present**: When done with auto-cleanup, present remaining issues to user
                Only after user confirms all issues are resolved can you conclude.
+               On confirm: update `Product-Spec.md` and refresh `.forge/spec-confirmed.json` (same format as [Machine Gate Markers]).
 
         Step 7: Archive
             If this iteration used `/change-manager`, archive is `/change-manager archive <name>` — not dev-builder.

@@ -30,10 +30,18 @@ color: blue
     | `execution-lapse` | Skill already states correct behavior; Agent skipped steps, ignored HARD-GATE, or hooks/bootstrap failed |
     | `unset` | Cannot decide — explain ambiguity in body; do not guess |
 
-    **Heuristics**:
-    - User: "the Skill says X but you didn't do X" → `execution-lapse`
-    - User: "the workflow never mentioned X" / "Spec step was wrong" → `skill-defect`
-    - Skipped `/product-spec-builder` confirm then wrote code → `execution-lapse` (forge-bootstrap + product-spec HARD-GATE)
+    **Heuristics** (apply in order; first match wins):
+
+    | Signal in context | Auto `failure_class` |
+    |-------------------|----------------------|
+    | User says Skill already required X but Agent skipped steps / ignored HARD-GATE / hook fired | `execution-lapse` |
+    | Missing `.forge/spec-confirmed.json` or `.forge/plan-confirmed.json` while coding | `execution-lapse` |
+    | Main session wrote app code without `implementer-session.json` | `execution-lapse` |
+    | Skill text missing step, wrong workflow, outdated guidance | `skill-defect` |
+    | User says "workflow never mentioned X" / "Spec should include Y" | `skill-defect` |
+    | Cannot decide | `unset` + one-line why in body |
+
+    If `trigger_reason` is `user_correction` and text cites existing Skill rule → prefer `execution-lapse`.
 
     **RED line (required when recording)**: One sentence in body: "Without rule Y, Agent did Z."
 

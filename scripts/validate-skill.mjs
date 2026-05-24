@@ -25,6 +25,7 @@ const REQUIRED_SECTIONS = [
   "Initialization",
 ];
 const RECOMMENDED_SECTIONS = ["Output Style", "Gotchas", "Output Artifacts"];
+const HARD_GATE_SKILLS = new Set(["product-spec-builder", "dev-planner", "dev-builder"]);
 
 const args = process.argv.slice(2);
 const strict = args.includes("--strict");
@@ -112,6 +113,11 @@ function validateSkill(dir) {
 
   for (const section of REQUIRED_SECTIONS) {
     if (!content.includes(`[${section}`)) error(`Missing required section [${section}]`);
+    else ok();
+  }
+
+  if (HARD_GATE_SKILLS.has(dirname)) {
+    if (!content.includes("[HARD-GATE]")) error("Missing required section [HARD-GATE]");
     else ok();
   }
 

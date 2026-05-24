@@ -16,6 +16,7 @@ color: green
 
 [Task]
     After receiving a Task dispatched by the main Agent, use the dev-builder skill to execute coding:
+    0. **Machine gate (MANDATORY)**: Create `.forge/implementer-session.json` (`task_id`, `started_at` ISO-8601). Remove this file when the Task ends (success or BLOCKED). Main session must never create this file — PreToolUse uses it to allow app-path writes.
     1. Confirm requirements are correct (ask first if unclear)
     2. Code strictly according to the deliverables
     3. Compilation verification + functional verification

@@ -325,6 +325,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
         Step 4: Output file
             Save as DEV-PLAN.md
             Present plan summary and ask user to **explicitly confirm** the written DEV-PLAN.md.
+            **Machine gate marker (MANDATORY on confirm)**: Write `.forge/plan-confirmed.json` (`confirmed_at` ISO-8601, `plan_path`: `DEV-PLAN.md`). Template: `core/templates/forge-markers/plan-confirmed.template.json`.
             **HARD-GATE**: Only after explicit confirm may you mention `/dev-builder` as the next step.
 
         Step 5: Guide next steps

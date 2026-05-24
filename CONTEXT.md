@@ -6,35 +6,31 @@
 
 ## 上次停在哪个位置
 
-- **A+B+E 落地**：`forge-bootstrap` + HARD-GATE + evolution Skill TDD（commit `3068927`）
-- **P0/P1 补全**（`582f29a`）：Session Iron Laws、feedback 标签、多客户端 feedback 路径
-- **C/D + 机器门**（本地待提交）：`spec-before-code-gate`、dev-builder 强制 implementer+worktree、dev-planner HARD-GATE、`tests/skill-fixtures`（forge-smoke 11/11）
-- 已 push `ee178d5`：README / README.zh-CN 补全 **What's New → v1.24.0** 段
+- **Harness 硬化已闭环**（本地提交 `3068927` `582f29a` `2590a1e` + 待提交：标记文件链、P2 skill-bypass、文档）
+- PreToolUse 五段链：Spec → spec-confirmed → DEV-PLAN → plan-confirmed → implementer-session
+- forge-smoke **12** 项（含 skill-fixtures、skill-bypass）
 
 ## 架构与 Harness（产品本身）
 
 - 12 Skill + 10 Agent + 10 默认钩子 + Loadout 机制（**Phase 1–13 已闭环**，见 DEV-PLAN.md）
-- **路线图（未排期）**：Gemini CLI、模板市场、Dashboard、Skill 进化 P1/P2 —— 非 v1.23.0 欠账
-- Skill 进化：P0 文档已完成，P1/P2 仍暂缓
+- **路线图（未排期）**：Gemini CLI、模板市场、Dashboard
+- Skill 进化：**P1-lite** 已做（`failure_class` 启发式）；**P1-full** 自动轨迹归因、**P2** 运行时 bypass 扫描仍暂缓
 
 ## 框架仓库 vs 用户项目（勿混淆）
 
 | 工件 | 用户项目 | ReqForge 框架仓库 |
 |------|----------|-------------------|
 | Product-Spec / DEV-PLAN | 应有 | 有（描述框架本身） |
-| Design-Brief | 可选 | **通常不需要** |
+| `.forge/*-confirmed.json` | 确认后生成 | 通常 gitignore |
 | memory/ | dev-builder 后创建 | **通常不需要** |
-| PROJECT-HEALTH.md | Phase 完成后更新 | **通常不需要** |
-| changes/ | brownfield 时用 | **通常为空** |
 
 ## 测试（框架仓库 · 非架构）
 
-- **Vitest**：`pnpm test` — Phase 10 脚本单元测试（22 项）
-- **forge-smoke**：`pnpm forge-smoke` — 10 项静态 smoke + test-demo 黄金路径
-- **test-demo**：`pnpm test-demo-golden-path` — 验收已提交 demo（不重新生成）
+- **Vitest**：`pnpm test` — 22 项
+- **forge-smoke**：`pnpm forge-smoke` — 12 项静态 smoke + test-demo 黄金路径
+- **test-demo**：`pnpm test-demo-golden-path`
 
 ## 维护者文档（非架构 · 非测试）
 
-- [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [platform-compliance.md](core/docs/platform-compliance.md)
-- [rtk-comparison.md](core/docs/rtk-comparison.md) · [nanochat-comparison.md](core/docs/nanochat-comparison.md) · [autoresearch-comparison.md](core/docs/autoresearch-comparison.md) · [llm-council-comparison.md](core/docs/llm-council-comparison.md) · [jobs-comparison.md](core/docs/jobs-comparison.md) · [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md)
-- [test-demo/README.md](test-demo/README.md) — 黄金路径；`todo-cli/` 为 Spec+Plan 产物（无独立用途）
+- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md)
+- [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [test-demo/README.md](test-demo/README.md)

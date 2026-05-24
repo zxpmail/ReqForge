@@ -61,6 +61,11 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     **Sub-Agent Isolation (MANDATORY)**: Per Task, RED/GREEN/REFACTOR implementation MUST run in a fresh `implementer` sub-agent — main session MUST NOT `Write`/`Edit` under `src/`, `app/`, `lib/`, `packages/`. Main session coordinates, reviews, commits. Details → `references/sub-agent-isolation.md`.
 
+[HARD-GATE]
+    Application code edits require the full machine gate chain (enforced by PreToolUse → `spec-before-code-gate.mjs`):
+    `Product-Spec.md` + `.forge/spec-confirmed.json` + `DEV-PLAN.md` + `.forge/plan-confirmed.json` + `.forge/implementer-session.json` (written by **implementer** at Task start, removed at Task end).
+    Main session MUST NOT create `implementer-session.json` — only the implementer sub-agent may.
+
     **Tool-Call Offloading**: When a tool call returns large output (2,000+ lines of logs, full-file reads, extensive search results), store the output to a temporary file and keep only essential headers/footers in context. Reference the file path for later use rather than embedding the full content. This prevents context window waste and keeps responses actionable.
 
 [Output Style]
@@ -229,7 +234,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
                - No git repo → document in task report; still MUST use implementer (no main-session app edits)
 
             Sub-agent implementation (TDD — steps 7–9 MUST NOT run in main session):
-            7. **Dispatch implementer** with isolated packet (see `references/sub-agent-isolation.md`). Implementer runs:
+            7. **Dispatch implementer** with isolated packet (see `references/sub-agent-isolation.md`). Implementer MUST create `.forge/implementer-session.json` before any app `Write`/`Edit` and remove it when the Task ends. Implementer runs:
                - **RED**: failing test first
                - **GREEN**: minimal pass
                - **REFACTOR**: keep green
