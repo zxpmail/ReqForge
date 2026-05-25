@@ -15,10 +15,12 @@ r.assert(fs.existsSync(claudeMd), "CLAUDE.md missing at repo root");
 const content = fs.readFileSync(claudeMd, "utf-8");
 const gates = [
   "Spec-Before-Code Gate",
+  "Idea Stage Exit Criteria",
   "Hallucination Gate",
   "Sloppiness Gate",
   "Overstepping Gate",
   "spec-confirmed",
+  "plan-confirmed",
   "implementer-session",
 ];
 

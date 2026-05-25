@@ -755,6 +755,7 @@ External harnesses reviewed for positioning (not dependencies):
 | [jobs](https://github.com/karpathy/jobs) | BLS occupation data + LLM rubric scoring (not task queues) | [jobs-comparison.md](core/docs/jobs-comparison.md) — risk_rank + PROJECT-HEALTH + Spec LLM-judge |
 | [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Persistent wiki: raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR filing discipline |
 | [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) | **4 principles**: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven (154k ★) | [karpathy-skills-comparison.md](core/docs/karpathy-skills-comparison.md) — behavior-rules.md + Karpathy Discipline in every Skill |
+| Founder's Playbook (PDF) | Idea → MVP → Launch → Scale; validation-before-build | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Idea Validation Gate + DEV-PLAN MVP Scope |
 
 **ReqForge maintainer docs** (not third-party comparisons):
 
@@ -765,6 +766,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Release gate (contributors) | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 | Golden path demo | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path` (`todo-cli/` = Spec+Plan artifact, not framework CLI) |
 | Agent execution discipline (8 rules) | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
+| Founder's Playbook ↔ Forge gates | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
 
 ---
 

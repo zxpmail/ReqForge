@@ -2,6 +2,7 @@
 /**
  * spec-before-code-gate.mjs — PreToolUse 应用代码写入链式机器门
  * 1) Product-Spec.md 存在
+ * 1b) Product-Spec.md 含完整 Idea Stage Exit Criteria（构思验证门）
  * 2) .forge/spec-confirmed.json（用户已确认 Spec）
  * 3) DEV-PLAN.md 存在
  * 4) .forge/plan-confirmed.json（用户已确认 Plan）
@@ -84,6 +85,32 @@ function isApplicationPath(rel) {
   return APP_DIR_RE.test(rel) || WORKTREE_APP_RE.test(rel);
 }
 
+/** Founder's Playbook: problem-solution fit evidence before app code */
+function hasIdeaStageExitCriteria(specPath) {
+  let content;
+  try {
+    content = fs.readFileSync(specPath, "utf8");
+  } catch {
+    return false;
+  }
+  if (!/##\s+Idea Stage Exit Criteria/i.test(content)) return false;
+  const sections = [
+    /###\s+1\.\s+Problem real and specific/i,
+    /###\s+2\.\s+Solution addresses the validated problem/i,
+    /###\s+3\.\s+Enough signal to justify building/i,
+  ];
+  if (!sections.every((re) => re.test(content))) return false;
+  // Reject placeholder-only tables (all cells empty or TBD)
+  const block = content.split(/##\s+Idea Stage Exit Criteria/i)[1]?.split(/^##\s+/m)[0] || "";
+  if (/\|\s*\[TBD\]\s*\|/i.test(block) && !/\|\s*[^|\s][^|]+\s*\|/.test(block.replace(/\|[\s\-:]+\|/g, ""))) {
+    return false;
+  }
+  const cells = [...block.matchAll(/\|\s*([^|]+?)\s*\|/g)].map((m) => m[1].trim());
+  const answers = cells.filter((c) => !/^(field|who exactly|how often|validated problem|evidence type|answer)$/i.test(c));
+  const filled = answers.filter((c) => c.length > 2 && !/^\[TBD\]$/i.test(c));
+  return filled.length >= 3;
+}
+
 function block(tool, rel, reason) {
   console.log(JSON.stringify({ decision: "block", reason: `${reason} Cannot ${tool} '${rel}'.` }));
 }
@@ -114,6 +141,14 @@ async function main() {
 
   if (!fs.existsSync(specFile)) {
     block(tool, rel, "Spec-Before-Code Gate: Product-Spec.md is missing. Run /product-spec-builder first.");
+    return;
+  }
+  if (!hasIdeaStageExitCriteria(specFile)) {
+    block(
+      tool,
+      rel,
+      "Idea Validation Gate: Product-Spec.md must include completed § Idea Stage Exit Criteria (all three questions with real answers, not [TBD]). Run /product-spec-builder.",
+    );
     return;
   }
   if (!fs.existsSync(MARKERS.specConfirmed)) {

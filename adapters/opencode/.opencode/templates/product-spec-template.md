@@ -22,6 +22,35 @@ This template is used to generate a structurally complete Product Spec document.
 - **Who are the target users** (be specific, don't just say "users")
 - What is the core value
 
+## Idea Stage Exit Criteria
+
+> **Validation-before-build** (Founder's Playbook): complete before `/dev-planner`. PreToolUse blocks app code until this section is filled — not `[TBD]`.
+
+### 1. Problem real and specific?
+
+| Field | Answer |
+|-------|--------|
+| Who exactly (role + context) | |
+| How often | |
+| How severe | |
+| Current workaround | |
+
+### 2. Solution addresses the validated problem?
+
+| Field | Answer |
+|-------|--------|
+| Validated problem (from discovery, not original guess) | |
+| How this product addresses it | |
+| Differs from original assumption? (Y/N + note) | |
+
+### 3. Enough signal to justify building?
+
+| Field | Answer |
+|-------|--------|
+| Qualitative evidence (real conversations) | |
+| Disconfirming evidence considered | |
+| Why build now vs wait | |
+
 ## Use Cases
 <List 3-5 specific scenarios: who, under what circumstances, how it's used, what problem it solves>
 

@@ -233,6 +233,11 @@ description: Used when the user says they want to build a product, application, 
         Step 0b: Summarize for Spec
             Capture outcome, top opportunities, top assumptions, and differentiation bullets for later Document Generation sections (Value Proposition, Success Metrics, Competitive Landscape, Key Assumptions).
 
+        Step 0c: Devil's advocate (recommended before build)
+            Ask Claude to argue **against** the hypothesis and surface disconfirming evidence (failed competitors, structural obstacles, behavior that contradicts the idea).
+            Capture strongest counterarguments in **Idea Stage Exit Criteria §3** (`Disconfirming evidence considered`).
+            Do not treat a prototype as validation — user conversations are the evidence (Founder's Playbook).
+
         **HARD-GATE unchanged**: Discovery does not replace written Product-Spec.md + explicit user confirm.
 
     [Requirements Exploration Phase]
@@ -431,7 +436,7 @@ description: Used when the user says they want to build a product, application, 
             - Merge duplicate findings across perspectives
 
             If **阻塞** or unresolved **待确认** → return to user; do not mark Spec complete.
-            If **可交付** → workflow ends; write `.forge/spec-confirmed.json` if not already written; [HARD-GATE] is lifted for planning/build — user may invoke `/dev-planner` (not `/dev-builder` until DEV-PLAN.md exists).
+            If **可交付** → verify **§ Idea Stage Exit Criteria** is complete (three subsections, no `[TBD]` in required fields); then write `.forge/spec-confirmed.json` if not already written; [HARD-GATE] is lifted for `/dev-planner` — PreToolUse **Idea Validation Gate** blocks app code until this section is filled.
 
             See [llm-council-comparison.md](../../docs/llm-council-comparison.md).
 

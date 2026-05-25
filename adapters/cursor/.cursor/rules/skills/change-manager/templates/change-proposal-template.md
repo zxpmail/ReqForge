@@ -14,6 +14,14 @@
 
 - 
 
+## Scope discipline
+
+> 对齐 DEV-PLAN **MVP Scope** / scope amendment criteria：扩大范围须有用户证据，不得顺手加 Plan 外功能。
+
+- **In scope for this change**:
+- **Out of scope** (explicit deferrals):
+- **Evidence required to expand scope** (e.g. repeated user feedback, regression on golden path):
+
 ## Success Criteria
 
 - [ ] 

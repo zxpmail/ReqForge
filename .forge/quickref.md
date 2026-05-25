@@ -10,10 +10,32 @@
 | 文件 | 含义 |
 |------|------|
 | `Product-Spec.md` | 产品需求（无则先 `/product-spec-builder`） |
+| `§ Idea Stage Exit Criteria` | 构思三门禁：问题真实 / 方案对准 / 证据足够 |
 | `.forge/spec-confirmed.json` | Spec 已书面确认 |
-| `DEV-PLAN.md` | 开发计划（无则 `/dev-planner`） |
+| `DEV-PLAN.md` | 开发计划（含 **MVP Scope**） |
 | `.forge/plan-confirmed.json` | Plan 已书面确认 |
 | `.forge/implementer-session.json` | implementer 子 Agent 正在写业务代码 |
+
+---
+
+## 四阶段 ↔ Forge（Founder's Playbook）
+
+| 阶段 | 目标 | Forge 命令 |
+|------|------|------------|
+| Idea | 验证后再构建 | `/product-spec-builder` |
+| MVP | 最小范围 + PMF 证据 | `/dev-planner` → `/dev-builder` |
+| Launch | 发布与加固 | `/code-review` → `/release-builder` |
+| Scale | 公司化增长 | （Harness 不覆盖，用 Playbook + Cowork） |
+
+---
+
+## Claude 表面怎么选（非 Forge 时）
+
+| 任务 | 用 | 原因 |
+|------|-----|------|
+| 快问、改写、头脑风暴 | Chat | 轻、对话式 |
+| 研究、长文档、连接器自动化 | Cowork | 文件夹 + MCP + 定时任务 |
+| 写软件、测试、git | Claude Code + **Forge Skills** | 代码库 + 机器门 |
 
 ---
 
@@ -26,7 +48,7 @@
 | 3 | Surgical Changes | 只改必须改的 |
 | 4 | Goal-Driven Execution | 可验证成功标准；测试/检查循环直到通过 |
 
-详情 → `.claude/skills/*/SKILL.md` 内 Behavior Rules，或框架文档 `behavior-rules.md`
+详情 → `.claude/skills/*/SKILL.md` 内 Behavior Rules，或 `behavior-rules.md`
 
 ---
 
@@ -41,7 +63,7 @@
 7. 提交前展示 diff、用户批准  
 8. **验证循环**：实施 → 跑最小验证集 → 失败则修 → **重新跑** → 全过才算 DONE  
 
-完整版 → `session-execution-discipline.md`（适配器 `templates/` 或 `core/docs/`）
+完整版 → `session-execution-discipline.md`
 
 ---
 
@@ -49,11 +71,12 @@
 
 | 反模式 | 后果 |
 |--------|------|
-| 无验证命令输出就宣称完成 | Sloppiness Gate / 违反 Goal-Driven |
-| 主 Session 直接改 `src/` 无 implementer 标记 | Implementer Gate 拦截 |
-| 顺手改格式/注释/无关文件 | Surgical Changes 违反 |
-| 在 Read 结果上再包一层无用抽象 | 浪费 context、易幻觉 |
-| 单次验证失败仍标 DONE | 须进入验证循环 |
+| 无 Spec § Idea Stage 就写业务代码 | Idea Validation Gate 拦截 |
+| 把可运行原型当「已验证」 | 须真人访谈证据写在 Spec |
+| 无验证输出就宣称完成 | Sloppiness Gate |
+| 主 Session 直接改 `src/` | Implementer Gate |
+| 顺手加 Plan 外功能 | 查 DEV-PLAN Scope amendment criteria |
+| 单次验证失败仍标 DONE | 须验证循环 |
 
 ---
 

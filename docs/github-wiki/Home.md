@@ -29,7 +29,8 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 
 | 主题 | 说明 |
 |------|------|
-| **Harness 硬化** | 会话注入 `forge-bootstrap`；PreToolUse 五段链（Spec → 确认 → Plan → 确认 → implementer）；HARD-GATE |
+| **Harness 硬化** | 会话注入 `forge-bootstrap`；PreToolUse 六段链（Spec → **Idea Stage** → 确认 → Plan → 确认 → implementer）；HARD-GATE |
+| **构思验证门** | `Product-Spec.md` § Idea Stage Exit Criteria；见 [founders-playbook-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/founders-playbook-comparison.md) |
 | **PM 框架** | `product-spec-builder` 可选参考 [pm-skills](https://github.com/phuryn/pm-skills)（OST、JTBD、假设、竞品） |
 | **思维链 CoT** | 先推理再结论；见 Skill 内模板，**不必**每条消息写「先想想看」 |
 | **Agent 执行纪律（8 条）** | 先计划再动手、改前先读、最小改动、提交前 diff 确认、**验证循环**（失败重跑直至通过）— [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
@@ -62,6 +63,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | Loadout 场景选型 | [loadout-scenarios.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/loadout-scenarios.md) |
 | 记忆体系 + LLM Wiki | [memory-system.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/memory-system.md) · [llm-wiki-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/llm-wiki-comparison.md) |
 | Superpowers 对照 | [superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/superpowers-comparison.md) |
+| Founder's Playbook 对照 | [founders-playbook-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/founders-playbook-comparison.md) |
 | OpenSpec 对照 | [openspec-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/openspec-comparison.md) |
 | 平台合规（CI/fork） | [platform-compliance.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/platform-compliance.md) |
 

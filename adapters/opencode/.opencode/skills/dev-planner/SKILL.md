@@ -19,6 +19,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     Required:
     - Product-Spec.md -> if missing, prompt user to call /product-spec-builder first
+    - Product-Spec.md must include completed **§ Idea Stage Exit Criteria** (three questions) — if missing or `[TBD]`, route back to `/product-spec-builder` before generating DEV-PLAN
 
     Optional (degradation mode):
     - Design-Brief.md -> if missing, mark as "no design specification mode", visual details annotated as [TBD by Design Brief]
@@ -88,6 +89,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     **Missing dependency order**: Building feature B before feature A when B depends on A. Always trace the dependency chain: infrastructure → data → API → UI. Violating this order means stubs and tech debt.
     **Tech stack without WebSearch**: "I'll use the latest version of X" → no, confirm. Versions change, breaking changes happen, compatibility issues exist. WebSearch every tech stack choice before writing it down.
     **Ignoring existing code**: In iteration mode, assuming the project is greenfield. Always scan existing code structure first — the plan must respect what's already there, not redesign from scratch.
+    **Missing MVP Scope**: Shipping a Phase list without **Out of scope** and **Scope amendment criteria** invites zero-friction creep. Fill `## MVP Scope` from the template before Phase 1.
 
 [Output Artifacts]
     - **DEV-PLAN.md** — Phased development plan (created in generation mode, updated in iteration mode)
@@ -311,6 +313,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
         Step 2: Fill content
             Fill according to template structure:
+            - **MVP Scope** (in scope, **out of scope**, scope amendment criteria — Founder's Playbook anti-creep)
             - Phase list (number + feature name + delivery checklist + key files + acceptance criteria)
             - Tech stack table
             - Database table summary (if applicable)

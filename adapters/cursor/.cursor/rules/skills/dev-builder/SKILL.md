@@ -70,8 +70,13 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
     完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
 
 [HARD-GATE]
+    **Session lifecycle** (architecture context — Founder's Playbook):
+    - **Start**: Read project `CLAUDE.md` / `AGENTS.md`, DEV-PLAN.md, memory/decisions-log.md
+    - **During**: Follow DEV-PLAN MVP Scope; do not expand without amendment criteria
+    - **End**: Append session decisions to `memory/decisions-log.md` (and update `memory/project-memory.md` if architecture shifted)
+
     Application code edits require the full machine gate chain (enforced by PreToolUse → `spec-before-code-gate.mjs`):
-    `Product-Spec.md` + `.forge/spec-confirmed.json` + `DEV-PLAN.md` + `.forge/plan-confirmed.json` + `.forge/implementer-session.json` (written by **implementer** at Task start, removed at Task end).
+    (1) `Product-Spec.md` (2) **Idea Stage Exit Criteria** complete (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` (implementer only).
     Main session MUST NOT create `implementer-session.json` — only the implementer sub-agent may.
 
     **Tool-Call Offloading**: When a tool call returns large output (2,000+ lines of logs, full-file reads, extensive search results), store the output to a temporary file and keep only essential headers/footers in context. Reference the file path for later use rather than embedding the full content. This prevents context window waste and keeps responses actionable.
@@ -131,7 +136,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 [Gotchas]
     **Plan-not-loaded**: Starting implementation without reading the current DEV-PLAN.md Phase → building the wrong thing. Always read DEV-PLAN.md first, confirm the Phase and Task, then code.
     **Skipping Environment-First**: Jumping into feature code before the project skeleton compiles and runs. No code on a broken foundation. The first task of any Phase should be making things runnable.
-    **Phase scope creep**: "I'll just add this small improvement while I'm coding" → that's how Phases inflate and never finish. One Phase, one goal. Additional improvements go to the feedback channel or next Phase.
+    **Phase scope creep**: "I'll just add this small improvement while I'm coding" → that's how Phases inflate and never finish. One Phase, one goal. Additional improvements go to the feedback channel or next Phase. Before adding scope, check DEV-PLAN **Scope amendment criteria** — no qualifying user evidence, no build.
     **Editing Spec/Plan during build**: Patching Product-Spec.md or DEV-PLAN.md to excuse implementation drift violates the prepare.py boundary. Route scope changes through change-manager or replan.
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
 
@@ -201,7 +206,7 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
             Execute [Dependency Check]
 
         Step 2: Load documents and code state
-            Read DEV-PLAN.md -> identify next Phase number. Read ONLY that Phase's delivery checklist, **Primary metric**, and key files. Do NOT read other Phases — they are not your concern.
+            Read DEV-PLAN.md -> identify next Phase number. Read **MVP Scope** (in scope / out of scope / amendment criteria). Read ONLY current Phase's delivery checklist, **Primary metric**, and key files. Do NOT read other Phases — they are not your concern.
             Read Product-Spec.md -> use as feature reference (**read-only** — do not edit during /dev-builder)
             If Design-Brief.md exists -> read visual direction
             If design tool MCP exists -> prepare to read

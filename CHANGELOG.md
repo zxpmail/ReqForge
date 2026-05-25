@@ -6,12 +6,16 @@ All notable changes to Forge are documented here.
 
 ### Added
 - **`.forge/quickref.md`**: human one-pager (gates, 4 principles, 8 rules summary, anti-patterns, Skill commands); template `core/templates/forge-quickref.md`; written by `pnpm forge-install` (`installForgeQuickref`).
+- **Idea Validation Gate**: `Product-Spec.md` § Idea Stage Exit Criteria (3 questions) required before app code (`spec-before-code-gate.mjs`); template + product-spec-builder devil's advocate step.
+- **MVP Scope block** in `DEV-PLAN.md` template (in scope / out of scope / scope amendment criteria); dev-planner + dev-builder enforcement.
+- [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Playbook ↔ Forge mapping.
 
 ### Changed
 - **Agent execution discipline**: rule 8 is now an explicit **verify loop** (fix → re-run checks until green; last-run output required); anti-patterns + framework test-placement table in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
 - **behavior-rules.md**: violation signals link to feedback case IDs; `何时可简化` exemption table (prior).
 - **forge-bootstrap** / **implementer**: verify-loop summary aligned with discipline doc.
 - **README** / **README.zh-CN** / **docs/github-wiki/Home.md** / **llms.txt**: verify loop + quickref on install.
+- **Audit alignment**: root + `test-demo` Spec/Plan examples; `core/templates/product-spec-template.md`; repo `.forge/quickref.md`; `change-proposal` scope discipline; `machine-gates-doc` + `core/hooks/AGENTS.md` six-step gate docs.
 
 ## [v1.25.0] - 2026-05-25
 

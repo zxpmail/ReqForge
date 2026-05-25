@@ -23,6 +23,19 @@ This template is used to generate a phased development plan. dev-builder reads t
 
 ---
 
+## MVP Scope
+
+**In scope (this plan / MVP)**:
+- [What we are building now — tie to Product-Spec core features]
+
+**Out of scope (deliberate — not in this MVP)**:
+- [Features explicitly deferred; resist zero-friction scope creep]
+
+**Scope amendment criteria** (what user evidence justifies adding scope):
+- [e.g. ≥3 independent users report the same blocker in feedback; retention fails activation criterion X]
+
+---
+
 ## Phase 1: [Feature Name]
 
 **Deliverables**:

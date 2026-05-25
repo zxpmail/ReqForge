@@ -6,7 +6,8 @@
 
 ## 上次停在哪个位置
 
-- **Multica 启示 P0+P1**：验证循环 / quickref / 反模式 / behavior-rules 案例 — 文档已同步；`CHANGELOG.md` [Unreleased]
+- **Founder's Playbook 批**：Idea Gate + MVP Scope + 示例 Spec/Plan 对齐 + quickref/模板/文档/smoke — 已提交并 push
+- **Multica 启示 P0+P1**：验证循环 / quickref / 反模式 — 已 push `3f61bc2`
 - **README / Wiki / llms / CHANGELOG** 已写入「Agent 执行纪律（8 条）」专节与导航
 - **版本 v1.25.0**；Harness 硬化 + pm-frameworks + CoT + 八条纪律（代码见 `session-execution-discipline.md`）
 - GitHub Wiki 源稿 `docs/github-wiki/Home.md` 需维护者手动粘贴到 wiki

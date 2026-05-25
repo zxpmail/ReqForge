@@ -5,6 +5,21 @@
 
 ---
 
+## MVP Scope
+
+**In scope (this plan / MVP)**:
+- CLI: add, list, complete, delete todos in `./todo.json`
+- AI auto-categorization on add (feature/bug/refactor/chore/docs/test)
+- Colored list grouped by category
+
+**Out of scope (deliberate — not in this MVP)**:
+- Cloud sync, multi-user, web UI, due dates, recurring tasks, plugins
+
+**Scope amendment criteria** (what user evidence justifies adding scope):
+- ≥3 independent user reports the same missing capability in feedback, or golden-path regression requires it
+
+---
+
 ## Phase 1: Project Skeleton + Types + Storage
 
 **Deliverables**:

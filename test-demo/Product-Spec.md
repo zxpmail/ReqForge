@@ -8,6 +8,33 @@ A simple command-line todo list tool for developers. Stores todos in a local JSO
 
 **Core Value**: Zero-friction task tracking in the terminal, per-directory isolation for project context, and automatic categorization so users don't waste time tagging.
 
+## Idea Stage Exit Criteria
+
+### 1. Problem real and specific?
+
+| Field | Answer |
+|-------|--------|
+| Who exactly (role + context) | Developers who track tasks per repo in the terminal |
+| How often | Daily during feature work and debugging |
+| How severe | Medium — scattered notes and mental lists lose tasks |
+| Current workaround | Global todo apps, IDE tasks, or plain text files |
+
+### 2. Solution addresses the validated problem?
+
+| Field | Answer |
+|-------|--------|
+| Validated problem (from discovery, not original guess) | Per-project CLI todos with minimal friction |
+| How this product addresses it | `todo.json` in cwd, four commands, optional AI category |
+| Differs from original assumption? (Y/N + note) | N |
+
+### 3. Enough signal to justify building?
+
+| Field | Answer |
+|-------|--------|
+| Qualitative evidence (real conversations) | Dogfood as ReqForge test-demo golden path |
+| Disconfirming evidence considered | Many CLI todo tools exist; wedge is Forge workflow demo + AI categorize |
+| Why build now vs wait | Needed as framework smoke fixture with filled Idea gate |
+
 ## Use Cases
 
 - **Feature Development**: Developer working on a feature adds subtasks as they go ("refactor auth module", "add input validation"), checks them off as completed, keeps focused on incremental progress.

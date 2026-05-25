@@ -738,6 +738,7 @@ pnpm dep-graph stats  # 查看图统计
 | [llm-council](https://github.com/karpathy/llm-council) | 多 LLM 互评 + Chairman 综合 | [llm-council-comparison.md](core/docs/llm-council-comparison.md) — code-review council + Spec Step 7 |
 | [jobs](https://github.com/karpathy/jobs) | BLS 职业数据 + LLM rubric 打分（非任务队列） | [jobs-comparison.md](core/docs/jobs-comparison.md) — risk_rank + PROJECT-HEALTH |
 | [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | 持久 wiki：raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR 归档纪律 |
+| Founder's Playbook（PDF） | Idea → MVP → Launch → Scale；先验证再构建 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Idea Validation Gate + DEV-PLAN MVP Scope |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -748,6 +749,7 @@ pnpm dep-graph stats  # 查看图统计
 | 发版守门（贡献者） | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 | 黄金路径示范 | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path`（`todo-cli/` 为 Spec+Plan 产物，非框架 CLI） |
 | Agent 执行纪律（8 条） | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
+| Founder's Playbook ↔ Forge 机器门 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
 
 ---
 

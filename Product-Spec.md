@@ -14,6 +14,35 @@
 - **开箱即用**：框架文件直接复制到项目目录就能用，不需要安装任何包，不需要复杂配置
 - 灵活迭代：不搞僵化瀑布，支持随时增量变更
 
+## Idea Stage Exit Criteria
+
+> 构思阶段退出标准（Founder's Playbook）。`/dev-planner` 前须填满；写业务代码前由 PreToolUse 机器门校验。
+
+### 1. Problem real and specific?
+
+| Field | Answer |
+|-------|--------|
+| Who exactly (role + context) | 独立开发者、小团队 PM/创业者，使用 Claude Code/Cursor/OpenCode 做 AI 辅助开发 |
+| How often | 每个新项目启动时都会遇到流程与规范缺失 |
+| How severe | 高——无 Spec/Plan 门禁时易直接写代码，返工成本高 |
+| Current workaround | 自建 prompt、抄零散 skill、或完全即兴对话 |
+
+### 2. Solution addresses the validated problem?
+
+| Field | Answer |
+|-------|--------|
+| Validated problem (from discovery, not original guess) | 需要可验证的「需求→计划→实现」Harness，且多客户端一致 |
+| How this product addresses it | Skill + 机器门 + Spec/Plan 工件，复制适配器即可用 |
+| Differs from original assumption? (Y/N + note) | N — 与最初「开源 Forge 框架」假设一致 |
+
+### 3. Enough signal to justify building?
+
+| Field | Answer |
+|-------|--------|
+| Qualitative evidence (real conversations) | 社区对 Spec 驱动、OpenSpec/Superpowers 对照的需求；本仓库 dogfood |
+| Disconfirming evidence considered | 纯 prompt 包、单客户端 工具链已饱和；差异化在全流程 Gate + 多适配器 |
+| Why build now vs wait | Agent 编码普及使「无验证就构建」失败率上升，需工程化纪律 |
+
 ## 应用场景
 
 - **从零开始新项目**：独立开发者有一个想法，克隆 Forge 仓库，按照框架流程一步步走，很快就能产出可运行产品，不会在流程上卡壳。

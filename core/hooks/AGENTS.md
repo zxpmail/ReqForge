@@ -26,7 +26,7 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 ### PreToolUse hooks
 | Name | Trigger | Purpose |
 |------|---------|---------|
-| `hallucination-gate` | PreToolUse | **Spec-Before-Code** (`scripts/hooks/spec-before-code-gate.mjs`) then path/parent-dir checks for Write/Edit |
+| `hallucination-gate` | PreToolUse | **Spec-Before-Code** (`scripts/hooks/spec-before-code-gate.mjs`): app `Write`/`Edit` requires (1) `Product-Spec.md` (2) **§ Idea Stage Exit Criteria** filled (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` with **MVP Scope** (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` for implementer only; then path/parent-dir checks. Plus **Sloppiness** / **Overstepping** gates in the same hook chain. |
 
 ### SessionStart hooks
 | Name | Trigger | Purpose |
