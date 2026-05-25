@@ -6,6 +6,7 @@ import {
   applyWindowsSettings,
   copyInstallTree,
   installForge,
+  installForgeQuickref,
   parseInstallArgs,
   resolvePaths,
   shouldSkipOverwrite,
@@ -129,6 +130,10 @@ describe("installForge", () => {
     forgeRoot = fs.mkdtempSync(path.join(os.tmpdir(), "reqforge-forge-root-"));
     target = fs.mkdtempSync(path.join(os.tmpdir(), "reqforge-target-"));
 
+    const quickrefSrc = path.join(forgeRoot, "core/templates");
+    fs.mkdirSync(quickrefSrc, { recursive: true });
+    fs.writeFileSync(path.join(quickrefSrc, "forge-quickref.md"), "# quickref");
+
     const adapterSrc = path.join(forgeRoot, "adapters/claude-code/.claude");
     fs.mkdirSync(adapterSrc, { recursive: true });
     fs.writeFileSync(path.join(adapterSrc, "CLAUDE.md"), "# test");
@@ -151,6 +156,19 @@ describe("installForge", () => {
     expect(result.destPath).toBe(path.join(target, ".claude"));
     expect(fs.existsSync(path.join(result.destPath, "CLAUDE.md"))).toBe(true);
     expect(result.windowsSettingsApplied).toBe(true);
+    expect(fs.readFileSync(path.join(target, ".forge/quickref.md"), "utf-8")).toBe("# quickref");
+  });
+
+  it("installForgeQuickref skips existing without force", () => {
+    const quickrefSrc = path.join(forgeRoot, "core/templates");
+    fs.mkdirSync(quickrefSrc, { recursive: true });
+    fs.writeFileSync(path.join(quickrefSrc, "forge-quickref.md"), "# new");
+    fs.mkdirSync(path.join(target, ".forge"), { recursive: true });
+    fs.writeFileSync(path.join(target, ".forge/quickref.md"), "# old");
+
+    installForgeQuickref(target, forgeRoot, () => {}, false);
+
+    expect(fs.readFileSync(path.join(target, ".forge/quickref.md"), "utf-8")).toBe("# old");
   });
 
   it("resolvePaths uses forge root", () => {

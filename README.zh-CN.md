@@ -66,7 +66,7 @@ flowchart LR
 - **PM 框架（product-spec）**：可选 [pm-skills](https://github.com/phuryn/pm-skills)（MIT 摘编）— OST、JTBD、假设、竞品；见 [需求深度](#需求深度pm-框架与思维链cot)。
 - **思维链（CoT）**：需求访谈、implementer、bug-fixer、bootstrap 第 9 条；无需用户手写「先想想看」。
 - **进化**：`failure_class`；进化提案 RED / GREEN / Verify-by。
-- **Agent 执行纪律（8 条）**：先列计划并批准、改前先读、最小改动、提交前 diff 确认、测过才算完成 — [全文](core/docs/session-execution-discipline.md)，会话摘要见 `forge-bootstrap`，用户项目见 [agents-template.md](core/templates/agents-template.md)。
+- **Agent 执行纪律（8 条）**：先列计划并批准、改前先读、最小改动、提交前 diff 确认、**验证循环**（失败重跑直至通过）— [全文](core/docs/session-execution-discipline.md)，会话摘要见 `forge-bootstrap`，用户项目见 [agents-template.md](core/templates/agents-template.md)；人类速查 `.forge/quickref.md`（安装时生成）。
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy 对照文档**：[autoresearch](core/docs/autoresearch-comparison.md)、[llm-council](core/docs/llm-council-comparison.md)、[jobs](core/docs/jobs-comparison.md)、[llm-wiki gist](core/docs/llm-wiki-comparison.md) — 方法论映射到 Forge Skill，非照搬代码。
@@ -177,7 +177,7 @@ flowchart LR
 - **Prompt Remediation 补救提示词**：feedback 模板新增 `prompt_remediation` 字段，每次失败可附带可复用的 prompt 片段防止再犯。
 
 ### v1.14.2 — 2026-05-20
-- **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层；提供 `install.sh` / `install.ps1` 封装
+- **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层，并写入 `.forge/quickref.md` 速查；提供 `install.sh` / `install.ps1` 封装
 - **安全升级**：`--force` 合并安装，不覆盖已有 `feedback/` 与 `settings.local.json`
 
 ### v1.14.1 — 2026-05-20
@@ -509,9 +509,9 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | 5 | 影响用户的转向先确认；范围变了重新定计划 |
 | 6 | 计划外问题只报告，不顺手修 |
 | 7 | 提交前展示 diff，获批准后再 commit |
-| 8 | 对相关包跑 lint/类型/测试，通过才算完成 |
+| 8 | **验证循环**：跑 lint/类型/测试 → 失败则修 → **重跑** → 全过才算完成（须附最后一轮命令输出） |
 
-分工（主 Session vs implementer）、与铁律关系：[session-execution-discipline.md](core/docs/session-execution-discipline.md)。自检清单：[harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md)。
+分工（主 Session vs implementer）、反模式与测试分层：[session-execution-discipline.md](core/docs/session-execution-discipline.md)。人类一页速查：`.forge/quickref.md`（`pnpm forge-install` 写入）。自检清单：[harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md)。
 
 ### 引导层 — 12 个 Skill
 
@@ -714,7 +714,7 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm set-github-metadata` | 把 `.github/repo-metadata.json` 同步到 GitHub About/Topics；令牌放 `.env.local` 的 `GITHUB_TOKEN=`（见 `.env.local.example`） |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
-| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目 |
+| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目，并生成 `.forge/quickref.md` |
 
 修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
 

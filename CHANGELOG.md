@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+### Added
+- **`.forge/quickref.md`**: human one-pager (gates, 4 principles, 8 rules summary, anti-patterns, Skill commands); template `core/templates/forge-quickref.md`; written by `pnpm forge-install` (`installForgeQuickref`).
+
+### Changed
+- **Agent execution discipline**: rule 8 is now an explicit **verify loop** (fix → re-run checks until green; last-run output required); anti-patterns + framework test-placement table in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
+- **behavior-rules.md**: violation signals link to feedback case IDs; `何时可简化` exemption table (prior).
+- **forge-bootstrap** / **implementer**: verify-loop summary aligned with discipline doc.
+- **README** / **README.zh-CN** / **docs/github-wiki/Home.md** / **llms.txt**: verify loop + quickref on install.
+
 ## [v1.25.0] - 2026-05-25
 
 ### Added

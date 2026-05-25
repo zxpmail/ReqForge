@@ -67,7 +67,7 @@ flowchart LR
 - **PM frameworks (product-spec)**: Optional [pm-skills](https://github.com/phuryn/pm-skills)-inspired references (MIT) — OST, JTBD, assumptions, competitors; see [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought).
 - **Chain-of-Thought (CoT)**: Step-by-step reasoning before conclusions in spec interviews, implementer, bug-fixer, bootstrap Iron Law 9.
 - **Evolution**: `failure_class` + RED/GREEN/Verify-by on evolution proposals.
-- **Agent execution discipline (8 rules)**: Plan → approve → act; read before edit; minimal diff; diff approval before commit; minimal tests — [full doc](core/docs/session-execution-discipline.md), session summary in `forge-bootstrap`, full copy in [agents-template.md](core/templates/agents-template.md).
+- **Agent execution discipline (8 rules)**: Plan → approve → act; read before edit; minimal diff; diff approval before commit; **verify loop** (re-run checks until pass) — [full doc](core/docs/session-execution-discipline.md), summary in `forge-bootstrap`, user copy in [agents-template.md](core/templates/agents-template.md); human quickref `.forge/quickref.md` on install.
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy comparisons**: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md) — methodology mapped to Forge Skills, not copied wholesale.
@@ -178,7 +178,7 @@ flowchart LR
 - **Prompt remediation**: feedback template now includes a `prompt_remediation` field — each failure can carry a reusable prompt fragment to prevent recurrence.
 
 ### v1.14.2 — 2026-05-20
-- **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter into your project; `install.sh` / `install.ps1` wrappers included
+- **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter and writes `.forge/quickref.md`; `install.sh` / `install.ps1` wrappers included
 - **Safe upgrade**: `--force` merges without overwriting `feedback/` or `settings.local.json`
 
 ### v1.14.1 — 2026-05-20
@@ -510,9 +510,9 @@ You do **not** need to type “think first” in every message — the Skill and
 | 5 | Confirm before user-impacting pivots; replan if scope changes |
 | 6 | Report off-scope issues — do not drive-by fix |
 | 7 | Show diff summary; user approves before commit |
-| 8 | Run lint / types / relevant tests before calling work done |
+| 8 | **Verify loop**: run lint / types / tests → fix failures → **re-run** until green; attach last-run output before DONE |
 
-Details, role split (main vs implementer), and maintainer commands: [session-execution-discipline.md](core/docs/session-execution-discipline.md). Also linked from [harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md).
+Details, anti-patterns, test placement, role split: [session-execution-discipline.md](core/docs/session-execution-discipline.md). Human one-pager: `.forge/quickref.md` (written by `pnpm forge-install`). Also [harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md).
 
 ### Karpathy behavior discipline (4 principles)
 
@@ -730,7 +730,7 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json`; put token in `.env.local` as `GITHUB_TOKEN=` (see `.env.local.example`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
-| `pnpm forge-install <client> --target <dir>` | Install adapter into a user project |
+| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md` into a user project |
 
 Always run `pnpm sync` after changing `core/skills`, `core/agents`, `core/hooks`, etc. — otherwise the `check-sync` hook will warn about adapter drift.
 

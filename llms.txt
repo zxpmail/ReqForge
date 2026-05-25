@@ -60,7 +60,7 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 | Cursor | `adapters/cursor/` | `.cursor/rules/` directory |
 | OpenCode | `adapters/opencode/` | `.opencode/` directory |
 
-One-command install: `pnpm forge-install <client> --target <dir>`
+One-command install: `pnpm forge-install <client> --target <dir>` (also writes `.forge/quickref.md`)
 
 Sync after editing core: `pnpm sync`
 

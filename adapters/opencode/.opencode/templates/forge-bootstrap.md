@@ -25,8 +25,9 @@ Hooks cannot replace these — they apply to **how** you execute the current tas
 - **Ask if no precedent** — Do not invent requirements; scope change → new plan.
 - **Report off-scope issues** — Mention only; do not fix without approval.
 - **Before commit** — Show diff summary; user approves; run minimal lint/type/test for touched packages.
+- **Verify loop** — Implement → run minimal checks → on failure fix and **re-run** → repeat until green → only then DONE (attach last-run command output).
 
-Full text: [session-execution-discipline.md](../docs/session-execution-discipline.md). User projects: copy from [agents-template.md](./agents-template.md) into `AGENTS.md` / project rules.
+Full text: [session-execution-discipline.md](../docs/session-execution-discipline.md). Human one-pager: `.forge/quickref.md` at project root (written by `pnpm forge-install`). User projects: copy from [agents-template.md](./agents-template.md) into `AGENTS.md` / project rules.
 
 ## Rationalization references
 

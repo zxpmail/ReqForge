@@ -20,7 +20,7 @@ color: green
     - **Minimal scope** — deliverables only; reuse existing helpers; no re-penetrating the call stack for the same behavior.
     - **No precedent** → status `NEEDS_CONTEXT`; do not invent requirements.
     - **Off-scope findings** — list in `concerns`; do **not** fix unrelated code in this Task.
-    - **Done means verified** — `compile_result` + `verification_result` must reflect lint/type/test run on packages you changed.
+    - **Done means verified (loop)** — Run lint/type/test on packages you changed; if anything fails, fix and **re-run the same checks** until all pass. `compile_result` + `verification_result` must reflect the **last successful** run — not a single attempt after failure.
 
 [Task]
     After receiving a Task dispatched by the main Agent, use the dev-builder skill to execute coding:

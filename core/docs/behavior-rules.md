@@ -96,15 +96,19 @@ Karpathy 四原则的 ReqForge 落地版。每个 Skill 执行时须遵守。
 
 ## 违反信号
 
-| 信号 | 触发了哪条原则 |
-|------|--------------|
-| diff 里有格式/注释变更 | Surgical Changes |
-| diff 比预期大很多 | Simplicity First / Surgical Changes |
-| 编码前没有问澄清问题 | Think Before Coding |
-| 实现偏离了用户说的范围 | Think Before Coding |
-| 提交信息写"还顺便修了 XX" | Surgical Changes |
-| 代码里有"也许以后会用"的部分 | Simplicity First |
-| 完成声明没有附验证命令输出 | Goal-Driven Execution |
+| 信号 | 触发了哪条原则 | 案例（feedback / 教训） |
+|------|--------------|------------------------|
+| diff 里有格式/注释变更 | Surgical Changes | — |
+| diff 比预期大很多 | Simplicity First / Surgical Changes | — |
+| 编码前没有问澄清问题 | Think Before Coding | — |
+| 实现偏离了用户说的范围 | Think Before Coding | — |
+| 提交信息写"还顺便修了 XX" | Surgical Changes | — |
+| 代码里有"也许以后会用"的部分 | Simplicity First | — |
+| 完成声明没有附验证命令输出 | Goal-Driven Execution | — |
+| 单次验证后仍标 DONE（未循环重跑） | Goal-Driven Execution | `dev-builder-single-pass-verification-insufficient.md` |
+| Phase/Spec 一轮校验仍漏项 | Goal-Driven Execution | `product-spec-builder-final-validation-single-pass-insufficient.md` |
+
+> **案例编号约定**：`feedback/<slug>.md` 为 ReqForge 仓库内 case ID；升格进规则或 EVOLUTION 时保留 `source_feedback` 链接。进化引擎扫描 `feedback/` 时应优先补全上表「案例」列。
 
 ---
 
