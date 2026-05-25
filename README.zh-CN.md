@@ -53,7 +53,8 @@ flowchart LR
 |------|------|
 | [安装与使用](#安装与使用) | 克隆、复制适配层、钩子、首次运行 |
 | [工作流程](#工作流程) | 需求 → 计划 → 开发 → 发布（存量项目用 `/change-manager`） |
-| [需求深度](#需求深度pm-框架与思维链cot) | product-spec-builder 的 PM 框架 + CoT |
+| [需求深度](#需求深度pm-框架与思维链cot) | PM 框架 + CoT |
+| [Agent 执行纪律](#agent-执行纪律8-条) | 先计划再动手、改前先读、最小改动、测过才算完成 |
 | [框架开发与维护](#框架开发与维护) | 测试、同步、`pnpm forge-smoke`、依赖图（贡献者） |
 
 ---
@@ -65,6 +66,7 @@ flowchart LR
 - **PM 框架（product-spec）**：可选 [pm-skills](https://github.com/phuryn/pm-skills)（MIT 摘编）— OST、JTBD、假设、竞品；见 [需求深度](#需求深度pm-框架与思维链cot)。
 - **思维链（CoT）**：需求访谈、implementer、bug-fixer、bootstrap 第 9 条；无需用户手写「先想想看」。
 - **进化**：`failure_class`；进化提案 RED / GREEN / Verify-by。
+- **Agent 执行纪律（8 条）**：先列计划并批准、改前先读、最小改动、提交前 diff 确认、测过才算完成 — [全文](core/docs/session-execution-discipline.md)，会话摘要见 `forge-bootstrap`，用户项目见 [agents-template.md](core/templates/agents-template.md)。
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy 对照文档**：[autoresearch](core/docs/autoresearch-comparison.md)、[llm-council](core/docs/llm-council-comparison.md)、[jobs](core/docs/jobs-comparison.md)、[llm-wiki gist](core/docs/llm-wiki-comparison.md) — 方法论映射到 Forge Skill，非照搬代码。
@@ -494,6 +496,23 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 **不必**每条消息写「先想想看」— 由 Skill 与会话铁律自动约束。见 [近期更新 → v1.25.0](#v1250--2026-05-25)。
 
+### Agent 执行纪律（8 条）
+
+**任务级**规则（本次改动怎么动手），与产品级 Iron Laws、HARD-GATE **叠加**。每次会话 `forge-bootstrap` 注入摘要；**完整条文**写入用户项目 `AGENTS.md`（来自 [agents-template.md](core/templates/agents-template.md)）。
+
+| 条 | 要点 |
+|----|------|
+| 1 | 非琐碎任务：先列步骤，用户批准后再改 |
+| 2 | 编辑前必须先读目标文件 |
+| 3 | 尽量缩小范围；复用已有抽象，禁止穿透重实现 |
+| 4 | 无先例则询问，不自行发明需求 |
+| 5 | 影响用户的转向先确认；范围变了重新定计划 |
+| 6 | 计划外问题只报告，不顺手修 |
+| 7 | 提交前展示 diff，获批准后再 commit |
+| 8 | 对相关包跑 lint/类型/测试，通过才算完成 |
+
+分工（主 Session vs implementer）、与铁律关系：[session-execution-discipline.md](core/docs/session-execution-discipline.md)。自检清单：[harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md)。
+
 ### 引导层 — 12 个 Skill
 
 每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔。每个 Skill 包含 `[Gotchas]` 章节记录常见陷阱与实战教训：
@@ -728,6 +747,7 @@ pnpm dep-graph stats  # 查看图统计
 | GitHub Actions 与 fork 策略 | [platform-compliance.md](core/docs/platform-compliance.md) |
 | 发版守门（贡献者） | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 | 黄金路径示范 | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path`（`todo-cli/` 为 Spec+Plan 产物，非框架 CLI） |
+| Agent 执行纪律（8 条） | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
 
 ---
 

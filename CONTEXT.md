@@ -6,11 +6,9 @@
 
 ## 上次停在哪个位置
 
-- **Harness 硬化已闭环**（本地提交 `3068927` `582f29a` `2590a1e` `86e8e0e`；标记文件链、P2 skill-bypass、文档已提交）
-- PreToolUse 五段链：Spec → spec-confirmed → DEV-PLAN → plan-confirmed → implementer-session
-- forge-smoke **12** 项；中英文 README + DEV-PLAN 已对齐
-- **product-spec-builder**：pm-frameworks + CoT（1–4）；`9b0d9c8` 去重 CoT 段 + CHANGELOG Unreleased
-- **版本 v1.25.0**；**任务级八条纪律**：`core/docs/session-execution-discipline.md` + bootstrap 摘要 + `agents-template` + implementer
+- **README / Wiki / llms / CHANGELOG** 已写入「Agent 执行纪律（8 条）」专节与导航
+- **版本 v1.25.0**；Harness 硬化 + pm-frameworks + CoT + 八条纪律（代码见 `session-execution-discipline.md`）
+- GitHub Wiki 源稿 `docs/github-wiki/Home.md` 需维护者手动粘贴到 wiki
 
 ## 架构与 Harness（产品本身）
 

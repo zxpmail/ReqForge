@@ -53,7 +53,8 @@ flowchart LR
 |---------|-------------|
 | [Installation & Usage](#installation--usage) | Clone, copy adapters, hooks, first run |
 | [Workflow](#workflow) | Spec → Plan → Build → Release (brownfield: `/change-manager`) |
-| [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought) | PM frameworks (pm-skills) + CoT templates in product-spec-builder |
+| [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought) | PM frameworks + CoT in product-spec-builder |
+| [Agent execution discipline](#agent-execution-discipline-8-rules) | Plan-before-act, read-before-edit, minimal diff, tests before done |
 | [Framework Development](#framework-development) | Tests, sync, `pnpm forge-smoke`, dependency graph (contributors) |
 
 ---
@@ -65,6 +66,7 @@ flowchart LR
 - **PM frameworks (product-spec)**: Optional [pm-skills](https://github.com/phuryn/pm-skills)-inspired references (MIT) — OST, JTBD, assumptions, competitors; see [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought).
 - **Chain-of-Thought (CoT)**: Step-by-step reasoning before conclusions in spec interviews, implementer, bug-fixer, bootstrap Iron Law 9.
 - **Evolution**: `failure_class` + RED/GREEN/Verify-by on evolution proposals.
+- **Agent execution discipline (8 rules)**: Plan → approve → act; read before edit; minimal diff; diff approval before commit; minimal tests — [full doc](core/docs/session-execution-discipline.md), session summary in `forge-bootstrap`, full copy in [agents-template.md](core/templates/agents-template.md).
 
 ### v1.24.0 — 2026-05-24
 - **Karpathy comparisons**: [autoresearch](core/docs/autoresearch-comparison.md), [llm-council](core/docs/llm-council-comparison.md), [jobs](core/docs/jobs-comparison.md), [llm-wiki gist](core/docs/llm-wiki-comparison.md) — methodology mapped to Forge Skills, not copied wholesale.
@@ -494,6 +496,23 @@ Beyond the interview flow, **product-spec-builder** ships optional references (n
 
 You do **not** need to type “think first” in every message — the Skill and session bootstrap apply the structure. See [What's New → v1.25.0](#v1250--2026-05-25).
 
+### Agent execution discipline (8 rules)
+
+**Task-level** rules (how to execute *this* change) — in addition to product-level Iron Laws and HARD-GATEs. Injected in summary on every session via `forge-bootstrap`; **full text** in your project’s `AGENTS.md` from [agents-template.md](core/templates/agents-template.md).
+
+| # | Rule (summary) |
+|---|----------------|
+| 1 | List steps; wait for approval before non-trivial edits |
+| 2 | Read files before Write/Edit |
+| 3 | Minimal diff; reuse abstractions — no stack rewrites |
+| 4 | Ask when there is no precedent — do not invent requirements |
+| 5 | Confirm before user-impacting pivots; replan if scope changes |
+| 6 | Report off-scope issues — do not drive-by fix |
+| 7 | Show diff summary; user approves before commit |
+| 8 | Run lint / types / relevant tests before calling work done |
+
+Details, role split (main vs implementer), and maintainer commands: [session-execution-discipline.md](core/docs/session-execution-discipline.md). Also linked from [harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md).
+
 ### Guidance Layer — 12 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
@@ -730,6 +749,7 @@ External harnesses reviewed for positioning (not dependencies):
 | GitHub Actions & fork policy | [platform-compliance.md](core/docs/platform-compliance.md) |
 | Release gate (contributors) | `pnpm forge-smoke` · [scripts/forge-smoke/README.md](scripts/forge-smoke/README.md) · [forge-smoke.yml](.github/workflows/forge-smoke.yml) |
 | Golden path demo | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path` (`todo-cli/` = Spec+Plan artifact, not framework CLI) |
+| Agent execution discipline (8 rules) | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
 
 ---
 

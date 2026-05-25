@@ -10,11 +10,12 @@ All notable changes to Forge are documented here.
 - **Harness hardening (Superpowers-aligned)**: `forge-bootstrap` session iron laws; `product-spec-builder` / `dev-planner` HARD-GATE; evolution Skill TDD quartet + `failure_class`; `tests/skill-fixtures` + forge-smoke **12** smokes; mandatory implementer + worktree; `.forge/*-confirmed.json` + `implementer-session.json` PreToolUse chain; `drift-map-template.md`; forge-smoke `skill-bypass` (P2); `validate-skill` requires `[HARD-GATE]` on spec/plan/build skills.
 - **product-spec-builder PM frameworks** (MIT-adapted from [pm-skills](https://github.com/phuryn/pm-skills)): optional OST, JTBD value prop, assumptions, competitive briefs + Spec template sections.
 - **Chain-of-Thought (CoT)**: `conversation-strategy` templates; implementer step 0b + `reasoning_summary`; `bug-fixer` diagnostic checklist; forge-bootstrap Iron Law 9 (no user magic phrase required).
+- **Agent execution discipline (8 rules)**: [session-execution-discipline.md](core/docs/session-execution-discipline.md); bootstrap summary; full copy in [agents-template.md](core/templates/agents-template.md); README **Agent execution discipline** section.
 - **release-builder**: Finishing Branch Checklist (merge / PR / keep / discard). **bug-fixer**: Phase-1-before-fix cross-ref to systematic debugging.
 
 ### Changed
 - `hallucination-gate` now runs full `spec-before-code-gate.mjs` (Spec, confirmations, Plan, implementer session). `feedback-observer` auto `failure_class` heuristics (P1-lite).
-- README / README.zh-CN / `llms.txt`: PM frameworks + CoT; **Requirements depth** section; Workflow spec-confirmation steps; version **v1.25.0**.
+- README / README.zh-CN / `llms.txt` / GitHub Wiki source: PM frameworks + CoT + **Agent execution discipline (8 rules)**; **Requirements depth** section; Workflow spec-confirmation steps; version **v1.25.0**.
 - DEV-PLAN / test-demo README: `pnpm forge-smoke` documented as **12** smokes (~15–30s).
 
 ## [v1.24.0] - 2026-05-24

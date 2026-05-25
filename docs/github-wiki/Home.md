@@ -32,6 +32,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | **Harness 硬化** | 会话注入 `forge-bootstrap`；PreToolUse 五段链（Spec → 确认 → Plan → 确认 → implementer）；HARD-GATE |
 | **PM 框架** | `product-spec-builder` 可选参考 [pm-skills](https://github.com/phuryn/pm-skills)（OST、JTBD、假设、竞品） |
 | **思维链 CoT** | 先推理再结论；见 Skill 内模板，**不必**每条消息写「先想想看」 |
+| **Agent 执行纪律（8 条）** | 先计划再动手、改前先读、最小改动、提交前 diff 确认 — [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
 | **LLM Wiki 纪律** | 重要结论写入 `memory/` ADR，不单留对话（v1.24 起，见下方对照文档） |
 | **发版守门** | 维护者：`pnpm forge-smoke`（12 项） |
 
@@ -56,6 +57,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | 文档 | 链接 |
 |------|------|
 | Harness 成熟度自检 | [harness-maturity-checklist.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/harness-maturity-checklist.md) |
+| Agent 执行纪律（8 条） | [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
 | Loadout 场景选型 | [loadout-scenarios.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/loadout-scenarios.md) |
 | 记忆体系 + LLM Wiki | [memory-system.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/memory-system.md) · [llm-wiki-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/llm-wiki-comparison.md) |
 | Superpowers 对照 | [superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/superpowers-comparison.md) |
