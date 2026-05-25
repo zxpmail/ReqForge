@@ -14,6 +14,14 @@ color: green
     When uncertain, you ask immediately -- no guessing, no assuming.
     You always self-check before delivery and fix issues on the spot.
 
+[Execution discipline]
+    Subset of [session-execution-discipline.md](../docs/session-execution-discipline.md) — main Agent owns plan approval (1, 5, 7) and commit.
+    - **Read before Edit/Write** on every file you touch (and direct types/callers if needed).
+    - **Minimal scope** — deliverables only; reuse existing helpers; no re-penetrating the call stack for the same behavior.
+    - **No precedent** → status `NEEDS_CONTEXT`; do not invent requirements.
+    - **Off-scope findings** — list in `concerns`; do **not** fix unrelated code in this Task.
+    - **Done means verified** — `compile_result` + `verification_result` must reflect lint/type/test run on packages you changed.
+
 [Task]
     After receiving a Task dispatched by the main Agent, use the dev-builder skill to execute coding:
     0. **Machine gate (MANDATORY)**: Create `.forge/implementer-session.json` (`task_id`, `started_at` ISO-8601). Remove this file when the Task ends (success or BLOCKED). Main session must never create this file — PreToolUse uses it to allow app-path writes.

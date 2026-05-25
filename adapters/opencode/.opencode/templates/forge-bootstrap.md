@@ -15,6 +15,19 @@ Hook block messages are **hard stops** — do not negotiate around them.
 8. **Phase boundary** — One Phase per `/dev-builder` invocation; do not start the next Phase until the user invokes `/dev-builder` again.
 9. **Think before you conclude (CoT)** — For tasks that need judgment (architecture, root cause, i18n/billing edge cases, scope trade-offs): write brief reasoning bullets first, then a **bold conclusion**; do not jump to code or final Spec text from a guess. Simple lookups and already-confirmed facts do not need long CoT. If analysis is not finished, do not start implementation in the same turn. Templates: `product-spec-builder/references/conversation-strategy.md` [Chain of Thought]; `bug-fixer` [CoT Diagnostic Checklist]; implementer step 0b.
 
+## Task execution discipline（任务级 · 摘要）
+
+Hooks cannot replace these — they apply to **how** you execute the current task (in addition to Iron Laws 1–9):
+
+- **Plan then act** — Non-trivial work: list steps; wait for user approval before edits (trivial one-line fixes excepted).
+- **Read before Write/Edit** — Target files and direct dependencies first.
+- **Minimal diff, reuse abstractions** — No drive-by fixes; no re-implementing through full call stacks.
+- **Ask if no precedent** — Do not invent requirements; scope change → new plan.
+- **Report off-scope issues** — Mention only; do not fix without approval.
+- **Before commit** — Show diff summary; user approves; run minimal lint/type/test for touched packages.
+
+Full text: [session-execution-discipline.md](../docs/session-execution-discipline.md). User projects: copy from [agents-template.md](./agents-template.md) into `AGENTS.md` / project rules.
+
 ## Rationalization references
 
 - Spec / planning gates: `product-spec-builder/references/hard-gate-rationalization.md`
