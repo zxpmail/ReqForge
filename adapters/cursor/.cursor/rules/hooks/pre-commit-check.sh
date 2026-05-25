@@ -36,4 +36,9 @@ if [ $TSC_EXIT -ne 0 ]; then
   exit 2
 fi
 
+# Karpathy violation check (advisory, non-blocking)
+if [ -f "$CLAUDE_PROJECT_DIR/scripts/check-karpathy-violations.sh" ]; then
+  . "$CLAUDE_PROJECT_DIR/scripts/check-karpathy-violations.sh" 2>/dev/null || true
+fi
+
 exit 0

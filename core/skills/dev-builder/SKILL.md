@@ -61,6 +61,14 @@ description: Used when DEV-PLAN.md is ready and the user says to start coding or
 
     **Sub-Agent Isolation (MANDATORY)**: Per Task, RED/GREEN/REFACTOR implementation MUST run in a fresh `implementer` sub-agent — main session MUST NOT `Write`/`Edit` under `src/`, `app/`, `lib/`, `packages/`. Main session coordinates, reviews, commits. Details → `references/sub-agent-isolation.md`.
 
+[Behavior Rules — Karpathy Discipline]
+    **Think Before Coding** — 不猜假设。有歧义先问。有 tradeoff 先摆。在用户确认前不写代码。
+    **Simplicity First** — 最少代码解决问题。200行能50行就重写。不写未来需要的抽象。
+    **Surgical Changes** — 只改必须改的。不改无关格式/注释/代码。不重构没坏的。每个变更行必须直接追溯到用户请求。
+    **Goal-Driven Execution** — 先写测试复现，再修。每步有验证。完成声明必须附验证命令输出。
+
+    完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
+
 [HARD-GATE]
     Application code edits require the full machine gate chain (enforced by PreToolUse → `spec-before-code-gate.mjs`):
     `Product-Spec.md` + `.forge/spec-confirmed.json` + `DEV-PLAN.md` + `.forge/plan-confirmed.json` + `.forge/implementer-session.json` (written by **implementer** at Task start, removed at Task end).

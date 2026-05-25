@@ -33,6 +33,14 @@ description: Used when the user says "this feature is broken", "getting an error
     - git -> if available, use git log/diff/blame to trace changes
     - **Dependency Graph** (`dep-graph`) -> if available, run `pnpm dep-graph affected <file>` to scope the blast radius before debugging
 
+[Behavior Rules — Karpathy Discipline]
+    **Think Before Coding** — 不猜假设。先收集证据再下结论。不 rush to change code.
+    **Simplicity First** — 最小修复原则。只修需要修的部分，不加投机性验证/保护。
+    **Surgical Changes** — 只改必须改的。修 bug 时不"顺手改进"相邻代码、格式、注释。
+    **Goal-Driven Execution** — 先写复现测试，再修。每步有验证。
+
+    完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
+
 [First Principles]
     **Phase 1 Before Fix (Superpowers systematic-debugging)**: No fix proposal until stable reproduction and data-flow tracing are documented. Symptom-only patches are failures — align with TDD: failing test first, then fix.
     **No Guessing, No Experiments**: No conclusions without evidence. Collect first, analyze first, hypothesize first, then verify. Do not rush to change code when you see an error.
@@ -287,6 +295,12 @@ description: Used when the user says "this feature is broken", "getting an error
          - Symptom: [what broke]
          - Design Flaw: [structural weakness that allowed the bug]
          - Principle Violation: [which rule/process was skipped]
+
+         [Goal-Driven Verification]
+         Verify each against the original request:
+         - User reported: "[original symptom]" → not reproducible, test passes
+         - Impact scope: [list of affected features] → regression verified
+         - Acceptance: [verifiable criterion] → command output attached
 
          Shall I commit? (commit message: fix: [problem description])
          Or are there other issues to fix?"

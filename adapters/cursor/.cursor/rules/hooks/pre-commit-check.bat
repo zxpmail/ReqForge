@@ -41,6 +41,11 @@ if !TSC_PASS! equ 0 (
     exit /b 2
 )
 
+REM Karpathy violation check (advisory, non-blocking)
+if exist "%CLAUDE_PROJECT_DIR%\scripts\check-karpathy-violations.bat" (
+    call "%CLAUDE_PROJECT_DIR%\scripts\check-karpathy-violations.bat"
+)
+
 exit /b 0
 
 :check_yolo

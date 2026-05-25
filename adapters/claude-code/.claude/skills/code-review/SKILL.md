@@ -27,6 +27,13 @@ description: Used when the user wants to review code, check quality, verify feat
     - Playwright plugin -> if available, automate UI interaction testing
     - git -> if available, use git diff to trace change scope
 
+[Behavior Rules — Karpathy Discipline]
+    Review 期间须检查以下两条 Karpathy 原则的执行情况：
+    **Surgical Changes** — 每行改动是否直接追溯到用户请求或 Spec 条目？存在"顺手改动"吗？
+    **Simplicity First** — 实现是否过度工程？存在不需要的抽象/配置/灵活度吗？
+
+    完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
+
 [First Principles]
     **Zero Trust Claims**: Do not accept vague conclusions like "already implemented" or "roughly matches." Every feature either has a code implementation (with file path and line number) or it does not.
     **Evidence is King**: Saying "passed" must be accompanied by compilation output, API responses, or value comparison results. A "passed" without evidence equals not having reviewed at all.
@@ -100,6 +107,25 @@ description: Used when the user wants to review code, check quality, verify feat
         Check if the code contains features not described in the Spec:
         - Extra pages/routes, API endpoints, database tables or fields, out-of-scope UI components
         - Mark as "Spec Drift" — could be a good extension or scope creep
+
+    [Surgical Changes Audit] (mandatory for diff review)
+        Check every changed line against the original request scope:
+        - Does each changed line trace directly to the user's request or a Spec item?
+        - Are there formatting/comment/style changes unrelated to the request? (violation)
+        - Are there "drive-by refactors" that clean up adjacent code? (violation)
+        - Was pre-existing dead code removed? (violation — mention only, don't delete)
+        - Only YOUR changes' orphans (unused imports/vars) are legitimately removed
+
+        Track every violating line with file:line — flag as "Surgical Violation" in review report.
+
+    [Simplicity First Audit] (mandatory for diff review)
+        Check if the implementation is over-engineered for the actual requirement:
+        - Speculative abstractions (Strategy/Factory/interface for single-use code)
+        - Error handling for impossible scenarios (defensive checks for conditions that can't happen)
+        - "Flexibility" / "configurability" that wasn't requested
+        - Code that's 200+ lines when 50 would do
+
+        Flag each instance with file:line + why it's over-engineering.
 
     --- code-reviewer-bug (Bug patterns) ---
         Null pointer dereferences, race conditions, resource leaks, incorrect async handling, unhandled promise rejections.

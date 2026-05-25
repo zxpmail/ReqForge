@@ -90,6 +90,16 @@ description: Used when the user adds a feature or incrementally changes an exist
         2. Run project verification commands; capture output in verify.md.
         3. List any failed criteria; if fail -> apply phase again, do not archive.
 
+        [Goal-Driven Verification Template]
+        For each acceptance criterion in specs.md:
+        - "[Criterion]" → "[how to verify]" → "[pass/fail + command output]"
+
+        Example:
+        - "Dark mode toggle persists across page reload" → "toggle dark mode, reload, check body class" → "pass (body.dark present after reload)"
+        - "Search returns results within 500ms" → "bench-search.js 10 iterations" → "fail (avg 1200ms, p95 2400ms)"
+
+        Archive is blocked until all criteria pass or user explicitly waives (record in verify.md).
+
     [Phase: archive]
         1. Require verify.md pass or explicit user waive (record in verify.md).
         2. Confirm Product-Spec.md + Product-Spec-CHANGELOG.md updated.

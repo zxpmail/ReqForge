@@ -55,6 +55,7 @@ flowchart LR
 | [Workflow](#workflow) | Spec → Plan → Build → Release (brownfield: `/change-manager`) |
 | [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought) | PM frameworks + CoT in product-spec-builder |
 | [Agent execution discipline](#agent-execution-discipline-8-rules) | Plan-before-act, read-before-edit, minimal diff, tests before done |
+| [Karpathy behavior discipline](#karpathy-behavior-discipline-4-principles) | Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven |
 | [Framework Development](#framework-development) | Tests, sync, `pnpm forge-smoke`, dependency graph (contributors) |
 
 ---
@@ -513,6 +514,19 @@ You do **not** need to type “think first” in every message — the Skill and
 
 Details, role split (main vs implementer), and maintainer commands: [session-execution-discipline.md](core/docs/session-execution-discipline.md). Also linked from [harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md).
 
+### Karpathy behavior discipline (4 principles)
+
+ReqForge 的行为层直接继承 [Andrej Karpathy 指出的 LLM 编码通病](https://x.com/karpathy/status/2015883857489522876)。四原则嵌入所有 Skill 的执行过程：
+
+| 原则 | 要对抗什么 | 检验信号 |
+|------|-----------|---------|
+| **Think Before Coding** | 不猜假设就开干、隐藏困惑、不摆 tradeoff | 编码前有无澄清问题？实现是否偏离用户说的范围？ |
+| **Simplicity First** | 200 行抽象工厂解决 10 行问题、投机性灵活度 | diff 是否比预期大很多？有无"以后也许会用"的代码？ |
+| **Surgical Changes** | 修 bug 顺手改格式/注释、重构没坏的代码 | diff 里有无格式/注释变更？提交信息写"顺便修了 XX"？ |
+| **Goal-Driven Execution** | 没有可验证标准就声称完成、不附证据 | 完成声明有无验证命令输出？是先写测试还是先写代码？ |
+
+完整说明 + ❌→✅ 示例 → [behavior-rules.md](core/docs/behavior-rules.md)。与上游 [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) 的同源映射 → [karpathy-skills-comparison.md](core/docs/karpathy-skills-comparison.md)。
+
 ### Guidance Layer — 12 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
@@ -740,6 +754,7 @@ External harnesses reviewed for positioning (not dependencies):
 | [llm-council](https://github.com/karpathy/llm-council) | Multi-LLM peer review + Chairman synthesis | [llm-council-comparison.md](core/docs/llm-council-comparison.md) — code-review council + spec Step 7 |
 | [jobs](https://github.com/karpathy/jobs) | BLS occupation data + LLM rubric scoring (not task queues) | [jobs-comparison.md](core/docs/jobs-comparison.md) — risk_rank + PROJECT-HEALTH + Spec LLM-judge |
 | [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Persistent wiki: raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR filing discipline |
+| [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) | **4 principles**: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven (154k ★) | [karpathy-skills-comparison.md](core/docs/karpathy-skills-comparison.md) — behavior-rules.md + Karpathy Discipline in every Skill |
 
 **ReqForge maintainer docs** (not third-party comparisons):
 

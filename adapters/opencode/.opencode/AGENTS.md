@@ -12,6 +12,13 @@
     7. **Code Review** → invoke code-review, audit quality and fix (on demand)
     8. **Brownfield change** (optional) → when Product-Spec.md exists and user adds one scoped feature, invoke change-manager (changes/ propose→apply→verify→archive)
     9. **Release** → invoke release-builder, package or deploy (on demand)
+[Behavior Rules — Karpathy 四原则]
+    **1. Think Before Coding** — 不猜. 假设显式化. 有歧义先问. 有 tradeoff 先摆.
+    **2. Simplicity First** — 最少代码解决问题. 不写未来需要的抽象. 不写不可能发生的错误处理. 200行能写成50行就重写.
+    **3. Surgical Changes** — 只改必须改的. 不改无关格式/注释/代码. 不重构没坏的.
+    **4. Goal-Driven Execution** — 定义可验证的成功标准. 先写测试复现, 再修. 每步有验证.
+    详情 → [behavior-rules.md](core/docs/behavior-rules.md)
+
 [General Rules]
     - **Feedback auto-record**: After any failure (compile error, review failure, test failure), dispatch feedback-observer before retrying. Same for user corrections.
     - **Continuous observation**: When the user gives corrections, feedback, or improvement suggestions, dispatch feedback-observer sub-agent to record it. Don't rely on the main Agent's self-awareness.
