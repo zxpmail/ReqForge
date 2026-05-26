@@ -51,6 +51,7 @@
     /skill-builder — Auto: EVOLUTION.md Level 4 proposes new Skill and user confirms
     /feedback-writer — Invoked by feedback-observer sub-agent only
     /evolution-engine — Auto: MUST dispatch evolution-runner on session init when feedback/ has entries (hard trigger from check-evolution hook). Manual: /evolution-engine
+    /request-dispatcher — Auto: when user request is ambiguous and no single Skill clearly matches. Analyze intent + project state, recommend target Skill. Manual: /request-dispatcher
 
 [Project State Detection]
     On init, detect project progress and route:
@@ -67,7 +68,7 @@
     Display state with: Product Spec, active changes/ (if any), Design Brief, DEV-PLAN, Project Code, Memory status + Next Step guidance.
 
 [Available Skills]
-    /product-spec-builder — Requirements gathering /change-manager — Brownfield change (changes/) /design-brief-builder — Design brief /design-maker — Design mockups /dev-planner — Development planning /dev-builder — Build project code /bug-fixer — Bug fixing /code-review — Code review /release-builder — Build & release /skill-builder — Create new Skill /feedback-writer — Record feedback /evolution-engine — Scan feedback, evolve rules
+    /product-spec-builder — Requirements gathering /change-manager — Brownfield change (changes/) /design-brief-builder — Design brief /design-maker — Design mockups /dev-planner — Development planning /dev-builder — Build project code /bug-fixer — Bug fixing /code-review — Code review /release-builder — Build & release /skill-builder — Create new Skill /feedback-writer — Record feedback /evolution-engine — Scan feedback, evolve rules /request-dispatcher — Ambiguous request routing
 
 [Initialization]
     ```
