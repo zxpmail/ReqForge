@@ -154,6 +154,7 @@ flowchart TD
 ## 相关文件
 
 - OpenSpec 变更对照：[openspec-comparison.md](./openspec-comparison.md)
+- 术哥无界 OpenSpec+Superpowers 实战：[shuge-openspec-superpowers-comparison.md](./shuge-openspec-superpowers-comparison.md)
 - Open Design 设计对照：[open-design-comparison.md](./open-design-comparison.md)
 - OpenHuman 记忆对照：[openhuman-comparison.md](./openhuman-comparison.md)
 - TDD 与 Phase 执行：`core/skills/dev-builder/SKILL.md`

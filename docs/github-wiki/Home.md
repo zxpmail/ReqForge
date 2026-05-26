@@ -35,6 +35,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | **思维链 CoT** | 先推理再结论；见 Skill 内模板，**不必**每条消息写「先想想看」 |
 | **Agent 执行纪律（8 条）** | 先计划再动手、改前先读、最小改动、提交前 diff 确认、**验证循环**（失败重跑直至通过）— [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
 | **Forge 速查** | 安装后项目根 `.forge/quickref.md`（`pnpm forge-install` 生成） |
+| **OpenSpec + Superpowers 衔接** | `/change-manager` ↔ `/dev-builder` Change-Scoped；见 [shuge-openspec-superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/shuge-openspec-superpowers-comparison.md) |
 | **LLM Wiki 纪律** | 重要结论写入 `memory/` ADR，不单留对话（v1.24 起，见下方对照文档） |
 | **发版守门** | 维护者：`pnpm forge-smoke`（12 项） |
 
@@ -65,6 +66,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | Superpowers 对照 | [superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/superpowers-comparison.md) |
 | Founder's Playbook 对照 | [founders-playbook-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/founders-playbook-comparison.md) |
 | OpenSpec 对照 | [openspec-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/openspec-comparison.md) |
+| 术哥无界 OpenSpec+Superpowers | [shuge-openspec-superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/shuge-openspec-superpowers-comparison.md) |
 | 平台合规（CI/fork） | [platform-compliance.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/platform-compliance.md) |
 
 完整对照索引见 [README → 参考与对照](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md#参考与对照)。

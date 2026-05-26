@@ -40,8 +40,30 @@ requires: []
     **Truth in Product-Spec**: `Product-Spec.md` is the long-lived source of truth; `changes/*/specs.md` is the delta until archive merges back.
     **Fresh Context for Apply**: Start apply in a new session when possible — planning context pollutes implementation.
     **Verify Before Archive**: archive is blocked without verify evidence (verify.md or equivalent checklist in tasks.md).
+    **Two Plans, Two Jobs**: `changes/<name>/tasks.md` = **business task list** for this change; `DEV-PLAN.md` = **engineering Phases** for the whole product. Do not merge them into one file. `/dev-planner` fills tasks.md; `/dev-builder` executes Tasks — it does not replace `/change-manager apply`.
 
 <!-- end: first-principles -->
+<!-- begin: openspec-superpowers-handoff -->
+[OpenSpec + Superpowers Handoff]
+    Article reference: [shuge-openspec-superpowers-comparison.md](../../docs/shuge-openspec-superpowers-comparison.md) (术哥无界 OpenSpec + Superpowers 实战).
+
+    | User intent | Forge command | Not |
+    |-------------|---------------|-----|
+    | Create change + delta specs | **propose** | dev-builder |
+    | Implement scoped change from `changes/<name>/` | **apply** → dev-builder (Change-Scoped) | OpenSpec `/opsx:apply` alone |
+    | Fill tasks / design for a change | **apply** Step 2 → dev-planner | product-spec-builder creating `changes/` |
+    | 0→1 Phase backlog | dev-planner → dev-builder (Phase mode) | change-manager |
+
+    **Explicit paths on apply** (do not rely on Agent to "discover" OpenSpec-style dirs):
+    - `changes/<change-name>/proposal.md`
+    - `changes/<change-name>/specs.md` (Delta + acceptance)
+    - `changes/<change-name>/design.md`
+    - `changes/<change-name>/tasks.md`
+    - Optional: `DEV-PLAN.md` — add **one Phase entry** for this change only, not whole-repo backlog
+
+    When invoking dev-builder from apply, pass **`change-name=<change-name>`** in the user message so Loading Phase reads the folder above.
+
+<!-- end: openspec-superpowers-handoff -->
 <!-- begin: output-style -->
 [Output Style]
     **Tone**: Release train conductor — explicit phases, no skipping propose because "it's small."
@@ -125,11 +147,11 @@ requires: []
     <!-- begin: phase:-apply -->
     [Phase: apply]
         Step 1: Load change context
-            Load all files under `changes/<change-name>/`.
+            Read **all** artifacts under `changes/<change-name>/` (see [OpenSpec + Superpowers Handoff] paths). If folder missing -> propose first.
         Step 2: Plan tasks
-            If tasks.md empty or placeholder -> invoke /dev-planner (change-scoped) to fill tasks.md; may add DEV-PLAN.md entries for this change only.
+            If tasks.md empty or placeholder -> invoke /dev-planner (change-scoped) to fill tasks.md; may add **one** DEV-PLAN.md Phase entry for this change only.
         Step 3: Implement
-            Recommend new session; then invoke /dev-builder for scoped Tasks only.
+            Recommend new session; invoke /dev-builder with **Change-Scoped Mode** and explicit `change-name=<change-name>`. Scope = tasks.md checkboxes only — not full DEV-PLAN backlog.
         Step 4: Review
             After each Task: execute [Change Assessment Checklist] scope dimension; then /code-review as per dev-builder loop.
         Step 5: Track progress
@@ -163,7 +185,7 @@ requires: []
         Step 1: Verify gate
             Require verify.md pass or explicit user waive (record in verify.md). See [Change Assessment Checklist] archive readiness dimension.
         Step 2: Update Spec
-            Confirm Product-Spec.md + Product-Spec-CHANGELOG.md updated.
+            Merge `specs.md` **Delta Spec** sections (ADDED/MODIFIED/REMOVED) into Product-Spec.md; confirm Product-Spec-CHANGELOG.md updated.
         Step 3: Move to archive
             `mv changes/<change-name>/ changes/archive/<change-name>/`
         Step 4: Report next steps
@@ -174,6 +196,6 @@ requires: []
 [Initialization]
     If user message matches propose pattern -> run [Phase: propose].
     If `changes/<name>/` exists and user says implement -> run [Phase: apply].
-    Reference: `core/docs/openspec-comparison.md` for Forge vs OpenSpec positioning.
+    Reference: `core/docs/openspec-comparison.md` for Forge vs OpenSpec positioning; `core/docs/shuge-openspec-superpowers-comparison.md` for apply vs dev-builder boundaries.
 
 <!-- end: initialization -->

@@ -16,6 +16,7 @@ All notable changes to Forge are documented here.
 - **forge-bootstrap** / **implementer**: verify-loop summary aligned with discipline doc.
 - **README** / **README.zh-CN** / **docs/github-wiki/Home.md** / **llms.txt**: verify loop + quickref on install.
 - **Audit alignment**: root + `test-demo` Spec/Plan examples; `core/templates/product-spec-template.md`; repo `.forge/quickref.md`; `change-proposal` scope discipline; `machine-gates-doc` + `core/hooks/AGENTS.md` six-step gate docs.
+- **Shuge OpenSpec+Superpowers article**: [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md); change-manager handoff + Delta/GWT specs + dev-builder Change-Scoped Mode.
 
 ## [v1.25.0] - 2026-05-25
 

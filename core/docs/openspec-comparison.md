@@ -123,5 +123,6 @@ flowchart TD
 - Skill：`core/skills/change-manager/SKILL.md`
 - 命令：`core/skills/change-manager/commands/change-manager.md`
 - 模板：`core/skills/change-manager/templates/`
+- 术哥无界 OpenSpec+Superpowers 实战对照：[shuge-openspec-superpowers-comparison.md](./shuge-openspec-superpowers-comparison.md)
 - 需求迭代细节：`core/skills/product-spec-builder/SKILL.md`（迭代模式 Document Update Phase）
 - 主流程：`CLAUDE.md` [Skill Dispatch]

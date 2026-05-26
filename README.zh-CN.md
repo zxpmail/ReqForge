@@ -739,6 +739,7 @@ pnpm dep-graph stats  # 查看图统计
 | [jobs](https://github.com/karpathy/jobs) | BLS 职业数据 + LLM rubric 打分（非任务队列） | [jobs-comparison.md](core/docs/jobs-comparison.md) — risk_rank + PROJECT-HEALTH |
 | [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | 持久 wiki：raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR 归档纪律 |
 | Founder's Playbook（PDF） | Idea → MVP → Launch → Scale；先验证再构建 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Idea Validation Gate + DEV-PLAN MVP Scope |
+| 术哥无界 OpenSpec + Superpowers 实战 | 双工具流水线 → 统一 Harness | [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — change-manager ↔ dev-builder 衔接 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 

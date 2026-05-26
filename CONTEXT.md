@@ -6,8 +6,8 @@
 
 ## 上次停在哪个位置
 
-- **Founder's Playbook 批**：Idea Gate + MVP Scope + 示例 Spec/Plan 对齐 + quickref/模板/文档/smoke — 已提交并 push
-- **Multica 启示 P0+P1**：验证循环 / quickref / 反模式 — 已 push `3f61bc2`
+- **术哥无界 OpenSpec+Superpowers 对照**：`shuge-openspec-superpowers-comparison.md`；change-manager/dev-builder 衔接 + Delta/GWT 模板
+- **Founder's Playbook 批**：Idea Gate + MVP Scope — 已 push `cc15f5c`
 - **README / Wiki / llms / CHANGELOG** 已写入「Agent 执行纪律（8 条）」专节与导航
 - **版本 v1.25.0**；Harness 硬化 + pm-frameworks + CoT + 八条纪律（代码见 `session-execution-discipline.md`）
 - GitHub Wiki 源稿 `docs/github-wiki/Home.md` 需维护者手动粘贴到 wiki

@@ -13,6 +13,8 @@ requires: []
 
     **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop**. User must call /dev-builder again for next Phase.
 
+    **Change-Scoped Mode**: Invoked from `/change-manager apply` with `change-name=<name>` -> read `changes/<name>/` (specs, design, tasks), execute **only** unchecked items in `changes/<name>/tasks.md`. Do not pull unrelated DEV-PLAN Phases. Still uses implementer + TDD + two-tier review per Task.
+
 <!-- end: task -->
 <!-- begin: not-for -->
 [Not For]
@@ -249,6 +251,10 @@ requires: []
 
         Step 2: Load documents and code state
             Read DEV-PLAN.md -> identify next Phase number. Read **MVP Scope** (in scope / out of scope / amendment criteria). Read ONLY current Phase's delivery checklist, **Primary metric**, and key files. Do NOT read other Phases — they are not your concern.
+            **Change-Scoped Mode** (when user message or change-manager handoff includes `change-name=<name>`):
+            - Read `changes/<name>/proposal.md`, `specs.md`, `design.md`, `tasks.md` — **mandatory**; do not assume Agent will find OpenSpec-style paths without this step
+            - Task list source = unchecked boxes in `tasks.md` only
+            - Spec compliance source = `specs.md` Delta + Scenarios (G/W/T), then Product-Spec.md for global context
             Read Product-Spec.md -> use as feature reference (**read-only** — do not edit during /dev-builder)
             If Design-Brief.md exists -> read visual direction
             If design tool MCP exists -> prepare to read
@@ -277,6 +283,7 @@ requires: []
             For each Task, execute the following loop:
 
             Before development — load reference documents:
+            0. **Change-Scoped**: If `change-name` set -> re-read `changes/<name>/specs.md` + `design.md` for **this Task** only
             1. Read the delivery checklist and key files corresponding to this Task from DEV-PLAN.md
             2. Read the feature description for this Task from Product-Spec.md
             3. Read the visual direction and page notes for this Task from Design-Brief.md
@@ -301,12 +308,12 @@ requires: []
             After implementer returns — cross-reference validation + Review loop:
             10. **Micro-cycle verify (≤10 min)**: Run the Task's targeted test/lint command; paste **command + pass/fail** in the same message. If the Phase has a **Primary metric**, note whether this Task moves it toward green. No micro-cycle evidence → Task not ready for review.
             11. Read actual code values, verify item by item against design values, correct any deviations (main session may fix only via re-dispatch implementer if code changes needed)
-            12. Cross-reference Product-Spec.md to confirm functional behavior matches description
+            12. **Spec compliance (tier 1)**: Cross-reference `changes/<name>/specs.md` acceptance + G/W/T when Change-Scoped; else DEV-PLAN Task + Product-Spec.md. Fail -> fix via implementer before tier 2.
             13. **Blast-radius scan**: If dep-graph is available, run `pnpm dep-graph affected <changed-files>` and `pnpm dep-graph risk <changed-files>`. Pass the affected files list to code-reviewer as `affected_files` so the review targets the right scope. Use the risk score to inform `change_complexity`:
                 - risk score "low" → change_complexity="simple" (skip parallel agents, quick check only)
                 - risk score "medium" or "high" → change_complexity="moderate" or "complex"
-            14. Dispatch code-reviewer with `affected_files` and `change_complexity` set.
-                **Anonymous review packet**: Do not pass implementer task narrative or session messages — only Spec excerpts, checklist, diffs, and file contents.
+            14. **Code quality (tier 2)**: Dispatch code-reviewer with `affected_files` and `change_complexity` set.
+                **Anonymous review packet**: Do not pass implementer task narrative or session messages — only Spec excerpts (include `changes/.../specs.md` when Change-Scoped), checklist, diffs, and file contents.
                 **Default `change_complexity`**: `simple` unless the Task touches multiple modules, new public APIs, auth/payments/data migration, or dep-graph risk is medium/high — then use `moderate` or `complex`.
                 code-reviewer also cross-references Product-Spec.md, Design-Brief.md, DEV-PLAN.md, and design drafts.
 
