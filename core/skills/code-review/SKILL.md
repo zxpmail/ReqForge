@@ -151,25 +151,19 @@ requires: []
     **Skipping compilation verification**: "It's just a style change" → style files can break. Run compilation verification every time.
 
 [Anti-Rationalization Checklist]
-    Agents tend to skip rules using "reasonable" justifications. Here are common rationalizations and the correct response.
 
-    Skipping item-by-item comparison:
-    - "The change is small, just a quick glance" -> review is not based on change size; item-by-item comparison is the minimum bar
-    - "I already reviewed this before" -> re-verify every time, do not trust previous conclusions. Code may have changed
-    - "This feature was not modified, no need to review" -> unmodified code can still be broken by changes in its context
-
-    Skipping evidence:
-    - "Everything looks normal" -> "normal" is not evidence; every conclusion needs file_path:line_number
-    - "Other features should not be affected" -> "should" equals not verified; regression test scope must be explicit
-    - "This code is standard" -> standard or not depends on whether it deviates from the Spec
-
-    Skipping security scan:
-    - "This project is small, there won't be security issues" -> small projects are more prone to security vulnerabilities
-    - "I didn't write any SQL" -> security issues are not just SQL injection (XSS, path leakage, hardcoded credentials)
-
-    Skipping compilation verification:
-    - "I only changed styles, no need to compile" -> style files can also cause compilation errors (Tailwind config, CSS Modules references)
-    - "The change is small, compilation will definitely pass" -> compilation is a gate; run it every time
+    | Rationalization | Reality |
+    |---|---|
+    | "The change is small, just a quick glance" | Review is not based on change size; item-by-item comparison is the minimum bar |
+    | "I already reviewed this before" | Re-verify every time, do not trust previous conclusions. Code may have changed |
+    | "This feature was not modified, no need to review" | Unmodified code can still be broken by changes in its context |
+    | "Everything looks normal" | "Normal" is not evidence; every conclusion needs file_path:line_number |
+    | "Other features should not be affected" | "Should" equals not verified; regression test scope must be explicit |
+    | "This code is standard" | Standard or not depends on whether it deviates from the Spec |
+    | "This project is small, there won't be security issues" | Small projects are more prone to security vulnerabilities |
+    | "I didn't write any SQL" | Security issues are not just SQL injection (XSS, path leakage, hardcoded credentials) |
+    | "I only changed styles, no need to compile" | Style files can also cause compilation errors (Tailwind config, CSS Modules references) |
+    | "The change is small, compilation will definitely pass" | Compilation is a gate; run it every time |
 
 [Review Strategy]
     Methodology during the review process.

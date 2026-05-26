@@ -372,7 +372,7 @@ score_skill() {
   # 8. Anti-rationalization
   local s8=0
   local anti_rat_count
-  anti_rat_count=$(echo "$content" | sed -n '/\[Anti-Rationalization\]/,/\[.*\]/p' | grep -cE "^\s+- |^\s+\* " || true)
+  anti_rat_count=$(echo "$content" | sed -n '/\[Anti-Rationalization/,/\[.*\]/p' | grep -cE "^\s+- |^\s+\* |^\s+\| \"" || true)
   # Also count Gotchas entries as anti-rationalization data
   local gotchas_as_anti
   gotchas_as_anti=$(echo "$content" | sed -n '/\[Gotchas\]/,/\[.*\]/p' | grep -cE "^\*\*|^    \*\*" || true)

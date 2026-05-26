@@ -151,24 +151,18 @@ requires: []
         - Fixed 3 times and still not working -> search with broader keywords; someone may have encountered the same pitfall
 
     [Anti-Rationalization Checklist]
-        Agents tend to skip rules using "reasonable" justifications. Here are common rationalizations and the correct response.
 
-        Skipping evidence collection and going straight to code changes:
-        - "I've seen this error before, this is how I fixed it last time" -> the same error can have different root causes; collect evidence first, then decide
-        - "No need to reproduce, it's obviously a problem with XX" -> "obviously" is not evidence; verify the hypothesis first, then change
-        - "Let me just try changing it and see what happens" -> locate the root cause first, blindly attempting introduces new problems
-
-        Changing multiple things at once:
-        - "I'll just fix this while I'm at it" -> one problem at a time. Changing multiple things at once makes it impossible to know which was the real fix
-        - "These two bugs are related" -> even if related, verify step by step, one at a time
-
-        Skipping regression verification:
-        - "I only changed one line, it won't affect anything else" -> one line change can impact the entire module; regression verification is not optional
-        - "It's fixed, take a look" -> a fix must have evidence (compilation passes + bug no longer reproduces + regression passes)
-
-        Abandoning systematic debugging:
-        - "This bug is too simple, no need for the four-stage process" -> when you think it's simple is exactly when you are most likely to miss critical information
-        - "It's an environment issue, no need to investigate" -> environment issues are bugs too; use the same systematic approach
+        | Rationalization | Reality |
+        |---|---|
+        | "I've seen this error before, this is how I fixed it last time" | Same error can have different root causes; collect evidence first, then decide |
+        | "No need to reproduce, it's obviously a problem with XX" | "Obviously" is not evidence; verify the hypothesis first, then change |
+        | "Let me just try changing it and see what happens" | Locate the root cause first; blindly attempting introduces new problems |
+        | "I'll just fix this while I'm at it" | One problem at a time. Changing multiple things at once makes it impossible to know which was the real fix |
+        | "These two bugs are related" | Even if related, verify step by step, one at a time |
+        | "I only changed one line, it won't affect anything else" | One line change can impact the entire module; regression verification is not optional |
+        | "It's fixed, take a look" | A fix must have evidence (compilation passes + bug no longer reproduces + regression passes) |
+        | "This bug is too simple, no need for the four-stage process" | When you think it's simple is exactly when you are most likely to miss critical information |
+        | "It's an environment issue, no need to investigate" | Environment issues are bugs too; use the same systematic approach |
 
 [CoT Diagnostic Checklist]
     <!-- 显式推理清单；与四阶段并存，Stage 3 前完成。不必让用户写「先想想看」。 -->
