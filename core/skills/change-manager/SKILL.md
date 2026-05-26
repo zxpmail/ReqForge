@@ -70,28 +70,55 @@ requires: []
     - `changes/<change-name>/verify.md` (after verify phase)
     - `changes/archive/<change-name>/` (after archive)
 
+[Change Assessment Checklist]
+    Before entering a Phase, assess the change scope and determine the appropriate level of rigor:
+
+    | Dimension | Must-Have | Recommended | Optional |
+    |-----------|-----------|-------------|----------|
+    | **Spec Impact** | specs.md updated | Product-Spec.md merged | Product-Spec-CHANGELOG.md updated |
+    | **UI Change** | design.md filled | Design-Brief.md cross-ref | Design tool MCP for values |
+    | **Scope Control** | single feature per folder | tasks.md with acceptance criteria | DEV-PLAN.md Phase entry |
+    | **Review Depth** | /code-review on diff | regression on affected modules | full /code-review on whole project |
+    | **Archive Readiness** | verify.md pass | user sign-off recorded | CHANGELOG updated |
+
+    Reference: see [Output Artifacts] for expected files per level.
+
 [Workflow]
-    Parse user intent for phase: **propose** | **apply** | **verify** | **archive** (default: propose if only a change name/description given).
+    Parse user intent for phase: **propose** | **apply** | **verify** | **archive** (default: propose if only a change name/description given). Execute the corresponding Phase steps below. Reference the [Change Assessment Checklist] to determine rigor for the current change.
 
     [Phase: propose]
-        1. Normalize `<change-name>` (kebab-case, e.g. add-dark-mode).
-        2. Create `changes/<change-name>/` from templates/.
-        3. Interview user until specs are testable; record in proposal.md + specs.md.
-        4. If conflicts with Product-Spec.md -> surface options; may invoke /product-spec-builder iteration for merge.
-        5. Stub design.md / tasks.md with "filled by dev-planner or design skills."
-        6. User confirms -> stop. Do not apply in same turn unless user explicitly asks.
+        Step 1: Normalize name
+            Normalize `<change-name>` (kebab-case, e.g. add-dark-mode). See [Dependency Check] for prerequisites.
+        Step 2: Scaffold directory
+            Create `changes/<change-name>/` from templates/ (see [File Structure]).
+        Step 3: Interview user
+            Interview user until specs are testable; record in proposal.md + specs.md.
+        Step 4: Resolve conflicts
+            If conflicts with Product-Spec.md -> surface options; may invoke /product-spec-builder iteration for merge.
+        Step 5: Stub remaining
+            Stub design.md / tasks.md with "filled by dev-planner or design skills."
+        Step 6: Confirm
+            User confirms -> stop. Do not apply in same turn unless user explicitly asks.
 
     [Phase: apply]
-        1. Load all files under `changes/<change-name>/`.
-        2. If tasks.md empty or placeholder -> invoke /dev-planner (change-scoped) to fill tasks.md; may add DEV-PLAN.md entries for this change only.
-        3. Recommend new session; then invoke /dev-builder for scoped Tasks only.
-        4. After each Task: /code-review as per dev-builder loop.
-        5. Mark tasks.md checkboxes as work completes.
+        Step 1: Load change context
+            Load all files under `changes/<change-name>/`.
+        Step 2: Plan tasks
+            If tasks.md empty or placeholder -> invoke /dev-planner (change-scoped) to fill tasks.md; may add DEV-PLAN.md entries for this change only.
+        Step 3: Implement
+            Recommend new session; then invoke /dev-builder for scoped Tasks only.
+        Step 4: Review
+            After each Task: execute [Change Assessment Checklist] scope dimension; then /code-review as per dev-builder loop.
+        Step 5: Track progress
+            Mark tasks.md checkboxes as work completes.
 
     [Phase: verify]
-        1. Re-read specs.md acceptance criteria vs implementation.
-        2. Run project verification commands; capture output in verify.md.
-        3. List any failed criteria; if fail -> apply phase again, do not archive.
+        Step 1: Compare against spec
+            Re-read specs.md acceptance criteria vs implementation.
+        Step 2: Run verification
+            Run project verification commands; capture output in verify.md.
+        Step 3: Assess results
+            List any failed criteria; if fail -> apply phase again, do not archive.
 
         [Goal-Driven Verification Template]
         For each acceptance criterion in specs.md:
@@ -104,10 +131,14 @@ requires: []
         Archive is blocked until all criteria pass or user explicitly waives (record in verify.md).
 
     [Phase: archive]
-        1. Require verify.md pass or explicit user waive (record in verify.md).
-        2. Confirm Product-Spec.md + Product-Spec-CHANGELOG.md updated.
-        3. `mv changes/<change-name>/ changes/archive/<change-name>/`
-        4. Report next suggested change or return to normal dev-builder Phases.
+        Step 1: Verify gate
+            Require verify.md pass or explicit user waive (record in verify.md). See [Change Assessment Checklist] archive readiness dimension.
+        Step 2: Update Spec
+            Confirm Product-Spec.md + Product-Spec-CHANGELOG.md updated.
+        Step 3: Move to archive
+            `mv changes/<change-name>/ changes/archive/<change-name>/`
+        Step 4: Report next steps
+            Report next suggested change or return to normal dev-builder Phases.
 
 [Initialization]
     If user message matches propose pattern -> run [Phase: propose].
