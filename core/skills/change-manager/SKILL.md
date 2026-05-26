@@ -2,6 +2,9 @@
 ---
 name: change-manager
 description: Used when the user adds a feature or incrementally changes an existing project that already has Product-Spec.md. Runs the changes/ workflow (propose, apply, verify, archive), aligned with OpenSpec-style SDD while delegating implementation to dev-planner and dev-builder.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

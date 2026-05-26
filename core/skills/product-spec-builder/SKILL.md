@@ -2,6 +2,9 @@
 ---
 name: product-spec-builder
 description: Used when the user says they want to build a product, application, or tool, or when they want to add features, change requirements, or adjust UI. Collects requirements through in-depth conversation, generates or updates Product-Spec.md.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

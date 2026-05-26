@@ -28,7 +28,7 @@ done
 if [ ${#TARGETS[@]} -eq 0 ]; then
   echo "Usage: $0 [--strict] [--score] <skill-dir-or-parent>"
   echo "  Validate SKILL.md files against the Forge Skill Spec."
-  echo "  --score: 16-item quality rubric (32 pts, ship threshold ≥ 24)"
+  echo "  --score: 16-item quality rubric (33 pts, ship threshold ≥ 24)"
   exit 1
 fi
 
@@ -154,6 +154,40 @@ print('OK')
     else
       pass
     fi
+  fi
+
+  # 4b. Frontmatter: version field
+  if ! echo "$content" | grep -q "^version:"; then
+    warn "Missing 'version' in frontmatter (recommended: semver like 1.0.0)"
+    if [ "$STRICT" = true ]; then error "Strict: missing version in frontmatter"; fi
+  else
+    local ver_val
+    ver_val=$(echo "$content" | grep "^version:" | head -1 | sed 's/^version:[[:space:]]*//')
+    if ! echo "$ver_val" | grep -qE "^[0-9]+\.[0-9]+\.[0-9]+$"; then
+      warn "version '$ver_val' is not valid semver (expected: major.minor.patch)"
+    else
+      pass
+    fi
+  fi
+
+  # 4c. Frontmatter: updated field
+  if ! echo "$content" | grep -q "^updated:"; then
+    warn "Missing 'updated' in frontmatter (recommended: ISO-8601 date like 2026-05-26)"
+  else
+    local upd_val
+    upd_val=$(echo "$content" | grep "^updated:" | head -1 | sed 's/^updated:[[:space:]]*//')
+    if ! echo "$upd_val" | grep -qE "^[0-9]{4}-[0-9]{2}-[0-9]{2}$"; then
+      warn "updated '$upd_val' is not valid ISO-8601 date (expected: YYYY-MM-DD)"
+    else
+      pass
+    fi
+  fi
+
+  # 4d. Frontmatter: requires field
+  if ! echo "$content" | grep -q "^requires:"; then
+    warn "Missing 'requires' in frontmatter (recommended: [] or list of skill names)"
+  else
+    pass
   fi
 
   # 5. Directory name is kebab-case
@@ -388,7 +422,7 @@ score_skill() {
   [ "$s11" -eq 0 ] && critical_fail=true
   echo "  11. Boundary clarity: $s11/2 $([ $s11 -eq 0 ] && echo 'CRITICAL')"
 
-  # 12. Template alignment
+  # 12. Template alignment (sections + frontmatter metadata)
   local s12=2  # Default full — only penalize if clearly divergent
   local required_present=0
   for section in "Task" "Dependency Check" "First Principles" "File Structure" "Workflow" "Initialization"; do
@@ -399,8 +433,14 @@ score_skill() {
   elif [ "$required_present" -lt 6 ]; then
     s12=1
   fi
+  # Frontmatter metadata bonus: +1 if version + updated both present
+  local meta_bonus=0
+  if echo "$content" | grep -q "^version:" && echo "$content" | grep -q "^updated:"; then
+    meta_bonus=1
+  fi
+  s12=$((s12 + meta_bonus))
   total_score=$((total_score + s12))
-  echo "  12. Template alignment: $s12/2 ($required_present/6 required sections)"
+  echo "  12. Template alignment: $s12/3 ($required_present/6 sections$([ $meta_bonus -eq 1 ] && echo ', +1 metadata') )"
 
   # 13. File size discipline
   local s13=0
@@ -452,7 +492,7 @@ score_skill() {
     status="FAIL"
   fi
   echo "  ----------------------------------------"
-  echo "  TOTAL: $total_score/32  $status"
+  echo "  TOTAL: $total_score/33  $status"
   if [ "$critical_fail" = true ]; then
     echo "  ⚠ Critical item scored 0 — must fix before shipping"
   fi
@@ -494,7 +534,7 @@ if [ "$SCORE_MODE" = true ]; then
   SCORE_COUNT=0
   SCORE_FAIL=0
 
-  echo "Forge Skill Quality Rubric (16 items, 32 pts)"
+  echo "Forge Skill Quality Rubric (16 items, 33 pts)"
   echo "Ship threshold: ≥ 24 with no critical item at 0"
   echo "Skills to score: ${#SKILL_DIRS[@]}"
 
@@ -505,7 +545,7 @@ if [ "$SCORE_MODE" = true ]; then
   echo ""
   echo "========================================"
   echo "Results: $SCORE_COUNT skills scored"
-  echo "  Average: $((SCORE_TOTAL / SCORE_COUNT))/32"
+  echo "  Average: $((SCORE_TOTAL / SCORE_COUNT))/33"
   echo "  PASS: $((SCORE_COUNT - SCORE_FAIL))"
   echo "  FAIL: $SCORE_FAIL"
   echo "========================================"

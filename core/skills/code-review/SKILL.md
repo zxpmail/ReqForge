@@ -2,6 +2,9 @@
 ---
 name: code-review
 description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec and design mockups. Outputs a structured review report with evidence for each conclusion.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

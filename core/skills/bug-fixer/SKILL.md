@@ -2,6 +2,9 @@
 ---
 name: bug-fixer
 description: Used when the user says "this feature is broken", "getting an error", "something's not right", or reports a bug, compilation error, or runtime exception. Locates root cause through a four-stage systematic debugging process and fixes it.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

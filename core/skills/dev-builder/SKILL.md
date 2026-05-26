@@ -2,6 +2,9 @@
 ---
 name: dev-builder
 description: Used when DEV-PLAN.md is ready and the user says to start coding or continue developing the next Phase. Sets up the skeleton for new projects, implements features by Phase for existing projects.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

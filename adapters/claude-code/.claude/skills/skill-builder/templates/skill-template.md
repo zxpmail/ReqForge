@@ -1,6 +1,8 @@
 ---
 name: skill-template
 description: Skeleton template for new Skills. When creating a new Skill, copy this template and replace [placeholders] with actual content. Required Sections must not be deleted. Recommended Sections should be kept or removed as needed. On-Demand Sections should be added based on actual circumstances.
+version: 1.0.0
+updated: 2026-05-26
 ---
 
 # Skill Skeleton Template
@@ -15,6 +17,9 @@ When creating a new Skill, copy the content below, replace [placeholders], and d
 ---
 name: [skill-name]
 description: [Decidable trigger: "Used when the user does X or says Y. Produces Z." Avoid "helps with" / "supports" / "assists with"]
+version: 1.0.0
+updated: [YYYY-MM-DD]
+requires: []
 ---
 
 [Task]
@@ -130,5 +135,5 @@ description: [Decidable trigger: "Used when the user does X or says Y. Produces 
 | Template files | templates/ subdirectory (if any) |
 | Section title | [Title] format |
 | Content indentation | 4 spaces |
-| Frontmatter | Only name and description |
+| Frontmatter | name, description, version, updated, requires |
 | Language | Chinese |

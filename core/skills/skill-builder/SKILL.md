@@ -2,6 +2,9 @@
 ---
 name: skill-builder
 description: Used when the user wants to create a new Skill, or when an EVOLUTION.md proposal auto-generates a new Skill. Creates a structurally consistent new Skill following the framework's modular conventions.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

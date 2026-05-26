@@ -2,6 +2,9 @@
 ---
 name: feedback-writer
 description: Called by the feedback-observer sub-agent when the user corrects AI behavior, provides improvement feedback, or a Skill execution needs capability assessment recording.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]

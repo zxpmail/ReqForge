@@ -2,6 +2,9 @@
 ---
 name: dev-planner
 description: Used when Product-Spec.md is complete and needs to be planned into development phases. Also used to update existing development plans after Spec changes. Outputs DEV-PLAN.md.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
 [Task]
