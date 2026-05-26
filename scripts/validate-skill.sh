@@ -401,7 +401,7 @@ score_skill() {
   # 10. Cross-reference consistency
   local s10=0
   local xref_count=0
-  echo "$content" | grep -qiE "\[Workflow\].*\[Strategy\]|\[Strategy\].*\[Workflow\]" && xref_count=$((xref_count + 1))
+  echo "$content" | grep -qiE "\[Workflow[^]]*\].*\[[^]]*[Ss]trategy\]|\[[^]]*[Ss]trategy\].*\[Workflow[^]]*\]" && xref_count=$((xref_count + 1))
   echo "$content" | grep -qiE "references/|see \[.*\]|reference \[|execute \[" && xref_count=$((xref_count + 1))
   if [ "$xref_count" -ge 2 ]; then
     s10=2

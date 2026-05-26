@@ -137,7 +137,7 @@ requires: []
     访谈需收集的维度 + 信息充分性判定。
     **0-to-1 / Iteration 提问时读取** references/requirements-dimensions.md。
 
-[Conversation Strategy]
+[Conversation Strategy] — [Workflow (0-to-1 Mode)] and [Workflow (Iteration Mode)] determine the current phase; select conversation strategy accordingly.
     开场、提问、方案与 AI/平台/技术引导、搜索与确认。
     **对话阶段读取** references/conversation-strategy.md（含 [Chain of Thought]：选型/边界/自质疑模板，无需用户手写「先想想看」）。
 

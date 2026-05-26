@@ -153,7 +153,7 @@ requires: []
     **Step 3 必须按此文执行** references/phase-completion-assessment.md。
 
 
-[Workflow (Initialization Mode)]
+[Workflow (Initialization Mode)] — Apply [Tech Stack Selection Strategy] and [Online Search Strategy] during implementation.
     Trigger condition: Has DEV-PLAN.md, no project code
 
     [Startup Phase]

@@ -186,7 +186,7 @@ requires: []
     - Design Flaw: useSession hook holds a stale reference after session deletion — no cleanup logic
     - Principle Violation: "One at a Time" — the delete operation didn't ensure dependent references were cleaned before completing
 
-[Workflow]
+[Workflow] — see [Debugging Strategy] for systematic analysis methodology.
     **按步执行** references/workflow.md
 
 [YOLO Mode]

@@ -118,7 +118,7 @@ requires: []
 
     **按步执行** references/review-strategy.md
 
-[Workflow]
+[Workflow] — see [Review Strategy] for review methodology.
     **按步执行** references/workflow.md
 
 [YOLO Mode]

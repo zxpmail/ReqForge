@@ -198,7 +198,7 @@ requires: []
     - Severe issues: `npm unpublish [package]@[version]` (within 72 hours)
     - After fix, bump version and re-publish
 
-[Workflow]
+[Workflow] — see [Release Strategy] for release methodology and [Rollback Strategy] for recovery.
     [Step 1: Requirements Gathering]
         Ask questions first, then act:
 
