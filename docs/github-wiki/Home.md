@@ -1,6 +1,6 @@
 # ReqForge（Forge）
 
-**当前版本：v1.25.0**（2026-05-25）  
+**当前版本：v1.26.0**（2026-05-26）  
 **主文档**：[README 中文](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md) · [README English](https://github.com/zxpmail/ReqForge/blob/main/README.md) · [CHANGELOG](https://github.com/zxpmail/ReqForge/blob/main/CHANGELOG.md)
 
 ---
@@ -25,7 +25,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 
 ---
 
-## v1.25 要点（摘要）
+## v1.26 要点（摘要）
 
 | 主题 | 说明 |
 |------|------|

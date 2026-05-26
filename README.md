@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.25.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.26.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,12 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.26.0 — 2026-05-26
+- **Verify loop**: Agent discipline rule 8 = fix → re-run checks until green; anti-patterns in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
+- **`.forge/quickref.md`**: one-page gates, 4 principles, Skill commands — written on `pnpm forge-install`.
+- **Idea Validation Gate** + **MVP Scope**: Founder's Playbook — Spec § Idea Stage Exit Criteria; DEV-PLAN scope block; six-step PreToolUse chain.
+- **OpenSpec + Superpowers handoff**: [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md); change-manager Change-Scoped → dev-builder; Delta Spec + G/W/T templates.
 
 ### v1.25.0 — 2026-05-25
 - **Harness hardening**: `forge-bootstrap` session iron laws; PreToolUse chain (Spec → confirmations → Plan → implementer session); **HARD-GATE** on product-spec, dev-planner, dev-builder; implementer + worktree per Task; forge-smoke **12** items.

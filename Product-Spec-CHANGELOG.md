@@ -1,5 +1,14 @@
 # 变更记录
 
+## [v1.26.0] - 2026-05-26
+### 新增
+- 验证循环纪律、`.forge/quickref.md`（forge-install 写入）
+- Idea Validation Gate、DEV-PLAN MVP Scope、Founder's Playbook 对照
+- 术哥无界 OpenSpec+Superpowers 对照；change-manager ↔ dev-builder Change-Scoped
+
+### 变更
+- 框架版本号 **v1.26.0**（package.json、README 徽章、Wiki Home）
+
 ## [v1.25.0] - 2026-05-25
 ### 新增
 - Harness 硬化：forge-bootstrap、PreToolUse 确认链、implementer-session、skill-fixtures / forge-smoke 12 项

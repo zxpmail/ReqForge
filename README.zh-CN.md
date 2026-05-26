@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.25.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.26.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,12 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.26.0 — 2026-05-26
+- **验证循环**：执行纪律第 8 条 = 失败重跑直至通过；反模式见 [session-execution-discipline.md](core/docs/session-execution-discipline.md)。
+- **`.forge/quickref.md`**：一页速查（机器门、四原则、Skill 命令）；`pnpm forge-install` 写入。
+- **构思验证门 + MVP Scope**：Founder's Playbook — Spec § Idea Stage；DEV-PLAN 范围块；PreToolUse 六段链。
+- **OpenSpec + Superpowers 衔接**：[shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md)；change-manager Change-Scoped → dev-builder；Delta Spec + G/W/T 模板。
 
 ### v1.25.0 — 2026-05-25
 - **Harness 硬化**：`forge-bootstrap` 会话铁律；PreToolUse 五段链；**HARD-GATE**；implementer + worktree；forge-smoke **12** 项。

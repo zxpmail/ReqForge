@@ -4,11 +4,14 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.26.0] - 2026-05-26
+
 ### Added
 - **`.forge/quickref.md`**: human one-pager (gates, 4 principles, 8 rules summary, anti-patterns, Skill commands); template `core/templates/forge-quickref.md`; written by `pnpm forge-install` (`installForgeQuickref`).
 - **Idea Validation Gate**: `Product-Spec.md` § Idea Stage Exit Criteria (3 questions) required before app code (`spec-before-code-gate.mjs`); template + product-spec-builder devil's advocate step.
 - **MVP Scope block** in `DEV-PLAN.md` template (in scope / out of scope / scope amendment criteria); dev-planner + dev-builder enforcement.
 - [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Playbook ↔ Forge mapping.
+- [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — OpenSpec + Superpowers article ↔ Forge; change-manager ↔ dev-builder handoff.
 
 ### Changed
 - **Agent execution discipline**: rule 8 is now an explicit **verify loop** (fix → re-run checks until green; last-run output required); anti-patterns + framework test-placement table in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
@@ -16,7 +19,7 @@ All notable changes to Forge are documented here.
 - **forge-bootstrap** / **implementer**: verify-loop summary aligned with discipline doc.
 - **README** / **README.zh-CN** / **docs/github-wiki/Home.md** / **llms.txt**: verify loop + quickref on install.
 - **Audit alignment**: root + `test-demo` Spec/Plan examples; `core/templates/product-spec-template.md`; repo `.forge/quickref.md`; `change-proposal` scope discipline; `machine-gates-doc` + `core/hooks/AGENTS.md` six-step gate docs.
-- **Shuge OpenSpec+Superpowers article**: [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md); change-manager handoff + Delta/GWT specs + dev-builder Change-Scoped Mode.
+- **change-manager** / **dev-builder**: Change-Scoped Mode; Delta Spec + G/W/T in change-specs-template; two-tier Task review (spec compliance → code quality).
 
 ## [v1.25.0] - 2026-05-25
 
