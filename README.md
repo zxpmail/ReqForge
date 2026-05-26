@@ -62,11 +62,12 @@ flowchart LR
 
 ## What's New
 
-### v1.26.0 — 2026-05-26
+### v1.26.0 — 2026-05-27
 - **Verify loop**: Agent discipline rule 8 = fix → re-run checks until green; anti-patterns in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
 - **`.forge/quickref.md`**: one-page gates, 4 principles, Skill commands — written on `pnpm forge-install`.
 - **Idea Validation Gate** + **MVP Scope**: Founder's Playbook — Spec § Idea Stage Exit Criteria; DEV-PLAN scope block; six-step PreToolUse chain.
 - **OpenSpec + Superpowers handoff**: [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md); change-manager Change-Scoped → dev-builder; Delta Spec + G/W/T templates.
+- **`request-dispatcher`**: meta-skill for ambiguous request routing; HTML knowledge boundaries on all 12 skills.
 
 ### v1.25.0 — 2026-05-25
 - **Harness hardening**: `forge-bootstrap` session iron laws; PreToolUse chain (Spec → confirmations → Plan → implementer session); **HARD-GATE** on product-spec, dev-planner, dev-builder; implementer + worktree per Task; forge-smoke **12** items.

@@ -9,7 +9,7 @@
 - **术哥无界 OpenSpec+Superpowers 对照**：`shuge-openspec-superpowers-comparison.md`；change-manager/dev-builder 衔接 + Delta/GWT 模板
 - **Founder's Playbook 批**：Idea Gate + MVP Scope — 已 push `cc15f5c`
 - **README / Wiki / llms / CHANGELOG** 已写入「Agent 执行纪律（8 条）」专节与导航
-- **版本 v1.26.0**（2026-05-26）：验证循环 + quickref + Idea Gate + MVP Scope + OpenSpec/Superpowers 衔接
+- **版本 v1.26.0**（2026-05-27）：验证循环 + quickref + Idea Gate + MVP Scope + OpenSpec/Superpowers 衔接 + request-dispatcher
 - GitHub Wiki 源稿 `docs/github-wiki/Home.md` 需维护者手动粘贴到 wiki
 
 ## 架构与 Harness（产品本身）

@@ -4,7 +4,7 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
-## [v1.26.0] - 2026-05-26
+## [v1.26.0] - 2026-05-27
 
 ### Added
 - **`.forge/quickref.md`**: human one-pager (gates, 4 principles, 8 rules summary, anti-patterns, Skill commands); template `core/templates/forge-quickref.md`; written by `pnpm forge-install` (`installForgeQuickref`).
@@ -12,6 +12,8 @@ All notable changes to Forge are documented here.
 - **MVP Scope block** in `DEV-PLAN.md` template (in scope / out of scope / scope amendment criteria); dev-planner + dev-builder enforcement.
 - [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Playbook ↔ Forge mapping.
 - [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — OpenSpec + Superpowers article ↔ Forge; change-manager ↔ dev-builder handoff.
+- **`request-dispatcher`** meta-skill — routes ambiguous user requests to the correct Forge Skill.
+- **HTML knowledge boundaries** (`<!-- begin/end -->`) on all 12 skills for progressive disclosure / validator cross-refs.
 
 ### Changed
 - **Agent execution discipline**: rule 8 is now an explicit **verify loop** (fix → re-run checks until green; last-run output required); anti-patterns + framework test-placement table in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
@@ -20,6 +22,10 @@ All notable changes to Forge are documented here.
 - **README** / **README.zh-CN** / **docs/github-wiki/Home.md** / **llms.txt**: verify loop + quickref on install.
 - **Audit alignment**: root + `test-demo` Spec/Plan examples; `core/templates/product-spec-template.md`; repo `.forge/quickref.md`; `change-proposal` scope discipline; `machine-gates-doc` + `core/hooks/AGENTS.md` six-step gate docs.
 - **change-manager** / **dev-builder**: Change-Scoped Mode; Delta Spec + G/W/T in change-specs-template; two-tier Task review (spec compliance → code quality).
+- **Skills**: version metadata standardization; Anti-Rationalization tables unified; progressive disclosure for product-spec-builder, bug-fixer, code-review.
+
+### Fixed
+- **validate-skill**: broaden Strategy pattern in cross-reference check; validator score fixes (change-manager, evolution-engine, feedback-writer, design-maker).
 
 ## [v1.25.0] - 2026-05-25
 

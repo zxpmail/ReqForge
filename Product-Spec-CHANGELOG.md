@@ -1,13 +1,14 @@
 # 变更记录
 
-## [v1.26.0] - 2026-05-26
+## [v1.26.0] - 2026-05-27
 ### 新增
 - 验证循环纪律、`.forge/quickref.md`（forge-install 写入）
 - Idea Validation Gate、DEV-PLAN MVP Scope、Founder's Playbook 对照
 - 术哥无界 OpenSpec+Superpowers 对照；change-manager ↔ dev-builder Change-Scoped
+- **request-dispatcher** 元 Skill；12 Skill HTML 知识边界标记
 
 ### 变更
-- 框架版本号 **v1.26.0**（package.json、README 徽章、Wiki Home）
+- 框架版本号 **v1.26.0**（package.json、README 徽章、Wiki Home）；发布日 **2026-05-27**
 
 ## [v1.25.0] - 2026-05-25
 ### 新增

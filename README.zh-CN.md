@@ -61,11 +61,12 @@ flowchart LR
 
 ## 近期更新
 
-### v1.26.0 — 2026-05-26
+### v1.26.0 — 2026-05-27
 - **验证循环**：执行纪律第 8 条 = 失败重跑直至通过；反模式见 [session-execution-discipline.md](core/docs/session-execution-discipline.md)。
 - **`.forge/quickref.md`**：一页速查（机器门、四原则、Skill 命令）；`pnpm forge-install` 写入。
 - **构思验证门 + MVP Scope**：Founder's Playbook — Spec § Idea Stage；DEV-PLAN 范围块；PreToolUse 六段链。
 - **OpenSpec + Superpowers 衔接**：[shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md)；change-manager Change-Scoped → dev-builder；Delta Spec + G/W/T 模板。
+- **`request-dispatcher`**：模糊请求路由元 Skill；12 个 Skill 增加 HTML 知识边界标记。
 
 ### v1.25.0 — 2026-05-25
 - **Harness 硬化**：`forge-bootstrap` 会话铁律；PreToolUse 五段链；**HARD-GATE**；implementer + worktree；forge-smoke **12** 项。
