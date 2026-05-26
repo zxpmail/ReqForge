@@ -76,7 +76,11 @@ requires: []
 [File Structure]
     ```
     code-review/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md                           # Main Skill definition (this file)
+    └── references/
+        ├── review-dimension-checklist.md  # Design/bug/security/types review dimensions
+        ├── review-strategy.md             # Item-by-item, design value, Playwright, security scan methods
+        └── workflow.md                    # Load baseline, dispatch, scan, aggregate, output report
     ```
 
 [Output Artifacts]
@@ -85,63 +89,7 @@ requires: []
 [Review Dimension Checklist]
     For moderate/complex changes, review runs via 4 parallel specialized agents (see [Workflow] Step 2). Each agent owns a dimension set below. For simple changes (`change_complexity="simple"`), the aggregator runs a quick quality pass only.
 
-    --- code-reviewer-design (Spec & UI) ---
-
-    [Functional Completeness]
-        Check every functional requirement in Product-Spec.md one by one:
-        - Does each feature in the Spec have a corresponding code implementation?
-        - Is the implementation complete (not half-baked)?
-        - Does the behavior match the Spec description (not just "it runs")?
-        - If DEV-PLAN.md exists -> cross-reference the current Phase's delivery checklist
-
-        For each feature, output:
-        - Fully implemented — Spec item + code location + verification method
-        - Partially implemented — what exactly is missing
-        - Not implemented — Spec original text citation
-
-    [UI Consistency] (if design mockups exist)
-        Check UI implementation against design mockups:
-        - If design tool MCP exists -> extract design values, compare against Tailwind class / style values in code item by item
-        - Visually inspect design mockup aesthetics as reference
-        - Compare: layout, components, colors, spacing, interaction states
-        - If Design-Brief.md exists -> cross-reference color direction, information density, interaction style
-
-    [Spec Drift Detection] (mandatory)
-        Check if the code contains features not described in the Spec:
-        - Extra pages/routes, API endpoints, database tables or fields, out-of-scope UI components
-        - Mark as "Spec Drift" — could be a good extension or scope creep
-
-    [Surgical Changes Audit] (mandatory for diff review)
-        Check every changed line against the original request scope:
-        - Does each changed line trace directly to the user's request or a Spec item?
-        - Are there formatting/comment/style changes unrelated to the request? (violation)
-        - Are there "drive-by refactors" that clean up adjacent code? (violation)
-        - Was pre-existing dead code removed? (violation — mention only, don't delete)
-        - Only YOUR changes' orphans (unused imports/vars) are legitimately removed
-
-        Track every violating line with file:line — flag as "Surgical Violation" in review report.
-
-    [Simplicity First Audit] (mandatory for diff review)
-        Check if the implementation is over-engineered for the actual requirement:
-        - Speculative abstractions (Strategy/Factory/interface for single-use code)
-        - Error handling for impossible scenarios (defensive checks for conditions that can't happen)
-        - "Flexibility" / "configurability" that wasn't requested
-        - Code that's 200+ lines when 50 would do
-
-        Flag each instance with file:line + why it's over-engineering.
-
-    --- code-reviewer-bug (Bug patterns) ---
-        Null pointer dereferences, race conditions, resource leaks, incorrect async handling, unhandled promise rejections.
-
-    --- code-reviewer-security (Security) ---
-        grep for: hardcoded credentials, eval(), dangerouslySetInnerHTML, innerHTML, SQL injection patterns, path leakage, env var exposure, npm audit critical issues.
-
-    --- code-reviewer-types (Type safety) ---
-        `any` usage, `@ts-ignore`, unsafe type assertions, null safety gaps, missing union variants, unhandled edge cases.
-
-    --- Aggregator (code-reviewer) ---
-        Merge all agent findings. Each finding MUST include severity, impact, confidence (1–5) and **risk_rank = S×I×C**.
-        Sort confirmed findings by risk_rank descending. Apply confidence thresholding (≥0.6 or confidence_5 ≥ 4), deduplication, cross-agent risk_rank boost, meta-review on suspected, Must-fix/Should-fix/Insight buckets. Run `tsc --noEmit`.
+    **按步执行** references/review-dimension-checklist.md
 
 [Gotchas]
     **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.
@@ -168,142 +116,10 @@ requires: []
 [Review Strategy]
     Methodology during the review process.
 
-    **Item-by-Item Comparison Method**
-    For each item in the Spec's feature list, find the corresponding implementation in code:
-    1. Read the Spec item
-    2. Search code for the relevant file/function/component
-    3. Verify whether the behavior matches
-    4. Record evidence (file_path:line_number)
-
-    **Design Value Comparison Method** (if design tools available)
-    1. Extract precise values of each design page through the design tool API
-    2. Read the corresponding component's Tailwind class / style values in code
-    3. Compare item by item: layout, color, spacing, font size, border radius
-    4. Flag deviations
-
-    **Playwright Interaction Verification Method** (if Playwright available)
-    Do not just check static pages; test the complete interaction flow:
-    1. Core user paths (create, edit, delete, view)
-    2. Error scenarios (invalid input, network error)
-    3. State transitions (loading -> loaded -> empty)
-    4. Navigation (page transitions, back navigation)
-
-    **Security Scan Method**
-    Use the Grep tool to search for security risk patterns in code:
-    - `eval(` -> dangerous function
-    - `dangerouslySetInnerHTML` -> XSS risk
-    - `innerHTML` -> XSS risk
-    - `VITE_.*KEY|VITE_.*SECRET|VITE_.*TOKEN` -> environment variable leakage
-    - `/Users/` or `C:\Users\` -> developer path leakage
-    - `password.*=.*['"]` -> hardcoded password
-    - `sk-ant-|sk-proj-|ANTHROPIC_API_KEY|OPENAI_API_KEY` -> hardcoded API Key
-    Search the src/ directory for each pattern using the Grep tool with output_mode set to content to view matching lines.
+    **按步执行** references/review-strategy.md
 
 [Workflow]
-    [Step 1: Load Comparison Baseline]
-        Read Product-Spec.md -> extract all functional requirements within the review scope, list them with numbers
-        Read DEV-PLAN.md -> read the delivery checklist and key files for the current Phase or Task
-        If Design-Brief.md exists -> read the visual direction and page notes within the review scope
-        If design tool MCP exists -> find the design pages corresponding to the review scope through the design tool, read the precise values of those pages and their components as the baseline for UI consistency comparison
-        Determine the review scope:
-        - Full review (/code-review) -> all Spec features
-        - Phase review (triggered by dev-builder Phase completion verification) -> current Phase's delivery checklist
-        - Task review (triggered by dev-builder per-Task review) -> current Task's delivery checklist
-
-    [Step 2: Parallel Agent Dispatch] (for moderate/complex changes)
-        **Default**: If `change_complexity` is omitted, treat as **simple** (quick aggregator pass only).
-        Escalate to moderate/complex only when caller sets it, or change touches multiple modules / new APIs / security-sensitive code.
-        For simple changes (typo fix, single-file rename, comment-only, default), skip to [Step 3].
-        **Anonymous review packet** (moderate/complex): Remove implementer task description, session handoff, and "I just implemented…" narrative from inputs to specialized agents. Pass: Spec excerpts, DEV-PLAN checklist, affected files list, git diff or file contents, Design-Brief/MCP values. Do **not** pass author identity or prior assistant messages about the change.
-        For moderate/complex changes, dispatch 4 specialized agents concurrently:
-        - **code-reviewer-design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
-        - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
-        - **code-reviewer-security**: OWASP Top 10, credential leaks, injection, XSS
-        - **code-reviewer-types**: Type safety, nullability, any/ts-ignore, edge cases
-        Each agent returns structured findings with **severity, impact, confidence (1–5), risk_rank**, and evidence.
-
-    [Step 3: Scan Code Implementation]
-        Traverse the project code directory
-        Identify: pages/routes, components, API endpoints, database tables, hooks, utility functions
-        Build a code map (what features are in which files)
-
-    [Step 4: Aggregation & Confidence Scoring]
-        Collect findings from all specialized agents. Apply aggregation rules:
-
-        **Risk ranking (primary sort key)**:
-        - Recompute **risk_rank** = severity × impact × confidence (1–5) if any field missing
-        - Sort confirmed findings by **risk_rank** descending
-
-        **Confidence thresholding** (legacy 0.0–1.0 or 1–5):
-        - confidence >= 0.6 OR confidence_5 >= 4 -> confirmed
-        - confidence 0.3-0.6 OR confidence_5 == 3 -> suspected -> meta-review
-        - confidence < 0.3 OR confidence_5 <= 2 -> suppress (security may override)
-
-        **Deduplication**: same file + same line range + same category -> keep highest risk_rank
-
-        **Cross-agent boost**: same file+line from >=2 agents at confirmed level -> risk_rank × 1.1 (cap 125)
-
-        **Meta-review (suspected only)**: For each suspected finding, aggregator asks: (1) is there file:line evidence?, (2) does Spec require this?, (3) would a specialist agree? Promote to confirmed (>=0.6), keep suspected, or suppress (<0.3).
-
-        **Compilation verification**: tsc --noEmit
-
-        **Actionability buckets** (confirmed + promoted findings):
-        - **Must-fix**: blocks Phase Primary metric, security, or Spec must-have
-        - **Should-fix**: quality/maintainability before Phase sign-off
-        - **Insight**: architecture/note; no immediate fix required
-
-    [Step 5: Output Aggregated Review Report]
-        Format:
-        "**Code Review Report**
-
-         **Reference Documents**: Product-Spec.md [+ DEV-PLAN.md Phase N]
-
-         **Agent Coverage**: design [✅/❌] | bug [✅/❌] | security [✅/❌] | types [✅/❌]
-
-         ---
-
-         **Confirmed Issues (X)** — sorted by **risk_rank** (high → low)
-         - [risk_rank] [category] [file:line] — description — S/I/C — [agent] — [Must-fix|Should-fix|Insight]
-
-         **Suspected Issues (X)** (confidence 30-60%, flagged for manual review)
-         - [category] [file:line] — description — uncertainty reason — [confidence%]
-
-         **Fully Implemented (X items)**
-         - [feature name]: [code location] — [verification method] — [100%]
-
-         **Partially Implemented (X items)**
-         - [feature name]: [what is missing] — Spec original text: '...' — [confidence%]
-
-         **Not Implemented (X items)**
-         - [feature name]: Spec original text: '...' — [100%]
-
-         **Spec Drift (X items)**
-         - [description]: code location — no corresponding requirement in Spec — [confidence%]
-
-         **Code Quality**
-         - Large files: [list files >300 lines]
-         - Type issues: [usage of any/ts-ignore]
-         - Compilation result: tsc --noEmit [output]
-
-         ---
-
-         **综合结论 (Chairman synthesis)**
-         - Verdict: **可合并 / 先修再审 / 阻塞**
-         - Primary metric (if DEV-PLAN Phase): [green / red + command evidence]
-         - One paragraph: biggest risk + recommended next action
-
-         **Must-fix (X)** | **Should-fix (X)** | **Insight (X)**
-         - List confirmed/promoted items under buckets (file:line — one line each)
-
-         **Priority Classification**
-         High: [core functionality missing, security issues — >= 60% confidence]
-         Medium: [auxiliary features, UI details, code quality — >= 60% confidence]
-         Low: [enhancement suggestions, suspected issues < 60% confidence]"
-
-    Note: This Skill's scope ends at outputting the report. Fixes are routed by the main Agent after receiving the report:
-    - Confirmed missing features / non-compliant with Spec -> main Agent invokes dev-builder to fill the gap
-    - Bug / security / type issues -> main Agent invokes bug-fixer to fix
-    - After fixes are complete, the main Agent re-dispatches code-review starting from Step 1
+    **按步执行** references/workflow.md
 
 [YOLO Mode]
     When FORGE_MODE=yolo, the review report is written to file instead of blocking:
