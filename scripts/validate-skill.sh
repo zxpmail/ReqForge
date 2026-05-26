@@ -210,6 +210,13 @@ print('OK')
     pass
   fi
 
+  # 9b. Progressive disclosure check (warn if > 300 lines without references/)
+  if [ "$line_count" -gt 300 ]; then
+    if ! echo "$content" | grep -q "references/"; then
+      warn "SKILL.md is $line_count lines with no references/ directory — extract detailed workflows into references/ for progressive disclosure"
+    fi
+  fi
+
   # 10. No TODO/FIXME placeholders (skip lines inside [Quality Rubric] table)
   local todo_count
   todo_count=$(echo "$content" | grep -vi "quality rubric\|scoring\|ship threshold\|zero TBD\|markers found" | grep -ci "TODO\|FIXME\|HACK\|XXX" || true)
@@ -278,7 +285,7 @@ score_skill() {
   local s4=0
   local workflow_steps
   # Count steps/phases/modes inside any [Workflow...] section
-  workflow_steps=$(echo "$content" | sed -n '/\[Workflow/,/^\[/' | grep -ciE "Step [0-9]|Stage [0-9]|\[.*Phase\]|\[.*Mode\]|Step [0-9]:|Stage [0-9]:" || true)
+  workflow_steps=$(echo "$content" | sed -n '/\[Workflow/,/^\[/p' | grep -ciE "Step [0-9]|Stage [0-9]|\[.*Phase\]|\[.*Mode\]|Step [0-9]:|Stage [0-9]:" || true)
   # Fallback: count Step N patterns in entire file if no [Workflow] section found
   if [ "$workflow_steps" -eq 0 ]; then
     workflow_steps=$(echo "$content" | grep -ciE "Step [0-9]:|Stage [0-9]:" || true)
@@ -361,7 +368,7 @@ score_skill() {
   local s10=0
   local xref_count=0
   echo "$content" | grep -qiE "\[Workflow\].*\[Strategy\]|\[Strategy\].*\[Workflow\]" && xref_count=$((xref_count + 1))
-  echo "$content" | sed -n '/\[Workflow\]/,/\[.*\]/p' | grep -qiE "execute \[|reference \[|see \[" && xref_count=$((xref_count + 1))
+  echo "$content" | grep -qiE "references/|see \[.*\]|reference \[|execute \[" && xref_count=$((xref_count + 1))
   if [ "$xref_count" -ge 2 ]; then
     s10=2
   elif [ "$xref_count" -ge 1 ]; then
