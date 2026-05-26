@@ -28,12 +28,28 @@ requires: []
     - ../../feedback/FEEDBACK-INDEX.md → If missing, no feedback data exists; return "no evolution suggestions"
     - At least one feedback file with occurrences >= 1 → If no feedback files exist, there is nothing to evolve
 
+    Optional:
+    - memory/ files → cross-reference task-history.md to validate whether pattern is real or coincidence
+
 [First Principles]
     **Data-Driven Evolution**: No change without data. A single feedback entry is an anecdote, not a signal. Wait for the 3-occurrence threshold before proposing rule graduation. Let the data speak, not your intuition.
     **Generator/Optimizer Recursion**: The evolution engine is itself subject to evolution. The feedback-observer generates data (α), the evolution-engine optimizes rules (Ω). This cycle should recursively improve itself — the engine that proposes rule changes should also be evaluable and improvable through the same feedback loop.
     **Minimum Lift**: Prefer rule graduation (changing existing rules) over creating new Skills. A 3-line rule addition to an existing SKILL.md is faster to deploy and easier to maintain than a new Skill directory. Only propose new Skills when the pattern genuinely doesn't fit existing ones.
     **Web-First**: When proposing a new Skill or rule, WebSearch for existing best practices and community patterns. Don't invent from scratch what already has a well-known solution.
     **Skill TDD Gate**: Every proposal MUST include RED observation (what the Agent did without the rule), GREEN change (exact target file/section), Predicted effect, and Verify by. Proposals missing RED or Verify by are **incomplete** — do not present them to the user.
+
+[Proposal Quality Checklist]
+    Before presenting an evolution proposal to the user, verify each criterion:
+
+    | Dimension | Must-Have | Recommended |
+    |-----------|-----------|-------------|
+    | **Data Support** | ≥3 feedback entries supporting the pattern | Cross-referenced against task-history.md to rule out false correlation |
+    | **Root Cause** | failure_class identified (skill-defect / execution-lapse / unset) | Skill score trend (Precision/Coverage) attached |
+    | **Proposed Change** | Specific SKILL.md section or rule text to add/change | Before/after diff example in proposal |
+    | **Verify-By** | Observable, time-bounded criterion to confirm fix | Suggested timeout for re-evaluation |
+    | **Priority** | RED (blocking) / GREEN (improvement) | Effort estimate (small/medium/large) |
+
+    Reference: see [First Principles] Skill TDD Gate for minimum proposal completeness.
 
 [Gotchas]
     **Premature graduation**: One feedback entry does not make a pattern. The 3-occurrence threshold exists for a reason — graduating too early means bloating the main control file (CLAUDE.md / AGENTS.md / reqforge.mdc) with one-off issues. Wait for the data.
@@ -67,6 +83,7 @@ requires: []
         Determine graduation target:
         - source_skill is clear -> graduate to the corresponding SKILL.md
         - Involves multiple Skills or is global -> graduate to the main control file [General Rules]
+        Cross-reference [Proposal Quality Checklist] Data Support dimension before proceeding.
 
     Step 2: Check Skill Optimization Signals
         Scan scores fields in feedback/, grouped by source_skill

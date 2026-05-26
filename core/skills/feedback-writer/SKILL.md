@@ -47,7 +47,7 @@ requires: []
 
     **Skill TDD input for evolution**: In the body, include a short **RED** line: "Without rule Y, Agent did Z" — feeds evolution-engine RED observation field.
 
-[Observation Dimensions]
+[Observation Dimension Checklist]
     The following 5 types of signals trigger feedback recording:
 
         1. **User Correction**
@@ -122,7 +122,21 @@ requires: []
     Not project-related -> Do not write, let the AI client handle via default behavior
     No duplicate writing — each piece of information goes into exactly one system
 
-[Workflow] 1. Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md) 2. Check if a feedback topic already exists (dedup) - Exists -> Update content + occurrences +1 + update updated - Does not exist -> Create new file + update index 3. Filename in kebab-case, brief topic description 4. Write using templates/feedback-topic-template.md format 5. Update FEEDBACK-INDEX.md
+[Workflow]
+    Step 1: Check index
+        Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md)
+    Step 2: Dedup
+        Check if a feedback topic already exists:
+        - Exists -> Update content + occurrences +1 + update updated
+        - Does not exist -> Create new file + update index
+    Step 3: Normalize name
+        Filename in kebab-case, brief topic description
+    Step 4: Write file
+        Write using templates/feedback-topic-template.md format (see [File Specification] for template locations)
+    Step 5: Update index
+        Update FEEDBACK-INDEX.md
+
+    For scoring standards during Step 4, reference [Observation Dimension Checklist] section for Precision/Coverage/Efficiency/Satisfaction criteria.
 
 [File Specification]
     Storage location: ../../feedback/

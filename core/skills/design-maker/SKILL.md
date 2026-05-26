@@ -23,6 +23,9 @@ requires: []
     - Design-Brief.md → If missing, prompt the user to call /design-brief-builder first
     - Design tool MCP → See the design tool detection process below
 
+    Optional:
+    - references/design-self-critique.md → used in verification if available
+
     Design tool detection process:
     1. Ask the user whether they want to use Pencil or Figma
     2. Check if the corresponding MCP is connected
@@ -44,6 +47,17 @@ requires: []
     - V Every interactive page covers empty, loading, error, and active states
     - V Design tokens are documented (not "looks about right")
     - X No improvised features — everything comes from Product-Spec.md and Design-Brief.md
+
+[Design Coverage Checklist]
+    Before delivering, verify each dimension:
+
+    | Dimension | Must-Have | Recommended |
+    |-----------|-----------|-------------|
+    | **Page Coverage** | Every Spec UI feature has a design page | State variants (empty/loading/error) for interactive pages |
+    | **Component System** | Reusable components extracted before page composition | Design tokens for colors, typography, spacing, radius |
+    | **Spec Fidelity** | Layout and content match Product-Spec.md item by item | Visual direction matches Design-Brief.md mood and notes |
+    | **Self-Critique** | references/design-self-critique.md executed (all >=3) | Anti-ai-slip checklist from design-brief-builder reviewed |
+    | **Consistency** | Same component looks same across pages | Design tokens referenced correctly, no ad-hoc values |
 
 [File Structure]
     ```
