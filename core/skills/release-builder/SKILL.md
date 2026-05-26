@@ -7,16 +7,21 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Execute the full build-package-test-publish lifecycle according to project type.
     Ensure the release artifact: can be installed, can run, has no privacy leaks, has no security vulnerabilities.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Writing code or features -> use /dev-builder instead
     - Fixing bugs found during testing -> use /bug-fixer instead
     - Reviewing code quality -> use /code-review instead
     - Projects with no code yet -> use /dev-builder first
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Executed on demand after requirements gathering, based on the user's chosen release channel.
 
@@ -38,12 +43,16 @@ requires: []
     Optional:
     - Product-Spec.md -> if available, cross-reference features for smoke testing
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **Dev Mode Passing != Package Works**: The development environment and the packaged runtime environment are completely different. Different paths, different dependency bundling methods, different permissions. Must test from the installed package, not just from dev mode.
     **Privacy is the Bottom Line**: Release artifacts must never contain personal data — database files, sessions, API Keys, developer paths, usernames. No exceptions, no exemptions.
     **Test After Installation**: Desktop: install from package to system directory then test. CLI: install globally then test. Web: deploy then test online. Do not test from the build output directory.
     **Web-First**: Package errors should be WebSearched first, especially electron-builder and Vercel CLI version compatibility and signing/notarization issues.
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**:
     - Like a release engineer: execute each item on the checklist one by one, attach results to each step
@@ -61,18 +70,24 @@ requires: []
     - "Privacy audit: grep '/Users/' found 2 developer paths in the build output. Stopping, fix first."
     - "DMG installed to /Applications, launched from system directory. Core functionality verified."
 
+<!-- end: output-style -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     release-builder/
     └── SKILL.md                           # Main Skill definition (this file)
     ```
 
+<!-- end: file-structure -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Privacy leaks in build artifacts**: API keys, local paths, env files, debug logs — all can end up in the bundle. Always grep for `/Users/`, `C:\Users\`, `API_KEY`, `sk-ant-` before packaging. A leak in the build is a leak in production.
     **Skipping smoke test**: "It compiles, so it ships" — no. Compilation means the types are right, not that the app works. Run the binary, hit the homepage, verify the core flow. 30 seconds of smoke testing saves a rollback.
     **Version tag mismatch**: package.json version, git tag, and release artifact name must match. Inconsistency here creates confusion that takes hours to untangle.
     **Build cache pollution**: CI or local caches can mask build failures. Always do `rm -rf dist &&` before the final build command. A cached success is not proof of a clean build.
 
+<!-- end: gotchas -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Build artifacts** — .next/, dist/, release/ and other build output directories
     - **Deployment URL** (Web) — production environment access address
@@ -91,14 +106,20 @@ requires: []
 
     Verify: tests/lint/typecheck evidence attached; no open `.forge/phase-exit-block`; code-review completed for this release scope.
 
+<!-- end: output-artifacts -->
+<!-- begin: release-checklist -->
 [Release Checklist]
     Items common to all project types.
 
+<!-- end: release-checklist -->
+    <!-- begin: version-management -->
     [Version Management]
         - Confirm package.json version field is updated (semver)
         - Confirm CHANGELOG is updated (if it exists)
         - Working directory is clean (git status has no uncommitted changes)
 
+    <!-- end: version-management -->
+    <!-- begin: build-verification -->
     [Build Verification]
         - Build command completes with zero errors
         - Artifact files exist and are of reasonable size. The Agent should judge the expected range based on project type and dependency scale. If suspiciously large, investigate whether unintended items were bundled.
@@ -123,14 +144,20 @@ requires: []
         - macOS/Linux -> `grep -rn "/Users/" [BUILD_DIR]/`
         - Windows -> `grep -rn "C:\\Users\\" [BUILD_DIR]/`
 
+    <!-- end: build-verification -->
+    <!-- begin: dependency-integrity -->
     [Dependency Integrity]
         - npm audit has no critical vulnerabilities
         - Build process has no MODULE_NOT_FOUND errors
 
+    <!-- end: dependency-integrity -->
+    <!-- begin: git-check -->
     [Git Check]
         - git author does not expose personal information
         - .gitignore covers all data files (.env*, *.db, .forge-data/)
 
+    <!-- end: git-check -->
+<!-- begin: release-strategy -->
 [Release Strategy]
     Select the release flow based on project type.
 
@@ -180,6 +207,8 @@ requires: []
     4. Installation test: `npm install -g [package-name]` -> verify the command runs
     5. Functional smoke test: execute each core command one by one, verify correct output
 
+<!-- end: release-strategy -->
+<!-- begin: rollback-strategy -->
 [Rollback Strategy]
     Rollback methods when issues are discovered after release:
 
@@ -199,6 +228,8 @@ requires: []
     - After fix, bump version and re-publish
 
 [Workflow] — see [Release Strategy] for release methodology and [Rollback Strategy] for recovery.
+<!-- end: rollback-strategy -->
+    <!-- begin: step-1:-requirements-gathering -->
     [Step 1: Requirements Gathering]
         Ask questions first, then act:
 
@@ -225,32 +256,44 @@ requires: []
 
         After gathering information, execute [Dependency Check] (only check the tools actually needed).
 
+    <!-- end: step-1:-requirements-gathering -->
+    <!-- begin: step-2:-version-confirmation -->
     [Step 2: Version Confirmation]
         Read package.json version
         Ask the user if they need to update the version number
         If yes -> modify package.json -> commit
 
+    <!-- end: step-2:-version-confirmation -->
+    <!-- begin: step-3:-build -->
     [Step 3: Build]
         Execute the build command (select the correct command based on project type)
         Verify that build artifacts exist and have no errors
         If there is a packaging step (Desktop) -> execute packaging
         Record the build artifact directory path
 
+    <!-- end: step-3:-build -->
+    <!-- begin: step-4:-privacy-audit -->
     [Step 4: Privacy Audit]
         Execute the [Privacy Audit] checklist using the actual artifact directory recorded in Step 3
         Any item fails -> stop, report the issue, wait for fix
         All pass -> continue
 
+    <!-- end: step-4:-privacy-audit -->
+    <!-- begin: step-5:-installation-test -->
     [Step 5: Installation Test]
         Web -> visit URL after deployment
         Desktop -> prompt the user to install from the package to the system directory and launch (AI cannot operate DMG installation)
         CLI -> install globally then run
 
+    <!-- end: step-5:-installation-test -->
+    <!-- begin: step-6:-smoke-test -->
     [Step 6: Smoke Test]
         Test core features according to project type and Product-Spec.md (if available)
         If Playwright is available -> automate critical flow testing
         Each test includes results
 
+    <!-- end: step-6:-smoke-test -->
+    <!-- begin: step-7:-release-confirmation -->
     [Step 7: Release Confirmation]
         Report all test results to the user:
         "**Release Ready Check**
@@ -271,12 +314,16 @@ requires: []
         - CLI -> npm publish
         - Desktop -> upload installer to GitHub Release or other distribution channel
 
+    <!-- end: step-7:-release-confirmation -->
+    <!-- begin: step-8:-post-release-verification -->
     [Step 8: Post-Release Verification]
         - Web -> visit production URL again, confirm it is usable
         - CLI -> `npm install -g [name]@[version]` to install the latest version and verify
         - Desktop -> confirm user installation test passed
         - If issues -> execute [Rollback Strategy]
 
+    <!-- end: step-8:-post-release-verification -->
+<!-- begin: yolo-mode -->
 [YOLO Mode]
     When FORGE_MODE=yolo, all user confirmation gates use defaults and write reports:
 
@@ -294,5 +341,9 @@ requires: []
         Build results, privacy audit results, smoke test results.
         Confirm release automatically. Write tag info to report file.
 
+<!-- end: yolo-mode -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Step 1: Requirements Gathering]
+
+<!-- end: initialization -->

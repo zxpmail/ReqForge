@@ -7,14 +7,19 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Read Product-Spec.md and Design-Brief.md, then generate complete design deliverables through a design tool MCP. Ensure that every feature with UI in the Product Spec has a corresponding design page, and every page covers all critical state variants.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Defining visual direction or style preferences -> use /design-brief-builder instead
     - Writing code from designs -> use /dev-builder instead
     - Projects without a design tool MCP available -> skip this skill and go straight to /dev-builder
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 
@@ -34,12 +39,16 @@ requires: []
     5. User does not have the corresponding design software installed → Prompt the user to install it and retry
     6. User chooses to skip → Exit design-maker; subsequent workflow continues in no-mockup mode
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **Full Coverage Principle**: Every feature with UI in the Product Spec must have a design page. Miss one page and development loses one reference — the consequence is development by guessing.
     **State Completeness Principle**: Every page must have more than just a default state. Empty state, loading state, error state, active state — pages with interactivity must cover critical state variants.
     **Components First Principle**: Build reusable components first, then compose pages from them. Avoid drawing the same button 10 times across 10 pages, requiring 10 changes for a single update.
     **Document-Driven Principle**: All design decisions come from Product-Spec.md and Design-Brief.md. Do not improvise based on personal preference, and do not add features not described in the documents.
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**: Designer presenting mockups to an engineering team — structured, precise, complete. Every page and variant is explicitly listed.
     **Principles**:
@@ -48,6 +57,8 @@ requires: []
     - V Design tokens are documented (not "looks about right")
     - X No improvised features — everything comes from Product-Spec.md and Design-Brief.md
 
+<!-- end: output-style -->
+<!-- begin: design-coverage-checklist -->
 [Design Coverage Checklist]
     Before delivering, verify each dimension:
 
@@ -59,6 +70,8 @@ requires: []
     | **Self-Critique** | references/design-self-critique.md executed (all >=3) | Anti-ai-slip checklist from design-brief-builder reviewed |
     | **Consistency** | Same component looks same across pages | Design tokens referenced correctly, no ad-hoc values |
 
+<!-- end: design-coverage-checklist -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     design-maker/
@@ -67,12 +80,16 @@ requires: []
         └── design-self-critique.md        # 五维自检 + anti-slop（交付前）
     ```
 
+<!-- end: file-structure -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Missing state variants**: Default state only is not a design. Every interactive component needs: empty, loading, error, active/selected, and disabled states. If you only design the happy path, development will guess the rest.
     **Skipping component isolation**: Drawing the same button on 10 pages = 10 updates when the button changes. Build a component library first, compose pages from it. The extra 5 minutes saves hours.
     **Design tool sync loss**: The design tool has the source of truth, but the SKILL.md describes what was true at invocation time. If the design tool is available, re-read values before each Task — don't trust memory.
     **Inconsistent spacing/color system**: Using ad-hoc values instead of a design token system. Every color, spacing, and font size should come from a defined palette, not "this looks about right."
 
+<!-- end: gotchas -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Design Deliverables** (created via design tool MCP):
       - Design tokens (color, typography, spacing, border radius system)
@@ -81,6 +98,8 @@ requires: []
       - State variants (default, empty, loading, error, etc.)
     - **Design Completion Report** (printed to screen)
 
+<!-- end: output-artifacts -->
+<!-- begin: skills -->
 [Skills]
     - **Document Analysis**: Extract all pages, features, and interactive elements from the Product Spec; extract visual direction from the Design Brief
     - **Design Planning**: Transform extracted information into a design delivery checklist, listing all pages and variants that need to be designed
@@ -88,6 +107,8 @@ requires: []
     - **Page Design**: Generate complete designs page by page using the design tool MCP
     - **Completeness Verification**: Cross-reference against the Product Spec to verify all pages and states are covered
 
+<!-- end: skills -->
+<!-- begin: design-deliverables -->
 [Design Deliverables]
     A complete set of mockups must include the following:
 
@@ -121,7 +142,11 @@ requires: []
     - Error state: Required for operations that can fail
     - Interaction variants: When the same area can display different content types, one variant per content type
 
+<!-- end: design-deliverables -->
+<!-- begin: workflow -->
 [Workflow]
+<!-- end: workflow -->
+    <!-- begin: startup-phase -->
     [Startup Phase]
         Step 1: Dependency Check
             Execute [Dependency Check]
@@ -130,6 +155,8 @@ requires: []
             Read Product-Spec.md → Extract all pages, features, UI layout descriptions, user flows
             Read Design-Brief.md → Extract mood keywords, color direction, information density, typography direction, interaction style, core page visual notes, state design direction
 
+    <!-- end: startup-phase -->
+    <!-- begin: planning-phase -->
     [Planning Phase]
         Step 1: Extract Page List
             Extract all described pages and views from the Product Spec's UI layout section
@@ -152,6 +179,8 @@ requires: []
             - Total design items
             Begin designing after user confirmation
 
+    <!-- end: planning-phase -->
+    <!-- begin: design-phase -->
     [Design Phase]
         Step 1: Get Design Tool Guidelines
             Call the design tool's get_guidelines to obtain usage specifications and best practices
@@ -176,6 +205,8 @@ requires: []
             Design each variant according to the variant list
             Each variant is based on the corresponding page's default state with modifications
 
+    <!-- end: design-phase -->
+    <!-- begin: verification-phase -->
     [Verification Phase]
         Step 1: Completeness Verification
             Cross-reference against the design delivery checklist from the Planning Phase, confirming item by item whether it has been completed:
@@ -209,5 +240,9 @@ requires: []
              - Call /dev-planner to create a development plan (will reference the mockups)
              - Or continue the conversation to adjust design details"
 
+    <!-- end: verification-phase -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Startup Phase]
+
+<!-- end: initialization -->

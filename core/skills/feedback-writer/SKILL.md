@@ -7,16 +7,21 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Receive context passed in by the main Agent, analyze whether there are feedback signals worth recording.
     Yes -> Write to ../../feedback/ and update the index.
     No -> Return "no new feedback".
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Evolving rules from feedback patterns -> use /evolution-engine instead
     - Fixing the underlying bug that caused the feedback -> use /bug-fixer instead
     - General user conversation not related to AI behavior -> do not record, not feedback material
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 
@@ -25,12 +30,16 @@ requires: []
     - ../../feedback/FEEDBACK-INDEX.md → If missing, create from templates/feedback-index-template.md
     - Signal context from feedback-observer → correction, failure, or assessment data
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **Signal Over Noise**: Only record when a signal is actually observed. Better to miss than to over-record. User frustration at the tool/environment itself is not AI capability feedback.
     **Dedup Before Write**: Always check FEEDBACK-INDEX.md for existing entries before creating new ones. Merge, don't duplicate. The same failure mode recorded 5 times inflates occurrence counts without adding information.
     **Scored Feedback**: Every feedback entry must have Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
     **Context Completeness**: A feedback entry without context (what the AI did, what the correct behavior is, which Skill was in use) is noise — it can't drive evolution.
 
+<!-- end: first-principles -->
+<!-- begin: failure-classification -->
 [Failure Classification]
     Every feedback entry SHOULD set `failure_class` in frontmatter (enables evolution-engine routing — see evolution-engine [Failure-Class Routing]):
 
@@ -47,6 +56,8 @@ requires: []
 
     **Skill TDD input for evolution**: In the body, include a short **RED** line: "Without rule Y, Agent did Z" — feeds evolution-engine RED observation field.
 
+<!-- end: failure-classification -->
+<!-- begin: observation-dimension-checklist -->
 [Observation Dimension Checklist]
     The following 5 types of signals trigger feedback recording:
 
@@ -93,18 +104,24 @@ requires: []
         **Judgment Standard**:
         Only record when a signal is actually observed. Better to miss than to over-record.
 
+<!-- end: observation-dimension-checklist -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Missing context**: Recording "the user corrected the AI" without capturing what the AI did, what the correct behavior should be, and which Skill was in use. A feedback entry without context is noise — it can't drive evolution.
     **Duplicate entries**: The same failure mode recorded 5 times because no one checked FEEDBACK-INDEX.md first. Always check existing entries before creating new ones — merge, don't duplicate.
     **False positives**: User frustration does not always equal bad AI behavior. Frustration at the tool/environment/language itself should not be recorded as AI capability feedback. Discriminate signal from noise.
     **Skipping scoring**: Writing qualitative feedback without Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
 
+<!-- end: gotchas -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     feedback-writer/
     └── SKILL.md                           # Main Skill definition (this file)
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**: Auditor recording an incident — factual, structured, contextual. Every entry must be actionable by the evolution-engine.
     **Principles**:
@@ -113,15 +130,21 @@ requires: []
     - V Check FEEDBACK-INDEX.md before writing — merge, don't duplicate
     - X No entries for user frustration with the tool/environment itself
 
+<!-- end: output-style -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **../../feedback/\<topic-name\>.md** — feedback topic file
     - **../../feedback/FEEDBACK-INDEX.md** — feedback index (append or update)
 
+<!-- end: output-artifacts -->
+<!-- begin: routing-rules -->
 [Routing Rules]
     Project-related -> Write to ../../feedback/
     Not project-related -> Do not write, let the AI client handle via default behavior
     No duplicate writing — each piece of information goes into exactly one system
 
+<!-- end: routing-rules -->
+<!-- begin: workflow -->
 [Workflow]
     Step 1: Check index
         Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md)
@@ -138,6 +161,8 @@ requires: []
 
     For scoring standards during Step 4, reference [Observation Dimension Checklist] section for Precision/Coverage/Efficiency/Satisfaction criteria.
 
+<!-- end: workflow -->
+<!-- begin: file-specification -->
 [File Specification]
     Storage location: ../../feedback/
     Index file: ../../feedback/FEEDBACK-INDEX.md
@@ -145,9 +170,15 @@ requires: []
     Content template: ../../feedback/templates/feedback-topic-template.md
     Drift map (optional, ≥3 repeats before evolution): ../../feedback/templates/drift-map-template.md
 
+<!-- end: file-specification -->
+<!-- begin: return-format -->
 [Return Format]
     Return to the main Agent after execution: - New record: "Recorded 1 feedback: [title] ([filename])" - Updated existing: "Updated [filename], occurrences: N -> N+1" - No signal: "No new feedback"
 
+<!-- end: return-format -->
+<!-- begin: initialization -->
 [Initialization]
     Step 1: Execute [Dependency Check]
     Step 2: Execute [Workflow]
+
+<!-- end: initialization -->

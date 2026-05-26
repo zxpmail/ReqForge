@@ -7,16 +7,21 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Orchestrate **one named change** under `changes/<change-name>/` from proposal through archive.
     Do not replace product-spec-builder for greenfield projects or wholesale Spec rewrites — use this Skill for **brownfield, scoped deltas**.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - First-time Product-Spec from scratch -> use /product-spec-builder instead
     - Whole Spec rewrite (major iteration, no single feature scope) -> use /product-spec-builder iteration mode on Product-Spec.md directly
     - Bug fixes only -> use /bug-fixer instead
     - Release packaging -> use /release-builder instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Required:
     - Product-Spec.md -> if missing, prompt to call /product-spec-builder first
@@ -27,6 +32,8 @@ requires: []
     - Design-Brief.md / design MCP -> fill design.md when UI is involved
     - Existing `changes/<other>/` -> warn if another change folder is in progress without archive
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **Agree Before Build**: proposal + specs must be user-confirmed before apply. No coding on vague "add dark mode" without specs.md acceptance criteria.
     **One Change, One Folder**: Never mix two features in one `changes/<name>/`. Split if scope creeps.
@@ -34,6 +41,8 @@ requires: []
     **Fresh Context for Apply**: Start apply in a new session when possible — planning context pollutes implementation.
     **Verify Before Archive**: archive is blocked without verify evidence (verify.md or equivalent checklist in tasks.md).
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**: Release train conductor — explicit phases, no skipping propose because "it's small."
     **Principles**:
@@ -42,6 +51,8 @@ requires: []
     - V Every phase ends with a concrete artifact path
     - V Delegate coding to /dev-builder, planning to /dev-planner, deep Spec edits to /product-spec-builder when needed
 
+<!-- end: output-style -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     change-manager/
@@ -55,6 +66,8 @@ requires: []
         └── change-verify-template.md
     ```
 
+<!-- end: file-structure -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Skipping propose**: "Just code it" -> still create minimal proposal.md + specs.md so archive and review have a baseline.
     **product-spec-builder overlap**: Do not let product-spec-builder create `changes/` — only this skill creates that folder. It may still edit Product-Spec.md during propose when merging requirements.
@@ -62,6 +75,8 @@ requires: []
     **Spec drift**: Merging specs.md into Product-Spec.md twice or not at all -> archive checklist must include CHANGELOG + Spec section update.
     **Whole-repo dev-builder**: apply must pass change scope (files/tasks from changes/<name>/ only), not entire DEV-PLAN backlog.
 
+<!-- end: gotchas -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - `changes/<change-name>/proposal.md`
     - `changes/<change-name>/specs.md`
@@ -70,6 +85,8 @@ requires: []
     - `changes/<change-name>/verify.md` (after verify phase)
     - `changes/archive/<change-name>/` (after archive)
 
+<!-- end: output-artifacts -->
+<!-- begin: change-assessment-checklist -->
 [Change Assessment Checklist]
     Before entering a Phase, assess the change scope and determine the appropriate level of rigor:
 
@@ -83,9 +100,13 @@ requires: []
 
     Reference: see [Output Artifacts] for expected files per level.
 
+<!-- end: change-assessment-checklist -->
+<!-- begin: workflow -->
 [Workflow]
     Parse user intent for phase: **propose** | **apply** | **verify** | **archive** (default: propose if only a change name/description given). Execute the corresponding Phase steps below. Reference the [Change Assessment Checklist] to determine rigor for the current change.
 
+<!-- end: workflow -->
+    <!-- begin: phase:-propose -->
     [Phase: propose]
         Step 1: Normalize name
             Normalize `<change-name>` (kebab-case, e.g. add-dark-mode). See [Dependency Check] for prerequisites.
@@ -100,6 +121,8 @@ requires: []
         Step 6: Confirm
             User confirms -> stop. Do not apply in same turn unless user explicitly asks.
 
+    <!-- end: phase:-propose -->
+    <!-- begin: phase:-apply -->
     [Phase: apply]
         Step 1: Load change context
             Load all files under `changes/<change-name>/`.
@@ -112,6 +135,8 @@ requires: []
         Step 5: Track progress
             Mark tasks.md checkboxes as work completes.
 
+    <!-- end: phase:-apply -->
+    <!-- begin: phase:-verify -->
     [Phase: verify]
         Step 1: Compare against spec
             Re-read specs.md acceptance criteria vs implementation.
@@ -120,6 +145,8 @@ requires: []
         Step 3: Assess results
             List any failed criteria; if fail -> apply phase again, do not archive.
 
+    <!-- end: phase:-verify -->
+        <!-- begin: goal-driven-verification-template -->
         [Goal-Driven Verification Template]
         For each acceptance criterion in specs.md:
         - "[Criterion]" → "[how to verify]" → "[pass/fail + command output]"
@@ -130,6 +157,8 @@ requires: []
 
         Archive is blocked until all criteria pass or user explicitly waives (record in verify.md).
 
+        <!-- end: goal-driven-verification-template -->
+    <!-- begin: phase:-archive -->
     [Phase: archive]
         Step 1: Verify gate
             Require verify.md pass or explicit user waive (record in verify.md). See [Change Assessment Checklist] archive readiness dimension.
@@ -140,7 +169,11 @@ requires: []
         Step 4: Report next steps
             Report next suggested change or return to normal dev-builder Phases.
 
+    <!-- end: phase:-archive -->
+<!-- begin: initialization -->
 [Initialization]
     If user message matches propose pattern -> run [Phase: propose].
     If `changes/<name>/` exists and user says implement -> run [Phase: apply].
     Reference: `core/docs/openspec-comparison.md` for Forge vs OpenSpec positioning.
+
+<!-- end: initialization -->

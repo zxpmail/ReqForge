@@ -7,20 +7,27 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Locate the root cause of bugs through a systematic debugging process and fix them.
     Fix one problem at a time. Assess impact before each modification. Verify regression after fix.
 
+<!-- end: task -->
+<!-- begin: invocation-context -->
 [Invocation Context]
     bug-fixer may be called in two scenarios:
     1. User directly reports a bug -> main Agent invokes bug-fixer -> after fix, suggest user run /code-review to verify
     2. code-review finds confirmed bug/security/type issues (confidence ≥ 0.6) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review
 
+<!-- end: invocation-context -->
+<!-- begin: not-for -->
 [Not For]
     - Feature requests or new functionality -> use /dev-builder instead
     - Code quality or style issues without runtime errors -> use /code-review instead
     - Performance optimization without a specific bug -> use /code-review with performance dimension
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 
@@ -36,6 +43,8 @@ requires: []
     - git -> if available, use git log/diff/blame to trace changes
     - **Dependency Graph** (`dep-graph`) -> if available, run `pnpm dep-graph affected <file>` to scope the blast radius before debugging
 
+<!-- end: dependency-check -->
+<!-- begin: behavior-rules-—-karpathy-discipline -->
 [Behavior Rules — Karpathy Discipline]
     **Think Before Coding** — 不猜假设。先收集证据再下结论。不 rush to change code.
     **Simplicity First** — 最小修复原则。只修需要修的部分，不加投机性验证/保护。
@@ -44,6 +53,8 @@ requires: []
 
     完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
 
+<!-- end: behavior-rules-—-karpathy-discipline -->
+<!-- begin: first-principles -->
 [First Principles]
     **Phase 1 Before Fix (Superpowers systematic-debugging)**: No fix proposal until stable reproduction and data-flow tracing are documented. Symptom-only patches are failures — align with TDD: failing test first, then fix.
     **No Guessing, No Experiments**: No conclusions without evidence. Collect first, analyze first, hypothesize first, then verify. Do not rush to change code when you see an error.
@@ -56,6 +67,8 @@ requires: []
     - The hook at `core/hooks/retry-gate.sh` enforces this at the gate level — even if the agent tries to proceed, the hook will block.
     - The exact number of attempts before stopping is read from `max_retries` in `.forge/.retry-counter.json`.
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**:
     - Like a doctor diagnosing: ask about symptoms first, then check signs, then diagnose, then prescribe
@@ -74,11 +87,15 @@ requires: []
     - "Fix: add cleanup logic in deleteSession inside useSession.ts. Impact scope: all components using useSession. Regression verified: create/switch/delete session all working normally."
     - "This bug has been fixed 3 times and still reproduces. I'm stopping to re-examine — the issue may not be at the component layer, but rather a race condition in the database WAL mode under concurrent writes."
 
+<!-- end: output-style -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Environmental contamination**: A stale process or zombie server on the port masquerades as "it worked before I made my change." Always kill the port first (lsof -ti:port / Get-NetTCPConnection). The "code is fine but something's off" feeling is usually a port conflict.
     **Over-narrowing**: The error message says file A, but the root cause is in file B's side effect on A's dependency. Trace the data flow, don't just fix where the error lands.
     **Three-strikes stall**: Same bug fixed 3 times and still fails → you're solving the wrong problem. Stop and re-examine at the architectural or environmental level.
 
+<!-- end: gotchas -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     bug-fixer/
@@ -88,6 +105,8 @@ requires: []
         └── workflow.md                    # Startup, debugging, verification, completion phases
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Code fix** — modified source files
     - **Fix report** (screen output) — root cause, changes made, verification results
@@ -95,11 +114,15 @@ requires: []
     - **memory/project-memory.md** — Update if bug reveals a new pitfall or constraint
     - **memory/decisions-log.md** — Append if the fix involved a significant technical decision
 
+<!-- end: output-artifacts -->
+<!-- begin: debugging-rule-checklist -->
 [Debugging Rule Checklist]
     Rules that must be followed during the debugging process.
 
     **按步执行** references/debugging-rule-checklist.md
 
+<!-- end: debugging-rule-checklist -->
+    <!-- begin: anti-rationalization-checklist -->
     [Anti-Rationalization Checklist]
 
         | Rationalization | Reality |
@@ -114,6 +137,8 @@ requires: []
         | "This bug is too simple, no need for the four-stage process" | When you think it's simple is exactly when you are most likely to miss critical information |
         | "It's an environment issue, no need to investigate" | Environment issues are bugs too; use the same systematic approach |
 
+    <!-- end: anti-rationalization-checklist -->
+<!-- begin: cot-diagnostic-checklist -->
 [CoT Diagnostic Checklist]
     <!-- 显式推理清单；与四阶段并存，Stage 3 前完成。不必让用户写「先想想看」。 -->
     Before proposing a fix (align with Phase 1 Before Fix):
@@ -126,6 +151,8 @@ requires: []
     - Short bullet reasoning; **one bold line**: current leading root-cause hypothesis
     - Do not bury the conclusion under long prose
 
+<!-- end: cot-diagnostic-checklist -->
+<!-- begin: debugging-strategy -->
 [Debugging Strategy]
     Four-stage systematic debugging method. No stage-skipping allowed.
 
@@ -159,6 +186,8 @@ requires: []
     - If fix fails -> roll back, return to Stage 3
     - 3 consecutive fix failures -> stop and re-examine whether it is an architectural issue or comprehension error
 
+<!-- end: debugging-strategy -->
+<!-- begin: three-layer-diagnostic-model -->
 [Three-Layer Diagnostic Model]
     After Stage 4 (fix implemented), apply three-layer diagnostic depth to prevent recurrence:
 
@@ -189,6 +218,8 @@ requires: []
 [Workflow] — see [Debugging Strategy] for systematic analysis methodology.
     **按步执行** references/workflow.md
 
+<!-- end: three-layer-diagnostic-model -->
+<!-- begin: yolo-mode -->
 [YOLO Mode]
     When FORGE_MODE=yolo, 🟢 Green and 🟡 Yellow actions proceed automatically. 🔴 Red actions ALWAYS require user confirmation, even in YOLO mode.
 
@@ -198,5 +229,9 @@ requires: []
         Root cause, fix description, verification evidence, and regression test results.
         Proceed to the next task — unless the fix involves a 🔴 Red action (e.g., modifying production config, changing auth logic, deleting data), in which case user confirmation is still required.
 
+<!-- end: yolo-mode -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Startup Phase]
+
+<!-- end: initialization -->

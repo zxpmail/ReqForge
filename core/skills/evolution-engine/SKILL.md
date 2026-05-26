@@ -7,6 +7,7 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Scan the accumulated data in ../../feedback/ and identify three types of evolution signals:
     1. Rule graduation: feedback repeats 3+ times -> propose upgrading to an official rule
@@ -16,11 +17,15 @@ requires: []
     Signals found -> Generate proposals and return to the main Agent; execute after user confirmation.
     No signals -> Return "no evolution suggestions".
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Recording individual feedback entries -> use /feedback-writer instead
     - Creating new Skills -> use /skill-builder instead
     - Fixing bugs or code issues -> use /bug-fixer or /code-review instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Automatically executed as the first step when the Skill starts.
 
@@ -31,6 +36,8 @@ requires: []
     Optional:
     - memory/ files → cross-reference task-history.md to validate whether pattern is real or coincidence
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **Data-Driven Evolution**: No change without data. A single feedback entry is an anecdote, not a signal. Wait for the 3-occurrence threshold before proposing rule graduation. Let the data speak, not your intuition.
     **Generator/Optimizer Recursion**: The evolution engine is itself subject to evolution. The feedback-observer generates data (α), the evolution-engine optimizes rules (Ω). This cycle should recursively improve itself — the engine that proposes rule changes should also be evaluable and improvable through the same feedback loop.
@@ -38,6 +45,8 @@ requires: []
     **Web-First**: When proposing a new Skill or rule, WebSearch for existing best practices and community patterns. Don't invent from scratch what already has a well-known solution.
     **Skill TDD Gate**: Every proposal MUST include RED observation (what the Agent did without the rule), GREEN change (exact target file/section), Predicted effect, and Verify by. Proposals missing RED or Verify by are **incomplete** — do not present them to the user.
 
+<!-- end: first-principles -->
+<!-- begin: proposal-quality-checklist -->
 [Proposal Quality Checklist]
     Before presenting an evolution proposal to the user, verify each criterion:
 
@@ -51,18 +60,24 @@ requires: []
 
     Reference: see [First Principles] Skill TDD Gate for minimum proposal completeness.
 
+<!-- end: proposal-quality-checklist -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Premature graduation**: One feedback entry does not make a pattern. The 3-occurrence threshold exists for a reason — graduating too early means bloating the main control file (CLAUDE.md / AGENTS.md / reqforge.mdc) with one-off issues. Wait for the data.
     **False correlation**: "Skill X has low scores AND the user complained about Y" → these may be unrelated. Check if the feedback actually names Skill X before proposing changes to it.
     **Ignoring sample size**: A skill used 100 times with 80% satisfaction is fine. A skill used 5 times with 60% satisfaction is noise. Always check the denominator before acting on a score.
     **Circular evolution**: Rule A graduates from feedback, then generates more feedback, then graduates again as Rule A'. This is the ratchet spinning without progress. After graduating a rule, skip that pattern for N cycles.
 
+<!-- end: gotchas -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     evolution-engine/
     └── SKILL.md                           # Main Skill definition (this file)
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**: Scientific analyst reporting pattern signals — data-driven, conservative, actionable. Proposals are suggestions, not commands.
     **Principles**:
@@ -71,9 +86,13 @@ requires: []
     - V Always check denominator (total skill uses) before acting on scores
     - X No premature graduation — wait for 3+ occurrences
 
+<!-- end: output-style -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Evolution proposals** (screen output) — three types: Rule Graduation / Skill Optimization / New Skill. Each proposal includes confirm/skip options.
 
+<!-- end: output-artifacts -->
+<!-- begin: workflow -->
 [Workflow]
 
     Step 1: Scan Graduation Candidates
@@ -102,6 +121,8 @@ requires: []
         Drop any candidate missing **RED observation** or **Verify by** — log internally as "incomplete signal", do not show to user
         No signals -> Return "no evolution suggestions"
 
+<!-- end: workflow -->
+<!-- begin: proposal-format -->
 [Proposal Format]
     Each proposal MUST include the **Skill TDD quartet** plus falsifiable verification (AHE-style — see [agent-harness-seven-layer-map](https://github.com/zxpmail/ReqForge/blob/main/core/docs/agent-harness-seven-layer-map.md)):
 
@@ -139,6 +160,8 @@ requires: []
         Verify by: [...]
         -- Confirm Create / Skip"
 
+<!-- end: proposal-format -->
+<!-- begin: failure-class-routing -->
 [Failure-Class Routing]
     Read `failure_class` from source feedback frontmatter when present:
 
@@ -150,6 +173,8 @@ requires: []
 
     Mixed tags on one topic → split into two proposals if fixes differ (Skill vs hook).
 
+<!-- end: failure-class-routing -->
+<!-- begin: post-confirmation-execution -->
 [Post-Confirmation Execution]
     User confirms or skips each item:
     - Rule graduation -> Write feedback content into the target SKILL.md or main control file, mark graduated: true
@@ -160,6 +185,8 @@ requires: []
     After apply: run the proposal's **Verify by** step and note pass/fail in the feedback topic or `memory/decisions-log.md`.
     If `failure_class` was `execution-lapse` and fix was hook/bootstrap-only, do **not** duplicate the same rule inside multiple Skills.
 
+<!-- end: post-confirmation-execution -->
+<!-- begin: yolo-mode -->
 [YOLO Mode]
     When FORGE_MODE=yolo, proposals are written to file instead of waiting for confirm/skip:
 
@@ -168,11 +195,17 @@ requires: []
         Omit proposals missing RED or Verify by. Skip per-item confirm/skip. Return to main Agent as:
         "N evolution proposals pending (see changes/proposals.md)"
 
+<!-- end: yolo-mode -->
+<!-- begin: return-format -->
 [Return Format]
     Return to the main Agent:
     - Proposals exist: "N evolution suggestions pending" + full proposal content
     - No proposals: "No evolution suggestions"
 
+<!-- end: return-format -->
+<!-- begin: initialization -->
 [Initialization]
     Step 1: Execute [Dependency Check]
     Step 2: Execute [Workflow]
+
+<!-- end: initialization -->

@@ -7,17 +7,22 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     **0-to-1 Mode**: Collect product requirements from the user through in-depth conversation, using direct even pointed questioning to force the user to think clearly, ultimately generating a structurally complete, detail-rich Product Spec document suitable for direct AI development, and output it as a .md file for the user.
 
     **Iteration Mode**: When the user proposes new features, requirement changes, or iterative ideas during development, use questioning to help the user clarify the change, detect conflicts with the existing Spec, directly update the Product Spec file, and automatically record the changelog.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Creating development plans -> use /dev-planner instead
     - Writing code -> use /dev-builder instead
     - Designing visual style -> use /design-brief-builder instead
     - Fixing bugs -> use /bug-fixer instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Executed automatically as the first step when the Skill starts. All checks must pass before entering the main workflow.
 
@@ -25,6 +30,8 @@ requires: []
     - 0-to-1 Mode: No pre-requisite files required
     - Iteration Mode: Product-Spec.md must exist
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **AI-First Principle**: For all features proposed by the user, first consider how they can be implemented with AI.
 
@@ -46,6 +53,8 @@ requires: []
     - When recommending solutions to the user → WebSearch to confirm feasibility and current best practices
     - When uncertain → search first, don't answer from memory
 
+<!-- end: first-principles -->
+<!-- begin: hard-gate -->
 [HARD-GATE]
     **Until `Product-Spec.md` is saved AND the user explicitly confirms it** (0-to-1) or confirms the iteration delta (Iteration Mode):
 
@@ -57,6 +66,8 @@ requires: []
 
     Rationalizations and responses → `references/hard-gate-rationalization.md`
 
+<!-- end: hard-gate -->
+<!-- begin: skills -->
 [Skills]
     - **Requirements Elicitation**: Guide the user to express their ideas through open-ended questions, capture key information
     - **Drill-Down Questioning**: Follow up on vague descriptions with detailed questions — do not accept "roughly", "maybe", "probably"
@@ -71,6 +82,8 @@ requires: []
     - **Structured Thinking**: Organize scattered information into a clear product framework
     - **Document Output**: Generate professional Product Spec following standard templates, output as .md file
 
+<!-- end: skills -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     product-spec-builder/
@@ -91,6 +104,8 @@ requires: []
         └── changelog-template.md
     ```
 
+<!-- end: file-structure -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Skipping WebSearch**: "I know this domain well" → WebSearch anyway. Competitors, frameworks, and best practices change fast. The moment you skip search is the moment you recommend an outdated approach.
     **Accepting vague requirements**: "users will like it", "good UX", "modern design" → these are not requirements. Keep pressing until you get specifics. If you stop at vague, the Spec will be unimplementable.
@@ -99,11 +114,15 @@ requires: []
     **Duplicating change-manager**: Creating `changes/<name>/` in iteration mode. That folder is owned by `/change-manager` — this skill only updates Product-Spec.md directly or hands off to change-manager.
     **Chat agreement is not HARD-GATE lift**: User says "sounds good" or "go ahead" in chat without reviewing written Product-Spec.md → HARD-GATE still active. Require explicit confirm of the **saved file** (or iteration changelog delta). See `references/hard-gate-rationalization.md`.
 
+<!-- end: gotchas -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Product-Spec.md** — Product Requirements Document (created in 0-to-1 mode, updated in iteration mode)
     - **Product-Spec-CHANGELOG.md** — Requirements Changelog (appended in iteration mode)
     - **changes/** — NOT created by this skill. Scoped features use `/change-manager` only
 
+<!-- end: output-artifacts -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**:
     - Direct, calm, occasionally with a world-weary coldness
@@ -133,6 +152,8 @@ requires: []
 
 
 
+<!-- end: output-style -->
+<!-- begin: requirements-dimension-checklist -->
 [Requirements Dimension Checklist]
     访谈需收集的维度 + 信息充分性判定。
     **0-to-1 / Iteration 提问时读取** references/requirements-dimensions.md。
@@ -141,14 +162,20 @@ requires: []
     开场、提问、方案与 AI/平台/技术引导、搜索与确认。
     **对话阶段读取** references/conversation-strategy.md（含 [Chain of Thought]：选型/边界/自质疑模板，无需用户手写「先想想看」）。
 
+<!-- end: requirements-dimension-checklist -->
+<!-- begin: workflow-0-to-1-mode -->
 [Workflow (0-to-1 Mode)]
     从零到一完整阶段（探索 → 澄清 → 细化 → 生成 Spec）。
     **进入 0-to-1 后按步执行** references/workflow-0-to-1.md。
 
+<!-- end: workflow-0-to-1-mode -->
+<!-- begin: workflow-iteration-mode -->
 [Workflow (Iteration Mode)]
     存量 Spec 迭代与 change-manager 路由。
     **Iteration Mode 完整步骤** references/workflow-iteration.md。
 
+<!-- end: workflow-iteration-mode -->
+<!-- begin: startup-check -->
 [Startup Check]
     When the Skill starts, first execute the following checks:
 
@@ -174,6 +201,8 @@ requires: []
         - Quick Mode: Execute [Workflow (Quick Mode)]
         - 0-to-1 Mode: Execute [Workflow (0-to-1 Mode)]
 
+<!-- end: startup-check -->
+<!-- begin: workflow-quick-mode -->
 [Workflow (Quick Mode)]
     **Trigger**: User gives a one-sentence description or says they want to start fast.
     **Goal**: Generate a minimal usable Product Spec in one round, with uncertain items marked [待确认] / [TBD].
@@ -222,8 +251,14 @@ requires: []
         Create `memory/` directory if not exists. Create `memory/decisions-log.md` from template. Record ADR-000: "Quick mode — tech stack and architecture inferred from one-sentence description, defaults chosen for uncertain items."
         Note: This creates only the decisions log. Full memory initialization (including project-memory.md and task-history.md) happens during the first /dev-builder invocation, when tech stack details are confirmed.
 
+<!-- end: workflow-quick-mode -->
+<!-- begin: machine-gate-markers -->
 [Machine Gate Markers]
     After **explicit user confirm** of Product-Spec.md (0-to-1 Step 4, Step 6/7, or Iteration Mode delta confirm), MUST write `.forge/spec-confirmed.json`. Template: `core/templates/forge-markers/spec-confirmed.template.json`.
 
+<!-- end: machine-gate-markers -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Startup Check]
+
+<!-- end: initialization -->

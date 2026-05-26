@@ -7,17 +7,22 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     **Initialization Mode**: No code + has DEV-PLAN.md -> set up project skeleton according to tech stack, install dependencies, configure development environment, complete Phase 1.
 
     **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop**. User must call /dev-builder again for next Phase.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Fixing bugs in existing code -> use /bug-fixer instead
     - Reviewing code quality -> use /code-review instead
     - Planning development phases -> use /dev-planner instead
     - Gathering requirements -> use /product-spec-builder instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Executed automatically as the first step when the Skill starts.
 
@@ -38,6 +43,8 @@ requires: []
     - If user permissions or interaction is needed, prompt the user to act
     - When optional dependencies are missing, mark as degraded mode and continue working — do not block the workflow
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **TDD First (RED-GREEN-REFACTOR)**: Tests must be written before functional code. No code without tests is allowed to be committed. This is the quality baseline.
     - **RED**: First write a test that will fail, describing the expected behavior
@@ -64,6 +71,8 @@ requires: []
 
     **Sub-Agent Isolation (MANDATORY)**: Per Task, RED/GREEN/REFACTOR implementation MUST run in a fresh `implementer` sub-agent — main session MUST NOT `Write`/`Edit` under `src/`, `app/`, `lib/`, `packages/`. Main session coordinates, reviews, commits. Details → `references/sub-agent-isolation.md`.
 
+<!-- end: first-principles -->
+<!-- begin: behavior-rules-—-karpathy-discipline -->
 [Behavior Rules — Karpathy Discipline]
     **Think Before Coding** — 不猜假设。有歧义先问。有 tradeoff 先摆。在用户确认前不写代码。
     **Simplicity First** — 最少代码解决问题。200行能50行就重写。不写未来需要的抽象。
@@ -72,6 +81,8 @@ requires: []
 
     完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
 
+<!-- end: behavior-rules-—-karpathy-discipline -->
+<!-- begin: hard-gate -->
 [HARD-GATE]
     **Session lifecycle** (architecture context — Founder's Playbook):
     - **Start**: Read project `CLAUDE.md` / `AGENTS.md`, DEV-PLAN.md, memory/decisions-log.md
@@ -84,6 +95,8 @@ requires: []
 
     **Tool-Call Offloading**: When a tool call returns large output (2,000+ lines of logs, full-file reads, extensive search results), store the output to a temporary file and keep only essential headers/footers in context. Reference the file path for later use rather than embedding the full content. This prevents context window waste and keeps responses actionable.
 
+<!-- end: hard-gate -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**:
     - Like a senior engineer reporting progress: concise, accurate, data-driven
@@ -106,6 +119,8 @@ requires: []
     - "This feature is already built into the SDK (confirmed via WebSearch), no need to implement it ourselves."
     - "Compilation passes but API returns 500. Need to investigate the migration logic in db.ts."
 
+<!-- end: output-style -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     dev-builder/
@@ -118,6 +133,8 @@ requires: []
         └── phase-completion-assessment.md
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Project code** — Complete project code under the \<project-name\>/ directory
     - **Git commits** — Atomic commits (phase-N: / fix: / feat: / refactor: / chore:)
@@ -126,16 +143,22 @@ requires: []
     - **memory/decisions-log.md** — Append when a technical decision was made during the Task
     - **memory/project-memory.md** — Update when architecture facts or constraints change
 
+<!-- end: output-artifacts -->
+<!-- begin: development-rules-checklist -->
 [Development Rules Checklist]
     编码期必须遵守的规范（代码标准、目录结构、数据库、Git、进程管理等）。
     **执行前读取** references/development-rules-checklist.md；Continuous Development Mode Step 2 引用此清单。
 
 
+<!-- end: development-rules-checklist -->
+<!-- begin: development-strategies -->
 [Development Strategies]
     Plan Mode、设计稿对照、在线搜索、技术栈选择等策略。
     **按需读取** references/development-strategies.md。
 
 
+<!-- end: development-strategies -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Plan-not-loaded**: Starting implementation without reading the current DEV-PLAN.md Phase → building the wrong thing. Always read DEV-PLAN.md first, confirm the Phase and Task, then code.
     **Skipping Environment-First**: Jumping into feature code before the project skeleton compiles and runs. No code on a broken foundation. The first task of any Phase should be making things runnable.
@@ -143,11 +166,15 @@ requires: []
     **Editing Spec/Plan during build**: Patching Product-Spec.md or DEV-PLAN.md to excuse implementation drift violates the prepare.py boundary. Route scope changes through change-manager or replan.
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
 
+<!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
 [Anti-Rationalization Checklist]
     常见「合理借口」与正确回应。
     **遇阻力时读取** references/anti-rationalization.md。
 
 
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: phase-completion-assessment -->
 [Phase Completion Assessment]
     Phase 结束四步验证 + 迭代循环 + Phase Summary 模板。
     **Step 3 必须按此文执行** references/phase-completion-assessment.md。
@@ -156,6 +183,8 @@ requires: []
 [Workflow (Initialization Mode)] — Apply [Tech Stack Selection Strategy] and [Online Search Strategy] during implementation.
     Trigger condition: Has DEV-PLAN.md, no project code
 
+<!-- end: phase-completion-assessment -->
+    <!-- begin: startup-phase -->
     [Startup Phase]
         Step 1: Dependency Check
             Execute [Dependency Check]
@@ -166,12 +195,16 @@ requires: []
             If Design-Brief.md exists -> read color direction, information density (for configuring Tailwind theme)
             If design tool MCP exists -> read design data for Phase 1 related pages
 
+    <!-- end: startup-phase -->
+    <!-- begin: technical-solution-phase -->
     [Technical Solution Phase]
         Apply [Tech Stack Selection Strategy]
         Confirm the plan according to the DEV-PLAN.md tech stack table
         WebSearch to verify framework versions and key dependency compatibility
         If multiple reasonable options exist -> present 2-3 options for the user to choose
 
+    <!-- end: technical-solution-phase -->
+    <!-- begin: project-setup-phase -->
     [Project Setup Phase]
         Initialize the project in the <project-name>/ subfolder, not in the root directory.
 
@@ -196,14 +229,20 @@ requires: []
         3. Create GitHub **private** repo and link remote
         4. First commit + push
 
+    <!-- end: project-setup-phase -->
+    <!-- begin: phase-1-development -->
     [Phase 1 Development]
         Enter the Phase execution workflow in [Continuous Development Mode], starting from Phase 1
         After Phase 1 is verified and completed, apply the same Force Stop rule:
         Agent MUST stop, user must call /dev-builder again for Phase 2.
 
+    <!-- end: phase-1-development -->
+<!-- begin: workflow-continuous-development-mode -->
 [Workflow (Continuous Development Mode)]
     Trigger condition: Has DEV-PLAN.md + has project code
 
+<!-- end: workflow-continuous-development-mode -->
+    <!-- begin: loading-phase -->
     [Loading Phase]
         Step 1: Dependency Check
             Execute [Dependency Check]
@@ -221,6 +260,8 @@ requires: []
             Identify the next Phase to develop
             If the user specifies a particular Phase -> use that one
 
+    <!-- end: loading-phase -->
+    <!-- begin: phase-execution-flow -->
     [Phase Execution Flow]
         Step 1: Plan + TaskList
             This step is a prerequisite for coding, cannot be skipped, does not require user confirmation. No code can be written without a Plan and TaskList.
@@ -362,6 +403,8 @@ requires: []
             - These rules apply even if the user says "continue" or "go ahead".
             - One Phase per invocation — this is not negotiable.
 
+    <!-- end: phase-execution-flow -->
+<!-- begin: yolo-mode -->
 [YOLO Mode]
     When FORGE_MODE=yolo, 🟢 Green and 🟡 Yellow actions proceed automatically. 🔴 Red actions ALWAYS require user confirmation, even in YOLO mode.
 
@@ -381,9 +424,13 @@ requires: []
         Present the same three options (A/B/C) and wait for the user to choose.
         Do NOT auto-select "Skip" or any other option.
 
+<!-- end: yolo-mode -->
+<!-- begin: initialization -->
 [Initialization]
     Detect project state, route to the corresponding mode:
     - No code + has DEV-PLAN.md -> Initialization Mode
     - Has code + has DEV-PLAN.md -> Continuous Development Mode
     - No DEV-PLAN.md -> prompt to call /dev-planner first
     - No Product-Spec.md -> prompt to call /product-spec-builder first
+
+<!-- end: initialization -->

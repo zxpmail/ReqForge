@@ -7,15 +7,20 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Review code implementation completeness and quality against Product-Spec.md and design mockups.
     Output a structured review report. Fixes are executed by the main Agent using dev-builder or bug-fixer Skill after receiving the report.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Fixing bugs -> use /bug-fixer instead
     - Writing new features -> use /dev-builder instead
     - Requirements gathering -> use /product-spec-builder instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 
@@ -30,6 +35,8 @@ requires: []
     - Playwright plugin -> if available, automate UI interaction testing
     - git -> if available, use git diff to trace change scope
 
+<!-- end: dependency-check -->
+<!-- begin: behavior-rules-—-karpathy-discipline -->
 [Behavior Rules — Karpathy Discipline]
     Review 期间须检查以下两条 Karpathy 原则的执行情况：
     **Surgical Changes** — 每行改动是否直接追溯到用户请求或 Spec 条目？存在"顺手改动"吗？
@@ -37,6 +44,8 @@ requires: []
 
     完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
 
+<!-- end: behavior-rules-—-karpathy-discipline -->
+<!-- begin: first-principles -->
 [First Principles]
     **Zero Trust Claims**: Do not accept vague conclusions like "already implemented" or "roughly matches." Every feature either has a code implementation (with file path and line number) or it does not.
     **Evidence is King**: Saying "passed" must be accompanied by compilation output, API responses, or value comparison results. A "passed" without evidence equals not having reviewed at all.
@@ -53,6 +62,8 @@ requires: []
 
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**:
     - Like a strict QA engineer: check off each item on the list one by one, no favoritism
@@ -73,6 +84,8 @@ requires: []
     - "Spec requires 'dark mode' (Section 4.1). ThemeProvider implements the toggle logic, but form components in settings-view.tsx are not dark-adapted — input backgrounds appear white in dark mode. Partially implemented."
     - "Code found hardcoded database path '/Users/example/data.db' at src/lib/db.ts:23. Security issue."
 
+<!-- end: output-style -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     code-review/
@@ -83,14 +96,20 @@ requires: []
         └── workflow.md                    # Load baseline, dispatch, scan, aggregate, output report
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Review report** (screen output) — parallel agent review results with aggregated findings: functional completeness, UI consistency, code quality, security scan, etc.
 
+<!-- end: output-artifacts -->
+<!-- begin: review-dimension-checklist -->
 [Review Dimension Checklist]
     For moderate/complex changes, review runs via 4 parallel specialized agents (see [Workflow] Step 2). Each agent owns a dimension set below. For simple changes (`change_complexity="simple"`), the aggregator runs a quick quality pass only.
 
     **按步执行** references/review-dimension-checklist.md
 
+<!-- end: review-dimension-checklist -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.
     **Evidence-less conclusions**: Saying "looks good" without file:line evidence. Every finding needs a concrete location. "Looks good" is not a review finding — it's a skipped step.
@@ -98,6 +117,8 @@ requires: []
     **Regression blind spot**: Only reviewing changed files without checking what depends on them. Use `dep-graph affected <file>` if available to scope impact.
     **Skipping compilation verification**: "It's just a style change" → style files can break. Run compilation verification every time.
 
+<!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
 [Anti-Rationalization Checklist]
 
     | Rationalization | Reality |
@@ -113,6 +134,8 @@ requires: []
     | "I only changed styles, no need to compile" | Style files can also cause compilation errors (Tailwind config, CSS Modules references) |
     | "The change is small, compilation will definitely pass" | Compilation is a gate; run it every time |
 
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: review-strategy -->
 [Review Strategy]
     Methodology during the review process.
 
@@ -121,6 +144,8 @@ requires: []
 [Workflow] — see [Review Strategy] for review methodology.
     **按步执行** references/workflow.md
 
+<!-- end: review-strategy -->
+<!-- begin: yolo-mode -->
 [YOLO Mode]
     When FORGE_MODE=yolo, the review report is written to file instead of blocking:
 
@@ -128,5 +153,9 @@ requires: []
         Same structured report format. Append to existing file if one exists.
         The main Agent proceeds to fixes automatically without waiting for user confirmation.
 
+<!-- end: yolo-mode -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Step 1: Load Comparison Baseline]
+
+<!-- end: initialization -->
