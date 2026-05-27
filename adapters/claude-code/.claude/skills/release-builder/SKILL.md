@@ -42,6 +42,7 @@ requires: []
 
     Optional:
     - Product-Spec.md -> if available, cross-reference features for smoke testing
+    - `.forge/security-guidance.md` -> if present, **read before release** — privacy + security smoke must not violate team rules (install via `pnpm forge-install`)
 
 <!-- end: dependency-check -->
 <!-- begin: first-principles -->

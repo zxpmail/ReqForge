@@ -129,6 +129,7 @@ export function copyInstallTree(
 
 const QUICKREF_SRC = "core/templates/forge-quickref.md";
 const DEVMAP_SRC = "core/templates/dev-map-template.md";
+const SECURITY_GUIDANCE_SRC = "core/templates/security-guidance-template.md";
 
 /** Copy forge-quickref into user project `.forge/quickref.md` */
 export function installForgeQuickref(
@@ -176,6 +177,29 @@ export function installDevMap(
   log(`  ✅ ${dest}`);
 }
 
+/** Copy security-guidance template into user project `.forge/security-guidance.md` */
+export function installSecurityGuidance(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const src = path.join(forgeRoot, SECURITY_GUIDANCE_SRC);
+  const forgeDir = path.join(targetRoot, ".forge");
+  const dest = path.join(forgeDir, "security-guidance.md");
+  if (!fs.existsSync(src)) {
+    log(`  ⚠️  security-guidance template not found: ${src}`);
+    return;
+  }
+  if (fs.existsSync(dest) && !force) {
+    log(`  ⏭️  .forge/security-guidance.md exists (use --force to overwrite)`);
+    return;
+  }
+  fs.mkdirSync(forgeDir, { recursive: true });
+  fs.copyFileSync(src, dest);
+  log(`  ✅ ${dest}`);
+}
+
 export function applyWindowsSettings(settingsDir: string, log: (msg: string) => void): boolean {
   const winSrc = path.join(settingsDir, "settings.windows.json");
   const dest = path.join(settingsDir, "settings.json");
@@ -203,6 +227,7 @@ export function installForge(
 
   installForgeQuickref(path.resolve(targetRoot), forgeRoot, log, options.force);
   installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installSecurityGuidance(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
   const useWindows =

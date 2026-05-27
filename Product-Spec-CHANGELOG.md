@@ -1,5 +1,13 @@
 # 变更记录
 
+## [v1.29.0] - 2026-05-28
+### 新增
+- **`.forge/security-guidance.md`**：团队安全规则模板，`installSecurityGuidance` + 对照文档
+- **forge-verify** `security-patterns` 轻量扫描
+
+### 变更
+- 框架版本号 **v1.29.0**；code-review / release-builder / dev-builder 引用安全规则文件
+
 ## [v1.28.0] - 2026-05-27
 ### 新增
 - **dev-map 开发导航地图**：`.forge/dev-map.md` 项目级语义索引，dev-builder 维护，`forge-install` 写入模板

@@ -29,6 +29,7 @@ requires: []
     - Project code exists -> if no code, prompt to call /dev-builder first
 
     Optional (enhances review capability):
+    - `.forge/security-guidance.md` -> if present, **must read** for moderate/complex reviews or when `code-reviewer-security` runs; team rules override generic OWASP guesses
     - DEV-PLAN.md -> if available, cross-reference Phase delivery checklist
     - Design-Brief.md -> if available, cross-reference visual specifications
     - Design tool MCP (Pencil / Figma, etc.) -> if available, extract design values and compare with code

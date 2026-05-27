@@ -64,8 +64,10 @@ One-command install: `pnpm forge-install <client> --target <dir>` (also writes `
 
 Sync after editing core: `pnpm sync`
 
-Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/shuge-openspec-superpowers-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/context7-comparison.md`, `core/docs/rtk-comparison.md`, `core/docs/nanochat-comparison.md`, `core/docs/autoresearch-comparison.md`, `core/docs/llm-council-comparison.md`, `core/docs/jobs-comparison.md`, `core/docs/llm-wiki-comparison.md`, `core/docs/founders-playbook-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`, `core/docs/session-execution-discipline.md`
+Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/shuge-openspec-superpowers-comparison.md`, `core/docs/security-guidance-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/context7-comparison.md`, `core/docs/rtk-comparison.md`, `core/docs/nanochat-comparison.md`, `core/docs/autoresearch-comparison.md`, `core/docs/llm-council-comparison.md`, `core/docs/jobs-comparison.md`, `core/docs/llm-wiki-comparison.md`, `core/docs/founders-playbook-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`, `core/docs/session-execution-discipline.md`
+
+Install also writes: `.forge/quickref.md`, `.forge/dev-map.md`, `.forge/security-guidance.md`
 
 Gates: Product-Spec.md + § Idea Stage Exit Criteria + spec-confirmed → DEV-PLAN.md (MVP Scope) + plan-confirmed → implementer-session (app code)
 
-Version: v1.28.0
+Version: v1.29.0

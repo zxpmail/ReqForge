@@ -4,6 +4,17 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.29.0] - 2026-05-28
+
+### Added
+- **`.forge/security-guidance.md`**: team-versioned security rules template; `pnpm forge-install` (`installSecurityGuidance`); [security-guidance-comparison.md](core/docs/security-guidance-comparison.md).
+- **forge-verify** `security-patterns`: lightweight `eval` / `new Function` scan when `.forge/security-guidance.md` exists.
+
+### Changed
+- **code-review** / **release-builder** / **dev-builder**: read `.forge/security-guidance.md` for security-sensitive work.
+- **forge-quickref**: index row for security-guidance.
+- **founders-playbook-comparison**: Security Gate links to security-guidance doc.
+
 ## [v1.28.0] - 2026-05-27
 
 ### Added

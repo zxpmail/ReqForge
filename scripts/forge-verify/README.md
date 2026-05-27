@@ -18,6 +18,7 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 | 3 | test | vitest / jest | 有测试配置的项目 |
 | 4 | no-placeholders | grep TBD/FIXME in src/ | 所有项目 |
 | 5 | dev-map-fresh | .forge/dev-map.md 存在且已填充 | 所有项目 |
+| 6 | security-patterns | `eval` / `new Function` 轻量扫描（需 security-guidance.md） | 有 src/ 的项目 |
 
 ## 基线对比流程
 

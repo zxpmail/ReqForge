@@ -11,6 +11,7 @@
  *   3. test            — 测试通过检查
  *   4. no-placeholders — grep TBD/FIXME in committed code
  *   5. dev-map-fresh   — dev-map.md 是否存在
+ *   6. security-patterns — 轻量危险模式扫描（eval / new Function）
  *
  * --baseline save    : 运行验证并保存结果到 .forge/verify-baseline.json
  * --baseline compare : 运行验证并与基线对比，输出增量
@@ -18,8 +19,8 @@
  */
 
 import { execSync } from "child_process";
-import { existsSync, readFileSync } from "fs";
-import { join, dirname } from "path";
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { join, dirname, relative } from "path";
 import { fileURLToPath } from "url";
 import { loadBaseline, saveBaseline, compareBaseline } from "./forge-verify/baseline.mjs";
 
@@ -124,6 +125,48 @@ function checkDevMapFresh() {
   return "dev-map present";
 }
 
+const SECURITY_PATTERN_RULES = [
+  { id: "eval()", re: /\beval\s*\(/ },
+  { id: "new Function()", re: /\bnew\s+Function\s*\(/ },
+];
+
+function collectSourceFiles(dir, acc = []) {
+  for (const name of readdirSync(dir)) {
+    const full = join(dir, name);
+    if (statSync(full).isDirectory()) {
+      if (name === "node_modules" || name === "dist" || name === ".git") continue;
+      collectSourceFiles(full, acc);
+      continue;
+    }
+    if (/\.(ts|tsx|js|jsx)$/.test(name)) acc.push(full);
+  }
+  return acc;
+}
+
+function checkSecurityPatterns() {
+  const guidancePath = join(ROOT, ".forge/security-guidance.md");
+  if (!existsSync(guidancePath)) return "skip (no .forge/security-guidance.md)";
+
+  const dirs = ["src", "lib", "app", "packages"].filter((d) => existsSync(join(ROOT, d)));
+  if (dirs.length === 0) return "skip (no src dirs)";
+
+  const hits = [];
+  for (const d of dirs) {
+    for (const file of collectSourceFiles(join(ROOT, d))) {
+      const text = readFileSync(file, "utf-8");
+      for (const rule of SECURITY_PATTERN_RULES) {
+        if (rule.re.test(text)) {
+          hits.push(`${rule.id} @ ${relative(ROOT, file)}`);
+        }
+      }
+    }
+  }
+  if (hits.length > 0) {
+    throw new Error(hits.slice(0, 5).join("; "));
+  }
+  return "no eval/new Function in src";
+}
+
 // --- Run all checks ---
 const checks = [
   run("skill-quality", checkSkillQuality),
@@ -131,6 +174,7 @@ const checks = [
   run("test", checkTest),
   run("no-placeholders", checkNoPlaceholders),
   run("dev-map-fresh", checkDevMapFresh),
+  run("security-patterns", checkSecurityPatterns),
 ];
 
 // --- Build results map ---

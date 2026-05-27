@@ -2,7 +2,8 @@
 
 ## 当前正在做什么
 
-- 无进行中任务
+- **security-guidance** 批已 push：**v1.29.0**（2026-05-28）— `.forge/security-guidance.md` + forge-verify 扫描 + 对照文档
+- **版本 v1.28.0**（2026-05-27）：dev-map + forge-verify + request-dispatcher
 
 ## 上次停在哪个位置
 

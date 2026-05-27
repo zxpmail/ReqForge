@@ -261,6 +261,7 @@ requires: []
             If Design-Brief.md exists -> read visual direction
             If design tool MCP exists -> prepare to read
             Read memory/ files -> project-memory.md (architecture context), decisions-log.md (past decisions), task-history.md (recent work)
+            If `.forge/security-guidance.md` exists -> read before auth/payment/upload/API-boundary Tasks; implement and review against team rules
             Scan existing code structure -> understand current project state
 
         Step 3: Determine current Phase

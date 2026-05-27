@@ -51,7 +51,7 @@ Product-Spec.md
 | MVP「刻意不做什么」 | DEV-PLAN `Out of scope` + `Scope amendment criteria` |
 | CLAUDE.md 会话末更新决策 | dev-builder Session lifecycle → `memory/decisions-log.md` |
 | 指标先于首个用户 | Spec `Success Metrics`（已有）；release-builder 指标门 — 待加强 |
-| 发布前安全审查 | code-review / release-builder — 待加强 Security Gate 节 |
+| 发布前安全审查 | `.forge/security-guidance.md` + code-review / release-builder — [security-guidance-comparison.md](./security-guidance-comparison.md) |
 | Chat / Cowork / Code 分工 | `.forge/quickref.md` Claude 表面指南 |
 
 ---

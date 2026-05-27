@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.28.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.29.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,10 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.29.0 — 2026-05-28
+- **`.forge/security-guidance.md`**：`forge-install` 写入团队安全规则；审查/发布/敏感 Task 须对照。
+- **forge-verify** 新增 `security-patterns` 轻量扫描 — [对照文档](core/docs/security-guidance-comparison.md)。
 
 ### v1.28.0 — 2026-05-27
 - **dev-map（开发导航地图）**：项目级语义索引 `.forge/dev-map.md`——AI 编码前先了解模块结构和已有模式。由 dev-builder 维护（谁动代码谁改地图）。`pnpm forge-install` 自动写入模板。
@@ -757,6 +761,7 @@ pnpm dep-graph stats  # 查看图统计
 | [jobs](https://github.com/karpathy/jobs) | BLS 职业数据 + LLM rubric 打分（非任务队列） | [jobs-comparison.md](core/docs/jobs-comparison.md) — risk_rank + PROJECT-HEALTH |
 | [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | 持久 wiki：raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR 归档纪律 |
 | Founder's Playbook（PDF） | Idea → MVP → Launch → Scale；先验证再构建 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Idea Validation Gate + DEV-PLAN MVP Scope |
+| Claude Code security-guidance 插件 | 实时安全 hooks ↔ 项目规则文件 | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) — 安装时写入 `.forge/security-guidance.md` |
 | 术哥无界 OpenSpec + Superpowers 实战 | 双工具流水线 → 统一 Harness | [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — change-manager ↔ dev-builder 衔接 |
 
 **ReqForge 维护者文档**（非第三方对照）：
@@ -769,6 +774,7 @@ pnpm dep-graph stats  # 查看图统计
 | 黄金路径示范 | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path`（`todo-cli/` 为 Spec+Plan 产物，非框架 CLI） |
 | Agent 执行纪律（8 条） | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
 | Founder's Playbook ↔ Forge 机器门 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
+| 安全规则 security-guidance | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) |
 
 ---
 

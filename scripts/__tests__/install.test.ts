@@ -7,6 +7,7 @@ import {
   copyInstallTree,
   installForge,
   installForgeQuickref,
+  installSecurityGuidance,
   parseInstallArgs,
   resolvePaths,
   shouldSkipOverwrite,
@@ -157,6 +158,21 @@ describe("installForge", () => {
     expect(fs.existsSync(path.join(result.destPath, "CLAUDE.md"))).toBe(true);
     expect(result.windowsSettingsApplied).toBe(true);
     expect(fs.readFileSync(path.join(target, ".forge/quickref.md"), "utf-8")).toBe("# quickref");
+  });
+
+  it("installSecurityGuidance writes .forge/security-guidance.md", () => {
+    const tplDir = path.join(forgeRoot, "core/templates");
+    fs.mkdirSync(tplDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(tplDir, "security-guidance-template.md"),
+      "# security rules",
+    );
+
+    installSecurityGuidance(target, forgeRoot, () => {}, false);
+
+    expect(
+      fs.readFileSync(path.join(target, ".forge/security-guidance.md"), "utf-8"),
+    ).toBe("# security rules");
   });
 
   it("installForgeQuickref skips existing without force", () => {

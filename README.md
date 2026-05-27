@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.28.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.29.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,10 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.29.0 — 2026-05-28
+- **`.forge/security-guidance.md`**: team security rules on `pnpm forge-install`; code-review / release-builder / dev-builder read it for sensitive work.
+- **forge-verify** `security-patterns`: lightweight `eval` / `new Function` scan — [comparison doc](core/docs/security-guidance-comparison.md).
 
 ### v1.28.0 — 2026-05-27
 - **dev-map**: Project-level navigation index at `.forge/dev-map.md` — AI explores module structure and existing patterns before coding. Maintained by dev-builder (who changes code updates the map). Template installed via `pnpm forge-install`.
@@ -774,6 +778,7 @@ External harnesses reviewed for positioning (not dependencies):
 | [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) | Persistent wiki: raw/schema + ingest/query/lint | [llm-wiki-comparison.md](core/docs/llm-wiki-comparison.md) — memory/ + ADR filing discipline |
 | [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) | **4 principles**: Think Before Coding, Simplicity First, Surgical Changes, Goal-Driven (154k ★) | [karpathy-skills-comparison.md](core/docs/karpathy-skills-comparison.md) — behavior-rules.md + Karpathy Discipline in every Skill |
 | Founder's Playbook (PDF) | Idea → MVP → Launch → Scale; validation-before-build | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Idea Validation Gate + DEV-PLAN MVP Scope |
+| Claude Code security-guidance 插件 | Real-time security hooks ↔ project rules file | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) — `.forge/security-guidance.md` on install |
 | 术哥无界 OpenSpec + Superpowers 实战 | Dual-tool pipeline → unified Harness | [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — change-manager ↔ dev-builder handoff |
 
 **ReqForge maintainer docs** (not third-party comparisons):
@@ -786,6 +791,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Golden path demo | [test-demo/README.md](test-demo/README.md) · `pnpm test-demo-golden-path` (`todo-cli/` = Spec+Plan artifact, not framework CLI) |
 | Agent execution discipline (8 rules) | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
 | Founder's Playbook ↔ Forge gates | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
+| Security guidance ↔ Forge | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) |
 
 ---
 
