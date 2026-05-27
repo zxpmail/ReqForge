@@ -62,7 +62,7 @@ requires: []
     | **Project State** | Required artifacts exist for the target Skill | No active changes/ folder conflict |
     | **Ambiguity Resolved** | Recommendation resolves the ambiguity | User would not be surprised by the routing |
 
-[Dispatch Decision Matrix]
+[Dispatch Decision Strategy]
 
     | User says... | Product-Spec.md exists? | Active changes/? | Code exists? | Route to |
     |---|---|---|---|---|
@@ -83,6 +83,12 @@ requires: []
     - "Make it production-ready" -> ask: "Bug fixes first (bug-fixer), code quality (code-review), or release pipeline (release-builder)?"
     - User mentions both a bug and a feature -> route to the dominant intent first; fix bug before adding features
 
+[Gotchas]
+    **Premature dispatch**: "This looks like X, let me dispatch immediately." — Without completing the three-step analysis (intent → state → disambiguate), you may route to the wrong Skill. Always complete all three steps.
+    **Prerequisite blindness**: Dispatching to /dev-planner without Product-Spec.md, or /code-review without code. — Always verify the target Skill's prerequisites before recommending. A recommendation that bounces is worse than a clarifying question.
+    **Over-routing**: Using request-dispatcher for every request instead of just the ambiguous 10%. — The static rules in CLAUDE.md [Skill Dispatch] handle 90% of cases. Only invoke this Skill when the static rules don't clearly match.
+    **Ignoring active changes/**: User asks for a new feature while changes/ folder is active. — Active changes/ must be resolved (verify + archive) before starting new work. Route to /change-manager for the active change, not a new Skill.
+
 [Anti-Rationalization Checklist]
 
     | Rationalization | Reality |
@@ -92,13 +98,8 @@ requires: []
     | "They said improve, that covers everything" | "Improve" is the most ambiguous word. Use the ambiguity patterns to narrow down before acting. |
     | "I'll handle it myself instead of dispatching" | Dispatching isn't delegation — it's using the right methodology for the job. Every Skill has specific procedures you don't have loaded. |
 
-[Gotchas]
-    **Premature dispatch**: "This looks like X, let me dispatch immediately." — Without completing the three-step analysis (intent → state → disambiguate), you may route to the wrong Skill. Always complete all three steps.
-    **Prerequisite blindness**: Dispatching to /dev-planner without Product-Spec.md, or /code-review without code. — Always verify the target Skill's prerequisites before recommending. A recommendation that bounces is worse than a clarifying question.
-    **Over-routing**: Using request-dispatcher for every request instead of just the ambiguous 10%. — The static rules in CLAUDE.md [Skill Dispatch] handle 90% of cases. Only invoke this Skill when the static rules don't clearly match.
-    **Ignoring active changes/**: User asks for a new feature while changes/ folder is active. — Active changes/ must be resolved (verify + archive) before starting new work. Route to /change-manager for the active change, not a new Skill.
+[Workflow] — See [Dispatch Decision Strategy] for routing rules before executing steps below.
 
-[Workflow]
     Step 1: Classify user intent
         Read the user's message and classify into one of:
         - New product idea -> /product-spec-builder
@@ -113,7 +114,7 @@ requires: []
 
     Step 2: Cross-reference project state
         Check existence of: Product-Spec.md, DEV-PLAN.md, project code directory, active changes/<name>/
-        Use the [Dispatch Decision Matrix] to narrow down.
+        Use the [Dispatch Decision Strategy] to narrow down.
         
     Step 3: Disambiguate or ask
         If still ambiguous after Step 1 + Step 2:

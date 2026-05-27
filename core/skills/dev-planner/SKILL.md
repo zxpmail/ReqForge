@@ -27,7 +27,7 @@ requires: []
 
     Required:
     - Product-Spec.md -> if missing, prompt user to call /product-spec-builder first
-    - Product-Spec.md must include completed **§ Idea Stage Exit Criteria** (three questions) — if missing or `[TBD]`, route back to `/product-spec-builder` before generating DEV-PLAN
+    - Product-Spec.md must include completed **§ Idea Stage Exit Criteria** (three questions) — if missing or `TBD`, route back to `/product-spec-builder` before generating DEV-PLAN
 
     Optional (degradation mode):
     - Design-Brief.md -> if missing, mark as "no design specification mode", visual details annotated as [TBD by Design Brief]
@@ -162,7 +162,7 @@ requires: []
 
 <!-- end: analysis-dimension-checklist -->
 <!-- begin: analysis-strategies -->
-[Analysis Strategies]
+[Analysis Strategy]
     **Dependency Graph Construction**
     Starting from the Spec's feature list, build dependency relationships between features:
     1. List all feature points
@@ -252,7 +252,7 @@ requires: []
 
 <!-- end: information-sufficiency-criteria -->
 <!-- begin: workflow-generation-mode -->
-[Workflow (Generation Mode)]
+[Workflow (Generation Mode)] — Apply [Analysis Strategy] methodology across all Phases below.
 <!-- end: workflow-generation-mode -->
     <!-- begin: loading-phase -->
     [Loading Phase]
@@ -306,7 +306,7 @@ requires: []
 
         Step 2: WebSearch validation
             Cross-reference the "Technology stack determination" dimension in [Analysis Dimension Checklist]
-            Apply the "WebSearch Validation" strategy from [Analysis Strategies]
+            Apply the "WebSearch Validation" strategy from [Analysis Strategy]
             Verify framework versions, key dependency compatibility, known issues
 
         Step 3: Confirm tech stack
@@ -326,11 +326,11 @@ requires: []
             For each feature, annotate: type, dependencies on other features, data tables involved, pages and components involved
 
         Step 2: Dependency graph construction
-            Apply the "Dependency Graph Construction" strategy from [Analysis Strategies]
+            Apply the "Dependency Graph Construction" strategy from [Analysis Strategy]
             Build the feature dependency graph, identify ordering
 
         Step 3: Phase breakdown
-            Apply the "Onion Peeling Method" and "Risk-First Method" from [Analysis Strategies]
+            Apply the "Onion Peeling Method" and "Risk-First Method" from [Analysis Strategy]
             Group features into Phases by dependency order and priority
             Apply "Granularity Calibration" to check each Phase's granularity
 
@@ -356,7 +356,7 @@ requires: []
             - Development rules
 
         Step 3: Self-check
-            Apply the "Granularity Calibration" from [Analysis Strategies] to check again
+            Apply the "Granularity Calibration" from [Analysis Strategy] to check again
             Confirm every core feature in the Spec has a corresponding Phase
             Confirm Phase order does not violate dependency relationships
             No-placeholder check: scan output for placeholders like TBD, "to be filled", "to be determined", "similar to Phase/Task N" — replace with specific content if found

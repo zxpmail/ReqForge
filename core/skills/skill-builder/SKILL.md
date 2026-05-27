@@ -100,7 +100,7 @@ requires: []
         Each Skill consists of multiple independent Sections, each being an atomic capability module:
         - [Dimension Checklist] — defines "what to check / collect"
         - [Strategy] — defines "how to do it"
-        - [Workflow] — defines "in what order"
+        - Workflow — defines "in what order"
         - [Dependency Check] — defines "what prerequisites are needed"
         These are building blocks — the same patterns can be reused across different Skills.
         Changing one Section does not affect other Sections.
@@ -151,8 +151,11 @@ requires: []
         - Written in Chinese
 
     <!-- end: format-conventions -->
+[Review Strategy]
+    Reference [Quality Rubric] for scoring criteria and the Workflow section below for the creation sequence.
+
 <!-- begin: workflow -->
-[Workflow]
+[Workflow] — See [Review Strategy] for quality assessment and [Quality Rubric] for scoring.
 <!-- end: workflow -->
     <!-- begin: step-1:-requirements-gathering -->
     [Step 1: Requirements Gathering]
