@@ -4,6 +4,16 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.27.0] - 2026-05-27
+
+### Added
+- **CLAUDE.md zone partitioning**: [Immutable/Stable/Volatile](CLAUDE.md#L1) zones — session-varying content at end of prompt preserves prefix for caching.
+
+### Changed
+- **Settings hook format**: PreToolUse/PostToolUse now arrays (was objects); removed invalid events (PreCommit, BeforeCommand, AfterCommand, PostCommit, OnInit); merged BeforeCommand/AfterCommand into PreToolUse/PostToolUse arrays.
+- **Skill quality**: 13/13 PASS, 0 FAIL (4 at perfect 33/33). Fixed Gotchas/step-counting cross-contamination, Strategy vs Strategies regex mismatch, TBD text matching `\[.*\]` sed pattern.
+- **Feedback cleanup**: Converted stray JSON files to standard `.md` frontmatter format; fixed FEEDBACK-INDEX.md missing entries.
+
 ## [v1.26.0] - 2026-05-27
 
 ### Added

@@ -68,4 +68,4 @@ Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparis
 
 Gates: Product-Spec.md + § Idea Stage Exit Criteria + spec-confirmed → DEV-PLAN.md (MVP Scope) + plan-confirmed → implementer-session (app code)
 
-Version: v1.26.0
+Version: v1.27.0

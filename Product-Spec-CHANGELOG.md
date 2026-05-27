@@ -1,5 +1,15 @@
 # 变更记录
 
+## [v1.27.0] - 2026-05-27
+### 新增
+- **CLAUDE.md 分区**：Immutable/Stable/Volatile 三区，提示词前缀保持稳定利于 prompt caching
+- **Hook 修复**：PreToolUse/PostToolUse 改为数组，移除无效事件，合并 BeforeCommand/AfterCommand
+
+### 变更
+- 框架版本号 **v1.27.0**（package.json、README 徽章、Wiki Home）；发布日 **2026-05-27**
+- **Skill 质量**：13/13 PASS，0 FAIL；4 个 Skill 满分 33/33；修复 Gotchas 计数污染、Strategy 复数 regex 不匹配、TBD 匹配 `\[.*\]` sed 模式
+- **反馈清理**：JSON 反馈文件统一转为 .md frontmatter 格式，FEEDBACK-INDEX.md 补全
+
 ## [v1.26.0] - 2026-05-27
 ### 新增
 - 验证循环纪律、`.forge/quickref.md`（forge-install 写入）
