@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.27.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.28.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,11 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.28.0 — 2026-05-27
+- **dev-map（开发导航地图）**：项目级语义索引 `.forge/dev-map.md`——AI 编码前先了解模块结构和已有模式。由 dev-builder 维护（谁动代码谁改地图）。`pnpm forge-install` 自动写入模板。
+- **forge-verify（事后验证）**：统一验证入口 `pnpm forge-verify`，5 项检查 + 基线对比（`--baseline save|compare|check`）。把"我觉得做完了"变成"系统确认做完了"。
+- **dev-builder 集成**：Loading Phase 自动保存基线；Phase 完成后自动运行 forge-verify 并对比基线、更新 dev-map。新增 Post-Verification Gate 原则。
 
 ### v1.27.0 — 2026-05-27
 - **CLAUDE.md 分区**：[Immutable/Stable/Volatile](CLAUDE.md#L1) 三个区段——每次会话变化的内容放末尾，保持前缀稳定以利 prompt caching。

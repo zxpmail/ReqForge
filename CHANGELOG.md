@@ -4,6 +4,18 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.28.0] - 2026-05-27
+
+### Added
+- **dev-map**: project-level navigation index at `.forge/dev-map.md` — AI explores module structure, existing patterns, and change impact chains before coding. Template at `core/templates/dev-map-template.md`; written by `pnpm forge-install` (`installDevMap`). Maintained by dev-builder (who changes code updates the map).
+- **forge-verify**: unified post-verification entry point `pnpm forge-verify` with 5 checks (skill-quality, compile, test, no-placeholders, dev-map-fresh) and baseline comparison (`--baseline save|compare|check`). Scripts at `scripts/forge-verify.mjs` + `scripts/forge-verify/baseline.mjs`.
+- **request-dispatcher**: added missing `skill.json` metadata and `commands/request-dispatcher.md`.
+
+### Changed
+- **dev-builder**: Loading Phase now runs `pnpm forge-verify --baseline save` before coding; Phase Completion Assessment runs `pnpm forge-verify --baseline compare` after four-step verification and updates `.forge/dev-map.md`. New First Principle: Post-Verification Gate.
+- **check-evolution hook**: Part 2 project state detection now includes `dev-map` status.
+- **Smoke tests**: `adapters-sync` and `skills-complete` updated from 12→13 skills to reflect request-dispatcher count.
+
 ## [v1.27.0] - 2026-05-27
 
 ### Added

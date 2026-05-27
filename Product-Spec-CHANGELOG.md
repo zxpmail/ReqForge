@@ -1,5 +1,17 @@
 # 变更记录
 
+## [v1.28.0] - 2026-05-27
+### 新增
+- **dev-map 开发导航地图**：`.forge/dev-map.md` 项目级语义索引，dev-builder 维护，`forge-install` 写入模板
+- **forge-verify 事后验证**：统一入口 `pnpm forge-verify`，5 项检查 + 基线对比（save/compare/check）
+- **request-dispatcher**：补全 skill.json 元数据和 commands/ 命令文件
+
+### 变更
+- 框架版本号 **v1.28.0**（package.json、README 徽章、Wiki Home）；发布日 **2026-05-27**
+- **dev-builder**：Loading Phase 保存基线，完成后 forge-verify 对比 + 更新 dev-map；新增 Post-Verification Gate 原则
+- **check-evolution hook**：项目状态检测增加 dev-map
+- **Smoke tests**：12→13 skill 计数对齐
+
 ## [v1.27.0] - 2026-05-27
 ### 新增
 - **CLAUDE.md 分区**：Immutable/Stable/Volatile 三区，提示词前缀保持稳定利于 prompt caching

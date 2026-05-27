@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.27.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.28.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,11 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.28.0 — 2026-05-27
+- **dev-map**: Project-level navigation index at `.forge/dev-map.md` — AI explores module structure and existing patterns before coding. Maintained by dev-builder (who changes code updates the map). Template installed via `pnpm forge-install`.
+- **forge-verify**: Unified post-verification entry `pnpm forge-verify` with 5 checks and baseline comparison (`--baseline save|compare|check`). Turns "I think I'm done" into "the system confirms I'm done."
+- **dev-builder integrated**: Loading Phase auto-saves baseline; Phase Completion runs forge-verify + compares baseline + updates dev-map. New Post-Verification Gate principle.
 
 ### v1.27.0 — 2026-05-27
 - **CLAUDE.md zone partitioning**: [Immutable/Stable/Volatile](CLAUDE.md#L1) zones — session-varying content at end of prompt preserves prefix for caching.
