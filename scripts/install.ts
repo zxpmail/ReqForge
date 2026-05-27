@@ -128,6 +128,7 @@ export function copyInstallTree(
 }
 
 const QUICKREF_SRC = "core/templates/forge-quickref.md";
+const DEVMAP_SRC = "core/templates/dev-map-template.md";
 
 /** Copy forge-quickref into user project `.forge/quickref.md` */
 export function installForgeQuickref(
@@ -145,6 +146,29 @@ export function installForgeQuickref(
   }
   if (fs.existsSync(dest) && !force) {
     log(`  ⏭️  .forge/quickref.md exists (use --force to overwrite)`);
+    return;
+  }
+  fs.mkdirSync(forgeDir, { recursive: true });
+  fs.copyFileSync(src, dest);
+  log(`  ✅ ${dest}`);
+}
+
+/** Copy dev-map template into user project `.forge/dev-map.md` */
+export function installDevMap(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const src = path.join(forgeRoot, DEVMAP_SRC);
+  const forgeDir = path.join(targetRoot, ".forge");
+  const dest = path.join(forgeDir, "dev-map.md");
+  if (!fs.existsSync(src)) {
+    log(`  ⚠️  dev-map template not found: ${src}`);
+    return;
+  }
+  if (fs.existsSync(dest) && !force) {
+    log(`  ⏭️  .forge/dev-map.md exists (use --force to overwrite)`);
     return;
   }
   fs.mkdirSync(forgeDir, { recursive: true });
@@ -178,6 +202,7 @@ export function installForge(
   if (merged) log("   (merged into existing directory; user feedback preserved)");
 
   installForgeQuickref(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
   const useWindows =

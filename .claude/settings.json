@@ -2,23 +2,53 @@
   "hooks": {
     "PreToolUse": [
       {
-        "run": "sh core/hooks/hallucination-gate.sh"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh core/hooks/hallucination-gate.sh"
+          }
+        ]
       },
       {
-        "run": "sh core/hooks/phase-exit-guard.sh && sh core/hooks/stop-gate.sh && sh core/hooks/retry-gate.sh && sh core/hooks/detect-feedback-signal.sh"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh core/hooks/phase-exit-guard.sh && sh core/hooks/stop-gate.sh && sh core/hooks/retry-gate.sh && sh core/hooks/detect-feedback-signal.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [
       {
-        "run": "sh core/hooks/memory-guard.sh && sh core/hooks/check-sync.sh"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh core/hooks/memory-guard.sh && sh core/hooks/check-sync.sh"
+          }
+        ]
       },
       {
-        "run": "sh core/hooks/mark-review-needed.sh && sh core/hooks/memory-check.sh"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh core/hooks/mark-review-needed.sh && sh core/hooks/memory-check.sh"
+          }
+        ]
       }
     ],
     "SessionStart": [
       {
-        "run": "sh core/hooks/check-evolution.sh"
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh core/hooks/check-evolution.sh"
+          }
+        ]
       }
     ]
   }

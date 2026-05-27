@@ -62,6 +62,8 @@
     - After user confirms Phase complete: `rm -f .forge/phase-exit-block` (or `del` on Windows).
 
     **After All Pass**:
+    - Run `pnpm forge-verify --baseline compare` — if new failures vs baseline, must fix before proceeding
+    - Update `.forge/dev-map.md` — add/modify rows for modules touched this Phase (who changes code updates the map)
     - Report results to the user (with evidence)
     - Remove `.forge/phase-exit-block` if present
     - **PROJECT-HEALTH.md** (user projects only): Create or update at project root from `core/templates/PROJECT-HEALTH-template.md` (via adapter templates path). Fill: date, Phase N, Primary metric result, Spec coverage X/Y, last test command output summary, top 3 risk_rank items from last review if any, last 5 rows from `memory/task-history.md`, next Phase name. Skip for ReqForge framework repo itself.

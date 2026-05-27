@@ -15,6 +15,7 @@
 | `DEV-PLAN.md` | 开发计划（含 **MVP Scope**） |
 | `.forge/plan-confirmed.json` | Plan 已书面确认 |
 | `.forge/implementer-session.json` | implementer 子 Agent 正在写业务代码 |
+| `.forge/dev-map.md` | 开发导航地图（谁动代码谁改地图） |
 
 ---
 
@@ -101,6 +102,16 @@ pnpm test && pnpm forge-smoke
 ```
 
 改 `core/` 后：`pnpm sync`
+
+---
+
+## 事后验证（forge-verify）
+
+```bash
+pnpm forge-verify                      # 运行验证
+pnpm forge-verify --baseline save      # 开发前保存基线
+pnpm forge-verify --baseline compare   # 开发后对比基线
+```
 
 ---
 

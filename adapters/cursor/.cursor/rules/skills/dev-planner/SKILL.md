@@ -2,30 +2,40 @@
 ---
 name: dev-planner
 description: Used when Product-Spec.md is complete and needs to be planned into development phases. Also used to update existing development plans after Spec changes. Outputs DEV-PLAN.md.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     **Generation Mode**: Read Product-Spec.md (and Design-Brief.md, if present), analyze feature dependency relationships, WebSearch to validate technology choices, output a phased development plan DEV-PLAN.md.
 
     **Iteration Mode**: When the Product Spec changes, analyze the scope of impact, update the Phase breakdown and file inventory in DEV-PLAN.md. Completed Phases (marked with [x]) remain untouched.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Writing actual code -> use /dev-builder instead
     - Gathering requirements -> use /product-spec-builder instead
     - Fixing bugs -> use /bug-fixer instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Executed automatically as the first step when the Skill starts:
 
     Required:
     - Product-Spec.md -> if missing, prompt user to call /product-spec-builder first
-    - Product-Spec.md must include completed **§ Idea Stage Exit Criteria** (three questions) — if missing or `[TBD]`, route back to `/product-spec-builder` before generating DEV-PLAN
+    - Product-Spec.md must include completed **§ Idea Stage Exit Criteria** (three questions) — if missing or `TBD`, route back to `/product-spec-builder` before generating DEV-PLAN
 
     Optional (degradation mode):
     - Design-Brief.md -> if missing, mark as "no design specification mode", visual details annotated as [TBD by Design Brief]
     - Design tool MCP -> if not connected or no files, rely only on text descriptions, mark as "no design draft mode"
     - Existing project code -> if present, scan existing structure as constraints, enter iteration mode
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     **Verifiable Principle**: Each Phase must be compilable, runnable, and show results upon completion. No "write a bunch of code but nothing runs" Phases allowed. Each Phase should deliver a **minimum runnable subset** — a core path that works end-to-end, even if features are incomplete. It's better to have 3 features that run than 10 features that don't.
 
@@ -55,6 +65,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - Not allowed: "implement related features" — list specific feature names and behaviors
     - Each Task description must be complete enough for an engineer without project context to read and execute
 
+<!-- end: first-principles -->
+<!-- begin: hard-gate -->
 [HARD-GATE]
     **Until `DEV-PLAN.md` is saved AND the user explicitly confirms the plan**:
 
@@ -65,6 +77,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     Rationalizations → `references/plan-hard-gate-rationalization.md`
 
+<!-- end: hard-gate -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     dev-planner/
@@ -75,6 +89,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
         └── dev-plan-template.md           # DEV-PLAN.md Output Template
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**: Architect communicating a build plan — structured, explicit, dependency-aware. Every Phase has a clear user-visible outcome.
     **Principles**:
@@ -84,6 +100,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - X No TBD or placeholder items — every word must be executable
     - X No "implement related features" — list specific feature names
 
+<!-- end: output-style -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Unrealistic Phasing**: "Do everything in Phase 1" is the most common failure. Each Phase must produce compilable, runnable, demonstrable output. If a Phase has no visible outcome, it's too broad — split it.
     **Missing dependency order**: Building feature B before feature A when B depends on A. Always trace the dependency chain: infrastructure → data → API → UI. Violating this order means stubs and tech debt.
@@ -91,10 +109,14 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     **Ignoring existing code**: In iteration mode, assuming the project is greenfield. Always scan existing code structure first — the plan must respect what's already there, not redesign from scratch.
     **Missing MVP Scope**: Shipping a Phase list without **Out of scope** and **Scope amendment criteria** invites zero-friction creep. Fill `## MVP Scope` from the template before Phase 1.
 
+<!-- end: gotchas -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **DEV-PLAN.md** — Phased development plan (created in generation mode, updated in iteration mode)
     - **changes/\<change-name\>/tasks.md** — Task breakdown (filled when `/change-manager apply` invokes dev-planner for that change only — not by product-spec-builder iteration)
 
+<!-- end: output-artifacts -->
+<!-- begin: analysis-dimension-checklist -->
 [Analysis Dimension Checklist]
     When analyzing the Product Spec, the following dimensions must be covered (not necessarily in order, adjust flexibly based on project characteristics):
 
@@ -138,7 +160,9 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     - Test case design
     - Git branch strategy
 
-[Analysis Strategies]
+<!-- end: analysis-dimension-checklist -->
+<!-- begin: analysis-strategies -->
+[Analysis Strategy]
     **Dependency Graph Construction**
     Starting from the Spec's feature list, build dependency relationships between features:
     1. List all feature points
@@ -206,6 +230,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
     This avoids the slow sequential "read one file at a time" approach and provides a comprehensive codebase picture in a single parallel pass.
 
+<!-- end: analysis-strategies -->
+<!-- begin: information-sufficiency-criteria -->
 [Information Sufficiency Criteria]
     DEV-PLAN.md can be generated when the following conditions are met:
 
@@ -224,7 +250,11 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
     If "Must Satisfy" conditions are not met, continue analyzing — don't generate a half-baked product.
     If "Try to Satisfy" conditions are not met, write the minimum acceptance criteria in the corresponding Phase's verification section — compiles, starts up, new features usable — without using placeholders.
 
-[Workflow (Generation Mode)]
+<!-- end: information-sufficiency-criteria -->
+<!-- begin: workflow-generation-mode -->
+[Workflow (Generation Mode)] — Apply [Analysis Strategy] methodology across all Phases below.
+<!-- end: workflow-generation-mode -->
+    <!-- begin: loading-phase -->
     [Loading Phase]
         Goal: Read all input documents, establish the analysis foundation
 
@@ -260,6 +290,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             If memory/ exists -> read project-memory.md (architecture constraints, known pitfalls), decisions-log.md (past decisions to respect), task-history.md (what has been implemented)
             Use memory constraints when planning Phase dependencies and file paths
 
+    <!-- end: loading-phase -->
+    <!-- begin: technical-validation-phase -->
     [Technical Validation Phase]
         Goal: Determine and validate the tech stack
 
@@ -274,7 +306,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
 
         Step 2: WebSearch validation
             Cross-reference the "Technology stack determination" dimension in [Analysis Dimension Checklist]
-            Apply the "WebSearch Validation" strategy from [Analysis Strategies]
+            Apply the "WebSearch Validation" strategy from [Analysis Strategy]
             Verify framework versions, key dependency compatibility, known issues
 
         Step 3: Confirm tech stack
@@ -282,6 +314,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             If the Spec's technical direction is clear and validated -> confirm directly, no need to ask the user
             Output the confirmed tech stack table
 
+    <!-- end: technical-validation-phase -->
+    <!-- begin: analysis-phase -->
     [Analysis Phase]
         Goal: Analyze feature dependency relationships, break down into Phases
 
@@ -292,11 +326,11 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             For each feature, annotate: type, dependencies on other features, data tables involved, pages and components involved
 
         Step 2: Dependency graph construction
-            Apply the "Dependency Graph Construction" strategy from [Analysis Strategies]
+            Apply the "Dependency Graph Construction" strategy from [Analysis Strategy]
             Build the feature dependency graph, identify ordering
 
         Step 3: Phase breakdown
-            Apply the "Onion Peeling Method" and "Risk-First Method" from [Analysis Strategies]
+            Apply the "Onion Peeling Method" and "Risk-First Method" from [Analysis Strategy]
             Group features into Phases by dependency order and priority
             Apply "Granularity Calibration" to check each Phase's granularity
 
@@ -305,6 +339,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             "Must Satisfy" all met -> proceed to output phase
             If questions remain -> confirm with the user before continuing
 
+    <!-- end: analysis-phase -->
+    <!-- begin: output-phase -->
     [Output Phase]
         Goal: Generate the DEV-PLAN.md file
 
@@ -320,7 +356,7 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
             - Development rules
 
         Step 3: Self-check
-            Apply the "Granularity Calibration" from [Analysis Strategies] to check again
+            Apply the "Granularity Calibration" from [Analysis Strategy] to check again
             Confirm every core feature in the Spec has a corresponding Phase
             Confirm Phase order does not violate dependency relationships
             No-placeholder check: scan output for placeholders like TBD, "to be filled", "to be determined", "similar to Phase/Task N" — replace with specific content if found
@@ -342,11 +378,15 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
              - Or call /design-brief-builder first to determine visual direction (if not done yet)
              - Want to adjust Phase granularity or order? Just tell me."
 
+    <!-- end: output-phase -->
+<!-- begin: workflow-iteration-mode -->
 [Workflow (Iteration Mode)]
     Trigger conditions:
     - DEV-PLAN.md already exists and Product Spec has changed
     - User proactively requests Phase adjustments
 
+<!-- end: workflow-iteration-mode -->
+    <!-- begin: change-analysis-phase -->
     [Change Analysis Phase]
         Step 1: Load existing files
             Read existing DEV-PLAN.md
@@ -369,6 +409,8 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
              - Phase M: [Impact description]
              Should I update it directly?"
 
+    <!-- end: change-analysis-phase -->
+    <!-- begin: update-phase -->
     [Update Phase]
         Step 1: Update Phase
             Modify the existing DEV-PLAN.md directly
@@ -381,5 +423,9 @@ description: Used when Product-Spec.md is complete and needs to be planned into 
         Step 3: Save file
             Save the updated DEV-PLAN.md
 
+    <!-- end: update-phase -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Loading Phase]
+
+<!-- end: initialization -->

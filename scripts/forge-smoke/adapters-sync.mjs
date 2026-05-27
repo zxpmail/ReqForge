@@ -9,7 +9,7 @@ const r = createRunner("adapters-sync");
 const coreNames = listSkillNames(path.join(ROOT, "core", "skills"));
 const coreJson = JSON.stringify(coreNames);
 
-r.assert(coreNames.length === 12, `core/skills expected 12, got ${coreNames.length}`);
+r.assert(coreNames.length === 13, `core/skills expected 13, got ${coreNames.length}`);
 
 for (const [adapter, relPath] of Object.entries(ADAPTER_SKILL_PATHS)) {
   const adapterDir = path.join(ROOT, relPath);

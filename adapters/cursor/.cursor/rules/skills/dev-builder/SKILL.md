@@ -62,6 +62,8 @@ requires: []
     **Online-First**: Rely on real-time information, not outdated memory. Before using external libraries/APIs, prefer **Context7** (`query-docs` / `resolve-library-id`) when installed, then WebSearch; see [development-strategies.md](references/development-strategies.md) Library Docs Strategy and [context7-comparison](https://github.com/zxpmail/ReqForge/blob/main/core/docs/context7-comparison.md).
     **Verification Is Evidence (Hard Gate)**: A completion declaration must include the verification command and its output executed in the same message. "It's done" plus compilation output run in the same message is a valid declaration. "It's done" plus "I compiled it earlier" is an invalid declaration — must re-run. "It's done" with no verification command at all is also an invalid declaration. This is not a suggestion — it is a gate. No on-the-spot verification, no completion.
 
+    **Post-Verification Gate (forge-verify)**: After four-step verification passes, run `pnpm forge-verify --baseline compare` to check for regressions vs the pre-Phase baseline. New failures must be fixed before the Phase is considered complete. This turns "I think I'm done" into "the system confirms I'm done." Also update `.forge/dev-map.md` with modules touched this Phase.
+
     **Spec/Plan Read-Only (prepare.py boundary)**: During /dev-builder, treat **Product-Spec.md** and **DEV-PLAN.md** as read-only constraints — like autoresearch's locked `prepare.py`. Do **not** edit them to match implementation drift. Requirement or scope changes → stop and route to `/change-manager` (brownfield) or user-approved `/product-spec-builder` + `/dev-planner` (greenfield). See [autoresearch-comparison.md](../../docs/autoresearch-comparison.md).
 
     **Task Micro-Cycle (≤10 min)**: After each Task's RED/GREEN/REFACTOR, run a **targeted** verification command within **10 minutes** of the code change and record **command + pass/fail** in the same message before code-reviewer. Aligns with autoresearch's fixed-budget loop and Superpowers TDD — Phase four-step verification remains the outer gate.
@@ -264,6 +266,9 @@ requires: []
         Step 3: Determine current Phase
             Display Phase list and completion status
             Identify the next Phase to develop
+
+        Step 4: Baseline snapshot
+            Run `pnpm forge-verify --baseline save` to capture current verification state before any code changes. This enables post-Phase baseline comparison.
             If the user specifies a particular Phase -> use that one
 
     <!-- end: loading-phase -->

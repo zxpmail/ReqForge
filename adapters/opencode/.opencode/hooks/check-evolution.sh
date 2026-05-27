@@ -79,12 +79,14 @@ fi
 HAS_SPEC=0
 HAS_PLAN=0
 HAS_CODE=0
+HAS_DEVMAP=0
 
 [ -f "$PROJECT_DIR/Product-Spec.md" ] && HAS_SPEC=1
 [ -f "$PROJECT_DIR/DEV-PLAN.md" ] && HAS_PLAN=1
 for dir in src app lib packages; do
   [ -d "$PROJECT_DIR/$dir" ] && HAS_CODE=1 && break
 done
+[ -f "$PROJECT_DIR/.forge/dev-map.md" ] && HAS_DEVMAP=1
 
 STATE_MSG="Project state: Product-Spec"
 if [ "$HAS_SPEC" -eq 0 ]; then
@@ -102,6 +104,13 @@ fi
 
 STATE_MSG="$STATE_MSG, Code"
 if [ "$HAS_CODE" -eq 0 ]; then
+  STATE_MSG="$STATE_MSG ❌"
+else
+  STATE_MSG="$STATE_MSG ✅"
+fi
+
+STATE_MSG="$STATE_MSG, dev-map"
+if [ "$HAS_DEVMAP" -eq 0 ]; then
   STATE_MSG="$STATE_MSG ❌"
 else
   STATE_MSG="$STATE_MSG ✅"

@@ -2,17 +2,25 @@
 ---
 name: code-review
 description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec and design mockups. Outputs a structured review report with evidence for each conclusion.
+version: 1.0.0
+updated: 2026-05-26
+requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Review code implementation completeness and quality against Product-Spec.md and design mockups.
     Output a structured review report. Fixes are executed by the main Agent using dev-builder or bug-fixer Skill after receiving the report.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Fixing bugs -> use /bug-fixer instead
     - Writing new features -> use /dev-builder instead
     - Requirements gathering -> use /product-spec-builder instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Automatically executed as the first step when the Skill starts:
 
@@ -27,6 +35,8 @@ description: Used when the user wants to review code, check quality, verify feat
     - Playwright plugin -> if available, automate UI interaction testing
     - git -> if available, use git diff to trace change scope
 
+<!-- end: dependency-check -->
+<!-- begin: behavior-rules-—-karpathy-discipline -->
 [Behavior Rules — Karpathy Discipline]
     Review 期间须检查以下两条 Karpathy 原则的执行情况：
     **Surgical Changes** — 每行改动是否直接追溯到用户请求或 Spec 条目？存在"顺手改动"吗？
@@ -34,6 +44,8 @@ description: Used when the user wants to review code, check quality, verify feat
 
     完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
 
+<!-- end: behavior-rules-—-karpathy-discipline -->
+<!-- begin: first-principles -->
 [First Principles]
     **Zero Trust Claims**: Do not accept vague conclusions like "already implemented" or "roughly matches." Every feature either has a code implementation (with file path and line number) or it does not.
     **Evidence is King**: Saying "passed" must be accompanied by compilation output, API responses, or value comparison results. A "passed" without evidence equals not having reviewed at all.
@@ -50,6 +62,8 @@ description: Used when the user wants to review code, check quality, verify feat
 
     **Web-First**: Suspicious code patterns or security concerns found during review should be WebSearched first to confirm whether they are known issues before drawing conclusions.
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     **Tone**:
     - Like a strict QA engineer: check off each item on the list one by one, no favoritism
@@ -70,76 +84,32 @@ description: Used when the user wants to review code, check quality, verify feat
     - "Spec requires 'dark mode' (Section 4.1). ThemeProvider implements the toggle logic, but form components in settings-view.tsx are not dark-adapted — input backgrounds appear white in dark mode. Partially implemented."
     - "Code found hardcoded database path '/Users/example/data.db' at src/lib/db.ts:23. Security issue."
 
+<!-- end: output-style -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     code-review/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md                           # Main Skill definition (this file)
+    └── references/
+        ├── review-dimension-checklist.md  # Design/bug/security/types review dimensions
+        ├── review-strategy.md             # Item-by-item, design value, Playwright, security scan methods
+        └── workflow.md                    # Load baseline, dispatch, scan, aggregate, output report
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Review report** (screen output) — parallel agent review results with aggregated findings: functional completeness, UI consistency, code quality, security scan, etc.
 
+<!-- end: output-artifacts -->
+<!-- begin: review-dimension-checklist -->
 [Review Dimension Checklist]
     For moderate/complex changes, review runs via 4 parallel specialized agents (see [Workflow] Step 2). Each agent owns a dimension set below. For simple changes (`change_complexity="simple"`), the aggregator runs a quick quality pass only.
 
-    --- code-reviewer-design (Spec & UI) ---
+    **按步执行** references/review-dimension-checklist.md
 
-    [Functional Completeness]
-        Check every functional requirement in Product-Spec.md one by one:
-        - Does each feature in the Spec have a corresponding code implementation?
-        - Is the implementation complete (not half-baked)?
-        - Does the behavior match the Spec description (not just "it runs")?
-        - If DEV-PLAN.md exists -> cross-reference the current Phase's delivery checklist
-
-        For each feature, output:
-        - Fully implemented — Spec item + code location + verification method
-        - Partially implemented — what exactly is missing
-        - Not implemented — Spec original text citation
-
-    [UI Consistency] (if design mockups exist)
-        Check UI implementation against design mockups:
-        - If design tool MCP exists -> extract design values, compare against Tailwind class / style values in code item by item
-        - Visually inspect design mockup aesthetics as reference
-        - Compare: layout, components, colors, spacing, interaction states
-        - If Design-Brief.md exists -> cross-reference color direction, information density, interaction style
-
-    [Spec Drift Detection] (mandatory)
-        Check if the code contains features not described in the Spec:
-        - Extra pages/routes, API endpoints, database tables or fields, out-of-scope UI components
-        - Mark as "Spec Drift" — could be a good extension or scope creep
-
-    [Surgical Changes Audit] (mandatory for diff review)
-        Check every changed line against the original request scope:
-        - Does each changed line trace directly to the user's request or a Spec item?
-        - Are there formatting/comment/style changes unrelated to the request? (violation)
-        - Are there "drive-by refactors" that clean up adjacent code? (violation)
-        - Was pre-existing dead code removed? (violation — mention only, don't delete)
-        - Only YOUR changes' orphans (unused imports/vars) are legitimately removed
-
-        Track every violating line with file:line — flag as "Surgical Violation" in review report.
-
-    [Simplicity First Audit] (mandatory for diff review)
-        Check if the implementation is over-engineered for the actual requirement:
-        - Speculative abstractions (Strategy/Factory/interface for single-use code)
-        - Error handling for impossible scenarios (defensive checks for conditions that can't happen)
-        - "Flexibility" / "configurability" that wasn't requested
-        - Code that's 200+ lines when 50 would do
-
-        Flag each instance with file:line + why it's over-engineering.
-
-    --- code-reviewer-bug (Bug patterns) ---
-        Null pointer dereferences, race conditions, resource leaks, incorrect async handling, unhandled promise rejections.
-
-    --- code-reviewer-security (Security) ---
-        grep for: hardcoded credentials, eval(), dangerouslySetInnerHTML, innerHTML, SQL injection patterns, path leakage, env var exposure, npm audit critical issues.
-
-    --- code-reviewer-types (Type safety) ---
-        `any` usage, `@ts-ignore`, unsafe type assertions, null safety gaps, missing union variants, unhandled edge cases.
-
-    --- Aggregator (code-reviewer) ---
-        Merge all agent findings. Each finding MUST include severity, impact, confidence (1–5) and **risk_rank = S×I×C**.
-        Sort confirmed findings by risk_rank descending. Apply confidence thresholding (≥0.6 or confidence_5 ≥ 4), deduplication, cross-agent risk_rank boost, meta-review on suspected, Must-fix/Should-fix/Insight buckets. Run `tsc --noEmit`.
-
+<!-- end: review-dimension-checklist -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Surface-level review**: Reading code without cross-referencing the Spec. Every line of code must be traceable to a Spec item. If it's not in the Spec, flag it as drift.
     **Evidence-less conclusions**: Saying "looks good" without file:line evidence. Every finding needs a concrete location. "Looks good" is not a review finding — it's a skipped step.
@@ -147,167 +117,35 @@ description: Used when the user wants to review code, check quality, verify feat
     **Regression blind spot**: Only reviewing changed files without checking what depends on them. Use `dep-graph affected <file>` if available to scope impact.
     **Skipping compilation verification**: "It's just a style change" → style files can break. Run compilation verification every time.
 
+<!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
 [Anti-Rationalization Checklist]
-    Agents tend to skip rules using "reasonable" justifications. Here are common rationalizations and the correct response.
 
-    Skipping item-by-item comparison:
-    - "The change is small, just a quick glance" -> review is not based on change size; item-by-item comparison is the minimum bar
-    - "I already reviewed this before" -> re-verify every time, do not trust previous conclusions. Code may have changed
-    - "This feature was not modified, no need to review" -> unmodified code can still be broken by changes in its context
+    | Rationalization | Reality |
+    |---|---|
+    | "The change is small, just a quick glance" | Review is not based on change size; item-by-item comparison is the minimum bar |
+    | "I already reviewed this before" | Re-verify every time, do not trust previous conclusions. Code may have changed |
+    | "This feature was not modified, no need to review" | Unmodified code can still be broken by changes in its context |
+    | "Everything looks normal" | "Normal" is not evidence; every conclusion needs file_path:line_number |
+    | "Other features should not be affected" | "Should" equals not verified; regression test scope must be explicit |
+    | "This code is standard" | Standard or not depends on whether it deviates from the Spec |
+    | "This project is small, there won't be security issues" | Small projects are more prone to security vulnerabilities |
+    | "I didn't write any SQL" | Security issues are not just SQL injection (XSS, path leakage, hardcoded credentials) |
+    | "I only changed styles, no need to compile" | Style files can also cause compilation errors (Tailwind config, CSS Modules references) |
+    | "The change is small, compilation will definitely pass" | Compilation is a gate; run it every time |
 
-    Skipping evidence:
-    - "Everything looks normal" -> "normal" is not evidence; every conclusion needs file_path:line_number
-    - "Other features should not be affected" -> "should" equals not verified; regression test scope must be explicit
-    - "This code is standard" -> standard or not depends on whether it deviates from the Spec
-
-    Skipping security scan:
-    - "This project is small, there won't be security issues" -> small projects are more prone to security vulnerabilities
-    - "I didn't write any SQL" -> security issues are not just SQL injection (XSS, path leakage, hardcoded credentials)
-
-    Skipping compilation verification:
-    - "I only changed styles, no need to compile" -> style files can also cause compilation errors (Tailwind config, CSS Modules references)
-    - "The change is small, compilation will definitely pass" -> compilation is a gate; run it every time
-
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: review-strategy -->
 [Review Strategy]
     Methodology during the review process.
 
-    **Item-by-Item Comparison Method**
-    For each item in the Spec's feature list, find the corresponding implementation in code:
-    1. Read the Spec item
-    2. Search code for the relevant file/function/component
-    3. Verify whether the behavior matches
-    4. Record evidence (file_path:line_number)
+    **按步执行** references/review-strategy.md
 
-    **Design Value Comparison Method** (if design tools available)
-    1. Extract precise values of each design page through the design tool API
-    2. Read the corresponding component's Tailwind class / style values in code
-    3. Compare item by item: layout, color, spacing, font size, border radius
-    4. Flag deviations
+[Workflow] — see [Review Strategy] for review methodology.
+    **按步执行** references/workflow.md
 
-    **Playwright Interaction Verification Method** (if Playwright available)
-    Do not just check static pages; test the complete interaction flow:
-    1. Core user paths (create, edit, delete, view)
-    2. Error scenarios (invalid input, network error)
-    3. State transitions (loading -> loaded -> empty)
-    4. Navigation (page transitions, back navigation)
-
-    **Security Scan Method**
-    Use the Grep tool to search for security risk patterns in code:
-    - `eval(` -> dangerous function
-    - `dangerouslySetInnerHTML` -> XSS risk
-    - `innerHTML` -> XSS risk
-    - `VITE_.*KEY|VITE_.*SECRET|VITE_.*TOKEN` -> environment variable leakage
-    - `/Users/` or `C:\Users\` -> developer path leakage
-    - `password.*=.*['"]` -> hardcoded password
-    - `sk-ant-|sk-proj-|ANTHROPIC_API_KEY|OPENAI_API_KEY` -> hardcoded API Key
-    Search the src/ directory for each pattern using the Grep tool with output_mode set to content to view matching lines.
-
-[Workflow]
-    [Step 1: Load Comparison Baseline]
-        Read Product-Spec.md -> extract all functional requirements within the review scope, list them with numbers
-        Read DEV-PLAN.md -> read the delivery checklist and key files for the current Phase or Task
-        If Design-Brief.md exists -> read the visual direction and page notes within the review scope
-        If design tool MCP exists -> find the design pages corresponding to the review scope through the design tool, read the precise values of those pages and their components as the baseline for UI consistency comparison
-        Determine the review scope:
-        - Full review (/code-review) -> all Spec features
-        - Phase review (triggered by dev-builder Phase completion verification) -> current Phase's delivery checklist
-        - Task review (triggered by dev-builder per-Task review) -> current Task's delivery checklist
-
-    [Step 2: Parallel Agent Dispatch] (for moderate/complex changes)
-        **Default**: If `change_complexity` is omitted, treat as **simple** (quick aggregator pass only).
-        Escalate to moderate/complex only when caller sets it, or change touches multiple modules / new APIs / security-sensitive code.
-        For simple changes (typo fix, single-file rename, comment-only, default), skip to [Step 3].
-        **Anonymous review packet** (moderate/complex): Remove implementer task description, session handoff, and "I just implemented…" narrative from inputs to specialized agents. Pass: Spec excerpts, DEV-PLAN checklist, affected files list, git diff or file contents, Design-Brief/MCP values. Do **not** pass author identity or prior assistant messages about the change.
-        For moderate/complex changes, dispatch 4 specialized agents concurrently:
-        - **code-reviewer-design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
-        - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
-        - **code-reviewer-security**: OWASP Top 10, credential leaks, injection, XSS
-        - **code-reviewer-types**: Type safety, nullability, any/ts-ignore, edge cases
-        Each agent returns structured findings with **severity, impact, confidence (1–5), risk_rank**, and evidence.
-
-    [Step 3: Scan Code Implementation]
-        Traverse the project code directory
-        Identify: pages/routes, components, API endpoints, database tables, hooks, utility functions
-        Build a code map (what features are in which files)
-
-    [Step 4: Aggregation & Confidence Scoring]
-        Collect findings from all specialized agents. Apply aggregation rules:
-
-        **Risk ranking (primary sort key)**:
-        - Recompute **risk_rank** = severity × impact × confidence (1–5) if any field missing
-        - Sort confirmed findings by **risk_rank** descending
-
-        **Confidence thresholding** (legacy 0.0–1.0 or 1–5):
-        - confidence >= 0.6 OR confidence_5 >= 4 -> confirmed
-        - confidence 0.3-0.6 OR confidence_5 == 3 -> suspected -> meta-review
-        - confidence < 0.3 OR confidence_5 <= 2 -> suppress (security may override)
-
-        **Deduplication**: same file + same line range + same category -> keep highest risk_rank
-
-        **Cross-agent boost**: same file+line from >=2 agents at confirmed level -> risk_rank × 1.1 (cap 125)
-
-        **Meta-review (suspected only)**: For each suspected finding, aggregator asks: (1) is there file:line evidence?, (2) does Spec require this?, (3) would a specialist agree? Promote to confirmed (>=0.6), keep suspected, or suppress (<0.3).
-
-        **Compilation verification**: tsc --noEmit
-
-        **Actionability buckets** (confirmed + promoted findings):
-        - **Must-fix**: blocks Phase Primary metric, security, or Spec must-have
-        - **Should-fix**: quality/maintainability before Phase sign-off
-        - **Insight**: architecture/note; no immediate fix required
-
-    [Step 5: Output Aggregated Review Report]
-        Format:
-        "**Code Review Report**
-
-         **Reference Documents**: Product-Spec.md [+ DEV-PLAN.md Phase N]
-
-         **Agent Coverage**: design [✅/❌] | bug [✅/❌] | security [✅/❌] | types [✅/❌]
-
-         ---
-
-         **Confirmed Issues (X)** — sorted by **risk_rank** (high → low)
-         - [risk_rank] [category] [file:line] — description — S/I/C — [agent] — [Must-fix|Should-fix|Insight]
-
-         **Suspected Issues (X)** (confidence 30-60%, flagged for manual review)
-         - [category] [file:line] — description — uncertainty reason — [confidence%]
-
-         **Fully Implemented (X items)**
-         - [feature name]: [code location] — [verification method] — [100%]
-
-         **Partially Implemented (X items)**
-         - [feature name]: [what is missing] — Spec original text: '...' — [confidence%]
-
-         **Not Implemented (X items)**
-         - [feature name]: Spec original text: '...' — [100%]
-
-         **Spec Drift (X items)**
-         - [description]: code location — no corresponding requirement in Spec — [confidence%]
-
-         **Code Quality**
-         - Large files: [list files >300 lines]
-         - Type issues: [usage of any/ts-ignore]
-         - Compilation result: tsc --noEmit [output]
-
-         ---
-
-         **综合结论 (Chairman synthesis)**
-         - Verdict: **可合并 / 先修再审 / 阻塞**
-         - Primary metric (if DEV-PLAN Phase): [green / red + command evidence]
-         - One paragraph: biggest risk + recommended next action
-
-         **Must-fix (X)** | **Should-fix (X)** | **Insight (X)**
-         - List confirmed/promoted items under buckets (file:line — one line each)
-
-         **Priority Classification**
-         High: [core functionality missing, security issues — >= 60% confidence]
-         Medium: [auxiliary features, UI details, code quality — >= 60% confidence]
-         Low: [enhancement suggestions, suspected issues < 60% confidence]"
-
-    Note: This Skill's scope ends at outputting the report. Fixes are routed by the main Agent after receiving the report:
-    - Confirmed missing features / non-compliant with Spec -> main Agent invokes dev-builder to fill the gap
-    - Bug / security / type issues -> main Agent invokes bug-fixer to fix
-    - After fixes are complete, the main Agent re-dispatches code-review starting from Step 1
-
+<!-- end: review-strategy -->
+<!-- begin: yolo-mode -->
 [YOLO Mode]
     When FORGE_MODE=yolo, the review report is written to file instead of blocking:
 
@@ -315,5 +153,9 @@ description: Used when the user wants to review code, check quality, verify feat
         Same structured report format. Append to existing file if one exists.
         The main Agent proceeds to fixes automatically without waiting for user confirmation.
 
+<!-- end: yolo-mode -->
+<!-- begin: initialization -->
 [Initialization]
     Execute [Step 1: Load Comparison Baseline]
+
+<!-- end: initialization -->

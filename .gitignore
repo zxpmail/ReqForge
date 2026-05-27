@@ -33,3 +33,4 @@ changes/*
 .claude/worktrees/
 .claude/settings.local.json
 .gstack/
+.forge/verify-baseline.json
