@@ -63,6 +63,10 @@ flowchart LR
 ## What's New
 
 ### v1.26.0 — 2026-05-27
+- **CLAUDE.md zone partitioning**: [Immutable/Stable/Volatile](CLAUDE.md#L1) zones — session-varying content at end of prompt preserves prefix for caching.
+- **Hook repair**: PreToolUse/PostToolUse now arrays (was objects); removed invalid events (PreCommit, BeforeCommand, AfterCommand, PostCommit, OnInit); merged BeforeCommand/AfterCommand into PreToolUse/PostToolUse arrays.
+- **Skill quality**: 13/13 PASS, 0 FAIL; 4 skills at perfect 33/33 (dev-planner, release-builder, request-dispatcher, skill-builder). Fixed Gotchas/step-counting cross-contamination, rename Analysis Strategies→Analysis Strategy (plural broke regex).
+- **Feedback cleanup**: Converted stray JSON to proper .md frontmatter, fixed missing FEEDBACK-INDEX.md entries.
 - **Verify loop**: Agent discipline rule 8 = fix → re-run checks until green; anti-patterns in [session-execution-discipline.md](core/docs/session-execution-discipline.md).
 - **`.forge/quickref.md`**: one-page gates, 4 principles, Skill commands — written on `pnpm forge-install`.
 - **Idea Validation Gate** + **MVP Scope**: Founder's Playbook — Spec § Idea Stage Exit Criteria; DEV-PLAN scope block; six-step PreToolUse chain.

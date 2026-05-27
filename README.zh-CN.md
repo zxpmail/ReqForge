@@ -62,6 +62,10 @@ flowchart LR
 ## 近期更新
 
 ### v1.26.0 — 2026-05-27
+- **CLAUDE.md 分区**：[Immutable/Stable/Volatile](CLAUDE.md#L1) 三个区段——每次会话变化的内容放末尾，保持前缀稳定以利 prompt caching。
+- **Hook 修复**：PreToolUse/PostToolUse 改为数组（原为对象）；移除无效事件（PreCommit、BeforeCommand、AfterCommand、PostCommit、OnInit）；BeforeCommand/AfterCommand 合并进 PreToolUse/PostToolUse。
+- **Skill 质量**：13/13 PASS，0 FAIL；4 个 Skill 满分 33/33（dev-planner、release-builder、request-dispatcher、skill-builder）。修复了 Gotchas 计数污染、step 统计范围问题、Analysis Strategies 复数不匹配 regex。
+- **反馈清理**：JSON 反馈文件转为标准 .md frontmatter 格式，FEEDBACK-INDEX.md 补全缺失条目。
 - **验证循环**：执行纪律第 8 条 = 失败重跑直至通过；反模式见 [session-execution-discipline.md](core/docs/session-execution-discipline.md)。
 - **`.forge/quickref.md`**：一页速查（机器门、四原则、Skill 命令）；`pnpm forge-install` 写入。
 - **构思验证门 + MVP Scope**：Founder's Playbook — Spec § Idea Stage；DEV-PLAN 范围块；PreToolUse 六段链。
