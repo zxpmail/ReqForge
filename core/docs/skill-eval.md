@@ -38,6 +38,7 @@ pnpm skill-eval my-skill
 .forge/skills/<skill-name>/eval/
 ├── triggers.json
 ├── cases.json
+├── rejected-edits.json   # 可选 — 验证未通过的 Skill 编辑（负样本）
 └── (项目根下) eval-output/<case-id>/   # 可选，cases.json 的 artifacts_root
 ```
 
@@ -65,6 +66,31 @@ Skill 本体通常在适配层目录，例如 `.claude/skills/<name>/SKILL.md`�
 
 跑 Agent 后把文件放进对应子目录，再执行 `pnpm skill-eval <name>` 做定量断言。
 
+### Train / held-out（SkillOpt 验证门简化版）
+
+在 `cases.json` 的每条 case 上增加可选字段 `"split": "train" | "held-out"`：
+
+| split | 用途 |
+|-------|------|
+| `train` | 改 Skill 时对照的回归集（默认无标签视为 train） |
+| `held-out` | **升格/合并前**必须再跑一遍；未提升则不要 Confirm evolution 提案 |
+
+`pnpm skill-eval` 当前对 split **不做强制**（静态检查仍跑全部 case）；团队约定：evolution **Verify by** 必须点名 held-out case id。
+
+## rejected-edits.json
+
+对齐 SkillOpt **rejected-edit buffer**：记录「已尝试但验证未通过」的 Skill 编辑，避免 evolution 重复提案。
+
+| 字段 | 说明 |
+|------|------|
+| `entries[].op` | `add` \| `delete` \| `replace` |
+| `entries[].target` | 如 `SKILL.md` § Workflow |
+| `entries[].change` | 摘要或 diff 说明 |
+| `entries[].reason` | 为何拒绝（Verify by 失败、held-out 退化等） |
+| `entries[].at` | ISO 日期 |
+
+`pnpm skill-eval init` 会生成空模板。详见 [skillopt-comparison.md](./skillopt-comparison.md)。
+
 ## 与 skill-builder 的关系
 
 `/skill-builder` 交付新 Skill 时 **必须**：
@@ -84,6 +110,7 @@ Skill 本体通常在适配层目录，例如 `.claude/skills/<name>/SKILL.md`�
 
 ## 相关
 
+- [skillopt-comparison.md](./skillopt-comparison.md) — SkillOpt 五步 ↔ Forge
 - [skill-builder SKILL](../skills/skill-builder/SKILL.md)
 - [tests/skill-fixtures/README.md](../../tests/skill-fixtures/README.md) — 框架内置 Skill 静态探针
 - [external-publish-preflight.md](./external-publish-preflight.md) — 发布门禁

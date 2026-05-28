@@ -100,6 +100,7 @@ flowchart TB
 | **P1-lite** | `failure_class` + RED 行 + evolution 四件套 + `feedback-observer` 分类 | ✅ v1.24+（`feedback-writer`、`evolution-engine`、`check-evolution` / `forge-bootstrap`） |
 | **P1-full** | 自动从轨迹推断 skill-defect vs execution-lapse（无人工标签） | ⏸ 暂缓 |
 | **P2** | `skill-bypass`：带 command 的 Skill 须在 `CLAUDE.md` Dispatch 出现 | ✅ forge-smoke `skill-bypass.mjs`（静态）；长期未触发统计仍暂缓 |
+| **P1** | SkillOpt 纪律：rejected-edits、≤3 条结构化编辑、train/held-out | ✅ v1.32+ — [skillopt-comparison.md](./skillopt-comparison.md) |
 
 ### P1-lite 使用说明
 

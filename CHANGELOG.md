@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.32.0] - 2026-05-28
+
+### Added
+- **SkillOpt 对照**：[skillopt-comparison.md](core/docs/skillopt-comparison.md) — rollout/反思/有预算编辑/验证门/rejected buffer ↔ Forge
+- **skill-eval**：`rejected-edits.json` 模板；cases 文档化 `split: train | held-out`
+- **evolution-engine**：Bounded Skill Edits（≤3 条 add/delete/replace + 失败写入 rejected-edits）
+- Template [evolution-bounded-edit-template.md](core/templates/evolution-bounded-edit-template.md)
+
 ## [v1.31.0] - 2026-05-28
 
 ### Added

@@ -445,6 +445,7 @@ export function initSkillEval(
   const copies: [string, string][] = [
     ["triggers.template.json", "triggers.json"],
     ["cases.template.json", "cases.json"],
+    ["rejected-edits.template.json", "rejected-edits.json"],
   ];
 
   for (const [srcName, destName] of copies) {

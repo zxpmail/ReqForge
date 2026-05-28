@@ -2,8 +2,8 @@
 
 ## 当前正在做什么
 
-- **security-guidance** 批已 push：**v1.29.0**（2026-05-28）— `.forge/security-guidance.md` + forge-verify 扫描 + 对照文档
-- **版本 v1.28.0**（2026-05-27）：dev-map + forge-verify + request-dispatcher
+- **SkillOpt 批**（本地）：`skillopt-comparison.md` + `rejected-edits.json` 模板 + evolution bounded edits + train/held-out 文档 — 待 commit/push **v1.32.0**
+- **security-guidance** 已 push：**v1.29.0**；远程 **v1.31.0**（skill-eval、preflight）
 
 ## 上次停在哪个位置
 
@@ -37,5 +37,5 @@
 
 ## 维护者文档（非架构 · 非测试）
 
-- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md)
+- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md) · [skillopt-comparison.md](core/docs/skillopt-comparison.md)
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [test-demo/README.md](test-demo/README.md)

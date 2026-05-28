@@ -53,6 +53,7 @@ describe("runSkillEval", () => {
     const dir = initSkillEval("demo-skill", { cwd: tmp, forgeRoot });
     expect(fs.existsSync(path.join(dir, "triggers.json"))).toBe(true);
     expect(fs.existsSync(path.join(dir, "cases.json"))).toBe(true);
+    expect(fs.existsSync(path.join(dir, "rejected-edits.json"))).toBe(true);
   });
 
   it("passes when triggers valid and artifacts match", () => {
