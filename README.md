@@ -62,7 +62,7 @@ flowchart LR
 
 ## What's New
 
-### v1.31.0 — 2026-05-29
+### v1.31.0 — 2026-05-20
 - **Custom Skill evaluator**: `pnpm skill-eval init <name>` + `pnpm skill-eval <name>`; `.forge/skills/<name>/eval/` (trigger cases + output assertions); see [skill-eval.md](core/docs/skill-eval.md)
 - **skill-builder**: ships eval pack with new Skills; **forge-install** writes `.forge/skills/_template/eval/`
 
