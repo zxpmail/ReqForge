@@ -246,6 +246,12 @@ requires: []
     Trigger condition: Has DEV-PLAN.md + has project code
 
 <!-- end: workflow-continuous-development-mode -->
+<!-- begin: zoom-out-pass -->
+[Zoom-Out Pass] (optional — read-only; Matt Pocock `zoom-out` inspired)
+    When user asks to **zoom out**, explain unfamiliar code, or understand module context **before** Phase work:
+    Execute references/zoom-out-pass.md — **no code changes** in this pass unless user then invokes normal Phase flow.
+
+<!-- end: zoom-out-pass -->
     <!-- begin: loading-phase -->
     [Loading Phase]
         Step 1: Dependency Check

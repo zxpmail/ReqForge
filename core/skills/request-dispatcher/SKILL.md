@@ -76,6 +76,10 @@ requires: []
     | "Build / implement more" | Yes | — | Yes | /dev-builder |
     | "Design / make it look good" | Yes | — | — | /design-brief-builder → /design-maker |
     | "Release / deploy / ship" | — | — | Yes | /release-builder |
+    | "Grill me / stress-test plan / 烤问" | — | — | — | /product-spec-builder → Light Grill Mode |
+    | "Zoom out / explain this module" | — | — | Yes | /dev-builder → [Zoom-Out Pass] (read-only) |
+    | "Architecture health / ball of mud" | — | — | Yes | /dev-planner → architecture-health-pass |
+    | "Break into GitHub issues" | Yes | — | — | /dev-planner → optional issue slices (after plan confirm) |
 
     **Ambiguity patterns**:
     - "Improve this" (no target specified) -> ask: "Improve functionality (bug-fixer), quality (code-review), or UI (design skills)?"

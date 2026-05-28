@@ -4,8 +4,9 @@
 
 ```
 .forge/skills/<skill-name>/eval/
-├── triggers.json   # 触发准确率用例（人工在 Agent 中验证）
-└── cases.json      # 输出质量断言（可对 eval-output/ 跑静态检查）
+├── triggers.json         # 触发准确率用例（人工在 Agent 中验证）
+├── cases.json            # 输出质量断言（可对 eval-output/ 跑静态检查）
+└── rejected-edits.json   # 被拒 Skill 编辑（SkillOpt 负样本缓冲）
 ```
 
 ```bash

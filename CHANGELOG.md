@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.34.0] - 2026-05-28
+
+### Added
+- **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — 与 skills-main 能力映射；并行安装建议
+- **P1 Light Grill**：`product-spec-builder` Light Grill Mode + [light-grill-mode.md](core/skills/product-spec-builder/references/light-grill-mode.md)
+- **P2 Zoom-out / 架构保健**：[zoom-out-pass.md](core/skills/dev-builder/references/zoom-out-pass.md)、[architecture-health-pass.md](core/skills/dev-planner/references/architecture-health-pass.md)
+- **P3 GitHub slices**：[github-issues-slices-template.md](core/templates/github-issues-slices-template.md) + dev-planner optional export
+- **request-dispatcher** routing for grill / zoom-out / architecture health / issue slices
+
 ## [v1.33.0] - 2026-05-28
 
 ### Added

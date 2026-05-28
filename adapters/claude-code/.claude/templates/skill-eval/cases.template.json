@@ -6,6 +6,7 @@
   "cases": [
     {
       "id": "happy-path",
+      "split": "train",
       "prompt": "（在 Agent 中执行的真实用户 prompt，带文件名、路径等细节）",
       "artifacts_subdir": "happy-path",
       "assertions": {

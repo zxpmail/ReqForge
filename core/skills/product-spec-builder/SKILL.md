@@ -202,16 +202,26 @@ requires: []
         - Not found → enter 0-to-1 Mode
 
     Step 3: Determine Mode
+        - User says **grill me** / **stress-test** / **烤问** / **对齐计划** (plan not ready for full Spec) → **Light Grill Mode** — execute [Workflow (Light Grill Mode)]; do not enter 0-to-1 until user asks to write Spec
         - Product requirements document found → enter **Iteration Mode**
         - Not found → ask user: "Full deep-dive or quick start?"
             - User says "quick" / "fast" / "just get going" / or gives a one-sentence description → enter **Quick Mode**
             - Otherwise → enter **0-to-1 Mode**
 
     Step 4: Execute corresponding workflow
+        - Light Grill Mode: Execute [Workflow (Light Grill Mode)]
         - Quick Mode: Execute [Workflow (Quick Mode)]
         - 0-to-1 Mode: Execute [Workflow (0-to-1 Mode)]
 
 <!-- end: startup-check -->
+<!-- begin: workflow-light-grill-mode -->
+[Workflow (Light Grill Mode)]
+    **Trigger**: User wants alignment / stress-test before Product-Spec (Matt Pocock `grill-me` — see [light-grill-mode.md](references/light-grill-mode.md)).
+    **Goal**: Shared understanding via one-question-at-a-time grilling; optional CONTEXT / project-taste updates; **no** Product-Spec.md unless user explicitly requests after Grill Summary.
+
+    **按步执行** references/light-grill-mode.md
+
+<!-- end: workflow-light-grill-mode -->
 <!-- begin: workflow-quick-mode -->
 [Workflow (Quick Mode)]
     **Trigger**: User gives a one-sentence description or says they want to start fast.

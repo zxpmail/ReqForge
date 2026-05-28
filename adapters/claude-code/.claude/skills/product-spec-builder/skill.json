@@ -10,7 +10,8 @@
       "User says 'I want to build a product/app/tool'",
       "User requests adding features",
       "User wants to change existing requirements/UI",
-      "Iterating on spec"
+      "Iterating on spec",
+      "User says grill me, stress-test plan, or align on a design before writing spec"
     ],
     "manual": true,
     "command": "/product-spec-builder"

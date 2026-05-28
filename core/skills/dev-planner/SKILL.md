@@ -378,7 +378,18 @@ requires: []
              - Or call /design-brief-builder first to determine visual direction (if not done yet)
              - Want to adjust Phase granularity or order? Just tell me."
 
+        Step 6 (optional): GitHub issue slices
+            If user uses GitHub Issues and asks to split the plan after confirm:
+            Read [github-issues-slices-template.md](../../templates/github-issues-slices-template.md)
+            Propose vertical-slice issues linked to Phases — **DEV-PLAN.md remains source of truth**
+
     <!-- end: output-phase -->
+<!-- begin: architecture-health-pass -->
+[Architecture Health Pass] (optional — periodic; not a replacement for /code-review)
+    When user requests architecture health, deepening, or "ball of mud" review:
+    Execute references/architecture-health-pass.md — output Health Notes only; replan only on user confirm.
+
+<!-- end: architecture-health-pass -->
 <!-- begin: workflow-iteration-mode -->
 [Workflow (Iteration Mode)]
     Trigger conditions:

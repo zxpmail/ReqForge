@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.33.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.34.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -8,7 +8,7 @@
 
 **一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md) · [七层对照 →](core/docs/agent-harness-seven-layer-map.md) · [Loadout 场景选型 →](core/docs/loadout-scenarios.md) · [平台合规 →](core/docs/platform-compliance.md)
 
-> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md) · **和 [Context7](https://github.com/upstash/context7)？** 库文档注入；建议与 ReqForge **叠加**。[Context7 →](core/docs/context7-comparison.md) · **和 [RTK](https://github.com/rtk-ai/rtk)？** Shell 输出压缩；可选与 ReqForge **叠加**。[RTK →](core/docs/rtk-comparison.md) · **和 [nanochat](https://github.com/karpathy/nanochat)？** LLM 训练 Harness；Forge 借鉴黄金路径/快环纪律。[nanochat →](core/docs/nanochat-comparison.md) · **和 [autoresearch](https://github.com/karpathy/autoresearch)？** 约束编辑 + 固定预算 + 单指标；Forge 映射为 Spec/Plan 锁定 + Primary metric。[autoresearch →](core/docs/autoresearch-comparison.md) · **和 [llm-council](https://github.com/karpathy/llm-council)？** 多模型互评；Forge 用 role-based council（code-review + Spec Step 7）。[llm-council →](core/docs/llm-council-comparison.md) · **和 [jobs](https://github.com/karpathy/jobs)？** BLS 职业数据 + LLM rubric 批量打分（非任务队列）；Forge 映射 risk_rank + PROJECT-HEALTH。[jobs →](core/docs/jobs-comparison.md) · **和 [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)？** raw/wiki/schema + ingest/query/lint；Forge 映射 memory/ + ADR 归档。[llm-wiki →](core/docs/llm-wiki-comparison.md) · **Skill 自进化论文？** [EmbodiSkill](https://arxiv.org/abs/2605.10332) / [SkillEvolver](https://arxiv.org/abs/2605.10500) 与 Forge 对照。[Skill 进化 →](core/docs/skill-evolution-comparison.md) · **和 [SkillOpt](https://microsoft.github.io/SkillOpt/)？** 有预算 Skill 编辑 + eval 验证门；Forge 不做库内 optimizer。[SkillOpt →](core/docs/skillopt-comparison.md) · **Harness 是镜子？** 腾讯显形 / 三块石碑 / 不可能三角。[Harness 镜子 →](core/docs/tencent-harness-mirror-comparison.md)
+> **和 [OpenSpec](https://github.com/Fission-AI/OpenSpec)？** 单次存量变更。[OpenSpec →](core/docs/openspec-comparison.md) · **和 [Superpowers](https://github.com/obra/superpowers)？** 工程纪律 vs 全流程。[Superpowers →](core/docs/superpowers-comparison.md) · **和 [Open Design](https://github.com/nexu-io/open-design)？** OD 出稿预览；ReqForge 需求→代码（已吸收发现问卷/反 slop）。[Open Design →](core/docs/open-design-comparison.md) · **和 [Context7](https://github.com/upstash/context7)？** 库文档注入；建议与 ReqForge **叠加**。[Context7 →](core/docs/context7-comparison.md) · **和 [RTK](https://github.com/rtk-ai/rtk)？** Shell 输出压缩；可选与 ReqForge **叠加**。[RTK →](core/docs/rtk-comparison.md) · **和 [nanochat](https://github.com/karpathy/nanochat)？** LLM 训练 Harness；Forge 借鉴黄金路径/快环纪律。[nanochat →](core/docs/nanochat-comparison.md) · **和 [autoresearch](https://github.com/karpathy/autoresearch)？** 约束编辑 + 固定预算 + 单指标；Forge 映射为 Spec/Plan 锁定 + Primary metric。[autoresearch →](core/docs/autoresearch-comparison.md) · **和 [llm-council](https://github.com/karpathy/llm-council)？** 多模型互评；Forge 用 role-based council（code-review + Spec Step 7）。[llm-council →](core/docs/llm-council-comparison.md) · **和 [jobs](https://github.com/karpathy/jobs)？** BLS 职业数据 + LLM rubric 批量打分（非任务队列）；Forge 映射 risk_rank + PROJECT-HEALTH。[jobs →](core/docs/jobs-comparison.md) · **和 [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)？** raw/wiki/schema + ingest/query/lint；Forge 映射 memory/ + ADR 归档。[llm-wiki →](core/docs/llm-wiki-comparison.md) · **Skill 自进化论文？** [EmbodiSkill](https://arxiv.org/abs/2605.10332) / [SkillEvolver](https://arxiv.org/abs/2605.10500) 与 Forge 对照。[Skill 进化 →](core/docs/skill-evolution-comparison.md) · **和 [SkillOpt](https://microsoft.github.io/SkillOpt/)？** 有预算 Skill 编辑 + eval 验证门；Forge 不做库内 optimizer。[SkillOpt →](core/docs/skillopt-comparison.md) · **Harness 是镜子？** … [Harness 镜子 →](core/docs/tencent-harness-mirror-comparison.md) · **和 [Matt Pocock Skills](https://github.com/mattpocock/skills)？** 可拼装日常工程 vs 全流程；已吸收 Light Grill。[Matt Pocock →](core/docs/mattpocock-skills-comparison.md)
 
 **使用框架无需 npm install** — 将适配目录复制到项目根目录，打开 AI 客户端即可。仅在本仓库贡献或运行 `scripts/` 时才需要 Node.js + pnpm。
 
@@ -60,6 +60,10 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.34.0 — 2026-05-28
+- **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片
+- **Light Grill**：说「grill me / 烤问」→ 轻量对齐，不必先写完整 Spec
 
 ### v1.33.0 — 2026-05-28
 - **腾讯 Harness 镜子对照**：[tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — 显形、三块石碑、不可能三角 ↔ Forge
@@ -847,6 +851,7 @@ pnpm dep-graph stats  # 查看图统计
 | 术哥无界 OpenSpec + Superpowers 实战 | 双工具流水线 → 统一 Harness | [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — change-manager ↔ dev-builder 衔接 |
 | [SkillOpt](https://microsoft.github.io/SkillOpt/) | 有预算 Skill 编辑 + 验证门 | [skillopt-comparison.md](core/docs/skillopt-comparison.md) — rejected-edits、进化纪律 |
 | 腾讯「Harness 镜子」 | 显形 / 三块石碑 / 不可能三角 | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — `.forge/project-taste.md` |
+| [Matt Pocock Skills](https://github.com/mattpocock/skills) | 可拼装日常工程 vs 全流程 | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill 等 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -863,6 +868,7 @@ pnpm dep-graph stats  # 查看图统计
 | 自定义 Skill 评估 | [skill-eval.md](core/docs/skill-eval.md) · `pnpm skill-eval` |
 | SkillOpt ↔ Forge | [skillopt-comparison.md](core/docs/skillopt-comparison.md) |
 | Harness 镜子（腾讯） | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · `.forge/project-taste.md` |
+| Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) |
 
 ---
 

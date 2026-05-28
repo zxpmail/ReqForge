@@ -2,8 +2,8 @@
 
 ## 当前正在做什么
 
-- **腾讯 Harness 镜子批** 已 push：**v1.33.0**（`bdda82c`）— 对照文档、project-taste、S1–S5
-- **SkillOpt 批** 已 push：**v1.32.0**
+- **Matt Pocock 吸收批**（本地）：Light Grill + zoom-out + 架构保健 + 对照文档 — **v1.34.0** 待 commit/push
+- **腾讯 Harness 镜子批** 已 push：**v1.33.0**
 
 ## 上次停在哪个位置
 

@@ -89,6 +89,7 @@
 - [agent-harness-seven-layer-map.md](./agent-harness-seven-layer-map.md) — AGENT魔方七层 ↔ ReqForge
 - [skill-evolution-comparison.md](./skill-evolution-comparison.md) — EmbodiSkill / SkillEvolver ↔ ReqForge（P1/P2 暂缓）
 - [tencent-harness-mirror-comparison.md](./tencent-harness-mirror-comparison.md) — Harness 镜子 / 三块石碑 / project-taste
+- [mattpocock-skills-comparison.md](./mattpocock-skills-comparison.md) — Light Grill / zoom-out / 架构保健
 - [session-execution-discipline.md](./session-execution-discipline.md) — 任务级八条执行纪律（计划/读文件/最小 diff/测试）
 - [memory-system.md](./memory-system.md) — three-tier memory
 - [behavior-boundaries.md](./behavior-boundaries.md) — what Forge must not do

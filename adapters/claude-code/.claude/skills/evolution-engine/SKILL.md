@@ -161,6 +161,19 @@ requires: []
         -- Confirm Create / Skip"
 
 <!-- end: proposal-format -->
+<!-- begin: bounded-skill-edits -->
+[Bounded Skill Edits] (SkillOpt-inspired — Skill Optimization proposals only)
+    When **GREEN change** targets a user-project `SKILL.md` (not hooks / `CLAUDE.md` / bootstrap):
+
+    1. **At most 3** structured edits per proposal; each op is exactly one of: `add` | `delete` | `replace`
+    2. Each edit MUST state **which failure class** it fixes (link `failure_class` or RED observation)
+    3. **Verify by** MUST include held-out or regression check — e.g. `pnpm skill-eval <skill-name>` on `split: held-out` cases, or a named Phase scenario
+    4. If Verify by **fails** after user applied the edit → append to `.forge/skills/<name>/eval/rejected-edits.json` (do not re-propose the same edit without new evidence)
+    5. Before presenting, answer: (a) which failure? (b) harm to existing behavior? (c) measurable improvement on held-out?
+
+    Template: [evolution-bounded-edit-template.md](../../templates/evolution-bounded-edit-template.md) · Background: [skillopt-comparison.md](../../docs/skillopt-comparison.md)
+
+<!-- end: bounded-skill-edits -->
 <!-- begin: failure-class-routing -->
 [Failure-Class Routing]
     Read `failure_class` from source feedback frontmatter when present:
