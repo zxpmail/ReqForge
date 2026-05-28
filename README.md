@@ -62,6 +62,15 @@ flowchart LR
 
 ## What's New
 
+### v1.33.0 — 2026-05-28
+- **Tencent Harness mirror**: [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — legibility, three steles, impossible triangle ↔ Forge
+- **`.forge/project-taste.md`**: team preference statements (soft S3 taste); `forge-install` via `installProjectTaste`; distinct from hard-line `security-guidance.md`
+- **Judgment Spectrum (S1–S5)**: `product-spec-builder`, `code-review`, `dev-builder` Loading Phase
+
+### v1.32.0 — 2026-05-28
+- **SkillOpt comparison**: [skillopt-comparison.md](core/docs/skillopt-comparison.md) — bounded edits, rejected-edit buffer, train/held-out
+- **skill-eval**: `rejected-edits.json` template; evolution-engine ≤3 structured edits per proposal
+
 ### v1.31.0 — 2026-05-28
 - **Custom Skill evaluator**: `pnpm skill-eval init <name>` + `pnpm skill-eval <name>`; `.forge/skills/<name>/eval/` (trigger cases + output assertions); see [skill-eval.md](core/docs/skill-eval.md)
 - **skill-builder**: ships eval pack with new Skills; **forge-install** writes `.forge/skills/_template/eval/`
@@ -318,7 +327,8 @@ On Windows, `settings.windows.json` is applied automatically. Use `--windows` on
 |------|---------|
 | `.forge/quickref.md` | One-page gates + Skill commands |
 | `.forge/dev-map.md` | Dev navigation map template |
-| `.forge/security-guidance.md` | Team security rules template |
+| `.forge/security-guidance.md` | Team security rules template (hard red lines) |
+| `.forge/project-taste.md` | Team taste / preferences (soft S3 — naming, structure) |
 | `.forge/preflight.json` | Release preflight checklist (editable) |
 | `.forge/preflight-wechat.example.json` | WeChat draft rules example (merge into preflight.json) |
 | `.forge/skills/_template/eval/` | Custom Skill eval templates (`triggers.json` / `cases.json`) |
@@ -435,6 +445,7 @@ my-app/
 │   ├── preflight-wechat.example.json
 │   ├── dev-map.md
 │   ├── security-guidance.md
+│   ├── project-taste.md        # team preferences (forge-install)
 │   ├── skills/_template/eval/  # custom Skill eval templates (forge-install)
 │   ├── skills/<name>/eval/     # per-Skill eval pack (`pnpm skill-eval init <name>`)
 │   └── config                  # optional — copy from config.example
@@ -456,6 +467,15 @@ pnpm skill-eval my-skill            # static checks + assertions on eval-output/
 - Templates: `.forge/skills/_template/eval/` (from `forge-install`)
 - Trigger accuracy: run `triggers.json` prompts in your client with Skill on vs off
 - Details: [skill-eval.md](core/docs/skill-eval.md)
+
+### Project taste vs security guidance
+
+| File | Role | Example |
+|------|------|---------|
+| `.forge/security-guidance.md` | **Red lines** (S1–S2) | No `eval`, no secrets in repo |
+| `.forge/project-taste.md` | **Team fingerprint** (S3) | Prefer simple over clever; max 2 inheritance levels |
+
+Written on `pnpm forge-install`. See [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md).
 
 ### Preflight (before publish)
 
@@ -791,7 +811,7 @@ After editing `core/`, sync to adapters and run tests before committing.
 
 ```bash
 pnpm install          # Dev dependencies (TypeScript, Vitest, etc.)
-pnpm test             # Unit tests (39 cases, incl. preflight, skill-eval)
+pnpm test             # Unit tests (40 cases, incl. preflight, skill-eval, project-taste install)
 pnpm preflight        # Verify release gate locally (see Preflight above)
 pnpm build            # Compile scripts/ to dist/
 pnpm sync             # Sync core/ → adapters/
@@ -812,7 +832,7 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json`; put token in `.env.local` as `GITHUB_TOKEN=` (see `.env.local.example`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
-| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `.forge/preflight.json`, `.forge/skills/_template/eval/`, etc. |
+| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `project-taste.md`, `preflight.json`, `skills/_template/eval/`, etc. |
 | `pnpm preflight [--build-dir dist]` | Release gate before publish (see `core/docs/external-publish-preflight.md`) |
 | `pnpm skill-eval init <name>` / `pnpm skill-eval <name>` | Eval pack for user-project custom Skills |
 
@@ -842,6 +862,8 @@ External harnesses reviewed for positioning (not dependencies):
 | Founder's Playbook (PDF) | Idea → MVP → Launch → Scale; validation-before-build | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) — Idea Validation Gate + DEV-PLAN MVP Scope |
 | Claude Code security-guidance 插件 | Real-time security hooks ↔ project rules file | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) — `.forge/security-guidance.md` on install |
 | 术哥无界 OpenSpec + Superpowers 实战 | Dual-tool pipeline → unified Harness | [shuge-openspec-superpowers-comparison.md](core/docs/shuge-openspec-superpowers-comparison.md) — change-manager ↔ dev-builder handoff |
+| [SkillOpt](https://microsoft.github.io/SkillOpt/) | Bounded Skill doc edits + validation gate | [skillopt-comparison.md](core/docs/skillopt-comparison.md) — rejected-edits, evolution discipline |
+| Tencent「Harness 镜子」 | Legibility / three steles / impossible triangle | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — `.forge/project-taste.md` |
 
 **ReqForge maintainer docs** (not third-party comparisons):
 
