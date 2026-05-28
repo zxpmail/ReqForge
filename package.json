@@ -15,6 +15,7 @@
     "forge-install": "ts-node scripts/install.ts",
     "dep-graph": "ts-node scripts/dependency-graph.ts",
     "preflight": "ts-node scripts/preflight.ts",
+    "skill-eval": "ts-node scripts/skill-eval.ts",
     "forge-smoke": "node scripts/forge-smoke/run-all.mjs",
     "forge-verify": "node scripts/forge-verify.mjs",
   "test-demo-golden-path": "node test-demo/run-golden-path.mjs",

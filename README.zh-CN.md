@@ -61,6 +61,10 @@ flowchart LR
 
 ## 近期更新
 
+### [Unreleased] — Skill Eval
+- **用户自定义 Skill 评估器**：`pnpm skill-eval init <name>` + `pnpm skill-eval <name>`；`.forge/skills/<name>/eval/`（触发用例 + 输出断言）；详见 [skill-eval.md](core/docs/skill-eval.md)
+- **skill-builder**：交付 Skill 时附带 eval 包；**forge-install** 写入 `.forge/skills/_template/eval/`
+
 ### v1.30.0 — 2026-05-28
 - **发布 preflight 门禁**：`pnpm preflight` — 发布/部署前机器检查（git 干净、版本号、产物隐私扫描）；可配置 `.forge/preflight.json`（含公众号草稿示例 `preflight-wechat.example.json`）。
 - **release-builder**：新增 Step 3b Preflight Gate — `exit 1` 则禁止发布；详见 [external-publish-preflight.md](core/docs/external-publish-preflight.md)。
@@ -316,6 +320,7 @@ Windows 下会自动应用 `settings.windows.json` → `settings.json`；其他�
 | `.forge/security-guidance.md` | 团队安全规则模板 |
 | `.forge/preflight.json` | 发布前检查清单（可编辑） |
 | `.forge/preflight-wechat.example.json` | 公众号草稿规则示例（可复制进 preflight.json） |
+| `.forge/skills/_template/eval/` | 自定义 Skill 评估模板（`triggers.json` / `cases.json`） |
 
 **方式 B — 手动复制**
 
@@ -429,11 +434,27 @@ my-app/
 │   ├── preflight-wechat.example.json  # 公众号示例（可选参考）
 │   ├── dev-map.md              # 模块导航（dev-builder 维护）
 │   ├── security-guidance.md    # 安全规则（审查/发布对照）
+│   ├── skills/_template/eval/  # 自定义 Skill 评估模板（forge-install）
+│   ├── skills/<name>/eval/     # 某 Skill 的评估包（pnpm skill-eval init <name>）
 │   └── config                  # 可选 — 从 config.example 复制
+├── eval-output/                # 可选 — skill-eval 产物断言目录（cases.json 引用）
 └── <project-name>/ ...         # 业务代码（勿平铺在根目录）
 ```
 
 除非你明确要求，Forge **不会**擅自修改你项目里的 `package.json`。
+
+### 自定义 Skill 评估（skill-eval）
+
+用 `/skill-builder` 或手写 **项目内自定义 Skill** 时，建议配套评估包（触发用例 + 输出断言）：
+
+```bash
+pnpm skill-eval init my-skill       # → .forge/skills/my-skill/eval/
+pnpm skill-eval my-skill            # 静态检查 + 对 eval-output/ 跑断言
+```
+
+- 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
+- 触发准确率：在 AI 客户端对有/无 Skill 对照 `triggers.json` 中的 prompt
+- 详解：[skill-eval.md](core/docs/skill-eval.md)
 
 ### 发布前门禁（Preflight）
 
@@ -730,7 +751,8 @@ Forge/
 │   ├── create-skill.sh        # 脚手架新建 Skill（pnpm create-skill）
 │   ├── apply-loadout.ts       # 将 loadout 钩子合并到 adapter settings
 │   ├── preflight.ts           # 发布前门禁（pnpm preflight）
-│   └── __tests__/             # Vitest 单元测试（含 preflight）
+│   ├── skill-eval.ts          # 用户项目自定义 Skill 评估（pnpm skill-eval）
+│   └── __tests__/             # Vitest 单元测试（含 preflight、skill-eval）
 ├── vitest.config.ts           # 测试配置
 ├── changes/                   # 变更产物
 ├── EVOLUTION.md               # 进化引擎定义
@@ -753,7 +775,7 @@ Forge/
 
 ```bash
 pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
-pnpm test             # 运行单元测试（32 项，含 preflight）
+pnpm test             # 运行单元测试（39 项，含 preflight、skill-eval）
 pnpm preflight        # 本地验证发布门禁（见上方「发布前门禁」）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
@@ -774,8 +796,9 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm set-github-metadata` | 把 `.github/repo-metadata.json` 同步到 GitHub About/Topics；令牌放 `.env.local` 的 `GITHUB_TOKEN=`（见 `.env.local.example`） |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
-| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目；写入 `.forge/quickref.md`、`.forge/preflight.json` 等 |
+| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目；写入 `.forge/quickref.md`、`.forge/preflight.json`、`.forge/skills/_template/eval/` 等 |
 | `pnpm preflight [--build-dir dist]` | 发布前门禁（git/版本/产物隐私 + `.forge/preflight.json`） |
+| `pnpm skill-eval init <name>` / `pnpm skill-eval <name>` | 用户项目自定义 Skill 评估包（触发用例 + 产物断言） |
 
 修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
 
@@ -815,6 +838,7 @@ pnpm dep-graph stats  # 查看图统计
 | Founder's Playbook ↔ Forge 机器门 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
 | 安全规则 security-guidance | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) |
 | 发布 preflight（用户项目 + 贡献者） | [external-publish-preflight.md](core/docs/external-publish-preflight.md) · `pnpm preflight` |
+| 自定义 Skill 评估 | [skill-eval.md](core/docs/skill-eval.md) · `pnpm skill-eval` |
 
 ---
 

@@ -2,6 +2,7 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { installSkillEvalTemplate } from "../skill-eval";
 import {
   applyWindowsSettings,
   copyInstallTree,
@@ -186,6 +187,19 @@ describe("installForge", () => {
     installForgeQuickref(target, forgeRoot, () => {}, false);
 
     expect(fs.readFileSync(path.join(target, ".forge/quickref.md"), "utf-8")).toBe("# old");
+  });
+
+  it("installSkillEvalTemplate writes _template/eval", () => {
+    const tplDir = path.join(forgeRoot, "core/templates/skill-eval");
+    fs.mkdirSync(tplDir, { recursive: true });
+    fs.writeFileSync(path.join(tplDir, "triggers.template.json"), "{}");
+    fs.writeFileSync(path.join(tplDir, "cases.template.json"), "{}");
+
+    installSkillEvalTemplate(target, forgeRoot, () => {}, false);
+
+    expect(
+      fs.existsSync(path.join(target, ".forge/skills/_template/eval/triggers.template.json")),
+    ).toBe(true);
   });
 
   it("installPreflightConfig writes preflight.json", () => {

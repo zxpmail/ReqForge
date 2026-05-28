@@ -12,6 +12,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import { installSkillEvalTemplate } from "./skill-eval";
 
 const FORGE_ROOT = path.resolve(__dirname, "..");
 
@@ -262,6 +263,7 @@ export function installForge(
   installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSecurityGuidance(path.resolve(targetRoot), forgeRoot, log, options.force);
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installSkillEvalTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
   const useWindows =

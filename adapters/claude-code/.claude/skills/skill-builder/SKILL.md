@@ -55,6 +55,7 @@ requires: []
     **Not cross-referencing existing Skills**: Writing in a different style from the rest of the codebase. Always read 1-2 existing Skills before creating a new one. Consistency matters for maintainability.
     **Empty sections**: "To be filled later" is technical debt. If a section isn't needed, don't include it. If it IS needed, fill it now. Empty sections in a Skill cause confusion when the Skill is invoked.
     **Missing Gotchas**: You're building a Skill that WILL accumulate failure points. If you don't leave a [Gotchas] section, where will those lessons go? Nowhere — they'll be repeated.
+    **Skipping Skill eval**: Shipping without `triggers.json` / `cases.json` — you won't know if description misfires or outputs regress. Run `pnpm skill-eval` after every meaningful SKILL.md change.
 
 <!-- end: gotchas -->
 <!-- begin: quality-rubric -->
@@ -87,6 +88,7 @@ requires: []
 [Output Artifacts]
     - **skills/\<skill-name\>/SKILL.md** — new Skill definition file (relative to framework root)
     - **skills/\<skill-name\>/templates/** — template directory for the new Skill (if any, relative to framework root)
+    - **`.forge/skills/<skill-name>/eval/`** — Skill eval pack (`triggers.json` + `cases.json`); run `pnpm skill-eval init <skill-name>` then `pnpm skill-eval <skill-name>` (see [skill-eval.md](../../docs/skill-eval.md))
 
 <!-- end: output-artifacts -->
 <!-- begin: creation-standards -->
@@ -212,6 +214,16 @@ requires: []
         - Is the style consistent with referenced existing Skills?
 
     <!-- end: step-5:-create-files -->
+    <!-- begin: step-5b:-skill-eval-pack -->
+    [Step 5b: Skill Eval Pack]
+        For user-project custom Skills (not only framework core skills):
+        1. Run `pnpm skill-eval init <skill-name>` in the project root → `.forge/skills/<skill-name>/eval/`
+        2. Edit **triggers.json**: ≥2 `should_trigger: true`, ≥2 `false`; negative cases must be near-miss (not "write fibonacci")
+        3. Edit **cases.json**: ≥1 output case with `fileExists` / `regexChecks` on paths under `eval-output/<subdir>/`
+        4. Run `pnpm skill-eval <skill-name>` — static check must pass before shipping the Skill
+        Trigger accuracy still needs manual A/B in the AI client (with Skill vs without). Output assertions run after a real agent run drops artifacts into `eval-output/`.
+
+    <!-- end: step-5b:-skill-eval-pack -->
     <!-- begin: step-6:-register-in-main-control-file -->
     [Step 6: Register in Main Control File]
         The AI client will auto-discover new Skills under the skills/ directory.

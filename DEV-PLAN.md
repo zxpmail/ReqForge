@@ -6,7 +6,7 @@
 
 ---
 
-## 当前进度（架构 Phase 1–14 · v1.30.0）
+## 当前进度（架构 Phase 1–15 · v1.30.0+）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
@@ -24,8 +24,9 @@
 | 12 并行代码审查 | ✅ 完成 | 4 专项 reviewer + 聚合器 |
 | 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
 | 14 发布 preflight | ✅ 完成 | `scripts/preflight.ts`、`pnpm preflight`、`.forge/preflight.json`；[external-publish-preflight.md](core/docs/external-publish-preflight.md) |
+| 15 用户 Skill eval | ✅ 完成 | `scripts/skill-eval.ts`、`pnpm skill-eval`、`.forge/skills/*/eval/`；[skill-eval.md](core/docs/skill-eval.md) |
 
-**架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync` → `pnpm preflight`（可选自检）
+**架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync` → `pnpm preflight`（可选自检）→ `pnpm skill-eval <name>`（用户自定义 Skill）
 
 **框架仓库发版测试（非架构）**：`pnpm forge-smoke`（12 项 smoke，含 test-demo 黄金路径，见附录 A）
 
@@ -52,8 +53,9 @@
 
 | 命令 | 与 Vitest 分工 |
 |------|----------------|
-| `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts`、`preflight.ts` 等**逻辑**单元测试（32 项） |
+| `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts`、`preflight.ts`、`skill-eval.ts` 等**逻辑**单元测试（39 项） |
 | `pnpm preflight` | 发布门禁（用户项目 + 框架仓自检）；配置 `.forge/preflight.json` |
+| `pnpm skill-eval` | 用户项目自定义 Skill 评估包（触发用例结构 + `eval-output/` 产物断言） |
 | `pnpm forge-smoke` | **结构/一致性**静态检查（12 项 smoke；#11 含 validate-skill；#12 为 test-demo 黄金路径） |
 | `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke #12） |
 

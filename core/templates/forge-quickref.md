@@ -111,6 +111,18 @@ pnpm preflight --build-dir dist    # 构建后扫描产物
 
 ---
 
+## 自定义 Skill 评估（skill-eval）
+
+```bash
+pnpm skill-eval init my-skill      # → .forge/skills/my-skill/eval/
+pnpm skill-eval my-skill           # 静态检查 + 对 eval-output/ 断言
+```
+
+- 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
+- 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照）
+
+---
+
 ## 维护者验证（ReqForge 框架仓）
 
 ```bash

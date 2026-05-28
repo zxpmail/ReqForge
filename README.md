@@ -62,6 +62,10 @@ flowchart LR
 
 ## What's New
 
+### [Unreleased] — Skill Eval
+- **Custom Skill evaluator**: `pnpm skill-eval init <name>` + `pnpm skill-eval <name>`; `.forge/skills/<name>/eval/` (trigger cases + output assertions); see [skill-eval.md](core/docs/skill-eval.md)
+- **skill-builder**: ships eval pack with new Skills; **forge-install** writes `.forge/skills/_template/eval/`
+
 ### v1.30.0 — 2026-05-28
 - **Release preflight gate**: `pnpm preflight` — machine checks before publish/deploy (clean git, version field, artifact privacy scan); configurable via `.forge/preflight.json` (includes WeChat draft example).
 - **release-builder**: new Step 3b Preflight Gate — exit code 1 blocks publish; see [external-publish-preflight.md](core/docs/external-publish-preflight.md).
@@ -317,6 +321,7 @@ On Windows, `settings.windows.json` is applied automatically. Use `--windows` on
 | `.forge/security-guidance.md` | Team security rules template |
 | `.forge/preflight.json` | Release preflight checklist (editable) |
 | `.forge/preflight-wechat.example.json` | WeChat draft rules example (merge into preflight.json) |
+| `.forge/skills/_template/eval/` | Custom Skill eval templates (`triggers.json` / `cases.json`) |
 
 **Option B — Manual copy**
 
@@ -430,11 +435,27 @@ my-app/
 │   ├── preflight-wechat.example.json
 │   ├── dev-map.md
 │   ├── security-guidance.md
+│   ├── skills/_template/eval/  # custom Skill eval templates (forge-install)
+│   ├── skills/<name>/eval/     # per-Skill eval pack (`pnpm skill-eval init <name>`)
 │   └── config                  # optional — copy from config.example
+├── eval-output/                # optional — artifact dir for skill-eval assertions
 └── <project-name>/ ...         # your application code (not flat in root)
 ```
 
 Forge does **not** modify your `package.json` unless you ask the agent to add dependencies during development.
+
+### Custom Skill eval (skill-eval)
+
+When you add **project-local custom Skills** (via `/skill-builder` or by hand), ship an eval pack:
+
+```bash
+pnpm skill-eval init my-skill       # → .forge/skills/my-skill/eval/
+pnpm skill-eval my-skill            # static checks + assertions on eval-output/
+```
+
+- Templates: `.forge/skills/_template/eval/` (from `forge-install`)
+- Trigger accuracy: run `triggers.json` prompts in your client with Skill on vs off
+- Details: [skill-eval.md](core/docs/skill-eval.md)
 
 ### Preflight (before publish)
 
@@ -745,7 +766,8 @@ Forge/
 │   ├── create-skill.sh        # Scaffold new Skill directory (pnpm create-skill)
 │   ├── apply-loadout.ts       # Merge loadout hooks into adapter settings
 │   ├── preflight.ts           # Release preflight gate (pnpm preflight)
-│   └── __tests__/             # Vitest unit tests (incl. preflight)
+│   ├── skill-eval.ts          # User-project custom Skill eval (pnpm skill-eval)
+│   └── __tests__/             # Vitest unit tests (incl. preflight, skill-eval)
 ├── vitest.config.ts           # Test runner config
 ├── changes/                   # Change artifacts (proposal/specs/design/tasks)
 │   └── archive/               # Archived implemented changes
@@ -769,7 +791,7 @@ After editing `core/`, sync to adapters and run tests before committing.
 
 ```bash
 pnpm install          # Dev dependencies (TypeScript, Vitest, etc.)
-pnpm test             # Unit tests (32 cases, incl. preflight)
+pnpm test             # Unit tests (39 cases, incl. preflight, skill-eval)
 pnpm preflight        # Verify release gate locally (see Preflight above)
 pnpm build            # Compile scripts/ to dist/
 pnpm sync             # Sync core/ → adapters/
@@ -790,8 +812,9 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json`; put token in `.env.local` as `GITHUB_TOKEN=` (see `.env.local.example`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
-| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `.forge/preflight.json`, etc. |
+| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `.forge/preflight.json`, `.forge/skills/_template/eval/`, etc. |
 | `pnpm preflight [--build-dir dist]` | Release gate before publish (see `core/docs/external-publish-preflight.md`) |
+| `pnpm skill-eval init <name>` / `pnpm skill-eval <name>` | Eval pack for user-project custom Skills |
 
 Always run `pnpm sync` after changing `core/skills`, `core/agents`, `core/hooks`, etc. — otherwise the `check-sync` hook will warn about adapter drift.
 
@@ -832,6 +855,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Founder's Playbook ↔ Forge gates | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
 | Security guidance ↔ Forge | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) |
 | Release preflight (user + contributors) | [external-publish-preflight.md](core/docs/external-publish-preflight.md) · `pnpm preflight` |
+| Custom Skill eval | [skill-eval.md](core/docs/skill-eval.md) · `pnpm skill-eval` |
 
 ---
 

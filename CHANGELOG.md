@@ -4,6 +4,10 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+### Added
+- **Skill eval** for user-project custom Skills: `pnpm skill-eval init <name>` + `pnpm skill-eval <name>`; templates in `core/templates/skill-eval/`; doc [skill-eval.md](core/docs/skill-eval.md)
+- **skill-builder**: deliver `eval/` pack (triggers + output assertions); **forge-install** writes `.forge/skills/_template/eval/`
+
 ## [v1.30.0] - 2026-05-28
 
 ### Added
