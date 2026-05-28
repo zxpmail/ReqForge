@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.30.0] - 2026-05-28
+
+### Added
+- **Release preflight**: `scripts/preflight.ts` + `pnpm preflight` — git/version/build privacy + `.forge/preflight.json` rules
+- Templates: `preflight-config.template.json`, `preflight-wechat.example.json`; doc [external-publish-preflight.md](core/docs/external-publish-preflight.md)
+- **release-builder** Step 3b Preflight Gate; `forge-install` writes `.forge/preflight.json` + `preflight-wechat.example.json`
+- README / quickref / DEV-PLAN / CLAUDE.md documentation for preflight
+
 ## [v1.29.0] - 2026-05-28
 
 ### Added

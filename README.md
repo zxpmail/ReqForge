@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.29.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.30.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,11 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.30.0 — 2026-05-28
+- **Release preflight gate**: `pnpm preflight` — machine checks before publish/deploy (clean git, version field, artifact privacy scan); configurable via `.forge/preflight.json` (includes WeChat draft example).
+- **release-builder**: new Step 3b Preflight Gate — exit code 1 blocks publish; see [external-publish-preflight.md](core/docs/external-publish-preflight.md).
+- **forge-install**: writes `.forge/preflight.json` when missing.
 
 ### v1.29.0 — 2026-05-28
 - **`.forge/security-guidance.md`**: team security rules on `pnpm forge-install`; code-review / release-builder / dev-builder read it for sensitive work.
@@ -303,6 +308,16 @@ pnpm forge-install claude-code --target ../my-app --force
 
 On Windows, `settings.windows.json` is applied automatically. Use `--windows` on other platforms if needed.
 
+`forge-install` also writes into the project root (if missing):
+
+| File | Purpose |
+|------|---------|
+| `.forge/quickref.md` | One-page gates + Skill commands |
+| `.forge/dev-map.md` | Dev navigation map template |
+| `.forge/security-guidance.md` | Team security rules template |
+| `.forge/preflight.json` | Release preflight checklist (editable) |
+| `.forge/preflight-wechat.example.json` | WeChat draft rules example (merge into preflight.json) |
+
 **Option B — Manual copy**
 
 Create or open your app directory, then copy **only** the adapter folder for your AI client.
@@ -409,10 +424,31 @@ my-app/
 │   ├── project-memory.md
 │   ├── decisions-log.md
 │   └── task-history.md
+├── .forge/                     # written by forge-install (version in git)
+│   ├── quickref.md
+│   ├── preflight.json          # → pnpm preflight
+│   ├── preflight-wechat.example.json
+│   ├── dev-map.md
+│   ├── security-guidance.md
+│   └── config                  # optional — copy from config.example
 └── <project-name>/ ...         # your application code (not flat in root)
 ```
 
 Forge does **not** modify your `package.json` unless you ask the agent to add dependencies during development.
+
+### Preflight (before publish)
+
+From your project root (Node.js only needed to run the check):
+
+```bash
+pnpm preflight                      # built-in: git clean, package.json version
+pnpm preflight --build-dir dist     # scan build output for secrets / .env / dev paths
+pnpm preflight --strict             # treat warnings as failures
+```
+
+- Edit `.forge/preflight.json` for custom rules (env vars, file exists, max bytes, regex).
+- WeChat / external APIs: see `.forge/preflight-wechat.example.json` and [external-publish-preflight.md](core/docs/external-publish-preflight.md).
+- **Exit code 1 = do not publish**; enforced by `release-builder` Step 3b.
 
 ### Updating Forge in an existing project
 
@@ -675,7 +711,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 11. **Phase verification** — Cross-Task integration check + compile + functional test
 12. **Iterate** — Request changes in conversation; auto-update Spec → Plan → code → review
 13. **Brownfield feature** (optional, when Spec already exists) — `/change-manager propose <name>` → fill `changes/<name>/` → apply (dev-planner/dev-builder scoped) → verify → archive
-14. **Release** — Invoke /release-builder
+14. **Release** — Invoke `/release-builder`; after build, run `pnpm preflight --build-dir <artifact-dir>` before deploy/tag
 
 ## Repository Structure
 
@@ -708,7 +744,8 @@ Forge/
 │   ├── validate-skill.sh      # Full validator + --score rubric (pnpm validate-skill:bash)
 │   ├── create-skill.sh        # Scaffold new Skill directory (pnpm create-skill)
 │   ├── apply-loadout.ts       # Merge loadout hooks into adapter settings
-│   └── __tests__/             # Vitest unit tests
+│   ├── preflight.ts           # Release preflight gate (pnpm preflight)
+│   └── __tests__/             # Vitest unit tests (incl. preflight)
 ├── vitest.config.ts           # Test runner config
 ├── changes/                   # Change artifacts (proposal/specs/design/tasks)
 │   └── archive/               # Archived implemented changes
@@ -732,7 +769,8 @@ After editing `core/`, sync to adapters and run tests before committing.
 
 ```bash
 pnpm install          # Dev dependencies (TypeScript, Vitest, etc.)
-pnpm test             # Unit tests (22 cases)
+pnpm test             # Unit tests (32 cases, incl. preflight)
+pnpm preflight        # Verify release gate locally (see Preflight above)
 pnpm build            # Compile scripts/ to dist/
 pnpm sync             # Sync core/ → adapters/
 pnpm forge-smoke      # Release gate: 12 smokes (~15–30s) — skill-fixtures, skill-bypass, test-demo golden path
@@ -752,7 +790,8 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json`; put token in `.env.local` as `GITHUB_TOKEN=` (see `.env.local.example`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
-| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md` into a user project |
+| `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `.forge/preflight.json`, etc. |
+| `pnpm preflight [--build-dir dist]` | Release gate before publish (see `core/docs/external-publish-preflight.md`) |
 
 Always run `pnpm sync` after changing `core/skills`, `core/agents`, `core/hooks`, etc. — otherwise the `check-sync` hook will warn about adapter drift.
 
@@ -792,6 +831,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Agent execution discipline (8 rules) | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
 | Founder's Playbook ↔ Forge gates | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
 | Security guidance ↔ Forge | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) |
+| Release preflight (user + contributors) | [external-publish-preflight.md](core/docs/external-publish-preflight.md) · `pnpm preflight` |
 
 ---
 

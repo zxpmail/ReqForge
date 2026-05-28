@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.29.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.30.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,11 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.30.0 — 2026-05-28
+- **发布 preflight 门禁**：`pnpm preflight` — 发布/部署前机器检查（git 干净、版本号、产物隐私扫描）；可配置 `.forge/preflight.json`（含公众号草稿示例 `preflight-wechat.example.json`）。
+- **release-builder**：新增 Step 3b Preflight Gate — `exit 1` 则禁止发布；详见 [external-publish-preflight.md](core/docs/external-publish-preflight.md)。
+- **forge-install**：自动写入 `.forge/preflight.json`（若不存在）。
 
 ### v1.29.0 — 2026-05-28
 - **`.forge/security-guidance.md`**：`forge-install` 写入团队安全规则；审查/发布/敏感 Task 须对照。
@@ -302,6 +307,16 @@ pnpm forge-install claude-code --target ../my-app --force
 
 Windows 下会自动应用 `settings.windows.json` → `settings.json`；其他平台可加 `--windows`。
 
+`forge-install` 还会在项目根目录写入（若不存在）：
+
+| 文件 | 用途 |
+|------|------|
+| `.forge/quickref.md` | 一页速查（机器门、Skill 命令） |
+| `.forge/dev-map.md` | 开发导航地图模板 |
+| `.forge/security-guidance.md` | 团队安全规则模板 |
+| `.forge/preflight.json` | 发布前检查清单（可编辑） |
+| `.forge/preflight-wechat.example.json` | 公众号草稿规则示例（可复制进 preflight.json） |
+
 **方式 B — 手动复制**
 
 进入你的应用目录，按所用客户端**只复制对应适配目录**：
@@ -408,10 +423,31 @@ my-app/
 │   ├── project-memory.md
 │   ├── decisions-log.md
 │   └── task-history.md
+├── .forge/                     # forge-install 写入（可版本管理）
+│   ├── quickref.md             # 速查
+│   ├── preflight.json          # 发布门禁配置 → pnpm preflight
+│   ├── preflight-wechat.example.json  # 公众号示例（可选参考）
+│   ├── dev-map.md              # 模块导航（dev-builder 维护）
+│   ├── security-guidance.md    # 安全规则（审查/发布对照）
+│   └── config                  # 可选 — 从 config.example 复制
 └── <project-name>/ ...         # 业务代码（勿平铺在根目录）
 ```
 
 除非你明确要求，Forge **不会**擅自修改你项目里的 `package.json`。
+
+### 发布前门禁（Preflight）
+
+在 `/release-builder` 或手动发布前，在项目根目录运行（需 Node.js，仅执行检查时临时需要）：
+
+```bash
+pnpm preflight                      # 内置：git、package.json version
+pnpm preflight --build-dir dist     # 额外扫描构建产物（密钥、.env、开发者路径）
+pnpm preflight --strict             # 警告也视为失败
+```
+
+- 编辑 `.forge/preflight.json` 增加自定义规则（环境变量、文件存在、字节上限、正则）。
+- 公众号等外部 API：参考 `.forge/preflight-wechat.example.json`，见 [external-publish-preflight.md](core/docs/external-publish-preflight.md)。
+- **`exit 1` = 禁止发布**；由 `release-builder` Step 3b 强制执行。
 
 ### 在已有项目中升级 Forge
 
@@ -661,7 +697,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 11. **阶段验证** — 跨 Task 集成检查 + 编译 + 功能测试
 12. **迭代** — 在对话中请求变更；自动更新 Spec → Plan → 代码 → 审查
 13. **存量功能**（可选，已有 Spec）— `/change-manager propose <名称>` → 填写 `changes/<名称>/` → apply（限定范围的 dev-planner/dev-builder）→ verify → archive
-14. **发布** — 调用 /release-builder
+14. **发布** — 调用 `/release-builder`；构建产物后运行 `pnpm preflight --build-dir <产物目录>`，通过后再部署/打 tag
 
 ## 仓库结构
 
@@ -693,7 +729,8 @@ Forge/
 │   ├── validate-skill.sh      # 完整校验 + --score 评分（pnpm validate-skill:bash）
 │   ├── create-skill.sh        # 脚手架新建 Skill（pnpm create-skill）
 │   ├── apply-loadout.ts       # 将 loadout 钩子合并到 adapter settings
-│   └── __tests__/             # Vitest 单元测试
+│   ├── preflight.ts           # 发布前门禁（pnpm preflight）
+│   └── __tests__/             # Vitest 单元测试（含 preflight）
 ├── vitest.config.ts           # 测试配置
 ├── changes/                   # 变更产物
 ├── EVOLUTION.md               # 进化引擎定义
@@ -716,7 +753,8 @@ Forge/
 
 ```bash
 pnpm install          # 安装开发依赖（TypeScript、Vitest 等）
-pnpm test             # 运行单元测试（22 项）
+pnpm test             # 运行单元测试（32 项，含 preflight）
+pnpm preflight        # 本地验证发布门禁（见上方「发布前门禁」）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
 pnpm forge-smoke      # 发版守门：12 项 smoke（约 15–30 秒；含 skill-fixtures、skill-bypass、test-demo 黄金路径）
@@ -736,7 +774,8 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm set-github-metadata` | 把 `.github/repo-metadata.json` 同步到 GitHub About/Topics；令牌放 `.env.local` 的 `GITHUB_TOKEN=`（见 `.env.local.example`） |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
-| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目，并生成 `.forge/quickref.md` |
+| `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目；写入 `.forge/quickref.md`、`.forge/preflight.json` 等 |
+| `pnpm preflight [--build-dir dist]` | 发布前门禁（git/版本/产物隐私 + `.forge/preflight.json`） |
 
 修改 `core/skills`、`core/agents`、`core/hooks` 等后务必执行 `pnpm sync`，否则 `check-sync` 钩子会提示不同步。
 
@@ -775,6 +814,7 @@ pnpm dep-graph stats  # 查看图统计
 | Agent 执行纪律（8 条） | [session-execution-discipline.md](core/docs/session-execution-discipline.md) · `agents-template.md` § Agent 执行纪律 |
 | Founder's Playbook ↔ Forge 机器门 | [founders-playbook-comparison.md](core/docs/founders-playbook-comparison.md) |
 | 安全规则 security-guidance | [security-guidance-comparison.md](core/docs/security-guidance-comparison.md) |
+| 发布 preflight（用户项目 + 贡献者） | [external-publish-preflight.md](core/docs/external-publish-preflight.md) · `pnpm preflight` |
 
 ---
 

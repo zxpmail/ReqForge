@@ -43,6 +43,7 @@ requires: []
     Optional:
     - Product-Spec.md -> if available, cross-reference features for smoke testing
     - `.forge/security-guidance.md` -> if present, **read before release** — privacy + security smoke must not violate team rules (install via `pnpm forge-install`)
+    - `.forge/preflight.json` -> if present, **run `pnpm preflight`** before publish; exit code 1 = blocked (see `core/docs/external-publish-preflight.md`)
 
 <!-- end: dependency-check -->
 <!-- begin: first-principles -->
@@ -273,6 +274,22 @@ requires: []
         Record the build artifact directory path
 
     <!-- end: step-3:-build -->
+    <!-- begin: step-3b:-preflight-gate -->
+    [Step 3b: Preflight Gate]
+        Run machine checks **before** manual privacy grep when artifacts exist:
+
+        ```bash
+        pnpm preflight --build-dir [BUILD_DIR]
+        ```
+
+        - `[BUILD_DIR]` = artifact path from Step 3 (e.g. `dist/`, `.next/`, `release/`)
+        - Exit **0** → continue. Exit **1** → **stop**, fix, rebuild, re-run preflight.
+        - Customize checks in `.forge/preflight.json` (WeChat / npm / custom API rules).
+        - No config file → built-in git + version + `--build-dir` privacy scan still run.
+
+        Do **not** publish or tag while preflight is blocked.
+
+    <!-- end: step-3b:-preflight-gate -->
     <!-- begin: step-4:-privacy-audit -->
     [Step 4: Privacy Audit]
         Execute the [Privacy Audit] checklist using the actual artifact directory recorded in Step 3

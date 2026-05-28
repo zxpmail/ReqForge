@@ -6,7 +6,7 @@
 
 ---
 
-## 当前进度（架构 Phase 1–13 · v1.25.0 标签同期）
+## 当前进度（架构 Phase 1–14 · v1.30.0）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
@@ -19,12 +19,13 @@
 | 7 Cursor 适配 | ✅ 完成 | |
 | 8 OpenCode 适配 | ✅ 完成 | 主控为 `AGENTS.md` |
 | 9 README 收尾 | ✅ 完成 | 中英文 README + CHANGELOG |
-| 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/`；发版静态 smoke：`scripts/forge-smoke/`（见附录 A） |
+| 10 脚本测试 | ✅ 完成 | Vitest：`scripts/__tests__/`（含 sync/install/dep-graph/preflight）；发版静态 smoke：`scripts/forge-smoke/`（见附录 A） |
 | 11 Loadout 机制 | ✅ 完成 | `core/loadouts/` 4 个内置 loadout（架构：bundle 定义） |
 | 12 并行代码审查 | ✅ 完成 | 4 专项 reviewer + 聚合器 |
 | 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
+| 14 发布 preflight | ✅ 完成 | `scripts/preflight.ts`、`pnpm preflight`、`.forge/preflight.json`；[external-publish-preflight.md](core/docs/external-publish-preflight.md) |
 
-**架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync`
+**架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync` → `pnpm preflight`（可选自检）
 
 **框架仓库发版测试（非架构）**：`pnpm forge-smoke`（12 项 smoke，含 test-demo 黄金路径，见附录 A）
 
@@ -51,7 +52,8 @@
 
 | 命令 | 与 Vitest 分工 |
 |------|----------------|
-| `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts` 等**逻辑**单元测试（22 项） |
+| `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts`、`preflight.ts` 等**逻辑**单元测试（32 项） |
+| `pnpm preflight` | 发布门禁（用户项目 + 框架仓自检）；配置 `.forge/preflight.json` |
 | `pnpm forge-smoke` | **结构/一致性**静态检查（12 项 smoke；#11 含 validate-skill；#12 为 test-demo 黄金路径） |
 | `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke #12） |
 

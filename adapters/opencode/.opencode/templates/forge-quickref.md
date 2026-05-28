@@ -17,6 +17,7 @@
 | `.forge/implementer-session.json` | implementer 子 Agent 正在写业务代码 |
 | `.forge/dev-map.md` | 开发导航地图（谁动代码谁改地图） |
 | `.forge/security-guidance.md` | 团队安全规则（审查/发布前对照） |
+| `.forge/preflight.json` | 发布门禁配置 → `pnpm preflight` |
 
 ---
 
@@ -26,7 +27,7 @@
 |------|------|------------|
 | Idea | 验证后再构建 | `/product-spec-builder` |
 | MVP | 最小范围 + PMF 证据 | `/dev-planner` → `/dev-builder` |
-| Launch | 发布与加固 | `/code-review` → `/release-builder` |
+| Launch | 发布与加固 | `/code-review` → `pnpm preflight` → `/release-builder` |
 | Scale | 公司化增长 | （Harness 不覆盖，用 Playbook + Cowork） |
 
 ---
@@ -92,7 +93,21 @@
 | 开发 | `/dev-builder`（每 Phase 一次） |
 | 调试 | `/bug-fixer` |
 | 审查 | `/code-review` |
-| 发布 | `/release-builder` |
+| 发布 | `/release-builder`（前先 `pnpm preflight --build-dir <产物>`） |
+
+---
+
+## 发布前门禁（preflight）
+
+```bash
+pnpm preflight
+pnpm preflight --build-dir dist    # 构建后扫描产物
+```
+
+- 配置：`.forge/preflight.json`（安装时生成）
+- 公众号示例：`.forge/preflight-wechat.example.json`
+- 详解：`core/docs/external-publish-preflight.md`（用户项目可复制该路径说明到团队 wiki）
+- **exit 1 = 禁止发布**
 
 ---
 

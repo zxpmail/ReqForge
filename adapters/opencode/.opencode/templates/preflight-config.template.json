@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "description": "Release preflight checks — customize per project. Run: pnpm preflight",
+  "envRequired": [],
+  "fileExists": [],
+  "maxBytes": [],
+  "regexChecks": []
+}

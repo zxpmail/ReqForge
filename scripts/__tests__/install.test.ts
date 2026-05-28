@@ -7,6 +7,7 @@ import {
   copyInstallTree,
   installForge,
   installForgeQuickref,
+  installPreflightConfig,
   installSecurityGuidance,
   parseInstallArgs,
   resolvePaths,
@@ -185,6 +186,28 @@ describe("installForge", () => {
     installForgeQuickref(target, forgeRoot, () => {}, false);
 
     expect(fs.readFileSync(path.join(target, ".forge/quickref.md"), "utf-8")).toBe("# old");
+  });
+
+  it("installPreflightConfig writes preflight.json", () => {
+    const forgeRoot = fs.mkdtempSync(path.join(os.tmpdir(), "reqforge-forge-pf-"));
+    const target = fs.mkdtempSync(path.join(os.tmpdir(), "reqforge-target-pf-"));
+    fs.mkdirSync(path.join(forgeRoot, "core", "templates"), { recursive: true });
+    fs.writeFileSync(
+      path.join(forgeRoot, "core", "templates", "preflight-config.template.json"),
+      '{"version":1}',
+    );
+    fs.writeFileSync(
+      path.join(forgeRoot, "core", "templates", "preflight-wechat.example.json"),
+      '{"version":1,"description":"ex"}',
+    );
+
+    installPreflightConfig(target, forgeRoot, () => {});
+
+    expect(fs.existsSync(path.join(target, ".forge", "preflight.json"))).toBe(true);
+    expect(fs.existsSync(path.join(target, ".forge", "preflight-wechat.example.json"))).toBe(true);
+
+    fs.rmSync(forgeRoot, { recursive: true, force: true });
+    fs.rmSync(target, { recursive: true, force: true });
   });
 
   it("resolvePaths uses forge root", () => {

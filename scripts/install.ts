@@ -130,6 +130,8 @@ export function copyInstallTree(
 const QUICKREF_SRC = "core/templates/forge-quickref.md";
 const DEVMAP_SRC = "core/templates/dev-map-template.md";
 const SECURITY_GUIDANCE_SRC = "core/templates/security-guidance-template.md";
+const PREFLIGHT_CONFIG_SRC = "core/templates/preflight-config.template.json";
+const PREFLIGHT_WECHAT_EXAMPLE_SRC = "core/templates/preflight-wechat.example.json";
 
 /** Copy forge-quickref into user project `.forge/quickref.md` */
 export function installForgeQuickref(
@@ -200,6 +202,37 @@ export function installSecurityGuidance(
   log(`  ✅ ${dest}`);
 }
 
+/** Copy preflight config template → `.forge/preflight.json` */
+export function installPreflightConfig(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const forgeDir = path.join(targetRoot, ".forge");
+  fs.mkdirSync(forgeDir, { recursive: true });
+
+  const configSrc = path.join(forgeRoot, PREFLIGHT_CONFIG_SRC);
+  const configDest = path.join(forgeDir, "preflight.json");
+  if (!fs.existsSync(configSrc)) {
+    log(`  ⚠️  preflight template not found: ${configSrc}`);
+  } else if (fs.existsSync(configDest) && !force) {
+    log(`  ⏭️  .forge/preflight.json exists (use --force to overwrite)`);
+  } else {
+    fs.copyFileSync(configSrc, configDest);
+    log(`  ✅ ${configDest}`);
+  }
+
+  const exampleSrc = path.join(forgeRoot, PREFLIGHT_WECHAT_EXAMPLE_SRC);
+  const exampleDest = path.join(forgeDir, "preflight-wechat.example.json");
+  if (fs.existsSync(exampleSrc)) {
+    if (!fs.existsSync(exampleDest) || force) {
+      fs.copyFileSync(exampleSrc, exampleDest);
+      log(`  ✅ ${exampleDest}`);
+    }
+  }
+}
+
 export function applyWindowsSettings(settingsDir: string, log: (msg: string) => void): boolean {
   const winSrc = path.join(settingsDir, "settings.windows.json");
   const dest = path.join(settingsDir, "settings.json");
@@ -228,6 +261,7 @@ export function installForge(
   installForgeQuickref(path.resolve(targetRoot), forgeRoot, log, options.force);
   installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSecurityGuidance(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
   const useWindows =

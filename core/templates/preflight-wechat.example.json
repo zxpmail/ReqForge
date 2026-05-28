@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "description": "WeChat Official Account draft preflight — merge checks into .forge/preflight.json as needed",
+  "envRequired": ["WEIXIN_APP_ID", "WEIXIN_APP_SECRET"],
+  "fileExists": ["draft/article.html"],
+  "maxBytes": [
+    {
+      "id": "wechat-title-bytes",
+      "description": "WeChat title ≤ 64 bytes (~20 CJK chars)",
+      "file": "draft/title.txt",
+      "max": 64
+    }
+  ],
+  "regexChecks": [
+    {
+      "id": "wechat-no-external-images",
+      "description": "HTML must not use non-WeChat CDN image URLs (use uploadimg first)",
+      "glob": "draft/**/*.html",
+      "mustNotMatch": "src=[\"']https?://(?!mmbiz\\.qpic\\.cn)[^\"']+",
+      "flags": "i"
+    }
+  ]
+}
