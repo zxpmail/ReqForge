@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.30.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.31.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -61,7 +61,7 @@ flowchart LR
 
 ## 近期更新
 
-### [Unreleased] — Skill Eval
+### v1.31.0 — 2026-05-29
 - **用户自定义 Skill 评估器**：`pnpm skill-eval init <name>` + `pnpm skill-eval <name>`；`.forge/skills/<name>/eval/`（触发用例 + 输出断言）；详见 [skill-eval.md](core/docs/skill-eval.md)
 - **skill-builder**：交付 Skill 时附带 eval 包；**forge-install** 写入 `.forge/skills/_template/eval/`
 
