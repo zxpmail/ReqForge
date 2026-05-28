@@ -4,7 +4,7 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
-## [v1.31.0] - 2026-05-20
+## [v1.31.0] - 2026-05-28
 
 ### Added
 - **Skill eval** for user-project custom Skills: `pnpm skill-eval init <name>` + `pnpm skill-eval <name>`; templates in `core/templates/skill-eval/`; doc [skill-eval.md](core/docs/skill-eval.md)

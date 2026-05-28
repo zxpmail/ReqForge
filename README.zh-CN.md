@@ -61,7 +61,7 @@ flowchart LR
 
 ## 近期更新
 
-### v1.31.0 — 2026-05-20
+### v1.31.0 — 2026-05-28
 - **用户自定义 Skill 评估器**：`pnpm skill-eval init <name>` + `pnpm skill-eval <name>`；`.forge/skills/<name>/eval/`（触发用例 + 输出断言）；详见 [skill-eval.md](core/docs/skill-eval.md)
 - **skill-builder**：交付 Skill 时附带 eval 包；**forge-install** 写入 `.forge/skills/_template/eval/`
 
