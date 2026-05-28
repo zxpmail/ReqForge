@@ -10,6 +10,7 @@ import {
   installForgeQuickref,
   installPreflightConfig,
   installSecurityGuidance,
+  installProjectTaste,
   parseInstallArgs,
   resolvePaths,
   shouldSkipOverwrite,
@@ -175,6 +176,21 @@ describe("installForge", () => {
     expect(
       fs.readFileSync(path.join(target, ".forge/security-guidance.md"), "utf-8"),
     ).toBe("# security rules");
+  });
+
+  it("installProjectTaste writes .forge/project-taste.md", () => {
+    const tplDir = path.join(forgeRoot, "core/templates");
+    fs.mkdirSync(tplDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(tplDir, "project-taste-template.md"),
+      "# project taste",
+    );
+
+    installProjectTaste(target, forgeRoot, () => {}, false);
+
+    expect(
+      fs.readFileSync(path.join(target, ".forge/project-taste.md"), "utf-8"),
+    ).toBe("# project taste");
   });
 
   it("installForgeQuickref skips existing without force", () => {

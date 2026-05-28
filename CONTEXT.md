@@ -2,8 +2,8 @@
 
 ## 当前正在做什么
 
-- **SkillOpt 批**（本地）：`skillopt-comparison.md` + `rejected-edits.json` 模板 + evolution bounded edits + train/held-out 文档 — 待 commit/push **v1.32.0**
-- **security-guidance** 已 push：**v1.29.0**；远程 **v1.31.0**（skill-eval、preflight）
+- **腾讯 Harness 镜子批**（本地）：`tencent-harness-mirror-comparison.md` + `project-taste.md` + S1–S5 — 待 commit/push **v1.33.0**
+- **SkillOpt 批** 已 push：**v1.32.0**
 
 ## 上次停在哪个位置
 
@@ -37,5 +37,5 @@
 
 ## 维护者文档（非架构 · 非测试）
 
-- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md) · [skillopt-comparison.md](core/docs/skillopt-comparison.md)
+- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md) · [skillopt-comparison.md](core/docs/skillopt-comparison.md) · [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md)
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [test-demo/README.md](test-demo/README.md)

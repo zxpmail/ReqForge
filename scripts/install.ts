@@ -131,6 +131,7 @@ export function copyInstallTree(
 const QUICKREF_SRC = "core/templates/forge-quickref.md";
 const DEVMAP_SRC = "core/templates/dev-map-template.md";
 const SECURITY_GUIDANCE_SRC = "core/templates/security-guidance-template.md";
+const PROJECT_TASTE_SRC = "core/templates/project-taste-template.md";
 const PREFLIGHT_CONFIG_SRC = "core/templates/preflight-config.template.json";
 const PREFLIGHT_WECHAT_EXAMPLE_SRC = "core/templates/preflight-wechat.example.json";
 
@@ -203,6 +204,29 @@ export function installSecurityGuidance(
   log(`  ✅ ${dest}`);
 }
 
+/** Copy project-taste template into user project `.forge/project-taste.md` */
+export function installProjectTaste(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const src = path.join(forgeRoot, PROJECT_TASTE_SRC);
+  const forgeDir = path.join(targetRoot, ".forge");
+  const dest = path.join(forgeDir, "project-taste.md");
+  if (!fs.existsSync(src)) {
+    log(`  ⚠️  project-taste template not found: ${src}`);
+    return;
+  }
+  if (fs.existsSync(dest) && !force) {
+    log(`  ⏭️  .forge/project-taste.md exists (use --force to overwrite)`);
+    return;
+  }
+  fs.mkdirSync(forgeDir, { recursive: true });
+  fs.copyFileSync(src, dest);
+  log(`  ✅ ${dest}`);
+}
+
 /** Copy preflight config template → `.forge/preflight.json` */
 export function installPreflightConfig(
   targetRoot: string,
@@ -262,6 +286,7 @@ export function installForge(
   installForgeQuickref(path.resolve(targetRoot), forgeRoot, log, options.force);
   installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSecurityGuidance(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installProjectTaste(path.resolve(targetRoot), forgeRoot, log, options.force);
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSkillEvalTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
 

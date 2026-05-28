@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.33.0] - 2026-05-28
+
+### Added
+- **腾讯 Harness 镜子对照**：[tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — 显形/三块石碑/不可能三角 ↔ Forge
+- **`.forge/project-taste.md`**：团队口味模板（`installProjectTaste` + `forge-install`）
+- **Judgment Spectrum (S1–S5)**：`product-spec-builder`、`code-review`；`dev-builder` Loading Phase 读 project-taste
+
 ## [v1.32.0] - 2026-05-28
 
 ### Added

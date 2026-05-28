@@ -262,6 +262,7 @@ requires: []
             If design tool MCP exists -> prepare to read
             Read memory/ files -> project-memory.md (architecture context), decisions-log.md (past decisions), task-history.md (recent work)
             If `.forge/security-guidance.md` exists -> read before auth/payment/upload/API-boundary Tasks; implement and review against team rules
+            If `.forge/project-taste.md` exists -> read for naming/structure/style preferences (soft — S3; not a substitute for Spec acceptance)
             Scan existing code structure -> understand current project state
 
         Step 3: Determine current Phase

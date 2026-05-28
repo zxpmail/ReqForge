@@ -158,6 +158,16 @@ requires: []
     访谈需收集的维度 + 信息充分性判定。
     **0-to-1 / Iteration 提问时读取** references/requirements-dimensions.md。
 
+[Judgment Spectrum] (what belongs in Spec vs elsewhere — [tencent-harness-mirror-comparison.md](../../docs/tencent-harness-mirror-comparison.md))
+    | Tier | Put in Product-Spec? | Where else |
+    |------|----------------------|------------|
+    | S1–S2 | **Yes** — verifiable acceptance, scope, non-goals | Phase checklist in DEV-PLAN |
+    | S3 | **No** — team taste | `.forge/project-taste.md` (forge-install); mention in Spec only if user insists |
+    | S4 | **Partial** — document decisions as ADR-style bullets when tradeoff is product-visible | `memory/decisions-log.md` after build |
+    | S5 | **No** — strategy / values / open aesthetic debate | Human Confirm; never pretend Spec is complete |
+
+    **Impossible triangle reminder:** do not chase "every definition of good" in Spec — that invites Goodhart and kills tacit judgment. Spec = intent layer (石碑①); taste stays soft (石碑③).
+
 [Conversation Strategy] — [Workflow (0-to-1 Mode)] and [Workflow (Iteration Mode)] determine the current phase; select conversation strategy accordingly.
     开场、提问、方案与 AI/平台/技术引导、搜索与确认。
     **对话阶段读取** references/conversation-strategy.md（含 [Chain of Thought]：选型/边界/自质疑模板，无需用户手写「先想想看」）。
