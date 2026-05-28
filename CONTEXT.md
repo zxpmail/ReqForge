@@ -2,7 +2,7 @@
 
 ## 当前正在做什么
 
-- **Matt Pocock 吸收批**（本地）：Light Grill + zoom-out + 架构保健 + 对照文档 — **v1.34.0** 待 commit/push
+- **Matt Pocock 吸收批** 已 push：**v1.34.0**（`6829402`）
 - **腾讯 Harness 镜子批** 已 push：**v1.33.0**
 
 ## 上次停在哪个位置
