@@ -67,6 +67,7 @@ flowchart LR
 - **Structured exploration trace**: `pnpm forge-trace` — record Phase decisions, dead ends, and evidence bindings in `.forge/trace/phase-<N>.json`. Hooked into dev-builder Loading Phase and Phase Completion Assessment. Checked by `forge-verify trace-fresh`. ([ARA paper](https://arxiv.org/abs/2604.24658) inspired)
 - **Scope filter (巽)**: `pnpm forge-scope` — declare Phase file boundaries (modify/readonly/outOfScope), enforced by `forge-verify scope-check` against `git diff`. Prevents scope creep during implementation.
 - **Evolution proposals (兌)**: dev-builder Phase Completion triggers evolution-engine scan; presents actionable pattern-based proposals to user as Y/N choices. Closes the feedback→evolution loop proactively. ([八卦信息论 巽兌 protocol audit] inspired)
+- **Skill quality judge**: `pnpm skill-eval judge <name>` — independent sub-agent evaluates Skill quality against a 5-dim rubric (structure/specificity/failure-mode/anti-patterns/effectiveness). Results recorded to `judge-history.json`. ([darwin-skill](https://github.com/alchaincyf/darwin-skill) inspired)
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill、zoom-out、架构保健、GitHub issue 切片（吸收思路，不整包合并）

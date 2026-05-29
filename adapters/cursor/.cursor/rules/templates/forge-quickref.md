@@ -118,12 +118,15 @@ pnpm preflight --build-dir dist    # 构建后扫描产物
 ## 自定义 Skill 评估（skill-eval）
 
 ```bash
-pnpm skill-eval init my-skill      # → .forge/skills/my-skill/eval/
-pnpm skill-eval my-skill           # 静态检查 + 对 eval-output/ 断言
+pnpm skill-eval init my-skill           # → .forge/skills/my-skill/eval/
+pnpm skill-eval my-skill                # 静态检查 + 对 eval-output/ 断言
+pnpm skill-eval judge-prep my-skill     # 初始化 judge 配置（rubric 定义）
+pnpm skill-eval judge my-skill          # 打印 judge briefing（给 AI agent 用）
+pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
 ```
 
 - 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
-- 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照）
+- 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照；judge 效果评估需 AI agent spawn 独立 sub-agent）
 
 ---
 

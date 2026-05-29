@@ -66,6 +66,7 @@ flowchart LR
 - **结构化探索图（trace）**：`pnpm forge-trace` — 记录 Phase 决策、死胡同、证据绑定至 `.forge/trace/phase-<N>.json`。集成到 dev-builder Loading Phase 和 Phase 完成评估。`forge-verify` 新增 `trace-fresh` 检查。（受 [ARA 论文](https://arxiv.org/abs/2604.24658) 启发）
 - **作用域过滤（巽）**：`pnpm forge-scope` — 声明 Phase 文件边界（modify/readonly/outOfScope），`forge-verify scope-check` 通过 `git diff` 强制执行。防止实施中越界改代码。
 - **进化提案（兌）**：dev-builder Phase 完成时触发 evolution-engine 扫描；向用户呈现基于反馈模式的可操作提案（Y/N 选择）。主动闭合反馈→进化循环。（受 [八卦信息论 巽兌 protocol audit] 启发）
+- **Skill 质量 judge**：`pnpm skill-eval judge <name>` — 独立 sub-agent 按 5 维 rubric（结构完整性/可执行具体性/失败模式编码/反例完备性/实测表现）评估 Skill 质量。结果记录至 `judge-history.json`。（受 [darwin-skill](https://github.com/alchaincyf/darwin-skill) 启发）
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片

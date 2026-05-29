@@ -91,6 +91,66 @@ Skill 本体通常在适配层目录，例如 `.claude/skills/<name>/SKILL.md`�
 
 `pnpm skill-eval init` 会生成空模板。详见 [skillopt-comparison.md](./skillopt-comparison.md)。
 
+## Judge — 独立效果评估
+
+> darwin-skill 启发：用独立 sub-agent 按 rubric 评估 Skill 质量，而非仅做静态结构检查。
+
+Judge 是 `skill-eval` 的可选增强模式，用于评估 Skill 的**实际效果**，而非仅检查文件结构。
+
+### 5 维 Rubric（满分 100）
+
+| # | 维度 | 权重 | 说明 |
+|---|------|------|------|
+| 1 | 结构完整性 | 15% | frontmatter 质量、工作流清晰度、输入输出明确 |
+| 2 | 可执行具体性 | 25% | 指令具体不模糊、有参数/格式/示例、可直接执行 |
+| 3 | 失败模式编码 | 20% | 显式"如果 X 失败→执行 Y"分支、fallback、边界条件 |
+| 4 | 反例完备性 | 15% | 有明确"不要做什么"清单、红灯动作单独章节 |
+| 5 | 实测表现 | 25% | 用测试 prompt 执行 Skill，输出质量符合宣称能力 |
+
+### CLI 命令
+
+```bash
+pnpm skill-eval judge-prep <name>        # 创建 judge-config.json
+pnpm skill-eval judge <name>             # 打印 judge briefing（AI agent 使用）
+pnpm skill-eval judge-record <name> --report <file>  # 记录 judge report 到 history
+```
+
+### Judge 工作流（AI agent 执行）
+
+Judge 评估需要 AI agent 来 spawn 独立 sub-agent，CLI 只负责生成 briefing 和记录结果。
+
+```
+1. pnpm skill-eval judge-prep my-skill
+   → 在 .forge/skills/my-skill/eval/ 创建 judge-config.json
+
+2. pnpm skill-eval judge my-skill
+   → 打印结构化 judge briefing（rubric + 测试 prompt + 指令）
+   → AI agent 读取后 spawn 独立 sub-agent 作为 judge
+
+3. Judge sub-agent 执行：
+   a. 读取 SKILL.md
+   b. 对每个测试 prompt 执行 Skill，评估输出质量
+   c. 按 rubric 打分（1-10），附 evidence
+   d. 输出 judge-report.json
+
+4. pnpm skill-eval judge-record my-skill --report judge-report.json
+   → 验证 report schema，追加到 judge-history.json
+   → 输出分数摘要
+```
+
+### 设计原则
+
+- **独立 judge**：judge sub-agent 与 Skill 作者是不同 agent，避免"自己改自己评"偏差
+- **效果优先**：实测表现维度权重最高（25%），结构再好效果差也得低分
+- **可追溯**：每次 judge 结果追加到 `judge-history.json`，支持趋势追踪
+- **人机协作**：CLI 处理结构化的部分，AI agent 处理需要理解力的评估
+
+### 已知限制
+
+- 细粒度区分仍不可靠（参考 darwin-skill 引用的 SkillLens 论文：rubric 能识别 gross degradation，但 fine-grained 差异仍不可信）
+- 测试 prompt 的质量决定 judge 有效性 — 应覆盖 happy path 和边缘场景
+- 跨 session judge 一致性无保证 — 同一 Skill 在不同 session 的评分可能波动
+
 ## 与 skill-builder 的关系
 
 `/skill-builder` 交付新 Skill 时 **必须**：

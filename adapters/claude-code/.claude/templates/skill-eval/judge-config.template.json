@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "skill": "my-custom-skill",
+  "description": "Judge configuration for skill quality evaluation",
+  "rubric": {
+    "dimensions": [
+      {
+        "id": "structure",
+        "name": "结构完整性",
+        "weight": 15,
+        "scoring": "1-10",
+        "description": "SKILL.md 有完整 frontmatter（name/description/triggers）、工作流步骤有序号、输入输出明确"
+      },
+      {
+        "id": "specificity",
+        "name": "可执行具体性",
+        "weight": 25,
+        "scoring": "1-10",
+        "description": "指令可直接执行，有具体参数/格式/示例，不使用'建议/可以考虑/根据情况'等模糊措辞"
+      },
+      {
+        "id": "failure_mode",
+        "name": "失败模式编码",
+        "weight": 20,
+        "scoring": "1-10",
+        "description": "有显式'如果 X 失败 → 执行 Y'分支、fallback 路径、错误恢复、边界条件处理"
+      },
+      {
+        "id": "anti_patterns",
+        "name": "反例完备性",
+        "weight": 15,
+        "scoring": "1-10",
+        "description": "有明确的'不要做什么'清单、红灯动作/反模式单独章节列出"
+      },
+      {
+        "id": "effectiveness",
+        "name": "实测表现",
+        "weight": 25,
+        "scoring": "1-10",
+        "description": "用测试 prompt 执行 Skill，输出质量符合宣称能力；对比 baseline（无 Skill）有明显提升"
+      }
+    ]
+  },
+  "judge_count": 1,
+  "test_prompt_source": "cases.json"
+}

@@ -9,6 +9,7 @@ All notable changes to Forge are documented here.
 - **Structured exploration trace** (`scripts/forge-trace.mjs`): `init`, `decision`, `dead-end`, `evidence`, `summary` commands for recording Phase decisions, abandoned approaches, and claim-to-evidence bindings. Stored in `.forge/trace/phase-<N>.json`. Hooked into dev-builder Loading Phase (init) and Phase Completion Assessment (record). New `trace-fresh` check in `forge-verify`.
 - **Scope filter (巽)** (`scripts/forge-scope.mjs`): `init`, `check`, `show` commands for declaring Phase file boundaries (modify/readonly/outOfScope). Creates `.forge/active-scope.json`. Enforced by `forge-verify scope-check` against `git diff --name-only HEAD`. Inspired by 八卦信息论 protocol audit.
 - **Evolution proposals (兌)**: dev-builder Phase Completion After All Pass triggers evolution-engine scan for actionable patterns. Presents Y/N proposals to user before proceeding. Logs deferred proposals to `.forge/evolution-proposals.md`. Closes the feedback→evolution loop proactively.
+- **Skill quality judge** (`pnpm skill-eval judge`): independent sub-agent evaluates Skill against 5-dim rubric (structure/specificity/failure-mode/anti-patterns/effectiveness). Commands: `judge-prep`, `judge` (prints briefing), `judge-record`. Results append to `judge-history.json`. Inspired by darwin-skill's autonomous evaluation loop.
 
 ### Changed
 - **dev-builder**: Loading Phase Step 5 initializes trace; Phase Completion Assessment After All Pass records decisions/dead-ends/evidence.
