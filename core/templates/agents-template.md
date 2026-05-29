@@ -81,3 +81,91 @@ This project may include platform-specific hook scripts:
 - `.ps1` — Windows PowerShell
 
 Hooks fire automatically at key events (commit, edit, startup).
+
+---
+
+## Parallel Worktree Workflow
+
+When working on multiple independent tasks in parallel (e.g., backend feature + frontend feature), use git worktrees so each task has its own working directory, tests, and commits.
+
+### Setup
+
+```bash
+# Script helper (cross-platform)
+python scripts/new_worktree.py "<task-name>" --link-deps
+
+# Or manual:
+git worktree add -b feat/<user>/<short-summary> ../_worktrees/<repo>/<task>
+```
+
+### Worktree Path Convention
+
+```
+<repo-parent>/_worktrees/<repo-name>/<task-slug>
+```
+
+### Branch Naming Convention
+
+```
+<Type>/<user>/<short-task>
+  Type: feat | chore | fix | hotfix | refactor
+  user: git user.name or user.email (before @)
+  short-task: max 3 words, kebab-case
+```
+
+Examples:
+- `feat/alice/user-auth`
+- `fix/bob/login-crash`
+- `refactor/alice/api-routes`
+
+### Rules
+
+1. **Each task = brand new branch** — never reuse old branches
+2. **Keep main worktree clean** — all work in task worktrees
+3. **Small frequent commits** — commit after each passing check
+4. **Sync regularly** — keep task branches in sync with the mainline branch (ask the user which local branch to track)
+5. **No hardcoded paths** — derive paths from git repo root
+
+### Dependency Sharing
+
+Avoid reinstalling dependencies in every worktree. Link from the main worktree:
+
+```bash
+# macOS/Linux
+bash scripts/link_worktree_deps.sh --main <main-root> --worktree <worktree-root>
+
+# Windows
+powershell -ExecutionPolicy Bypass -File scripts/link_worktree_deps.ps1 -Main <main-root> -Worktree <worktree-root>
+```
+
+Use `--force` to overwrite existing links.
+
+### Multi-Agent Coordination
+
+When multiple AI agents work in parallel on different worktrees:
+
+1. **Claim your task** — pick from the todo list, create a worktree
+2. **Commit independently** — each worktree commits its own changes
+3. **Integrate via clean branch** — don't commit on a dirty main worktree
+4. **Cherry-pick** — create a clean integration worktree, cherry-pick task commits, run checks, then merge
+
+### Integration Checklist
+
+Before claiming a task is done:
+
+- [ ] All changes committed in task worktree
+- [ ] Tests pass in isolation
+- [ ] Integration worktree passes all checks
+- [ ] Diff reviewed by user
+- [ ] Branch merged to mainline
+- [ ] Worktree cleaned up
+
+## Memory System
+
+Three files in `memory/` track project context across AI sessions:
+
+| File | Purpose | Read at | Update after |
+|------|---------|---------|--------------|
+| `project-memory.md` | Architecture, constraints, known pitfalls | Session start | Task completion |
+| `decisions-log.md` | ADR-format architectural decisions | Session start | When decision made |
+| `task-history.md` | Recent task summaries (last 30) | Session start | Task completion |

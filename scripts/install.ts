@@ -132,6 +132,7 @@ const QUICKREF_SRC = "core/templates/forge-quickref.md";
 const DEVMAP_SRC = "core/templates/dev-map-template.md";
 const SECURITY_GUIDANCE_SRC = "core/templates/security-guidance-template.md";
 const PROJECT_TASTE_SRC = "core/templates/project-taste-template.md";
+const AGENTS_TEMPLATE_SRC = "core/templates/agents-template.md";
 const PREFLIGHT_CONFIG_SRC = "core/templates/preflight-config.template.json";
 const PREFLIGHT_WECHAT_EXAMPLE_SRC = "core/templates/preflight-wechat.example.json";
 
@@ -227,6 +228,27 @@ export function installProjectTaste(
   log(`  ✅ ${dest}`);
 }
 
+/** Copy agents-template.md → project root `AGENTS.md` */
+export function installAgentsTemplate(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const src = path.join(forgeRoot, AGENTS_TEMPLATE_SRC);
+  const dest = path.join(path.resolve(targetRoot), "AGENTS.md");
+  if (!fs.existsSync(src)) {
+    log(`  ⚠️  agents template not found: ${src}`);
+    return;
+  }
+  if (fs.existsSync(dest) && !force) {
+    log(`  ⏭️  AGENTS.md exists (use --force to overwrite)`);
+    return;
+  }
+  fs.copyFileSync(src, dest);
+  log(`  ✅ ${dest}`);
+}
+
 /** Copy preflight config template → `.forge/preflight.json` */
 export function installPreflightConfig(
   targetRoot: string,
@@ -289,6 +311,7 @@ export function installForge(
   installProjectTaste(path.resolve(targetRoot), forgeRoot, log, options.force);
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSkillEvalTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installAgentsTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
   const useWindows =
