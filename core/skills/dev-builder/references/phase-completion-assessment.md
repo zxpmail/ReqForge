@@ -70,6 +70,10 @@
     - Update `.forge/dev-map.md` — add/modify rows for modules touched this Phase (who changes code updates the map)
     - Record structured trace: capture key decisions (tradeoffs, chosen approach, abandoned alternatives), dead ends (approaches tried but failed, lessons learned), and evidence-file bindings for each claim. Append to `.forge/trace/phase-<N>.json`:
       - `node scripts/forge-trace.mjs decision <N> --q "<question>" --c "<chosen>" -r "<reason>" -a "<abandoned>"` (if exists)
+    - **Scope compliance (巽 — Filter)**: Run `node scripts/forge-scope.mjs check` to verify no files outside the declared scope were modified. If violations found, must revert or update scope declaration before proceeding. (Skip if script doesn't exist.)
+    - **Evolution proposals (兌 — Exchange)**: After all checks pass, run evolution-engine to scan feedback data for actionable patterns. If proposals found, present to user as Y/N choices:
+      - "I noticed [pattern] from the last Phase. Suggest [change]. Apply? (Y/N)"
+      - Only proceed after user responds; if user says no, log to `.forge/evolution-proposals.md` for later review.
     - Report results to the user (with evidence)
     - Remove `.forge/phase-exit-block` if present
     - **PROJECT-HEALTH.md** (user projects only): Create or update at project root from `core/templates/PROJECT-HEALTH-template.md` (via adapter templates path). Fill: date, Phase N, Primary metric result, Spec coverage X/Y, last test command output summary, top 3 risk_rank items from last review if any, last 5 rows from `memory/task-history.md`, next Phase name. Skip for ReqForge framework repo itself.

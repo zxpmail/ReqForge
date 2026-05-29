@@ -43,6 +43,20 @@
         "Claims→Evidence 绑定"
       ],
       "timestamp": "2026-05-29T03:23:59.866Z"
+    },
+    {
+      "question": "八卦信息论最值得落地的两个协议缺口",
+      "chosen": "巽(scope filter) + 兌(proactive evolution)",
+      "options": [
+        "巽(scope filter)",
+        "兌(proactive evolution)",
+        "其他接口增强(乾坤震坎离艮)"
+      ],
+      "reason": "scope filter 填补主动过滤缺口，proactive evolution 填补双向反馈缺口 — 两者都与现有 forge-verify/dev-builder 体系无缝衔接",
+      "abandoned": [
+        "其他接口增强"
+      ],
+      "timestamp": "2026-05-29T05:17:36.468Z"
     }
   ],
   "deadEnds": [
@@ -59,6 +73,18 @@
       "core/templates/agents-template.md",
       "scripts/install.ts",
       "core/templates/forge-quickref.md"
+    ],
+    "巽 — Active Scope Filter": [
+      "scripts/forge-scope.mjs",
+      "scripts/forge-verify.mjs",
+      "core/skills/dev-builder/SKILL.md",
+      "core/skills/dev-builder/references/phase-completion-assessment.md",
+      "core/templates/forge-quickref.md",
+      "package.json"
+    ],
+    "兌 — Proactive Evolution Proposals": [
+      "core/skills/dev-builder/references/phase-completion-assessment.md",
+      "core/skills/evolution-engine/SKILL.md"
     ]
   },
   "summary": null

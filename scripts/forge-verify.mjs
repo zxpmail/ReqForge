@@ -13,6 +13,7 @@
  *   5. dev-map-fresh   — dev-map.md 是否存在
  *   6. security-patterns — 轻量危险模式扫描（eval / new Function）
  *   7. trace-fresh     — .forge/trace/ 是否存在且有内容
+ *   8. scope-check     — 检查文件改动是否超出声明的作用域
  *
  * --baseline save    : 运行验证并保存结果到 .forge/verify-baseline.json
  * --baseline compare : 运行验证并与基线对比，输出增量
@@ -183,6 +184,39 @@ function checkTraceFresh() {
   return `trace/${latest}: ${data.decisions.length} decisions, ${data.deadEnds.length} dead-ends`;
 }
 
+function checkScope() {
+  const scopePath = join(ROOT, ".forge", "active-scope.json");
+  if (!existsSync(scopePath)) return "skip (no .forge/active-scope.json)";
+  const scope = JSON.parse(readFileSync(scopePath, "utf-8"));
+  if (!scope.modify || scope.modify.length === 0) return "skip (no modify paths declared)";
+
+  try {
+    const out = execSync(
+      `git diff --name-only HEAD`,
+      { cwd: ROOT, encoding: "utf-8", timeout: 15000, stdio: "pipe" }
+    ).trim();
+    if (!out) return "no uncommitted changes";
+
+    const changed = out.split("\n").filter(Boolean);
+    const modifySet = new Set(scope.modify);
+    const violations = changed.filter(file => {
+      if (file.startsWith(".forge/") || file.startsWith(".git")) return false;
+      for (const p of modifySet) {
+        if (file === p || file.startsWith(p + "/")) return false;
+      }
+      return true;
+    });
+
+    if (violations.length > 0) {
+      throw new Error(`${violations.length} files outside scope: ${violations.slice(0, 5).join(", ")}`);
+    }
+    return "all changes in-scope";
+  } catch (e) {
+    if (e.message?.includes("files outside scope")) throw e;
+    return "git diff unavailable, skip";
+  }
+}
+
 // --- Run all checks ---
 const checks = [
   run("skill-quality", checkSkillQuality),
@@ -192,6 +226,7 @@ const checks = [
   run("dev-map-fresh", checkDevMapFresh),
   run("security-patterns", checkSecurityPatterns),
   run("trace-fresh", checkTraceFresh),
+  run("scope-check", checkScope),
 ];
 
 // --- Build results map ---

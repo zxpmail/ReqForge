@@ -285,6 +285,17 @@ requires: []
             This creates `.forge/trace/phase-<N>.json` to record decisions, dead ends, and evidence bindings during development.
             If the script/forge-trace.mjs doesn't exist in the project, skip this step.
 
+        Step 6: Scope declaration (巽 — Filter)
+            Declare the Phase's file scope to prevent scope creep:
+            `node scripts/forge-scope.mjs init <phase-N> --modify "<files-to-edit>" --readonly "<files-to-read>"`
+
+            Follow the DEV-PLAN.md Phase delivery checklist to determine scope:
+            - **--modify**: files/directories this Phase will create or edit (e.g. "src/components/,src/pages/login.tsx")
+            - **--readonly**: files/directories this Phase needs to read but NOT edit (e.g. "src/lib/,src/types/")
+
+            If the script/forge-scope.mjs doesn't exist in the project, skip this step.
+            Scope is enforced by `forge-verify scope-check` after Phase completion.
+
     <!-- end: loading-phase -->
     <!-- begin: phase-execution-flow -->
     [Phase Execution Flow]

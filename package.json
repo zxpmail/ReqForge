@@ -19,6 +19,7 @@
     "forge-smoke": "node scripts/forge-smoke/run-all.mjs",
     "forge-verify": "node scripts/forge-verify.mjs",
     "forge-trace": "node scripts/forge-trace.mjs",
+    "forge-scope": "node scripts/forge-scope.mjs",
   "test-demo-golden-path": "node test-demo/run-golden-path.mjs",
     "validate-skill": "node scripts/validate-skill.mjs",
     "validate-skill:bash": "bash scripts/validate-skill.sh",

@@ -21,6 +21,7 @@
 | `.forge/preflight.json` | 发布门禁配置 → `pnpm preflight` |
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
 | `.forge/tests/` | Playwright E2E 测试模板（config + auth + Phase 验证） |
+| `.forge/active-scope.json` | 当前 Phase 文件作用域（巽 — 越界检查） |
 
 ---
 
@@ -151,6 +152,14 @@ node scripts/forge-trace.mjs init <N>                               # Phase N �
 node scripts/forge-trace.mjs decision <N> -q "<问>" -c "<选>" -r "<因>"  # 记录决策
 node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教训>" # 记录死胡同
 node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
+```
+
+## 作用域过滤（巽 — Filter）
+
+```bash
+node scripts/forge-scope.mjs init <N> --modify "src/" --readonly "src/lib/"  # 声明 Phase 范围
+node scripts/forge-scope.mjs check                                            # 检查是否越界
+node scripts/forge-scope.mjs show                                             # 查看当前作用域
 ```
 
 ---

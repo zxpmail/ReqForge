@@ -1,0 +1,14 @@
+{
+  "phase": 1,
+  "createdAt": "2026-05-29T05:17:23.902Z",
+  "modify": [
+    "scripts",
+    "core/templates",
+    "core/skills",
+    "adapters",
+    "package.json",
+    ".forge"
+  ],
+  "readonly": [],
+  "outOfScope": []
+}
