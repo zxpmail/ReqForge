@@ -21,7 +21,7 @@
  */
 
 import { execSync } from "child_process";
-import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, unlinkSync } from "fs";
 import { join, dirname, relative } from "path";
 import { fileURLToPath } from "url";
 import { loadBaseline, saveBaseline, compareBaseline } from "./forge-verify/baseline.mjs";
@@ -260,6 +260,9 @@ console.log(`\n  Total: ${totalPass} pass, ${totalFail} fail, ${totalSkip} skip\
 // --- Baseline logic ---
 if (baselineMode === "save") {
   saveBaseline(resultsMap, ROOT);
+  // Clean up any previous verify-block — new baseline is a fresh start
+  const blockPath = join(ROOT, ".forge/.verify-block");
+  if (existsSync(blockPath)) unlinkSync(blockPath);
   console.log("  Baseline saved to .forge/verify-baseline.json\n");
   process.exit(0);
 }
@@ -281,6 +284,14 @@ if (baselineMode === "compare" || baselineMode === "check") {
   }
   if (diff.added.length === 0 && diff.removed.length === 0) {
     console.log("  No changes from baseline.");
+  }
+
+  // Write/remove verify-block for phase-exit-guard
+  const blockPath = join(ROOT, ".forge/.verify-block");
+  if (diff.added.length > 0) {
+    writeFileSync(blockPath, `New forge-verify failures: ${diff.added.join(", ")}\n`, "utf-8");
+  } else if (existsSync(blockPath)) {
+    unlinkSync(blockPath);
   }
   console.log();
 

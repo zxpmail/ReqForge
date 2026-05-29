@@ -5,6 +5,7 @@
     "scripts",
     "core/templates",
     "core/skills",
+    "core/hooks",
     "adapters",
     "package.json",
     ".forge"

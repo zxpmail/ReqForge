@@ -11,14 +11,26 @@ is_yolo_mode() {
 }
 
 BLOCK_FILE="$CLAUDE_PROJECT_DIR/.forge/phase-exit-block"
+VERIFY_BLOCK="$CLAUDE_PROJECT_DIR/.forge/.verify-block"
 
-if [ ! -f "$BLOCK_FILE" ]; then
+if [ ! -f "$BLOCK_FILE" ] && [ ! -f "$VERIFY_BLOCK" ]; then
   exit 0
 fi
 
-REASON=$(head -n 1 "$BLOCK_FILE" 2>/dev/null | tr -d '\r')
+REASON=""
+if [ -f "$BLOCK_FILE" ]; then
+  REASON=$(head -n 1 "$BLOCK_FILE" 2>/dev/null | tr -d '\r')
+fi
+if [ -f "$VERIFY_BLOCK" ]; then
+  VERIFY_REASON=$(head -n 1 "$VERIFY_BLOCK" 2>/dev/null | tr -d '\r')
+  if [ -n "$REASON" ]; then
+    REASON="$REASON; $VERIFY_REASON"
+  else
+    REASON="$VERIFY_REASON"
+  fi
+fi
 if [ -z "$REASON" ]; then
-  REASON="Phase or DEV-PLAN acceptance criteria not complete. See DEV-PLAN.md and dev-builder phase verification."
+  REASON="Phase or DEV-PLAN acceptance criteria not complete, or forge-verify detected new failures. See DEV-PLAN.md and dev-builder phase verification."
 fi
 
 if is_yolo_mode; then
@@ -29,5 +41,5 @@ fi
 
 # Escape double quotes for JSON reason field
 ESCAPED=$(printf '%s' "$REASON" | sed 's/\\/\\\\/g; s/"/\\"/g')
-printf '{"decision": "block", "reason": "%s — Complete Phase four-step verification in dev-builder, then remove .forge/phase-exit-block before stopping."}\n' "$ESCAPED"
+printf '{"decision": "block", "reason": "%s — Complete Phase four-step verification and fix forge-verify failures, then remove block files before stopping."}\n' "$ESCAPED"
 exit 0
