@@ -61,6 +61,10 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.0 — 2026-05-29
+- **AGENTS.md 模板**：增强版，新增并行 worktree 工作流（分支命名约定、依赖共享、多 Agent 协调规则）。`pnpm forge-install` 写入项目根目录。（受 [FreeTodo](https://github.com/FreeU-group/FreeTodo) 启发）
+- **结构化探索图（trace）**：`pnpm forge-trace` — 记录 Phase 决策、死胡同、证据绑定至 `.forge/trace/phase-<N>.json`。集成到 dev-builder Loading Phase 和 Phase 完成评估。`forge-verify` 新增 `trace-fresh` 检查。（受 [ARA 论文](https://arxiv.org/abs/2604.24658) 启发）
+
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片
 - **Light Grill**：说「grill me / 烤问」→ 轻量对齐，不必先写完整 Spec
