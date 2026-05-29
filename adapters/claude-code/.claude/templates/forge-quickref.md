@@ -19,6 +19,7 @@
 | `.forge/security-guidance.md` | 团队安全规则（审查/发布前对照） |
 | `AGENTS.md` | AI Agent 行为约束与并行工作流规范（forge-install 写入） |
 | `.forge/preflight.json` | 发布门禁配置 → `pnpm preflight` |
+| `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
 
 ---
 
@@ -140,6 +141,15 @@ pnpm test && pnpm forge-smoke
 pnpm forge-verify                      # 运行验证
 pnpm forge-verify --baseline save      # 开发前保存基线
 pnpm forge-verify --baseline compare   # 开发后对比基线
+```
+
+## 探索图（trace）
+
+```bash
+node scripts/forge-trace.mjs init <N>                               # Phase N 初始化
+node scripts/forge-trace.mjs decision <N> -q "<问>" -c "<选>" -r "<因>"  # 记录决策
+node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教训>" # 记录死胡同
+node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
 ```
 
 ---

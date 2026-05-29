@@ -279,6 +279,12 @@ requires: []
             Run `pnpm forge-verify --baseline save` to capture current verification state before any code changes. This enables post-Phase baseline comparison.
             If the user specifies a particular Phase -> use that one
 
+        Step 5: Trace init
+            Initialize exploration trace for this Phase:
+            `node scripts/forge-trace.mjs init <phase-N>`
+            This creates `.forge/trace/phase-<N>.json` to record decisions, dead ends, and evidence bindings during development.
+            If the script/forge-trace.mjs doesn't exist in the project, skip this step.
+
     <!-- end: loading-phase -->
     <!-- begin: phase-execution-flow -->
     [Phase Execution Flow]

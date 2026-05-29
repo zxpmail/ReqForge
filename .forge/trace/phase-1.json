@@ -1,0 +1,65 @@
+{
+  "phase": 1,
+  "createdAt": "2026-05-29T03:23:43.881Z",
+  "decisions": [
+    {
+      "question": "?",
+      "chosen": "",
+      "options": [],
+      "reason": "",
+      "abandoned": [],
+      "timestamp": "2026-05-29T03:23:48.507Z"
+    },
+    {
+      "question": "FreeTodo 的最有价值启发",
+      "chosen": "AGENTS.md 标准化工作流模板",
+      "options": [
+        "AGENTS.md 模板",
+        "AI Agent trace",
+        "计划 frontmatter",
+        "命令参考注入",
+        "提示词 i18n 外拆",
+        "依赖共享脚本"
+      ],
+      "reason": "并行 worktree 流程、分支命名、多 Agent 协调 — 与 forge-install 模板体系无缝对接，改动量小风险低",
+      "abandoned": [
+        "AI Agent trace",
+        "计划 frontmatter",
+        "命令参考注入"
+      ],
+      "timestamp": "2026-05-29T03:23:54.257Z"
+    },
+    {
+      "question": "ARA 论文最有价值启发",
+      "chosen": "结构化探索图 trace",
+      "options": [
+        "trace",
+        "feedback-observer 改造",
+        "Claims→Evidence 绑定"
+      ],
+      "reason": "失败路径和决策理由当前随 session 消失 — trace 记录决策树、死胡同、证据绑定，使 evolution-engine 可基于结构化数据驱动规则优化",
+      "abandoned": [
+        "feedback-observer 改造",
+        "Claims→Evidence 绑定"
+      ],
+      "timestamp": "2026-05-29T03:23:59.866Z"
+    }
+  ],
+  "deadEnds": [
+    {
+      "approach": "forge-trace CLI 用短参数 -q/-c",
+      "failedAt": "CLI 解析",
+      "failureMode": "参数名不匹配 — CLI 只支持 --long 格式",
+      "lesson": "CLI 参数统一用 --flag 格式，文档和 help 要显式注明",
+      "timestamp": "2026-05-29T03:24:01.385Z"
+    }
+  ],
+  "evidence": {
+    "AGENTS.md 模板": [
+      "core/templates/agents-template.md",
+      "scripts/install.ts",
+      "core/templates/forge-quickref.md"
+    ]
+  },
+  "summary": null
+}

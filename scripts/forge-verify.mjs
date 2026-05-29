@@ -12,6 +12,7 @@
  *   4. no-placeholders — grep TBD/FIXME in committed code
  *   5. dev-map-fresh   — dev-map.md 是否存在
  *   6. security-patterns — 轻量危险模式扫描（eval / new Function）
+ *   7. trace-fresh     — .forge/trace/ 是否存在且有内容
  *
  * --baseline save    : 运行验证并保存结果到 .forge/verify-baseline.json
  * --baseline compare : 运行验证并与基线对比，输出增量
@@ -167,6 +168,21 @@ function checkSecurityPatterns() {
   return "no eval/new Function in src";
 }
 
+function checkTraceFresh() {
+  const traceDir = join(ROOT, ".forge", "trace");
+  if (!existsSync(traceDir)) return "skip (no .forge/trace/)";
+  const files = readdirSync(traceDir).filter(f => f.endsWith(".json"));
+  if (files.length === 0) return "skip (trace dir empty)";
+
+  const latest = files.sort().reverse()[0];
+  const data = JSON.parse(readFileSync(join(traceDir, latest), "utf-8"));
+  const hasContent = data.decisions?.length > 0 || data.deadEnds?.length > 0;
+  if (!hasContent) {
+    throw new Error(`trace/${latest} exists but has no decisions/dead-ends — record phase decisions via forge-trace.mjs`);
+  }
+  return `trace/${latest}: ${data.decisions.length} decisions, ${data.deadEnds.length} dead-ends`;
+}
+
 // --- Run all checks ---
 const checks = [
   run("skill-quality", checkSkillQuality),
@@ -175,6 +191,7 @@ const checks = [
   run("no-placeholders", checkNoPlaceholders),
   run("dev-map-fresh", checkDevMapFresh),
   run("security-patterns", checkSecurityPatterns),
+  run("trace-fresh", checkTraceFresh),
 ];
 
 // --- Build results map ---
