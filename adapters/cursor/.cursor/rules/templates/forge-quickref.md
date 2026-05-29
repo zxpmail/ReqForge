@@ -20,6 +20,7 @@
 | `AGENTS.md` | AI Agent 行为约束与并行工作流规范（forge-install 写入） |
 | `.forge/preflight.json` | 发布门禁配置 → `pnpm preflight` |
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
+| `.forge/tests/` | Playwright E2E 测试模板（config + auth + Phase 验证） |
 
 ---
 
@@ -151,6 +152,20 @@ node scripts/forge-trace.mjs decision <N> -q "<问>" -c "<选>" -r "<因>"  # �
 node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教训>" # 记录死胡同
 node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
 ```
+
+---
+
+## E2E 测试（Playwright）
+
+```bash
+npx playwright test --project=chromium               # 运行 Chromium 测试
+npx playwright test --headed                          # 带浏览器界面运行
+npx playwright test tests/verify-phase-<N>.spec.ts    # 运行特定 Phase 验证
+npx playwright show-report                            # 查看 HTML 报告
+npx playwright show-trace trace.zip                   # 调试失败 Trace
+```
+
+配置模板见 `.forge/tests/`（forge-install 写入）。首次使用需先 `npm init playwright@latest`。
 
 ---
 

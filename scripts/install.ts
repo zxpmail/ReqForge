@@ -133,6 +133,9 @@ const DEVMAP_SRC = "core/templates/dev-map-template.md";
 const SECURITY_GUIDANCE_SRC = "core/templates/security-guidance-template.md";
 const PROJECT_TASTE_SRC = "core/templates/project-taste-template.md";
 const AGENTS_TEMPLATE_SRC = "core/templates/agents-template.md";
+const PLAYWRIGHT_CONFIG_SRC = "core/templates/playwright-config.template.ts";
+const PLAYWRIGHT_AUTH_SETUP_SRC = "core/templates/tests/auth-setup.template.ts";
+const PLAYWRIGHT_VERIFY_SPEC_SRC = "core/templates/tests/verify-phase.template.spec.ts";
 const PREFLIGHT_CONFIG_SRC = "core/templates/preflight-config.template.json";
 const PREFLIGHT_WECHAT_EXAMPLE_SRC = "core/templates/preflight-wechat.example.json";
 
@@ -249,6 +252,39 @@ export function installAgentsTemplate(
   log(`  ✅ ${dest}`);
 }
 
+const PLAYWRIGHT_DEST_DIR = ".forge/tests";
+
+/** Copy Playwright E2E templates → `.forge/tests/` */
+export function installPlaywrightTemplates(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const entries = [
+    { srcRel: PLAYWRIGHT_CONFIG_SRC, destName: "playwright.config.template.ts" },
+    { srcRel: PLAYWRIGHT_AUTH_SETUP_SRC, destName: "auth-setup.template.ts" },
+    { srcRel: PLAYWRIGHT_VERIFY_SPEC_SRC, destName: "verify-phase.template.spec.ts" },
+  ];
+  const destDir = path.join(path.resolve(targetRoot), PLAYWRIGHT_DEST_DIR);
+  fs.mkdirSync(destDir, { recursive: true });
+
+  for (const entry of entries) {
+    const src = path.join(forgeRoot, entry.srcRel);
+    const dest = path.join(destDir, entry.destName);
+    if (!fs.existsSync(src)) {
+      log(`  ⚠️  Playwright template not found: ${src}`);
+      continue;
+    }
+    if (fs.existsSync(dest) && !force) {
+      log(`  ⏭️  ${PLAYWRIGHT_DEST_DIR}/${entry.destName} exists (use --force to overwrite)`);
+      continue;
+    }
+    fs.copyFileSync(src, dest);
+    log(`  ✅ ${dest}`);
+  }
+}
+
 /** Copy preflight config template → `.forge/preflight.json` */
 export function installPreflightConfig(
   targetRoot: string,
@@ -312,6 +348,7 @@ export function installForge(
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSkillEvalTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
   installAgentsTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installPlaywrightTemplates(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
   const useWindows =

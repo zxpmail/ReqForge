@@ -27,9 +27,13 @@
     - Start dev server, confirm no error output
     - New features are usable
     - Existing features are not broken (regression)
-    - If Playwright is available -> use browser automation to test core interaction flows
+    - If Playwright is available and `.forge/tests/` exists:
+      - Open `.forge/tests/verify-phase.template.spec.ts` for reference
+      - Write a quick E2E test for the Phase's core user flow (search → act → verify)
+      - Run: `npx playwright test --project=chromium`
+      - If tests fail, use `npx playwright show-trace` to debug (trace.zip auto-recorded on retry)
     - If Playwright is not available -> use curl to check API endpoint returns 200 + remind user to manually confirm UI rendering in browser
-    - Output evidence: startup logs + API response + design value comparison results
+    - Output evidence: startup logs + API response + test results + design value comparison results
 
     **Smoke Tests** (additional checks beyond the four steps):
     - Security scan: npm audit has no critical vulnerabilities
