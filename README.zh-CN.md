@@ -67,6 +67,7 @@ flowchart LR
 - **作用域过滤（巽）**：`pnpm forge-scope` — 声明 Phase 文件边界（modify/readonly/outOfScope），`forge-verify scope-check` 通过 `git diff` 强制执行。防止实施中越界改代码。
 - **进化提案（兌）**：dev-builder Phase 完成时触发 evolution-engine 扫描；向用户呈现基于反馈模式的可操作提案（Y/N 选择）。主动闭合反馈→进化循环。（受 [八卦信息论 巽兌 protocol audit] 启发）
 - **Skill 质量 judge**：`pnpm skill-eval judge <name>` — 独立 sub-agent 按 5 维 rubric（结构完整性/可执行具体性/失败模式编码/反例完备性/实测表现）评估 Skill 质量。结果记录至 `judge-history.json`。（受 [darwin-skill](https://github.com/alchaincyf/darwin-skill) 启发）
+- **Skill 编写模式参考**：[`core/docs/skill-authoring-patterns.md`](core/docs/skill-authoring-patterns.md) — SKILL.md 作者实战参考：工作流设计、失败模式编码、反例黑名单、rubric 自查表。
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片
