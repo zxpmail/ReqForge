@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.34.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -64,6 +64,8 @@ flowchart LR
 ### v1.35.0 — 2026-05-29
 - **AGENTS.md 模板**：增强版，新增并行 worktree 工作流（分支命名约定、依赖共享、多 Agent 协调规则）。`pnpm forge-install` 写入项目根目录。（受 [FreeTodo](https://github.com/FreeU-group/FreeTodo) 启发）
 - **结构化探索图（trace）**：`pnpm forge-trace` — 记录 Phase 决策、死胡同、证据绑定至 `.forge/trace/phase-<N>.json`。集成到 dev-builder Loading Phase 和 Phase 完成评估。`forge-verify` 新增 `trace-fresh` 检查。（受 [ARA 论文](https://arxiv.org/abs/2604.24658) 启发）
+- **作用域过滤（巽）**：`pnpm forge-scope` — 声明 Phase 文件边界（modify/readonly/outOfScope），`forge-verify scope-check` 通过 `git diff` 强制执行。防止实施中越界改代码。
+- **进化提案（兌）**：dev-builder Phase 完成时触发 evolution-engine 扫描；向用户呈现基于反馈模式的可操作提案（Y/N 选择）。主动闭合反馈→进化循环。（受 [八卦信息论 巽兌 protocol audit] 启发）
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片

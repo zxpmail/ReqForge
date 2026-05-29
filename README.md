@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.34.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -65,6 +65,8 @@ flowchart LR
 ### v1.35.0 — 2026-05-29
 - **AGENTS.md template**: enhanced with parallel worktree workflow — branch naming, dependency sharing, multi-agent coordination. Written to project root by `pnpm forge-install`. ([FreeTodo](https://github.com/FreeU-group/FreeTodo) inspired)
 - **Structured exploration trace**: `pnpm forge-trace` — record Phase decisions, dead ends, and evidence bindings in `.forge/trace/phase-<N>.json`. Hooked into dev-builder Loading Phase and Phase Completion Assessment. Checked by `forge-verify trace-fresh`. ([ARA paper](https://arxiv.org/abs/2604.24658) inspired)
+- **Scope filter (巽)**: `pnpm forge-scope` — declare Phase file boundaries (modify/readonly/outOfScope), enforced by `forge-verify scope-check` against `git diff`. Prevents scope creep during implementation.
+- **Evolution proposals (兌)**: dev-builder Phase Completion triggers evolution-engine scan; presents actionable pattern-based proposals to user as Y/N choices. Closes the feedback→evolution loop proactively. ([八卦信息论 巽兌 protocol audit] inspired)
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill、zoom-out、架构保健、GitHub issue 切片（吸收思路，不整包合并）

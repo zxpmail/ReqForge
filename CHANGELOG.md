@@ -7,11 +7,14 @@ All notable changes to Forge are documented here.
 ### Added
 - **AGENTS.md template** (`core/templates/agents-template.md`): enhanced with parallel worktree workflow — branch naming convention (`Type/user/short-task`), dependency sharing scripts, multi-agent coordination rules, and integration checklist. Written by `pnpm forge-install` as project root `AGENTS.md`.
 - **Structured exploration trace** (`scripts/forge-trace.mjs`): `init`, `decision`, `dead-end`, `evidence`, `summary` commands for recording Phase decisions, abandoned approaches, and claim-to-evidence bindings. Stored in `.forge/trace/phase-<N>.json`. Hooked into dev-builder Loading Phase (init) and Phase Completion Assessment (record). New `trace-fresh` check in `forge-verify`.
+- **Scope filter (巽)** (`scripts/forge-scope.mjs`): `init`, `check`, `show` commands for declaring Phase file boundaries (modify/readonly/outOfScope). Creates `.forge/active-scope.json`. Enforced by `forge-verify scope-check` against `git diff --name-only HEAD`. Inspired by 八卦信息论 protocol audit.
+- **Evolution proposals (兌)**: dev-builder Phase Completion After All Pass triggers evolution-engine scan for actionable patterns. Presents Y/N proposals to user before proceeding. Logs deferred proposals to `.forge/evolution-proposals.md`. Closes the feedback→evolution loop proactively.
 
 ### Changed
 - **dev-builder**: Loading Phase Step 5 initializes trace; Phase Completion Assessment After All Pass records decisions/dead-ends/evidence.
-- **forge-verify**: new `trace-fresh` check — validates trace files have content (decisions or dead-ends).
+- **forge-verify**: new `trace-fresh` check — validates trace files have content (decisions or dead-ends); new `scope-check` — enforces `.forge/active-scope.json` boundaries against `git diff`.
 - **forge-quickref**: index rows for AGENTS.md and `.forge/trace/`; trace command quick reference.
+- **phase-exit-guard**: now checks both `.forge/phase-exit-block` and `.forge/.verify-block` (written by forge-verify on baseline regression).
 
 ## [v1.34.0] - 2026-05-28
 
