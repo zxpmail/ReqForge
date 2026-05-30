@@ -24,6 +24,7 @@
     "validate-skill": "node scripts/validate-skill.mjs",
     "validate-skill:bash": "bash scripts/validate-skill.sh",
     "apply-loadout": "ts-node scripts/apply-loadout.ts",
+		"use-platform": "node scripts/use-platform.mjs",
     "set-github-metadata": "node scripts/set-github-metadata.mjs",
     "create-skill": "bash scripts/create-skill.sh",
     "build": "tsc",

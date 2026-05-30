@@ -1,22 +1,45 @@
 {
   "hooks": {
-    "PreToolUse": {
-      "run": "core\\hooks\\hallucination-gate.bat"
-    },
-    "PreCommit": {
-      "run": "core\\hooks\\pre-commit-check.bat"
-    },
-    "BeforeCommand": {
-      "run": "core\\hooks\\phase-exit-guard.bat && core\\hooks\\stop-gate.bat && core\\hooks\\retry-gate.bat && core\\hooks\\detect-feedback-signal.bat"
-    },
-    "AfterCommand": {
-      "run": "core\\hooks\\mark-review-needed.bat && core\\hooks\\memory-check.bat"
-    },
-    "PostToolUse": {
-      "run": "core\\hooks\\memory-guard.bat"
-    },
-    "OnInit": {
-      "run": "core\\hooks\\check-evolution.bat"
-    }
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "core\\hooks\\hallucination-gate.bat" }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "core\\hooks\\phase-exit-guard.bat" },
+          { "type": "command", "command": "core\\hooks\\stop-gate.bat" },
+          { "type": "command", "command": "core\\hooks\\retry-gate.bat" },
+          { "type": "command", "command": "core\\hooks\\detect-feedback-signal.bat" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "core\\hooks\\memory-guard.bat" },
+          { "type": "command", "command": "core\\hooks\\check-sync.bat" }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "core\\hooks\\mark-review-needed.bat" },
+          { "type": "command", "command": "core\\hooks\\memory-check.bat" }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "core\\hooks\\check-evolution.bat" }
+        ]
+      }
+    ]
   }
 }
