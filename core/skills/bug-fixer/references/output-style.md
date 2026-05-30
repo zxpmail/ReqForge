@@ -16,3 +16,6 @@
 - "Error message is TypeError: Cannot read property 'id' of undefined, appearing at chat-view.tsx:45. Tracing the call chain reveals the session object is null. Root cause is that the useSession hook does not clean up its reference after session deletion."
 - "Fix: add cleanup logic in deleteSession inside useSession.ts. Impact scope: all components using useSession. Regression verified: create/switch/delete session all working normally."
 - "This bug has been fixed 3 times and still reproduces. I'm stopping to re-examine — the issue may not be at the component layer, but rather a race condition in the database WAL mode under concurrent writes."
+
+**Completion Footer** (Bug 报告 / 修复完成时必须附加):
+  → `../../_shared/output-status-protocol.md`

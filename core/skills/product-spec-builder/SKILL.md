@@ -101,6 +101,7 @@ requires: []
 <!-- begin: output-style -->
 [Output Style]
     → `references/output-style.md`（Spec 访谈人格；与 `_shared/output-style-concise` 不同）
+    → Spec 输出必须附加 `../_shared/output-status-protocol.md`
 
 <!-- end: output-style -->
 <!-- begin: requirements-dimension-checklist -->
