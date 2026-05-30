@@ -18,22 +18,12 @@
     全文 + 示例 → [behavior-rules.md](core/docs/behavior-rules.md)。Skill 内 → `core/skills/_shared/karpathy-discipline.md`。
 
 [General Rules]
-    - **Feedback auto-record**: After any failure (compile error, review failure, test failure), dispatch feedback-observer before retrying. Same for user corrections.
-    - **Continuous observation**: When the user gives corrections, feedback, or improvement suggestions, dispatch feedback-observer sub-agent to record it. Don't rely on the main Agent's self-awareness.
-    - When receiving additionalContext injected by the detect-feedback-signal hook, must dispatch feedback-observer after handling the user's request. Do not ignore.
-    - **Progressive disclosure**: CLAUDE.md is dispatch map only. Procedures live in SKILL.md — reference only when that skill is active.
-    - **Tool-call offloading**: Outputs >2000 lines → write to temp file, keep only headers/footers in context.
-    - **Web-first**: WebSearch before touching external libraries, APIs, or framework versions.
-    - **Pin exact versions**: Every tech stack dependency must be pinned to exact version (major.minor.patch). No ranges (`^1.0.0`), no `latest`, no `*`. If the version is uncertain, WebSearch to confirm before writing.
-    - Detailed docs (file structure, behavior boundaries, memory system, sub-agent orchestration) → https://github.com/zxpmail/ReqForge/tree/main/core/docs/
-    - <important if=".forge/graph.json exists">**Dependency Graph**: If `.forge/graph.json` exists, use `pnpm dep-graph <affected|risk>` before code changes to scope impact via blast-radius analysis.</important>
-    - **forge-install**: To copy Forge adapters into user projects, run `pnpm forge-install <client> --target <dir>` (or `./scripts/install.sh` / `./scripts/install.ps1`). Also writes `.forge/preflight.json` and related templates.
-    - **preflight**: Before publish/deploy, run `pnpm preflight` (add `--build-dir` after build). Exit 1 blocks release — see `core/docs/external-publish-preflight.md`; `/release-builder` Step 3b enforces this.
-    - **skill-eval**: For user-project custom Skills, run `pnpm skill-eval init <name>` then `pnpm skill-eval <name>` after edits — see `core/docs/skill-eval.md`; `/skill-builder` Step 5b ships the eval pack.
-    - **CLI best practices**: Use `/model` to switch models (Opus for planning, Sonnet for coding). Use `/compact` with hints (e.g., `/compact focus on auth refactor`) instead of letting auto-compact fire at low-intelligence moments. Use `/context` to check usage — restart session or handoff when above 40%. Run `/sandbox` to reduce permission prompts. Keep sessions focused; genuinely new tasks get a fresh session.
-    - **Machine Gates** (enforced by hooks, not by prompt): **Spec-Before-Code Gate** — PreToolUse app-write chain via `spec-before-code-gate.mjs`: (1) `Product-Spec.md` (2) **§ Idea Stage Exit Criteria** complete (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` (implementer only). Plus **Hallucination Gate**, **Sloppiness Gate**, **Overstepping Gate**. Rules that can be codified as lint/test/schema/hook/CI MUST be codified — natural language alone is not enforcement.
-    - **Session Iron Laws**: On every session start, `check-evolution` injects `templates/forge-bootstrap.md` (skill-before-action, Spec/Plan HARD-GATEs, hook blocks are hard stops). If prompt text conflicts with that injection, **follow forge-bootstrap**.
-    - **Task execution discipline**: Plan-before-act, read-before-edit, minimal diff — summary in forge-bootstrap; full → [session-execution-discipline.md](core/docs/session-execution-discipline.md); user project → [agents-template.md](core/templates/agents-template.md).
+    - **Feedback loop**: Failure or user correction → dispatch feedback-observer before retry. `detect-feedback-signal` hook injection → same; do not ignore.
+    - **Progressive disclosure**: CLAUDE.md = dispatch map only; procedures in active Skill `SKILL.md` + `references/`.
+    - **Tool-call offloading · Web-first · Pin exact versions · forge-install · preflight · skill-eval · CLI session · loadout 选型** → `.forge/quickref.md`（用户项目）或 [forge-quickref.md](core/templates/forge-quickref.md)；架构文档 → https://github.com/zxpmail/ReqForge/tree/main/core/docs/
+    - <important if=".forge/graph.json exists">**Dependency Graph**: If `.forge/graph.json` exists, use `pnpm dep-graph <affected|risk>` before code changes.</important>
+    - **Machine Gates** (enforced by hooks, not by prompt): **Spec-Before-Code Gate** — PreToolUse app-write chain via `spec-before-code-gate.mjs`: (1) `Product-Spec.md` (2) **§ Idea Stage Exit Criteria** complete (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` (implementer only). Plus **Hallucination Gate**, **Sloppiness Gate**, **Overstepping Gate**. Codify as hook/lint/test/CI — natural language alone is not enforcement.
+    - **Session Iron Laws + task discipline**: `check-evolution` injects `templates/forge-bootstrap.md` — **follow forge-bootstrap** on conflict; full → [session-execution-discipline.md](core/docs/session-execution-discipline.md); user project → [agents-template.md](core/templates/agents-template.md).
 
 <!-- end: immutable -->
 <!-- begin: stable -->
@@ -54,9 +44,6 @@
     /feedback-writer — Invoked by feedback-observer sub-agent only
     /evolution-engine — Auto: MUST dispatch evolution-runner on session init when feedback/ has entries (hard trigger from check-evolution hook). Manual: /evolution-engine
     /request-dispatcher — Auto: when user request is ambiguous and no single Skill clearly matches. Analyze intent + project state, recommend target Skill. Manual: /request-dispatcher
-
-[Available Skills]
-    /product-spec-builder — Requirements gathering /change-manager — Brownfield change (changes/) /design-brief-builder — Design brief /design-maker — Design mockups /dev-planner — Development planning /dev-builder — Build project code /bug-fixer — Bug fixing /code-review — Code review /release-builder — Build & release /skill-builder — Create new Skill /feedback-writer — Record feedback /evolution-engine — Scan feedback, evolve rules /request-dispatcher — Ambiguous request routing
 
 <!-- end: stable -->
 <!-- begin: volatile -->

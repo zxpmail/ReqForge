@@ -4,6 +4,13 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.7] - 2026-05-26
+
+### Changed
+- **Prompt slimming (P6)**: `CLAUDE.md` General Rules 指针化（~7.9k→~5.5k）；tool-call / web-first / pin / forge-install / preflight / skill-eval / CLI / loadout → `forge-quickref` §通用规则；移除重复的 `[Available Skills]` 段（保留 `[Skill Dispatch]`）。
+- **forge-quickref**: 新增 §通用规则（CLAUDE.md 指针目标），含 `--loadout` 安装说明。
+- **skill-builder**: 新 Skill 注册步骤改为只更新 `[Skill Dispatch]`。
+
 ## [v1.35.6] - 2026-05-26
 
 ### Added

@@ -228,9 +228,8 @@ requires: []
     [Step 6: Register in Main Control File]
         The AI client will auto-discover new Skills under the skills/ directory.
         However, the main control file needs to be supplemented with:
-        1. [Skill Invocation Rules] — add trigger conditions for the new Skill (auto / manual)
-        2. [Available Skills] — add a line `/[skill-name] - [description]`
-        3. [Workflow] — if the new Skill needs a corresponding phase in the main flow, add the phase definition
+        1. [Skill Dispatch] — add trigger line for the new Skill (auto / manual)
+        2. [Workflow] — if the new Skill needs a corresponding phase in the main flow, add the phase definition
 
     <!-- end: step-6:-register-in-main-control-file -->
 <!-- begin: initialization -->

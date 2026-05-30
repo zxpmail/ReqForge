@@ -124,6 +124,19 @@
 
 ---
 
+## 通用规则（CLAUDE.md 指针目标）
+
+| 主题 | 规则 |
+|------|------|
+| Tool-call offloading | 输出 >2000 行 → 写临时文件，上下文只留头尾 |
+| Web-first | 碰外部库 / API / 框架版本前先 WebSearch |
+| Pin exact versions | `major.minor.patch` 精确版本；禁止 `^` / `latest` / `*` |
+| forge-install | `pnpm forge-install <client> --target <dir>`；`--loadout <name>` 只装对应 Skill/Agent + hooks |
+| Loadout 选型 | [loadout-scenarios.md](../docs/loadout-scenarios.md) |
+| CLI session | `/model`（Opus 规划 · Sonnet 编码）· `/compact` 带 hint · `/context` >40% 考虑 handoff · `/sandbox` |
+
+---
+
 ## Skill 命令速查
 
 | 阶段 | 命令 |
