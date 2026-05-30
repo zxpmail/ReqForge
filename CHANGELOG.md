@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.3] - 2026-05-30
+
+### Changed
+- **Prompt slimming (P2)**: `product-spec-builder` SKILL.md index-only (~7k chars); principles/output-style/judgment-spectrum/startup routing → `references/`; **Quick Mode** isolated in `references/workflow-quick-mode.md` (do not load full 0-to-1 interview chain); Karpathy → `_shared/karpathy-discipline.md`.
+
 ## [v1.35.2] - 2026-05-30
 
 ### Added

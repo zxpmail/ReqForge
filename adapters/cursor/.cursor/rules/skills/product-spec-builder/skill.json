@@ -1,6 +1,6 @@
 {
   "name": "product-spec-builder",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "When user says they want to build a product/app/tool, or wants to add features, change requirements, adjust UI",
   "author": "ReqForge",
   "license": "MIT",

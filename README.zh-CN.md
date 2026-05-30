@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,9 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.35.3 — 2026-05-30
+- **提示词瘦身（P2）**：`product-spec-builder` 主 SKILL 索引化（~17k→~7k）；Quick 路径 → `references/workflow-quick-mode.md`（不加载完整 0-to-1 访谈链）
 
 ### v1.35.2 — 2026-05-30
 - **提示词瘦身（P1）**：`dev-planner` 主 SKILL 索引化（~28k→~5k）；分析/流程迁至 `references/`；`CLAUDE.md` volatile 路由外置至 `forge-quickref` §项目状态路由

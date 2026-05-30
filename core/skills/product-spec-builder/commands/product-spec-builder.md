@@ -5,13 +5,24 @@ argument-hint: [product idea or feature description]
 
 # Command: /product-spec-builder
 
-Entry: `/product-spec-builder` or describe product idea. **Full workflow → `SKILL.md`** (0-to-1 vs Iteration Mode).
+Entry: `/product-spec-builder` or describe product idea. **Full workflow → `SKILL.md`**.
+
+## Mode routing (read one workflow ref)
+
+| Mode | Trigger | Read |
+|------|---------|------|
+| **Quick** | one sentence / "quick" / "fast" | `references/workflow-quick-mode.md` only |
+| **Light Grill** | grill me / 烤问 / stress-test | `references/light-grill-mode.md` |
+| **0-to-1** | no Spec yet, full deep-dive | `references/workflow-0-to-1.md` |
+| **Iteration** | Product-Spec.md exists | `references/workflow-iteration.md` |
+
+Startup routing → `references/startup-check.md`.
 
 ## Phases (index)
 
-| Phase | SKILL.md section | Acceptance |
-|-------|------------------|------------|
-| Discovery | 0-to-1 startup | One-paragraph concept agreed |
-| Detail / Interview | Questioning phases | Spec sections fillable without guessing |
-| Spec write | Document generation | Product-Spec.md confirmed (HARD-GATE lifts only after explicit user confirm) |
-| Iteration | `[Workflow (Iteration Mode)]` | Major/minor → edit Spec; moderate scoped feature → **`/change-manager propose`** (do not create `changes/` here) |
+| Phase | Reference | Acceptance |
+|-------|-----------|------------|
+| Discovery | workflow-0-to-1 | One-paragraph concept agreed |
+| Detail / Interview | conversation-strategy | Spec sections fillable without guessing |
+| Spec write | product-spec-template | Product-Spec.md confirmed (HARD-GATE lifts only after explicit user confirm) |
+| Iteration | workflow-iteration | Major/minor → edit Spec; moderate scoped feature → **`/change-manager propose`** |

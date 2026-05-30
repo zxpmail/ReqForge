@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,9 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.35.3 — 2026-05-30
+- **Prompt slimming (P2)**: `product-spec-builder` SKILL index-only (~17k→~7k); Quick path → `references/workflow-quick-mode.md` (skips full 0-to-1 interview chain)
 
 ### v1.35.2 — 2026-05-30
 - **Prompt slimming (P1)**: `dev-planner` SKILL index-only (~28k→~5k); analysis/workflow in `references/`; CLAUDE.md volatile routing → `forge-quickref` §项目状态路由
