@@ -338,6 +338,10 @@ pnpm forge-install cursor .
 
 # Merge upgrade (keeps your feedback/ and settings.local.json)
 pnpm forge-install claude-code --target ../my-app --force
+
+# Install only a loadout bundle (skills + agents + hooks)
+pnpm forge-install cursor . --loadout lite
+pnpm forge-install claude-code --target ../my-app --loadout minimal --force
 ```
 
 ```powershell
@@ -363,6 +367,7 @@ On Windows, `settings.windows.json` is applied automatically. Use `--windows` on
 | `.forge/preflight.json` | Release preflight checklist (editable) |
 | `.forge/preflight-wechat.example.json` | WeChat draft rules example (merge into preflight.json) |
 | `.forge/skills/_template/eval/` | Custom Skill eval templates (`triggers.json` / `cases.json`) |
+| `.forge/loadout-active.json` | Active loadout when installed with `--loadout` |
 
 **Option B — Manual copy**
 
@@ -420,10 +425,10 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 | CLI / library | `cli-tool` |
 | Quick spike / script | `minimal` |
 
-- **Default install** ≈ `full` loadout (all hooks in `settings.json`).
-- **Trim hooks** (contributors, from Forge clone): `pnpm apply-loadout minimal claude-code` merges a lighter hook set into adapter `settings.json`. Add `--dry-run` to preview.
-- Loadouts are **reference manifests** — skills/agents are already copied; use loadouts to understand what each bundle includes.
-- **Brownfield** (`/change-manager`): included in `full` and `web-app` only; `cli-tool` and `minimal` omit it — copy the skill from `core/skills/change-manager/` or switch loadout if you need `changes/` on a CLI project.
+- **Default install** copies all skills/agents (≈ `full` loadout hooks in `settings.json`).
+- **`--loadout <name>`** (`full`, `web-app`, `lite`, `cli-tool`, `minimal`): copies **only** that bundle’s skills/agents (+ `_shared`), merges its hooks, writes `.forge/loadout-active.json`.
+- **Trim hooks only** (maintainers, from Forge clone): `pnpm apply-loadout minimal claude-code` merges a lighter hook set into adapter `settings.json`. Add `--dry-run` to preview.
+- **Brownfield** (`/change-manager`): included in `full`, `web-app`, and `lite` only; `cli-tool` and `minimal` omit it — use `--loadout web-app` / `full`, or copy the skill from `core/skills/change-manager/`.
 
 ### Step 4 — First run in your AI client
 
@@ -864,6 +869,7 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
 | `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `project-taste.md`, `preflight.json`, `skills/_template/eval/`, etc. |
+| `pnpm forge-install <client> --loadout <name>` | Same, but only loadout skills/agents + loadout hooks + `.forge/loadout-active.json` |
 | `pnpm preflight [--build-dir dist]` | Release gate before publish (see `core/docs/external-publish-preflight.md`) |
 | `pnpm skill-eval init <name>` / `pnpm skill-eval <name>` | Eval pack for user-project custom Skills |
 

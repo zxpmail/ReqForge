@@ -4,6 +4,14 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.6] - 2026-05-26
+
+### Added
+- **`forge-install --loadout <name>`** (`-l`): install only skills/agents from a loadout (+ `_shared`), merge loadout hooks into adapter settings, write `.forge/loadout-active.json`. Shared logic in `scripts/loadout.ts`; `apply-loadout` refactored to use it.
+
+### Changed
+- **loadout-scenarios.md**: document `--loadout` install path; skills are filtered on install when loadout is specified.
+
 ## [v1.35.5] - 2026-05-30
 
 ### Changed

@@ -15,6 +15,9 @@ import {
   resolvePaths,
   shouldSkipOverwrite,
 } from "../install";
+import { loadLoadout, shouldIncludeForLoadout, ADAPTER_LAYOUT } from "../loadout";
+
+const REPO_ROOT = path.resolve(__dirname, "../..");
 
 describe("parseInstallArgs", () => {
   it("parses client and target", () => {
@@ -29,6 +32,17 @@ describe("parseInstallArgs", () => {
     expect(parseInstallArgs(["cursor", "--target", "../app"])).toMatchObject({
       client: "cursor",
       target: "../app",
+    });
+  });
+
+  it("parses --loadout flag", () => {
+    expect(parseInstallArgs(["claude-code", ".", "--loadout", "minimal"])).toMatchObject({
+      client: "claude-code",
+      loadout: "minimal",
+    });
+    expect(parseInstallArgs(["cursor", "-l", "lite"])).toMatchObject({
+      client: "cursor",
+      loadout: "lite",
     });
   });
 });
@@ -244,5 +258,74 @@ describe("installForge", () => {
     const { src, dest } = resolvePaths("claude-code", target, forgeRoot);
     expect(src).toBe(path.join(forgeRoot, "adapters/claude-code/.claude"));
     expect(dest).toBe(path.join(target, ".claude"));
+  });
+
+  it("installs minimal loadout — filters skills/agents and writes marker", () => {
+    const adapterRoot = path.join(forgeRoot, "adapters/claude-code/.claude");
+    const skillsRoot = path.join(adapterRoot, "skills");
+    for (const name of [
+      "product-spec-builder",
+      "dev-builder",
+      "bug-fixer",
+      "code-review",
+      "feedback-writer",
+      "change-manager",
+      "dev-planner",
+    ]) {
+      fs.mkdirSync(path.join(skillsRoot, name), { recursive: true });
+      fs.writeFileSync(path.join(skillsRoot, name, "SKILL.md"), `# ${name}`);
+    }
+    fs.mkdirSync(path.join(skillsRoot, "_shared"), { recursive: true });
+    fs.writeFileSync(path.join(skillsRoot, "_shared", "karpathy-discipline.md"), "# shared");
+    fs.writeFileSync(path.join(skillsRoot, "AGENTS.md"), "# agents");
+    fs.mkdirSync(path.join(adapterRoot, "agents"), { recursive: true });
+    fs.writeFileSync(path.join(adapterRoot, "agents/implementer.md"), "# impl");
+    fs.writeFileSync(path.join(adapterRoot, "agents/planner.md"), "# plan");
+
+    fs.mkdirSync(path.join(forgeRoot, "core/loadouts"), { recursive: true });
+    fs.copyFileSync(
+      path.join(REPO_ROOT, "core/loadouts/minimal.json"),
+      path.join(forgeRoot, "core/loadouts/minimal.json"),
+    );
+
+    const result = installForge("claude-code", target, {
+      forgeRoot,
+      log: () => {},
+      loadout: "minimal",
+    });
+
+    expect(result.loadout).toBe("minimal");
+    const destSkills = path.join(result.destPath, "skills");
+    expect(fs.existsSync(path.join(destSkills, "dev-builder/SKILL.md"))).toBe(true);
+    expect(fs.existsSync(path.join(destSkills, "_shared/karpathy-discipline.md"))).toBe(true);
+    expect(fs.existsSync(path.join(destSkills, "change-manager/SKILL.md"))).toBe(false);
+    expect(fs.existsSync(path.join(destSkills, "dev-planner/SKILL.md"))).toBe(false);
+    expect(fs.existsSync(path.join(result.destPath, "agents/implementer.md"))).toBe(true);
+    expect(fs.existsSync(path.join(result.destPath, "agents/planner.md"))).toBe(false);
+
+    const marker = JSON.parse(
+      fs.readFileSync(path.join(target, ".forge/loadout-active.json"), "utf-8"),
+    ) as { name: string; skills: string[] };
+    expect(marker.name).toBe("minimal");
+    expect(marker.skills).toHaveLength(5);
+
+    const settings = JSON.parse(
+      fs.readFileSync(path.join(result.destPath, "settings.json"), "utf-8"),
+    ) as { hooks?: Record<string, unknown> };
+    expect(settings.hooks?.PreCommit).toBeDefined();
+  });
+});
+
+describe("shouldIncludeForLoadout", () => {
+  it("includes only loadout skills plus _shared", () => {
+    const loadout = loadLoadout("minimal", REPO_ROOT);
+    const layout = ADAPTER_LAYOUT["claude-code"];
+
+    expect(shouldIncludeForLoadout("skills/dev-builder/SKILL.md", loadout, layout)).toBe(true);
+    expect(shouldIncludeForLoadout("skills/_shared/foo.md", loadout, layout)).toBe(true);
+    expect(shouldIncludeForLoadout("skills/change-manager/SKILL.md", loadout, layout)).toBe(false);
+    expect(shouldIncludeForLoadout("agents/implementer.md", loadout, layout)).toBe(true);
+    expect(shouldIncludeForLoadout("agents/planner.md", loadout, layout)).toBe(false);
+    expect(shouldIncludeForLoadout("CLAUDE.md", loadout, layout)).toBe(true);
   });
 });

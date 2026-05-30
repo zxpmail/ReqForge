@@ -13,6 +13,15 @@
 import * as fs from "fs";
 import * as path from "path";
 import { installSkillEvalTemplate } from "./skill-eval";
+import {
+  ADAPTER_LAYOUT,
+  applyLoadoutHooksInDest,
+  installLoadoutMarker,
+  loadLoadout,
+  listLoadoutNames,
+  shouldIncludeForLoadout,
+  type Loadout,
+} from "./loadout";
 
 const FORGE_ROOT = path.resolve(__dirname, "..");
 
@@ -50,6 +59,8 @@ export interface InstallOptions {
   windows?: boolean;
   forgeRoot?: string;
   log?: (msg: string) => void;
+  /** When set, copy only loadout skills/agents and apply loadout hooks */
+  loadout?: string;
 }
 
 export interface InstallResult {
@@ -58,6 +69,7 @@ export interface InstallResult {
   destPath: string;
   merged: boolean;
   windowsSettingsApplied: boolean;
+  loadout?: string;
 }
 
 export function isInstallClient(value: string): value is InstallClient {
@@ -84,18 +96,49 @@ export function shouldSkipOverwrite(relativePath: string, destFile: string): boo
 
 /**
  * Copy src tree into dest. Fresh dest: full copy. Existing dest: requires force; merges with preserve rules.
+ * Optional include(relPath) skips paths where include returns false (loadout filtering).
  */
 export function copyInstallTree(
   srcDir: string,
   destDir: string,
-  options: Pick<InstallOptions, "force"> = {},
+  options: Pick<InstallOptions, "force"> & { include?: (rel: string) => boolean } = {},
 ): { merged: boolean } {
   if (!fs.existsSync(srcDir)) {
     throw new Error(`Adapter source not found: ${srcDir}`);
   }
 
+  const include = options.include;
+
+  const merge = (src: string, dest: string, relBase: string) => {
+    const stat = fs.statSync(src);
+    if (stat.isDirectory()) {
+      if (include && relBase && !include(relBase)) {
+        const hasChild = fs.readdirSync(src).some((name) => {
+          const childRel = relBase ? `${relBase}/${name}` : name;
+          return include(childRel) || subtreeIncluded(src, name, childRel, include);
+        });
+        if (!hasChild) return;
+      }
+      fs.mkdirSync(dest, { recursive: true });
+      for (const name of fs.readdirSync(src)) {
+        const childRel = relBase ? `${relBase}/${name}` : name;
+        if (include && !include(childRel) && !subtreeIncluded(src, name, childRel, include)) {
+          continue;
+        }
+        merge(path.join(src, name), path.join(dest, name), childRel);
+      }
+      return;
+    }
+
+    if (include && relBase && !include(relBase)) return;
+    if (shouldSkipOverwrite(relBase, dest)) return;
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.copyFileSync(src, dest);
+  };
+
   if (!fs.existsSync(destDir)) {
-    fs.cpSync(srcDir, destDir, { recursive: true });
+    fs.mkdirSync(destDir, { recursive: true });
+    merge(srcDir, destDir, "");
     return { merged: false };
   }
 
@@ -105,27 +148,25 @@ export function copyInstallTree(
     );
   }
 
-  const merge = (src: string, dest: string, relBase: string) => {
-    const stat = fs.statSync(src);
-    if (stat.isDirectory()) {
-      fs.mkdirSync(dest, { recursive: true });
-      for (const name of fs.readdirSync(src)) {
-        merge(
-          path.join(src, name),
-          path.join(dest, name),
-          relBase ? `${relBase}/${name}` : name,
-        );
-      }
-      return;
-    }
-
-    if (shouldSkipOverwrite(relBase, dest)) return;
-    fs.mkdirSync(path.dirname(dest), { recursive: true });
-    fs.copyFileSync(src, dest);
-  };
-
   merge(srcDir, destDir, "");
   return { merged: true };
+}
+
+/** True if any descendant path would pass include() */
+function subtreeIncluded(
+  parentSrc: string,
+  name: string,
+  childRel: string,
+  include: (rel: string) => boolean,
+): boolean {
+  if (include(childRel)) return true;
+  const full = path.join(parentSrc, name);
+  if (!fs.statSync(full).isDirectory()) return false;
+  for (const sub of fs.readdirSync(full)) {
+    const subRel = `${childRel}/${sub}`;
+    if (include(subRel) || subtreeIncluded(full, sub, subRel, include)) return true;
+  }
+  return false;
 }
 
 const QUICKREF_SRC = "core/templates/forge-quickref.md";
@@ -334,12 +375,31 @@ export function installForge(
   const forgeRoot = options.forgeRoot ?? FORGE_ROOT;
   const { src, dest, config } = resolvePaths(client, targetRoot, forgeRoot);
 
+  let loadout: Loadout | undefined;
+  let include: ((rel: string) => boolean) | undefined;
+  if (options.loadout) {
+    loadout = loadLoadout(options.loadout, forgeRoot);
+    const layout = ADAPTER_LAYOUT[client];
+    include = (rel) => shouldIncludeForLoadout(rel, loadout!, layout);
+  }
+
   log(`📦 Installing Forge for ${client}`);
+  if (loadout) {
+    log(`   loadout: ${loadout.name} (${loadout.skills.length} skills, ${loadout.agents.length} agents, ${loadout.hooks.length} hooks)`);
+  }
   log(`   from: ${src}`);
   log(`   to:   ${dest}`);
 
-  const { merged } = copyInstallTree(src, dest, { force: options.force });
+  const { merged } = copyInstallTree(src, dest, { force: options.force, include });
   if (merged) log("   (merged into existing directory; user feedback preserved)");
+  if (loadout) {
+    log(`   (skills filtered to loadout "${loadout.name}"; _shared always included)`);
+  }
+
+  if (loadout) {
+    applyLoadoutHooksInDest(client, dest, loadout, log);
+    installLoadoutMarker(path.resolve(targetRoot), loadout, log, options.force);
+  }
 
   installForgeQuickref(path.resolve(targetRoot), forgeRoot, log, options.force);
   installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
@@ -362,7 +422,12 @@ export function installForge(
   log("✅ Install complete. Next steps:");
   log(`   1. Open ${path.resolve(targetRoot)} in your AI client`);
   log("   2. Start a chat — Forge detects project progress automatically");
-  log("   3. Run /product-spec-builder or describe your product idea");
+  if (loadout) {
+    log(`   3. Loadout "${loadout.name}" active — see .forge/loadout-active.json`);
+    log("   4. Run /product-spec-builder or describe your product idea");
+  } else {
+    log("   3. Run /product-spec-builder or describe your product idea");
+  }
 
   return {
     client,
@@ -370,6 +435,7 @@ export function installForge(
     destPath: dest,
     merged,
     windowsSettingsApplied,
+    loadout: loadout?.name,
   };
 }
 
@@ -379,6 +445,7 @@ export interface ParsedInstallArgs {
   force: boolean;
   windows: boolean;
   help: boolean;
+  loadout?: string;
 }
 
 export function parseInstallArgs(argv: string[]): ParsedInstallArgs {
@@ -409,6 +476,12 @@ export function parseInstallArgs(argv: string[]): ParsedInstallArgs {
       const next = argv[++i];
       if (!next) throw new Error("--target requires a directory path");
       result.target = next;
+      continue;
+    }
+    if (arg === "--loadout" || arg === "-l") {
+      const next = argv[++i];
+      if (!next) throw new Error("--loadout requires a name (full, lite, minimal, web-app, cli-tool)");
+      result.loadout = next;
       continue;
     }
     if (arg.startsWith("-")) {
@@ -446,14 +519,16 @@ Clients:
 
 Options:
   --target, -t <dir>   Project directory (default: current directory)
+  --loadout, -l <name> Install only skills/agents from loadout + apply its hooks
+                       (full, web-app, lite, cli-tool, minimal)
   --force, -f          Merge into existing adapter dir (preserves feedback/, settings.local.json)
   --windows, -w        Use settings.windows.json → settings.json (default on win32)
   --help, -h           Show this help
 
 Examples:
   pnpm forge-install claude-code --target ../my-app
-  pnpm forge-install cursor .
-  ./scripts/install.ps1 opencode C:\\projects\\my-app --force
+  pnpm forge-install cursor . --loadout lite
+  pnpm forge-install claude-code --target ../my-app --loadout minimal --force
 `);
 }
 
@@ -487,6 +562,7 @@ function main(): void {
     installForge(parsed.client, target, {
       force: parsed.force,
       windows: parsed.windows,
+      loadout: parsed.loadout,
     });
   } catch (err) {
     console.error(`❌ ${err instanceof Error ? err.message : err}`);

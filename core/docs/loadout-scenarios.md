@@ -1,7 +1,7 @@
 # Loadout Scenarios — Which Bundle When?
 
 > **Scope**: User/maintainer **selection guide** — not Harness architecture. The loadout **mechanism** (JSON bundles, hooks) is Phase 11 / `core/loadouts/`.
-> Files: `core/loadouts/{full,web-app,lite,cli-tool,minimal}.json` · apply hooks: `pnpm apply-loadout <name> <client>`
+> Files: `core/loadouts/{full,web-app,lite,cli-tool,minimal}.json` · install filtered bundle: `pnpm forge-install <client> --loadout <name>` · merge hooks only (maintainers): `pnpm apply-loadout <name> <client>`
 
 **Loadouts are orthogonal bundles** — skills, agents, and hooks you can mix by copying files or switching hook sets. This doc maps **what you want to do** → **which built-in loadout** → **which Skills to invoke first**.
 
@@ -72,14 +72,17 @@ Full scenario tables below.
 
 ## Orthogonal composition (mix without a new loadout)
 
-Loadouts describe **recommended sets**, not hard limits. All 12 skills are copied into adapters by default (`full`-equivalent install).
+Loadouts describe **recommended sets**, not hard limits.
+
+- **Default** `pnpm forge-install` copies **all** skills/agents (≈ `full`).
+- **`--loadout <name>`** copies **only** that loadout’s skills/agents (+ `_shared`); hooks merged from the same loadout. See `.forge/loadout-active.json` after install.
 
 | Need | Start from | Add |
 |------|------------|-----|
-| CLI project + brownfield | `cli-tool` hooks | Copy `change-manager` from `core/skills/` **or** `pnpm apply-loadout web-app` for hooks only |
-| Minimal hooks + change workflow | `minimal` hooks | Manually copy `change-manager` skill |
-| Web app without design MCP noise | `web-app` | Ignore optional MCP block in JSON |
-| Everything except design | `full` | Simply don't invoke design-* skills |
+| CLI project + brownfield | `cli-tool --loadout` or full install | Copy `change-manager` from `core/skills/` **or** `pnpm forge-install … --loadout web-app` |
+| Minimal hooks + change workflow | `minimal --loadout` | Manually copy `change-manager` skill or reinstall with `web-app` |
+| Web app without design MCP noise | `web-app --loadout` | Ignore optional MCP block in JSON |
+| Everything except design | `full` install | Simply don't invoke design-* skills |
 
 **Principle:** Skills are **what you invoke**; loadouts are **what you enable by default** (especially hooks and documented intent).
 
@@ -94,7 +97,9 @@ Default adapter install ≈ **`full` hooks (10)**. Lighter loadouts mainly diffe
 | `full` / `web-app` / `cli-tool` | 10 | — |
 | `minimal` | 7 | `mark-review-needed`, `check-evolution`, `memory-guard` |
 
-Run `pnpm apply-loadout minimal claude-code` (or `cursor` / `opencode`) to merge a lighter hook set into `settings.json`. Skills remain on disk regardless.
+Run `pnpm apply-loadout minimal claude-code` (or `cursor` / `opencode`) to merge a lighter hook set into adapter `settings.json` (maintainers, from Forge clone).
+
+**End users:** `pnpm forge-install <client> --loadout minimal --target <dir>` installs **only** that loadout’s skills/agents and applies its hooks in one step.
 
 ---
 
