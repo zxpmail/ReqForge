@@ -2,17 +2,14 @@
 
 ## 当前正在做什么
 
+- **v1.35.0 批** 已 pull 同步：**`48da6ba`**（AGENTS 模板、trace、scope、进化提案、skill judge、skill-authoring-patterns）
 - **Matt Pocock 吸收批** 已 push：**v1.34.0**（`6829402`）
-- **腾讯 Harness 镜子批** 已 push：**v1.33.0**
 
 ## 上次停在哪个位置
 
-- **术哥无界 OpenSpec+Superpowers 对照**：`shuge-openspec-superpowers-comparison.md`；change-manager/dev-builder 衔接 + Delta/GWT 模板
-- **Founder's Playbook 批**：Idea Gate + MVP Scope — 已 push `cc15f5c`
-- **README / Wiki / llms / CHANGELOG** 已写入「Agent 执行纪律（8 条）」专节与导航
-- **版本 v1.28.0**（2026-05-27）：dev-map 开发导航地图 + forge-verify 事后统一验证入口 + dev-builder 验证集成
-- **版本 v1.27.0**（2026-05-27）：CLAUDE.md 分区 + hook 修复 + Skill 质量满分 + 反馈清理
-- **版本 v1.26.0**（2026-05-27）：验证循环 + quickref + Idea Gate + MVP Scope + OpenSpec/Superpowers 衔接 + request-dispatcher
+- **v1.35.0**（2026-05-29）：`forge-trace` / `forge-scope` / `forge-verify` 扩展；dev-builder Phase 完成评估 + 进化提案（兌）；Playwright E2E 模板；`skill-eval judge`；[skill-authoring-patterns.md](core/docs/skill-authoring-patterns.md)
+- **v1.34.0**：Matt Pocock 吸收（Light Grill、zoom-out、架构保健、GitHub slices）
+- **v1.33.0**：腾讯 Harness 镜子 + `project-taste.md` + S1–S5
 - GitHub Wiki 源稿 `docs/github-wiki/Home.md` 需维护者手动粘贴到 wiki
 
 ## 架构与 Harness（产品本身）
@@ -31,11 +28,11 @@
 
 ## 测试（框架仓库 · 非架构）
 
-- **Vitest**：`pnpm test` — 22 项
+- **Vitest**：`pnpm test` — 40 项
 - **forge-smoke**：`pnpm forge-smoke` — 12 项静态 smoke + test-demo 黄金路径
 - **test-demo**：`pnpm test-demo-golden-path`
 
 ## 维护者文档（非架构 · 非测试）
 
-- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md) · [skillopt-comparison.md](core/docs/skillopt-comparison.md) · [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md)
+- [superpowers-comparison.md](core/docs/superpowers-comparison.md) · [skill-evolution-comparison.md](core/docs/skill-evolution-comparison.md) · [skillopt-comparison.md](core/docs/skillopt-comparison.md) · [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) · [skill-authoring-patterns.md](core/docs/skill-authoring-patterns.md)
 - [loadout-scenarios.md](core/docs/loadout-scenarios.md) · [test-demo/README.md](test-demo/README.md)
