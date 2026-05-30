@@ -4,16 +4,16 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": ".claude\\hooks\\hallucination-gate.bat" }
+          { "type": "command", "command": "bash .claude/hooks/hallucination-gate.sh" }
         ]
       },
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": ".claude\\hooks\\phase-exit-guard.bat" },
-          { "type": "command", "command": ".claude\\hooks\\stop-gate.bat" },
-          { "type": "command", "command": ".claude\\hooks\\retry-gate.bat" },
-          { "type": "command", "command": ".claude\\hooks\\detect-feedback-signal.bat" }
+          { "type": "command", "command": "bash .claude/hooks/phase-exit-guard.sh" },
+          { "type": "command", "command": "bash .claude/hooks/stop-gate.sh" },
+          { "type": "command", "command": "bash .claude/hooks/retry-gate.sh" },
+          { "type": "command", "command": "bash .claude/hooks/detect-feedback-signal.sh" }
         ]
       }
     ],
@@ -21,15 +21,15 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": ".claude\\hooks\\memory-guard.bat" },
-          { "type": "command", "command": ".claude\\hooks\\check-sync.bat" }
+          { "type": "command", "command": "bash .claude/hooks/memory-guard.sh" },
+          { "type": "command", "command": "bash .claude/hooks/check-sync.sh" }
         ]
       },
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": ".claude\\hooks\\mark-review-needed.bat" },
-          { "type": "command", "command": ".claude\\hooks\\memory-check.bat" }
+          { "type": "command", "command": "bash .claude/hooks/mark-review-needed.sh" },
+          { "type": "command", "command": "bash .claude/hooks/memory-check.sh" }
         ]
       }
     ],
@@ -37,7 +37,7 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": ".claude\\hooks\\check-evolution.bat" }
+          { "type": "command", "command": "bash .claude/hooks/check-evolution.sh" }
         ]
       }
     ]
