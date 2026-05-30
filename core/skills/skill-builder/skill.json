@@ -2,6 +2,8 @@
   "name": "skill-builder",
   "version": "1.0.0",
   "description": "When user wants to create a new Skill, or EVOLUTION.md Level 4 proposal auto-generates a new Skill",
+  "tier": "interactive",
+  "intent": "Guide the user through creating a compliant Forge Skill — scaffolds files, validates structure, and ensures metadata consistency for the Skills ecosystem",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {

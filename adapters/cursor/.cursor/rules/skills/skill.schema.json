@@ -3,7 +3,7 @@
   "title": "Forge Skill Metadata",
   "description": "Schema for Forge skill.json metadata files",
   "type": "object",
-  "required": ["name", "version", "description", "author", "triggers"],
+  "required": ["name", "version", "description", "tier", "intent", "author", "triggers"],
   "properties": {
     "name": {
       "type": "string",
@@ -18,6 +18,16 @@
     "description": {
       "type": "string",
       "description": "Decidable trigger description — when to use this skill"
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["workflow", "interactive", "component"],
+      "description": "Skill classification tier: multi-phase pipeline, guided conversation, or single-pass artifact"
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Richer purpose statement — why this skill exists and what it achieves beyond the trigger description"
     },
     "author": {
       "type": "string",

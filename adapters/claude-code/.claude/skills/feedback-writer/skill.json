@@ -21,6 +21,10 @@
     "skills": []
   },
   "commands": [],
-  "agents": ["feedback-observer"],
-  "hooks": []
+  "agents": [
+    "feedback-observer"
+  ],
+  "hooks": [],
+  "tier": "component",
+  "intent": "Capture user corrections and improvement signals as structured feedback entries — the data source for Forge's self-evolution loop"
 }

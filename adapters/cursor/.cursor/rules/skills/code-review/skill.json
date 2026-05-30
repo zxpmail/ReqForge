@@ -15,7 +15,9 @@
     "command": "/code-review"
   },
   "prerequisites": {
-    "files": ["Product-Spec.md"],
+    "files": [
+      "Product-Spec.md"
+    ],
     "skills": []
   },
   "commands": [
@@ -32,5 +34,7 @@
     "code-reviewer-types",
     "code-reviewer-design"
   ],
-  "hooks": []
+  "hooks": [],
+  "tier": "component",
+  "intent": "Run parallel specialized review agents against the codebase to surface bugs, security issues, and spec gaps in a single audit pass"
 }

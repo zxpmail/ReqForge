@@ -16,7 +16,9 @@
     "command": "/change-manager"
   },
   "prerequisites": {
-    "files": ["Product-Spec.md"],
+    "files": [
+      "Product-Spec.md"
+    ],
     "skills": []
   },
   "commands": [
@@ -27,5 +29,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "workflow",
+  "intent": "Orchestrate scoped brownfield changes from proposal through archive without rewriting the full Spec — the most structured multi-phase workflow in Forge"
 }

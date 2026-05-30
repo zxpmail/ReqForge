@@ -25,5 +25,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "workflow",
+  "intent": "Build, audit, and publish project artifacts to target channels — the go-live gate that turns code into a shippable product"
 }

@@ -2,6 +2,8 @@
   "name": "feedback-writer",
   "version": "1.0.0",
   "description": "When user corrects AI behavior, provides improvement feedback, or Skill execution needs capability scoring",
+  "tier": "component",
+  "intent": "Capture user corrections and improvement signals as structured feedback entries — the data source for Forge's self-evolution loop",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {

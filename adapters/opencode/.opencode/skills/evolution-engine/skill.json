@@ -16,9 +16,17 @@
   },
   "prerequisites": {
     "files": [],
-    "skills": ["feedback-writer"]
+    "skills": [
+      "feedback-writer"
+    ]
   },
   "commands": [],
-  "agents": ["evolution-runner"],
-  "hooks": ["check-evolution"]
+  "agents": [
+    "evolution-runner"
+  ],
+  "hooks": [
+    "check-evolution"
+  ],
+  "tier": "workflow",
+  "intent": "Evolve Forge itself — triage accumulated feedback, propose improvements, and auto-generate new Skills through a feedback-driven continuous improvement loop"
 }

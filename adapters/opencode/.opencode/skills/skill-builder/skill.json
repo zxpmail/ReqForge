@@ -26,5 +26,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "interactive",
+  "intent": "Guide the user through creating a compliant Forge Skill — scaffolds files, validates structure, and ensures metadata consistency for the Skills ecosystem"
 }

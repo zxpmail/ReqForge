@@ -26,5 +26,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "interactive",
+  "intent": "Diagnose root cause through systematic troubleshooting conversation, then apply targeted fixes — Forge's structured debugging loop"
 }

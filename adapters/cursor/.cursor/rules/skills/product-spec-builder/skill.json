@@ -28,5 +28,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "interactive",
+  "intent": "Guide the user through structured requirement discovery via Socratic Q&A — produce a rigorous Product-Spec.md that captures scope, workflows, data model, and constraints before any code is written"
 }

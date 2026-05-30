@@ -2,6 +2,8 @@
   "name": "dev-planner",
   "version": "1.1.0",
   "description": "When Product-Spec.md is complete and needs to be planned into development phases",
+  "tier": "interactive",
+  "intent": "Transform a validated Spec into an actionable phased DEV-PLAN with task breakdown, dependency ordering, and effort estimates — bridges requirements into execution",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {

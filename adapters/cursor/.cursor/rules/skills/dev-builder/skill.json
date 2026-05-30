@@ -15,7 +15,10 @@
     "command": "/dev-builder"
   },
   "prerequisites": {
-    "files": ["Product-Spec.md", "DEV-PLAN.md"],
+    "files": [
+      "Product-Spec.md",
+      "DEV-PLAN.md"
+    ],
     "skills": []
   },
   "commands": [
@@ -25,6 +28,11 @@
       "argument-hint": "[phase-number]"
     }
   ],
-  "agents": ["implementer", "test-writer"],
-  "hooks": []
+  "agents": [
+    "implementer",
+    "test-writer"
+  ],
+  "hooks": [],
+  "tier": "workflow",
+  "intent": "Execute DEV-PLAN phases one at a time, generating production code, tests, and project structure — the core implementation engine of Forge"
 }

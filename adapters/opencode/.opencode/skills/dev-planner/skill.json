@@ -15,7 +15,9 @@
     "command": "/dev-planner"
   },
   "prerequisites": {
-    "files": ["Product-Spec.md"],
+    "files": [
+      "Product-Spec.md"
+    ],
     "skills": []
   },
   "commands": [
@@ -25,6 +27,10 @@
       "argument-hint": "[scope: full|iteration]"
     }
   ],
-  "agents": ["planner"],
-  "hooks": []
+  "agents": [
+    "planner"
+  ],
+  "hooks": [],
+  "tier": "interactive",
+  "intent": "Transform a validated Spec into an actionable phased DEV-PLAN with task breakdown, dependency ordering, and effort estimates — bridges requirements into execution"
 }

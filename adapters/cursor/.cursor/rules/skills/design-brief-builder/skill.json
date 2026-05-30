@@ -15,7 +15,9 @@
     "command": "/design-brief-builder"
   },
   "prerequisites": {
-    "files": ["Product-Spec.md"],
+    "files": [
+      "Product-Spec.md"
+    ],
     "skills": []
   },
   "commands": [
@@ -26,5 +28,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "interactive",
+  "intent": "Interview the user on visual preferences, brand context, and design constraints to produce a Design-Brief.md — the bridge from spec to mockups"
 }

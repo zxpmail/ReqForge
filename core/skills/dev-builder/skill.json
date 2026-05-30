@@ -2,6 +2,8 @@
   "name": "dev-builder",
   "version": "1.1.0",
   "description": "When DEV-PLAN.md is ready and user says start coding or continue to next phase",
+  "tier": "workflow",
+  "intent": "Execute DEV-PLAN phases one at a time, generating production code, tests, and project structure — the core implementation engine of Forge",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {

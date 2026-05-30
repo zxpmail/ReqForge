@@ -14,7 +14,10 @@
     "command": "/design-maker"
   },
   "prerequisites": {
-    "files": ["Product-Spec.md", "Design-Brief.md"],
+    "files": [
+      "Product-Spec.md",
+      "Design-Brief.md"
+    ],
     "skills": []
   },
   "commands": [
@@ -25,5 +28,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "component",
+  "intent": "Generate complete design mockups from a Design-Brief using external design tools — produces concrete visual artifacts from structured input"
 }

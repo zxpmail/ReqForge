@@ -62,6 +62,9 @@ flowchart LR
 
 ## What's New
 
+### v1.35.9 — 2026-05-30
+- **Skill Taxonomy (P7-lite)**: Three-tier classification (`workflow` / `interactive` / `component`) + `intent` field added to all 13 `skill.json` files. New `core/docs/skill-taxonomy.md` with classification table, decision criteria, and rationale. `validate-skill.mjs` extended to enforce `tier` (required enum) and `intent` (required string). Propagated to all 3 adapters. ([Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills) taxonomy inspired)
+
 ### v1.35.8 — 2026-05-26
 - **Prompt slimming**: `change-manager` SKILL index-only (~11k→~4.7k); brownfield workflow → `references/workflow.md`
 

@@ -23,5 +23,7 @@
     }
   ],
   "agents": [],
-  "hooks": []
+  "hooks": [],
+  "tier": "interactive",
+  "intent": "Analyze ambiguous or cross-cutting user requests against project state and available Skills, recommend the best match — the first interaction point for unclear intents"
 }
