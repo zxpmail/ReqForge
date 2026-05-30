@@ -424,7 +424,7 @@ Hooks run before tool use, on commit, edit, session start, etc. Default `setting
 
 | Platform | Action |
 |----------|--------|
-| **Windows** | In `.claude/` (or `.cursor/` inside rules): `copy settings.windows.json settings.json` |
+| **Windows** | Run `pnpm use-platform` (or `node scripts/use-platform.mjs --windows`) to swap `.sh` → `.bat` hooks in `.claude/settings.json` |
 | **Linux / Mac** | Default `settings.json` uses `.sh` hooks — no change needed |
 | **OpenCode** | No `settings.json`; `.sh` / `.bat` hooks work per platform |
 
@@ -474,7 +474,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
-│   ├── settings.json           # 10 hooks (Unix .sh); copy settings.windows.json on Windows
+│   ├── settings.json           # 10 hooks (Unix .sh); run `pnpm use-platform` on Windows
 │   ├── skills/                 # 12 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
@@ -547,7 +547,7 @@ pnpm preflight --strict             # treat warnings as failures
 
 1. Pull the latest `ReqForge` clone (or download a new release).
 2. Re-copy the adapter directory over your project’s `.claude/` / `.cursor/` / `.opencode/` (back up local `feedback/` if you customized it).
-3. Re-apply Windows `settings.windows.json` → `settings.json` if needed.
+3. Run `pnpm use-platform` on Windows to activate `.bat` hooks.
 
 ### YOLO mode (not recommended)
 
