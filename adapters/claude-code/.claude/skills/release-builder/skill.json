@@ -1,6 +1,6 @@
 {
   "name": "release-builder",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "When user wants to package, deploy, publish, or ship; or dev complete and ready for delivery",
   "author": "ReqForge",
   "license": "MIT",

@@ -2,8 +2,8 @@
 
 ## 当前正在做什么
 
-- **提示词瘦身 P2** 已 push（`50867c2`）：product-spec-builder 瘦身 + Quick 路径 reference
-- **v1.35.2 P1** 已 push（`1621ef2`）：dev-planner 瘦身 + lite loadout + quickref 状态路由
+- **提示词瘦身 P3** 待 push：design-brief-builder + release-builder 索引化
+- **提示词瘦身 P2** 已 push（`50867c2`）：product-spec-builder Quick 路径
 - **v1.35.1** 已 push：跨客户端接力 + dev-builder P0 瘦身
 - **Cross-Client Handoff** 已 push（`22d5c5b`）
 - **Matt Pocock 吸收批** 已 push：**v1.34.0**（`6829402`）

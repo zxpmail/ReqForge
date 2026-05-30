@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.4] - 2026-05-30
+
+### Changed
+- **Prompt slimming (P3)**: `design-brief-builder` SKILL.md index-only (~3.8k chars); interview/workflow → `references/`; must read `references/workflow.md`.
+- **Prompt slimming (P3)**: `release-builder` SKILL.md index-only (~4.8k chars); checklist/strategy/8-step workflow → `references/`; privacy audit steps unchanged.
+
 ## [v1.35.3] - 2026-05-30
 
 ### Changed
