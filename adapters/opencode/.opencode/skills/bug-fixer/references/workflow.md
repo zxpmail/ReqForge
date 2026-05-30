@@ -22,7 +22,7 @@
             Scan project code -> understand relevant module structure
 
     [Debugging Phase]
-        Execute the four-stage process from [Debugging Strategy]:
+        Execute four-stage process from `references/debugging-strategy.md`:
         Stage 1 -> Stage 2 -> Stage 3 -> Stage 4
 
         Report progress to the user after each stage:

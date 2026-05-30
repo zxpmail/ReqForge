@@ -4,6 +4,12 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.5] - 2026-05-30
+
+### Changed
+- **Prompt slimming (P4)**: `bug-fixer` SKILL.md index-only (~5.2k chars); four-stage debugging, CoT, three-layer model → `references/`; must read `references/workflow.md`; retry-gate unchanged.
+- **Prompt slimming (P4)**: `code-review` SKILL.md index-only (~4.5k chars); principles/judgment-spectrum/anti-rationalization → `references/`; parallel reviewer workflow unchanged in `references/workflow.md`.
+
 ## [v1.35.4] - 2026-05-30
 
 ### Changed

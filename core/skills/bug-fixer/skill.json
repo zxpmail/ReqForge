@@ -1,6 +1,6 @@
 {
   "name": "bug-fixer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "When user says 'this feature is broken', 'error', 'something is wrong', or reports a bug/compile error/runtime exception",
   "author": "ReqForge",
   "license": "MIT",
