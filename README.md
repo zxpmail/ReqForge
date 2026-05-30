@@ -64,6 +64,7 @@ flowchart LR
 
 ### v1.35.0 — 2026-05-29
 - **AGENTS.md template**: enhanced with parallel worktree workflow — branch naming, dependency sharing, multi-agent coordination. Written to project root by `pnpm forge-install`. ([FreeTodo](https://github.com/FreeU-group/FreeTodo) inspired)
+- **Cross-client handoff**: fixed read-order checklist in `forge-quickref` / `AGENTS.md` — switch clients (Claude Code ↔ Cursor ↔ OpenCode) via files, not chat recap
 - **Structured exploration trace**: `pnpm forge-trace` — record Phase decisions, dead ends, and evidence bindings in `.forge/trace/phase-<N>.json`. Hooked into dev-builder Loading Phase and Phase Completion Assessment. Checked by `forge-verify trace-fresh`. ([ARA paper](https://arxiv.org/abs/2604.24658) inspired)
 - **Scope filter (巽)**: `pnpm forge-scope` — declare Phase file boundaries (modify/readonly/outOfScope), enforced by `forge-verify scope-check` against `git diff`. Prevents scope creep during implementation.
 - **Evolution proposals (兌)**: dev-builder Phase Completion triggers evolution-engine scan; presents actionable pattern-based proposals to user as Y/N choices. Closes the feedback→evolution loop proactively. ([八卦信息论 巽兌 protocol audit] inspired)

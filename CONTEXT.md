@@ -2,6 +2,7 @@
 
 ## 当前正在做什么
 
+- **Cross-Client Handoff** 已写入 `forge-quickref` + `agents-template` 并已 push
 - **v1.35.0 批** 已 pull 同步：**`48da6ba`**（AGENTS 模板、trace、scope、进化提案、skill judge、skill-authoring-patterns）
 - **Matt Pocock 吸收批** 已 push：**v1.34.0**（`6829402`）
 

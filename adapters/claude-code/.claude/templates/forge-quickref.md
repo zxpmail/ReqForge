@@ -22,6 +22,24 @@
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
 | `.forge/tests/` | Playwright E2E 测试模板（config + auth + Phase 验证） |
 | `.forge/active-scope.json` | 当前 Phase 文件作用域（巽 — 越界检查） |
+| `memory/handoff.md` | 跨 session / 跨客户端接力摘要（Phase 完成或上下文将满时生成） |
+
+---
+
+## 跨客户端接力（Cross-Client Handoff）
+
+换 AI 客户端（Claude Code ↔ Cursor ↔ OpenCode 等）或换 Agent 继续同一 Phase 时，**不要口头复述上下文**——先更新文件，新 session 按序读取：
+
+| 顺序 | 文件 | 用途 |
+|------|------|------|
+| 1 | `memory/handoff.md` | 当前进度、待办、阻塞（有则必读） |
+| 2 | `memory/project-memory.md` + `decisions-log.md` | 架构约束与已做决策 |
+| 3 | `DEV-PLAN.md` 当前 Phase | 任务范围与验收标准 |
+| 4 | `.forge/active-scope.json` | 允许修改的文件边界 |
+| 5 | `.forge/trace/phase-<N>.json` | 本 Phase 决策、死胡同、证据 |
+| 6 | `AGENTS.md` | 本项目 Agent 行为约束 |
+
+**离开前**：更新 `handoff.md`（或让 dev-builder Phase 完成时生成）；**进入后**：按上表读取再动手。
 
 ---
 

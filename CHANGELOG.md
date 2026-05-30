@@ -13,6 +13,7 @@ All notable changes to Forge are documented here.
 - **Skill authoring patterns** (`core/docs/skill-authoring-patterns.md`): practical reference synthesizing 300 prompts patterns, darwin-skill rubric, and ReqForge Harness experience — workflow design, failure-mode encoding, actionable specificity, anti-pattern blacklists, evaluation checkpoints, multi-agent collaboration, and rubric self-check table.
 
 ### Changed
+- **Cross-client handoff**: `forge-quickref` and `agents-template` — fixed file read-order when switching AI clients (Claude Code ↔ Cursor ↔ OpenCode); update `memory/handoff.md` before leaving, read handoff + memory + DEV-PLAN + scope + trace + AGENTS on arrival.
 - **dev-builder**: Loading Phase Step 5 initializes trace; Phase Completion Assessment After All Pass records decisions/dead-ends/evidence.
 - **forge-verify**: new `trace-fresh` check — validates trace files have content (decisions or dead-ends); new `scope-check` — enforces `.forge/active-scope.json` boundaries against `git diff`.
 - **forge-quickref**: index rows for AGENTS.md and `.forge/trace/`; trace command quick reference.

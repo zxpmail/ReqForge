@@ -73,6 +73,23 @@ Three memory files are maintained in `memory/`:
 
 Read all three at session start. Update after each task.
 
+### Cross-Client Handoff
+
+When switching AI clients (Claude Code ↔ Cursor ↔ OpenCode) or handing off to another agent mid-Phase:
+
+**Before leaving** — update `memory/handoff.md` (or let dev-builder generate it at Phase completion). Include: current Phase, completed/pending items, blockers, changed files, key ADRs.
+
+**After arriving** — read in order; do not rely on chat history from the previous client:
+
+1. `memory/handoff.md` (if present)
+2. `memory/project-memory.md` + `memory/decisions-log.md`
+3. `DEV-PLAN.md` — current Phase section only
+4. `.forge/active-scope.json`
+5. `.forge/trace/phase-<N>.json` for the active Phase
+6. This file (`AGENTS.md`)
+
+Then continue work. Never restate context only in conversation — the files are the handoff protocol.
+
 ## Cross-Platform Hooks
 
 This project may include platform-specific hook scripts:
