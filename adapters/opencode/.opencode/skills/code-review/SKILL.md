@@ -39,11 +39,7 @@ requires: []
 <!-- end: dependency-check -->
 <!-- begin: behavior-rules-—-karpathy-discipline -->
 [Behavior Rules — Karpathy Discipline]
-    Review 期间须检查以下两条 Karpathy 原则的执行情况：
-    **Surgical Changes** — 每行改动是否直接追溯到用户请求或 Spec 条目？存在"顺手改动"吗？
-    **Simplicity First** — 实现是否过度工程？存在不需要的抽象/配置/灵活度吗？
-
-    完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
+    Review 时重点查 Surgical Changes + Simplicity First → `../_shared/karpathy-discipline.md`
 
 <!-- end: behavior-rules-—-karpathy-discipline -->
 <!-- begin: first-principles -->

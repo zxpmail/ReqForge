@@ -5,7 +5,7 @@ argument-hint: [phase-number]
 
 # Command: /dev-builder
 
-Entry: `/dev-builder` (one Phase per invocation). **Full workflow → `SKILL.md`.**
+Entry: `/dev-builder` (one Phase per invocation). **必须先 Read `references/workflow.md` 对应章节**，再执行 Phase（完整步骤见该文件）。
 
 | Phase | SKILL.md | Acceptance |
 |-------|----------|------------|

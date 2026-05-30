@@ -14,11 +14,8 @@
     8. **Brownfield change** (optional) → when Product-Spec.md exists and user adds one scoped feature, invoke change-manager (changes/ propose→apply→verify→archive)
     9. **Release** → invoke release-builder, package or deploy (on demand)
 [Behavior Rules — Karpathy 四原则]
-    **1. Think Before Coding** — 不猜. 假设显式化. 有歧义先问. 有 tradeoff 先摆.
-    **2. Simplicity First** — 最少代码解决问题. 不写未来需要的抽象. 不写不可能发生的错误处理. 200行能写成50行就重写.
-    **3. Surgical Changes** — 只改必须改的. 不改无关格式/注释/代码. 不重构没坏的.
-    **4. Goal-Driven Execution** — 定义可验证的成功标准. 先写测试复现, 再修. 每步有验证.
-    详情 → [behavior-rules.md](core/docs/behavior-rules.md)
+    快照：Think Before Coding · Simplicity First · Surgical Changes · Goal-Driven Execution。
+    全文 + 示例 → [behavior-rules.md](core/docs/behavior-rules.md)。Skill 内 → `core/skills/_shared/karpathy-discipline.md`。
 
 [General Rules]
     - **Feedback auto-record**: After any failure (compile error, review failure, test failure), dispatch feedback-observer before retrying. Same for user corrections.
@@ -36,7 +33,7 @@
     - **CLI best practices**: Use `/model` to switch models (Opus for planning, Sonnet for coding). Use `/compact` with hints (e.g., `/compact focus on auth refactor`) instead of letting auto-compact fire at low-intelligence moments. Use `/context` to check usage — restart session or handoff when above 40%. Run `/sandbox` to reduce permission prompts. Keep sessions focused; genuinely new tasks get a fresh session.
     - **Machine Gates** (enforced by hooks, not by prompt): **Spec-Before-Code Gate** — PreToolUse app-write chain via `spec-before-code-gate.mjs`: (1) `Product-Spec.md` (2) **§ Idea Stage Exit Criteria** complete (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` (implementer only). Plus **Hallucination Gate**, **Sloppiness Gate**, **Overstepping Gate**. Rules that can be codified as lint/test/schema/hook/CI MUST be codified — natural language alone is not enforcement.
     - **Session Iron Laws**: On every session start, `check-evolution` injects `templates/forge-bootstrap.md` (skill-before-action, Spec/Plan HARD-GATEs, hook blocks are hard stops). If prompt text conflicts with that injection, **follow forge-bootstrap**.
-    - **Task execution discipline**: Plan-before-act, read-before-edit, minimal diff, diff approval before commit, minimal tests — summary in forge-bootstrap; full text in [session-execution-discipline.md](core/docs/session-execution-discipline.md); user projects copy [agents-template.md](core/templates/agents-template.md) § Agent 执行纪律.
+    - **Task execution discipline**: Plan-before-act, read-before-edit, minimal diff — summary in forge-bootstrap; full → [session-execution-discipline.md](core/docs/session-execution-discipline.md); user project → [agents-template.md](core/templates/agents-template.md).
 
 <!-- end: immutable -->
 <!-- begin: stable -->

@@ -46,12 +46,7 @@ requires: []
 <!-- end: dependency-check -->
 <!-- begin: behavior-rules-—-karpathy-discipline -->
 [Behavior Rules — Karpathy Discipline]
-    **Think Before Coding** — 不猜假设。先收集证据再下结论。不 rush to change code.
-    **Simplicity First** — 最小修复原则。只修需要修的部分，不加投机性验证/保护。
-    **Surgical Changes** — 只改必须改的。修 bug 时不"顺手改进"相邻代码、格式、注释。
-    **Goal-Driven Execution** — 先写复现测试，再修。每步有验证。
-
-    完整说明 + ❌→✅ 示例 → `core/docs/behavior-rules.md`
+    → `../_shared/karpathy-discipline.md`（bug 场景：先证据后改码；最小修复）
 
 <!-- end: behavior-rules-—-karpathy-discipline -->
 <!-- begin: first-principles -->
