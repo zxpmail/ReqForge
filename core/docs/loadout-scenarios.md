@@ -1,7 +1,7 @@
 # Loadout Scenarios — Which Bundle When?
 
 > **Scope**: User/maintainer **selection guide** — not Harness architecture. The loadout **mechanism** (JSON bundles, hooks) is Phase 11 / `core/loadouts/`.
-> Files: `core/loadouts/{full,web-app,cli-tool,minimal}.json` · apply hooks: `pnpm apply-loadout <name> <client>`
+> Files: `core/loadouts/{full,web-app,lite,cli-tool,minimal}.json` · apply hooks: `pnpm apply-loadout <name> <client>`
 
 **Loadouts are orthogonal bundles** — skills, agents, and hooks you can mix by copying files or switching hook sets. This doc maps **what you want to do** → **which built-in loadout** → **which Skills to invoke first**.
 
@@ -14,6 +14,7 @@
 | Build a **new web app** end-to-end (spec → design → code → release) | **`web-app`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
 | Add a **scoped feature** to an existing product (brownfield) | **`full`** or **`web-app`** | `/change-manager` propose → apply → verify |
 | Build a **CLI or library** (no UI design skills) | **`cli-tool`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
+| **Greenfield / brownfield dev, token-conscious** (no design/release) | **`lite`** | spec → plan → build → review; brownfield via change-manager |
 | **Quick prototype** or small script (minimal process) | **`minimal`** | `/product-spec-builder` (Quick mode) → `/dev-builder` |
 | **Fix a bug** only | Any (skills already copied) | `/bug-fixer` → `/code-review` |
 | **Evolve Harness rules** from feedback | **`full`** or **`web-app`** | fix issue → feedback recorded → `/evolution-engine` |
@@ -30,6 +31,7 @@ Full scenario tables below.
 |---------|--------|-------|----------|
 | **`full`** | 12 (all) | 10 | Complete toolchain · brownfield · skill-builder · evolution |
 | **`web-app`** | 11 (no skill-builder) | 10 | Web products with design + Context7/Figma/Playwright MCP hints |
+| **`lite`** | 8 | 8 | Spec→Plan→Build→Review · change-manager · **no design/release/evolution/skill-builder** |
 | **`cli-tool`** | 8 (no design*, no change-manager) | 10 | CLIs, libraries, backend tools |
 | **`minimal`** | 5 | 7 | Spikes, scripts, learning Forge |
 
@@ -46,6 +48,7 @@ Full scenario tables below.
 | New **web** product | `web-app` | spec → design-brief → design-maker (optional) → plan → build → review → release | — |
 | New **CLI / API / lib** | `cli-tool` | spec → plan → build → review → release | design-maker |
 | **Hackathon / spike** | `minimal` | spec (Quick) → build → review | plan, change-manager, release (optional) |
+| **Standard app (no design skill install)** | `lite` | spec → plan → build → review | design-maker, release-builder, evolution |
 | **Full control** (incl. skill-builder) | `full` | same as web-app + skill-builder available | — |
 
 ### Brownfield (existing code)

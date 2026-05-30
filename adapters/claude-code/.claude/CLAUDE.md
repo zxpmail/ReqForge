@@ -61,18 +61,7 @@
 <!-- end: stable -->
 <!-- begin: volatile -->
 [Project State Detection]
-    On init, detect project progress and route:
-    - No Product-Spec.md → guide user to describe idea or invoke /product-spec-builder
-    - Has Product-Spec, no DEV-PLAN, no code → Spec complete, guide to next step
-    - Has Product-Spec + DEV-PLAN, no code → Plan complete, guide to /dev-builder
-    - Has Product-Spec + code, no DEV-PLAN → suggest /dev-planner
-    - Has Product-Spec + DEV-PLAN + code → in development, continue developing
-    - Has active `changes/<name>/` (not under `changes/archive/`) → guide /change-manager apply or verify; do not start unrelated dev-builder Phases until change is archived or user defers
-    - Has Product-Spec + user asks for new feature (no active change folder) → prefer /change-manager propose before whole-repo dev-builder
-
-    Memory check: if memory/ exists → read all three files. If not + code exists → flag for /dev-builder. If not + no code → not needed.
-
-    Display state with: Product Spec, active changes/ (if any), Design Brief, DEV-PLAN, Project Code, Memory status + Next Step guidance.
+    Execute routing per **`.forge/quickref.md` §项目状态路由**（框架仓：`core/templates/forge-quickref.md`）。检测文件 → 推荐 Skill → 汇报 Next Step。
 
 [Initialization]
     ```

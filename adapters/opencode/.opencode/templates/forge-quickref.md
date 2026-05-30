@@ -26,6 +26,25 @@
 
 ---
 
+## 项目状态路由（Session 启动）
+
+检测文件系统 → 推荐下一步（Forge 控制文件 `CLAUDE.md` volatile 区引用本表）：
+
+| 状态 | 下一步 |
+|------|--------|
+| 无 `Product-Spec.md` | `/product-spec-builder` |
+| 有 Spec，无 `DEV-PLAN.md`，无代码 | Spec 完成 → `/dev-planner`（或可选 design） |
+| 有 Spec + Plan，无代码 | `/dev-builder` Phase 1 |
+| 有 Spec + 代码，无 Plan | `/dev-planner` |
+| 有 Spec + Plan + 代码 | 继续 `/dev-builder` 或 `/bug-fixer` |
+| 活跃 `changes/<name>/`（非 archive） | `/change-manager` apply/verify；勿并行无关 Phase |
+| 新功能请求（无 active change） | 优先 `/change-manager` propose |
+| `memory/` 存在 | Session 启动读三文件；有代码无 memory → dev-builder 后补 |
+
+汇报：Product Spec · active changes · Design Brief · DEV-PLAN · Code · Memory · **Next Step**。
+
+---
+
 ## 跨客户端接力（Cross-Client Handoff）
 
 换 AI 客户端（Claude Code ↔ Cursor ↔ OpenCode 等）或换 Agent 继续同一 Phase 时，**不要口头复述上下文**——先更新文件，新 session 按序读取：

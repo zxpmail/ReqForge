@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,10 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.35.2 — 2026-05-30
+- **提示词瘦身（P1）**：`dev-planner` 主 SKILL 索引化（~28k→~5k）；分析/流程迁至 `references/`；`CLAUDE.md` volatile 路由外置至 `forge-quickref` §项目状态路由
+- **`lite` loadout**：8 Skill + 8 hook（含 change-manager，无 design/release/evolution）— `pnpm apply-loadout lite <client>`
 
 ### v1.35.1 — 2026-05-30
 - **提示词瘦身（P0）**：`dev-builder` 主 SKILL 索引化（~36k→~7k 字符）；完整流程 → `references/workflow.md`；原则 → `references/first-principles.md`；跨 Skill 共享指针 → `core/skills/_shared/`；压缩 `forge-bootstrap`；`bug-fixer` / `code-review` 去重 Karpathy 段落

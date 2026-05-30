@@ -5,7 +5,7 @@ argument-hint: [scope: full|iteration]
 
 # Command: /dev-planner
 
-Entry: `/dev-planner` or `[scope: iteration]`. **Full workflow → `SKILL.md`** (generation vs iteration mode).
+Entry: `/dev-planner` or `[scope: iteration]`. **必须先 Read `references/workflow.md`** 对应模式章节。
 
 | Mode | SKILL.md | Output |
 |------|----------|--------|

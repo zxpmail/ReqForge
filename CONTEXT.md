@@ -2,7 +2,8 @@
 
 ## 当前正在做什么
 
-- **v1.35.1** 已 push：README 独立版本节 + 提示词瘦身 / 跨客户端接力
+- **v1.35.2 P1** 待 push：dev-planner 瘦身 + lite loadout + quickref 状态路由
+- **v1.35.1** 已 push：跨客户端接力 + dev-builder P0 瘦身
 - **Cross-Client Handoff** 已 push（`22d5c5b`）
 - **Matt Pocock 吸收批** 已 push：**v1.34.0**（`6829402`）
 

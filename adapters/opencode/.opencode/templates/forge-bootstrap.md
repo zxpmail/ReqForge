@@ -3,6 +3,8 @@
 **MANDATORY — not suggestions.** Injected on every session start via `check-evolution` hook.
 Hook block messages are **hard stops** — do not negotiate around them.
 
+**Project state routing** → `.forge/quickref.md` §项目状态路由（install 后）或 `core/templates/forge-quickref.md`。
+
 ## Iron Laws
 
 1. **Skill before action** — Match task → Skill; open its `SKILL.md` Workflow before app code `Write`/`Edit`/Bash.

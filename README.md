@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,10 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.35.2 — 2026-05-30
+- **Prompt slimming (P1)**: `dev-planner` SKILL index-only (~28k→~5k); analysis/workflow in `references/`; CLAUDE.md volatile routing → `forge-quickref` §项目状态路由
+- **`lite` loadout**: 8 skills + 8 hooks (change-manager included; no design/release/evolution) — `pnpm apply-loadout lite <client>`
 
 ### v1.35.1 — 2026-05-30
 - **Prompt slimming (P0)**: `dev-builder` SKILL index-only (~36k→~7k chars); full workflow → `references/workflow.md`; principles → `references/first-principles.md`; shared pointers in `core/skills/_shared/`; compressed `forge-bootstrap`; deduped Karpathy blocks in `bug-fixer` / `code-review`

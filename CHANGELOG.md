@@ -4,6 +4,15 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.2] - 2026-05-30
+
+### Added
+- **`lite` loadout** (`core/loadouts/lite.json`): 8 skills (spec, change-manager, plan, build, bug, review, feedback, dispatcher) + 8 hooks — token-conscious greenfield/brownfield without design/release/evolution/skill-builder.
+
+### Changed
+- **Prompt slimming (P1)**: `dev-planner` SKILL.md index-only (~5k chars); workflow/analysis → `references/`; must read `references/workflow.md` before planning.
+- **CLAUDE.md volatile trim**: Project State Detection → `forge-quickref.md` §项目状态路由; bootstrap points to quickref for session routing.
+
 ## [v1.35.1] - 2026-05-30
 
 ### Added

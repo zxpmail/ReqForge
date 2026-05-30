@@ -1,0 +1,39 @@
+{
+  "name": "lite",
+  "version": "1.0.0",
+  "description": "Lite loadout — Spec→Plan→Build→Review without design/release/skill-builder/evolution. Lower token surface than full; includes change-manager for brownfield.",
+  "scenarios": [
+    "greenfield-dev",
+    "brownfield-feature",
+    "token-conscious"
+  ],
+  "skills": [
+    "product-spec-builder",
+    "change-manager",
+    "dev-planner",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "feedback-writer",
+    "request-dispatcher"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "feedback-observer",
+    "planner"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "phase-exit-guard",
+    "stop-gate",
+    "retry-gate",
+    "detect-feedback-signal",
+    "memory-check",
+    "memory-guard",
+    "hallucination-gate"
+  ],
+  "mcp_servers": []
+}
