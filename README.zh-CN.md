@@ -61,6 +61,12 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.7 — 2026-05-26
+- **提示词瘦身（P6）**：`CLAUDE.md` General Rules 指针化（~7.9k→~5.3k）；详情 → `forge-quickref` §通用规则；移除重复 `[Available Skills]`
+
+### v1.35.6 — 2026-05-26
+- **`forge-install --loadout`**：按 loadout 只安装对应 Skill/Agent + hooks；写入 `.forge/loadout-active.json`
+
 ### v1.35.5 — 2026-05-30
 - **提示词瘦身（P4）**：`bug-fixer`（~14k→~5k）、`code-review`（~11k→~4.5k）主 SKILL 索引化；四阶段调试/审查流程 → `references/`
 

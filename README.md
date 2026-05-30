@@ -62,6 +62,12 @@ flowchart LR
 
 ## What's New
 
+### v1.35.7 — 2026-05-26
+- **Prompt slimming (P6)**: `CLAUDE.md` General Rules pointerized (~7.9k→~5.3k); details → `forge-quickref` §通用规则; removed duplicate `[Available Skills]` block
+
+### v1.35.6 — 2026-05-26
+- **`forge-install --loadout`**: install only loadout skills/agents + hooks; writes `.forge/loadout-active.json`
+
 ### v1.35.5 — 2026-05-30
 - **Prompt slimming (P4)**: `bug-fixer` (~14k→~5k) and `code-review` (~11k→~4.5k) SKILL index-only; four-stage debug/review workflows → `references/`; retry-gate and parallel reviewers unchanged
 
