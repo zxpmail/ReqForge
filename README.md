@@ -62,6 +62,10 @@ flowchart LR
 
 ## What's New
 
+### v1.35.10 — 2026-05-30
+- **Output Status Protocol**: New `_shared/output-status-protocol.md` — every Phase/output ends with `[Decision]` / `[Assumption]` / `[Next]` / `[Status]` (DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT). Wired into product-spec-builder, dev-planner, bug-fixer, change-manager, dev-builder Output Style sections. ([Digidai/product-manager-skills](https://github.com/Digidai/product-manager-skills) output contract inspired)
+- **ETHOS principles**: Three shared output principles (`Thinking Before Templating`, `Opinions With Tradeoffs`, `Compression Over Completeness`) added to `_shared/output-style-concise.md`
+
 ### v1.35.9 — 2026-05-30
 - **Skill Taxonomy (P7-lite)**: Three-tier classification (`workflow` / `interactive` / `component`) + `intent` field added to all 13 `skill.json` files. New `core/docs/skill-taxonomy.md` with classification table, decision criteria, and rationale. `validate-skill.mjs` extended to enforce `tier` (required enum) and `intent` (required string). Propagated to all 3 adapters. ([Product-Manager-Skills](https://github.com/deanpeters/Product-Manager-Skills) taxonomy inspired)
 
