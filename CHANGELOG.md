@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+## [v1.35.8] - 2026-05-26
+
+### Changed
+- **Prompt slimming**: `change-manager` SKILL.md index-only (~11k→~4.7k); propose/apply/verify/archive workflow → `references/`; must read `references/workflow.md`.
+
 ## [v1.35.7] - 2026-05-26
 
 ### Changed

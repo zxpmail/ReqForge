@@ -61,6 +61,9 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.8 — 2026-05-26
+- **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`
+
 ### v1.35.7 — 2026-05-26
 - **提示词瘦身（P6）**：`CLAUDE.md` General Rules 指针化（~7.9k→~5.3k）；详情 → `forge-quickref` §通用规则；移除重复 `[Available Skills]`
 

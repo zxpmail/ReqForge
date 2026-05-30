@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.7-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.8-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,9 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.35.8 — 2026-05-26
+- **Prompt slimming**: `change-manager` SKILL index-only (~11k→~4.7k); brownfield workflow → `references/workflow.md`
 
 ### v1.35.7 — 2026-05-26
 - **Prompt slimming (P6)**: `CLAUDE.md` General Rules pointerized (~7.9k→~5.3k); details → `forge-quickref` §通用规则; removed duplicate `[Available Skills]` block

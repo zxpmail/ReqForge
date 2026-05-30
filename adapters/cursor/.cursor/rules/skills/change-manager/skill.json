@@ -1,6 +1,6 @@
 {
   "name": "change-manager",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "When user adds a feature or change to an existing project with Product-Spec.md; brownfield iteration via changes/ folder (propose, apply, verify, archive)",
   "author": "ReqForge",
   "license": "MIT",
