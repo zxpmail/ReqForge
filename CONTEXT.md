@@ -2,7 +2,7 @@
 
 ## 当前正在做什么
 
-- **提示词瘦身 P0** 待 push：dev-builder 索引化 + `_shared/` + bootstrap 压缩
+- **提示词瘦身 P0** 已 push（`f5be5cd`）
 - **Cross-Client Handoff** 已 push（`22d5c5b`）
 - **Matt Pocock 吸收批** 已 push：**v1.34.0**（`6829402`）
 
