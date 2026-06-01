@@ -25,6 +25,7 @@
 | 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
 | 14 发布 preflight | ✅ 完成 | `scripts/preflight.ts`、`pnpm preflight`、`.forge/preflight.json`；[external-publish-preflight.md](core/docs/external-publish-preflight.md) |
 | 15 用户 Skill eval | ✅ 完成 | `scripts/skill-eval.ts`、`pnpm skill-eval`、`.forge/skills/*/eval/`；[skill-eval.md](core/docs/skill-eval.md) |
+| 16 运营监控 | ◐ 开发中 | `scripts/forge-ops.mjs`、`pnpm forge-ops` |
 
 **架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync` → `pnpm preflight`（可选自检）→ `pnpm skill-eval <name>`（用户自定义 Skill）
 
@@ -299,3 +300,21 @@
 - 包管理器：pnpm
 - 核心文件不允许依赖二进制 Node 模块，保持纯文本可用
 - 适配器只放入口文件，核心内容通过同步脚本从 core 同步
+
+---
+
+## Phase 16: 运营监控闭环
+
+**交付内容**：
+- 通知通道集成（`scripts/forge-ops/alerts.mjs`）
+- 监控配置管理（`.forge/ops/config.json`）
+- 告警模块单元测试（`scripts/forge-ops/__tests__/alerts.test.mjs`）
+
+**关键文件**：
+- `scripts/forge-ops/alerts.mjs` — 通知通道（飞书/Slack/邮件）
+- `scripts/forge-ops/__tests__/alerts.test.mjs` — 通知模块测试
+- `.forge/ops/config.json` — 监控端点配置
+
+**验收标准**：
+- 测试通过（`pnpm test`）
+- `forge-ops` 能加载配置并告警（`scripts/forge-ops.mjs`）
