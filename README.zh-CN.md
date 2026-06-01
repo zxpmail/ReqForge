@@ -68,7 +68,11 @@ flowchart LR
 - **Windows 钩子修复**：CRLF 导致 Git Bash "cannot execute binary file"。`.gitattributes` 强制 `*.sh eol=lf`；hooks 分平台配置，Windows 使用 `.bat`。
 - **forge-ui-check**：`pnpm forge-ui-check <N>` — 扫描 DEV-PLAN.md UI 相关清单项，检查文件存在，自动生成 Playwright 测试（表单/按钮/输入框/导航/页面路由断言），`--url` 参数启动浏览器端验证。
 - **forge-ui-loop**：`pnpm forge-ui-loop <N>` — UI 自动修复循环。运行检查，生成 `.forge/ui-loop/fix-brief.md`，支持 `--url`/`--max`/`--reset`。YOLO 模式：检查→修复→再检查直到 UI 全部通过。
-- **forge-loop**：`pnpm forge-loop` — 下班前跑这条，第二天来就完事了。自动扫哪些阶段没做完，逐个执行 dev-builder，查遗漏，修 bug，跑测试，循环到全部通过。支持 `--all`（全自动）、`--run`（开始干活）、`--serve`（启动网页）、`--url`（网页测试）、`--max`（最多几轮）、`--skip-plan/--skip-ui/--skip-test`（跳过某些检查）、`--reset`（重置）。
+- **forge-loop**：`pnpm forge-loop` — 下班前跑这条，第二天来就完事了。
+- **forge-loop --fde**：`pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取 Product-Spec 和 DEV-PLAN 上下文，完成时输出 `.forge/evidence/phase-N-report.md` 交付证据报告（测试通过率 + 清单完成度 + 文件变更）。
+- **forge-ops**：`pnpm forge-ops <url>` — 运营监控闭环。健康检查→验证套件→基线对比→回归检测→自动修复。支持 `--interval` 循环、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
+- **skill-eval judge v2**：Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。评估工作流在真实项目中产生可重复结果的能力。
+- **forge-ui-check 修复**：Phase 无独立章节时跳过而非报错，修复 forge-loop 死循环。自动扫哪些阶段没做完，逐个执行 dev-builder，查遗漏，修 bug，跑测试，循环到全部通过。支持 `--all`（全自动）、`--run`（开始干活）、`--serve`（启动网页）、`--url`（网页测试）、`--max`（最多几轮）、`--skip-plan/--skip-ui/--skip-test`（跳过某些检查）、`--reset`（重置）。
 
 ### v1.35.8 — 2026-05-26
 - **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`
@@ -864,6 +868,9 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm set-github-metadata` | 把 `.github/repo-metadata.json` 同步到 GitHub About/Topics；令牌放 `.env.local` 的 `GITHUB_TOKEN=`（见 `.env.local.example`） |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
+| `pnpm forge-loop [<N>] [--all] [--run] [--fde]` | 统一 Phase 循环 — 检测→修复→验证 |
+| `pnpm forge-fde <N>` | FDE 模式：上下文感知循环 + `.forge/evidence/` 证据报告 |
+| `pnpm forge-ops <url> [--interval <sec>]` | 生产环境监控 — 健康检查 → 基线对比 → 检测 → 修复 |
 | `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目；写入 `.forge/quickref.md`、`project-taste.md`、`preflight.json`、`skills/_template/eval/` 等 |
 | `pnpm preflight [--build-dir dist]` | 发布前门禁（git/版本/产物隐私 + `.forge/preflight.json`） |
 | `pnpm skill-eval init <name>` / `pnpm skill-eval <name>` | 用户项目自定义 Skill 评估包（触发用例 + 产物断言） |
