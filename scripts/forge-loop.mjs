@@ -10,7 +10,9 @@
  *   5. 报告 → clean？下一轮 / 超限？停止
  *
  * 用法：
- *   pnpm forge-loop <N>                                    # 全量循环
+ *   pnpm forge-loop                                        # 列出未完成的阶段
+ *   pnpm forge-loop --all                                  # 自动逐个执行所有未完成阶段
+ *   pnpm forge-loop <N>                                    # 执行指定阶段
  *   pnpm forge-loop <N> --serve "pnpm dev"                 # 启动 dev server
  *   pnpm forge-loop <N> --url http://localhost:5173        # 已有 dev server
  *   pnpm forge-loop <N> --max 10                           # 最多 10 次
@@ -39,6 +41,7 @@ let skipPlan = false;
 let skipUi = false;
 let skipTest = false;
 let reset = false;
+let allMode = false;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--max" && args[i + 1]) { maxIterations = parseInt(args[++i], 10); continue; }
@@ -48,7 +51,58 @@ for (let i = 0; i < args.length; i++) {
   if (args[i] === "--skip-ui") { skipUi = true; continue; }
   if (args[i] === "--skip-test") { skipTest = true; continue; }
   if (args[i] === "--reset") { reset = true; continue; }
+  if (args[i] === "--all" || args[i] === "--auto") { allMode = true; continue; }
   if (/^\d+$/.test(args[i])) { phaseNum = parseInt(args[i], 10); }
+}
+
+// --- Auto-detect incomplete phases ---
+function findIncompletePhases() {
+  const planPath = join(ROOT, "DEV-PLAN.md");
+  if (!existsSync(planPath)) return [];
+  const plan = readFileSync(planPath, "utf-8");
+  const lines = plan.split("\n");
+  const phases = [];
+  let inTable = false;
+  for (const line of lines) {
+    if (line.startsWith("| Phase |")) { inTable = true; continue; }
+    if (line.startsWith("|---")) continue;
+    if (inTable) {
+      if (!line.startsWith("|")) { inTable = false; continue; }
+      const match = line.match(/^\|\s*(\d+)\s+(.+?)\s*\|\s*(.+?)\s*\|/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        const status = match[3].trim();
+        if (!status.includes("✅")) {
+          phases.push({ num, name: match[2].trim(), status });
+        }
+      }
+    }
+  }
+  return phases;
+}
+
+// No phase number → show incomplete or use --all
+if (!phaseNum && !reset) {
+  const incomplete = findIncompletePhases();
+  if (incomplete.length === 0) {
+    console.log(`✅ DEV-PLAN.md 所有阶段已完成！`);
+    process.exit(0);
+  }
+  if (allMode) {
+    // Chain: run each incomplete phase sequentially
+    phaseNum = incomplete[0].num;
+    console.log(`\n📋 ${incomplete.length} 个阶段未完成，从 Phase ${phaseNum} 开始。\n`);
+    // Write chaining state so next call picks up the next phase
+    const chainState = { remaining: incomplete.slice(1).map(p => p.num), phase: phaseNum };
+    const chainDir = join(STATE_DIR, "..", "loop-chain.json");
+    ensureDir(STATE_DIR);
+    writeFileSync(chainDir, JSON.stringify(chainState, null, 2));
+  } else {
+    console.log(`📋 ${incomplete.length} 个阶段未完成：`);
+    incomplete.forEach(p => console.log(`   Phase ${p.num} — ${p.name} (${p.status})`));
+    console.log(`\n使用 --all 自动逐个执行，或指定 Phase 号。`);
+    process.exit(0);
+  }
 }
 
 if (reset) {
@@ -58,15 +112,16 @@ if (reset) {
 }
 
 if (!phaseNum) {
-  console.error("Usage: node scripts/forge-loop.mjs <N> [options]");
-  console.error("  <N>               Phase number");
-  console.error("  --serve <cmd>      Start dev server (e.g. 'pnpm dev')");
-  console.error("  --url <url>        Dev server URL for Playwright");
-  console.error("  --max <M>          Max iterations (default: 5)");
-  console.error("  --skip-plan        Skip delivery checklist check");
-  console.error("  --skip-ui          Skip UI / Playwright check");
-  console.error("  --skip-test        Skip pnpm test");
-  console.error("  --reset            Reset loop state");
+  console.error("Usage: node scripts/forge-loop.mjs [<N>] [options]");
+  console.error("  <N>               Phase number (omit to list incomplete, --all to auto-execute)");
+  console.error("  --all             Auto-execute all incomplete phases sequentially");
+  console.error("  --serve <cmd>     Start dev server (e.g. 'pnpm dev')");
+  console.error("  --url <url>       Dev server URL for Playwright");
+  console.error("  --max <M>         Max iterations per phase (default: 5)");
+  console.error("  --skip-plan       Skip delivery checklist check");
+  console.error("  --skip-ui         Skip UI / Playwright check");
+  console.error("  --skip-test       Skip pnpm test");
+  console.error("  --reset           Reset loop state");
   process.exit(1);
 }
 
@@ -321,6 +376,29 @@ function hasPhaseStarted() {
   }
 }
 
+// === Chain: advance to next phase after completion ===
+function chainNext() {
+  const chainPath = join(ROOT, ".forge", "loop-chain.json");
+  if (!existsSync(chainPath)) return false;
+  try {
+    const chain = JSON.parse(readFileSync(chainPath, "utf-8"));
+    if (chain.remaining.length === 0) { rmSync(chainPath); return false; }
+    const next = chain.remaining.shift();
+    chain.phase = next;
+    writeFileSync(chainPath, JSON.stringify(chain, null, 2));
+    console.log(`\n═══════════════════════════════════════`);
+    console.log(`  ➡ 进入下一阶段: Phase ${next}`);
+    console.log(`═══════════════════════════════════════\n`);
+    // Re-execute with new phase — spawn self
+    const selfCmd = `node ${fileURLToPath(import.meta.url)} ${next}${serveCmd ? ` --serve "${serveCmd}"` : ""}${baseUrl ? ` --url ${baseUrl}` : ""} --max ${maxIterations}${skipPlan ? " --skip-plan" : ""}${skipUi ? " --skip-ui" : ""}${skipTest ? " --skip-test" : ""}`;
+    execSync(selfCmd, { cwd: ROOT, stdio: "inherit", timeout: 3600000 });
+    return true;
+  } catch (e) {
+    console.error("chain error:", e.message);
+    return false;
+  }
+}
+
 // === Main ===
 const state = readState();
 
@@ -328,6 +406,7 @@ if (state.phase !== phaseNum) { state.phase = phaseNum; state.iteration = 0; sta
 
 if (state.status === "max-reached") {
   console.log(`⚠️ Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}。`);
+  if (chainNext()) process.exit(0);
   process.exit(0);
 }
 if (state.status === "complete") {
@@ -416,6 +495,7 @@ if (allOk) {
   writeState(state);
   console.log(`\n✅ Phase ${phaseNum} 全部通过！`);
   stopServer();
+  if (chainNext()) process.exit(0);
   process.exit(0);
 }
 
@@ -426,6 +506,7 @@ if (state.iteration >= maxIterations) {
   writeState(state);
   console.log(`\n⚠️ Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}。`);
   stopServer();
+  if (chainNext()) process.exit(0);
   process.exit(0);
 }
 

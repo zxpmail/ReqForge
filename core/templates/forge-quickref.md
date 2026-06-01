@@ -212,6 +212,8 @@ node scripts/forge-trace.mjs summary [<N>]                          # 查看摘�
 ## 统一循环（forge-loop）
 
 ```bash
+pnpm forge-loop                               # 查看未完成的阶段列表
+pnpm forge-loop --all                         # 自动逐个执行所有未完成的阶段
 pnpm forge-loop <N>                           # 全量循环：执行→检测→修改→测试
 pnpm forge-loop <N> --run                     # 自动执行 dev-builder（Phase 未启动时）
 pnpm forge-loop <N> --serve "pnpm dev"        # 启动 dev server
@@ -230,13 +232,13 @@ pnpm forge-loop <N> --reset                   # 重置循环状态
 4. **测试** → pnpm test + Playwright
 5. **循环** → 全部通过？完成 / 超限？停止
 
-**YOLO 下班一条命令**：
+**YOLO 下班一条命令（全部未完成阶段）**：
 ```bash
 claude --yolo --loop "
-pnpm forge-loop 3 --run --serve 'pnpm dev' --url http://localhost:5173 --max 5
-如果输出说'尚未启动'，先执行 dev-builder for Phase 3 并提交
+pnpm forge-loop --all --run --serve 'pnpm dev' --url http://localhost:5173 --max 5
+如果输出说'尚未启动'，先执行 dev-builder 并提交
 如果 .forge/loop/fix-brief.md 存在，执行所有修复指令
-重复直到 state.json 显示 complete 或 max-reached
+重复直到所有阶段完成
 "
 ```
 ```
