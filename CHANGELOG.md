@@ -9,6 +9,7 @@ All notable changes to Forge are documented here.
 
 ### Fixed
 - **Windows hook execution**: all `.sh` files had CRLF line endings, causing Git Bash shebang failure (`#!/usr/bin/sh\r` → "cannot execute binary file"). Added `.gitattributes` enforcing `eol=lf` for `.sh` files and normalized all existing files to LF. `.bat` files kept at CRLF.
+- **Windows hook execution (round 2)**: `settings.json` had hooks using `sh` which always fire on all platforms. Moved hooks to platform-specific files only: `settings.unix.json` (`.sh`), `settings.windows.json` (`.bat`). `settings.json` now empty hookless base.
 
 ## [v1.35.8] - 2026-05-26
 

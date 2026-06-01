@@ -4,16 +4,13 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/hallucination-gate.sh" }
+          { "type": "command", "command": ".claude/hooks/hallucination-gate.bat" }
         ]
       },
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/phase-exit-guard.sh" },
-          { "type": "command", "command": "bash .claude/hooks/stop-gate.sh" },
-          { "type": "command", "command": "bash .claude/hooks/retry-gate.sh" },
-          { "type": "command", "command": "bash .claude/hooks/detect-feedback-signal.sh" }
+          { "type": "command", "command": ".claude/hooks/phase-exit-guard.bat && .claude/hooks/stop-gate.bat && .claude/hooks/retry-gate.bat && .claude/hooks/detect-feedback-signal.bat" }
         ]
       }
     ],
@@ -21,15 +18,13 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/memory-guard.sh" },
-          { "type": "command", "command": "bash .claude/hooks/check-sync.sh" }
+          { "type": "command", "command": ".claude/hooks/memory-guard.bat && .claude/hooks/check-sync.bat" }
         ]
       },
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/mark-review-needed.sh" },
-          { "type": "command", "command": "bash .claude/hooks/memory-check.sh" }
+          { "type": "command", "command": ".claude/hooks/mark-review-needed.bat && .claude/hooks/memory-check.bat" }
         ]
       }
     ],
@@ -37,7 +32,7 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash .claude/hooks/check-evolution.sh" }
+          { "type": "command", "command": ".claude/hooks/check-evolution.bat" }
         ]
       }
     ]
