@@ -2,13 +2,21 @@
 
 All notable changes to Forge are documented here.
 
-## [Unreleased]
+## [v1.35.12] - 2026-06-01
 
 ### Added
 - **forge-ops**: new `pnpm forge-ops <url>` — production monitoring loop: health check → verify suite → baseline comparison → regression detection → fix brief → report. Supports `--interval <sec>`, `--baseline save|compare`, `--fix`. Output: `.forge/ops/report.md`. (Phase 16 candidate)
 - **forge-loop --fde**: Forward Deployed Engineer mode — reads Product-Spec.md + DEV-PLAN.md context before execution, generates structured evidence report (`.forge/evidence/phase-N-report.md`) on completion. `pnpm forge-fde` convenience alias.
 - **Evidence chain**: `forge-loop --fde` outputs machine-readable evidence report with test pass rate, delivery checklist completion, UI check results, file change list, and pass/fail verdict per deliverable.
 - **skill-eval judge v2 rubric**: expanded from 5 to 6 dimensions — added "工作流质量与可重复性" (workflow quality & repeatability, 30% weight) focusing on result consistency, verification loops, and real-project usability. Baseline comparison dimension added. judge-config template bumped to version 2.
+
+### Fixed
+- **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
+- **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
+
+## [Unreleased]
+
+### Added
 - **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md during `skill-eval run` — detects mismatches between claimed counts (e.g. "four dimensions") and actual markdown list lengths; supports CN/Arabic/EN numerals with 20+ quantifiers.
 - **forge-phase-check**: new `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N delivery checklist, cross-references against `git diff` file changes, and outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment.
 - **forge-phase-loop**: new `pnpm forge-phase-loop <N>` — single-iteration phase auto-completion tool. Runs forge-phase-check, generates `.forge/phase-loop/fix-brief.md` with structured AI-readable fix instructions for each omitted item. Supports `--max <M>` (max iterations, default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check → fix → re-check until clean.

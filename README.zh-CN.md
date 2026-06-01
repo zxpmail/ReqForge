@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.11-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.12-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -61,6 +61,12 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.12 — 2026-06-01
+- **forge-loop --fde**：`pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取 Product-Spec 和 DEV-PLAN 上下文，完成时输出 `.forge/evidence/phase-N-report.md` 交付证据报告（测试通过率 + 清单完成度 + 文件变更）。
+- **forge-ops**：`pnpm forge-ops <url>` — 运营监控闭环。健康检查→验证套件→基线对比→回归检测→自动修复。支持 `--interval` 循环、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
+- **skill-eval judge v2**：Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。评估工作流在真实项目中产生可重复结果的能力。
+- **forge-ui-check 修复**：Phase 无独立章节时跳过而非报错，修复 forge-loop 死循环。
+
 ### v1.35.11 — 2026-06-01
 - **forge-phase-check**：`pnpm forge-phase-check <N>` — 解析 DEV-PLAN.md Phase N 清单，通过 `git diff` 对照交付内容/关键文件/验收标准，输出遗漏/完成/冗余报告。纯机械比对，不靠 AI 判断。（支持 `--json` 输出）
 - **forge-phase-loop**：`pnpm forge-phase-loop <N>` — 单次迭代自动完成循环。运行检查，有遗漏则生成 `.forge/phase-loop/fix-brief.md`，每条含精确修复指令。支持 `--max`（默认 5）和 `--reset`。配合 YOLO 模式实现 检查→修复→再检查 自动循环直到完成。
@@ -69,10 +75,6 @@ flowchart LR
 - **forge-ui-check**：`pnpm forge-ui-check <N>` — 扫描 DEV-PLAN.md UI 相关清单项，检查文件存在，自动生成 Playwright 测试（表单/按钮/输入框/导航/页面路由断言），`--url` 参数启动浏览器端验证。
 - **forge-ui-loop**：`pnpm forge-ui-loop <N>` — UI 自动修复循环。运行检查，生成 `.forge/ui-loop/fix-brief.md`，支持 `--url`/`--max`/`--reset`。YOLO 模式：检查→修复→再检查直到 UI 全部通过。
 - **forge-loop**：`pnpm forge-loop` — 下班前跑这条，第二天来就完事了。
-- **forge-loop --fde**：`pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取 Product-Spec 和 DEV-PLAN 上下文，完成时输出 `.forge/evidence/phase-N-report.md` 交付证据报告（测试通过率 + 清单完成度 + 文件变更）。
-- **forge-ops**：`pnpm forge-ops <url>` — 运营监控闭环。健康检查→验证套件→基线对比→回归检测→自动修复。支持 `--interval` 循环、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
-- **skill-eval judge v2**：Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。评估工作流在真实项目中产生可重复结果的能力。
-- **forge-ui-check 修复**：Phase 无独立章节时跳过而非报错，修复 forge-loop 死循环。自动扫哪些阶段没做完，逐个执行 dev-builder，查遗漏，修 bug，跑测试，循环到全部通过。支持 `--all`（全自动）、`--run`（开始干活）、`--serve`（启动网页）、`--url`（网页测试）、`--max`（最多几轮）、`--skip-plan/--skip-ui/--skip-test`（跳过某些检查）、`--reset`（重置）。
 
 ### v1.35.8 — 2026-05-26
 - **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`

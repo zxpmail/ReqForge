@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.11-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.12-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -62,6 +62,12 @@ flowchart LR
 
 ## What's New
 
+### v1.35.12 — 2026-06-01
+- **forge-loop --fde**: `pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取项目上下文，完成时输出 `.forge/evidence/phase-N-report.md` 证据报告（测试通过率 + 交付清单 + 文件变更）。
+- **forge-ops**: `pnpm forge-ops <url>` — 运营监控闭环。健康检查 → 验证套件 → 基线对比 → 回归检测 → 自动修复。支持 `--interval` 循环模式、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
+- **skill-eval judge v2**: Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。强调工作流在真实项目中产生可重复结果的能力。
+- **forge-ui-check fix**: Phase 无独立章节时不再误报，跳过而非 exit 1。
+
 ### v1.35.11 — 2026-06-01
 - **forge-phase-check**: `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N checklist, cross-references `git diff` against deliverables/keyfiles/acceptance items. Outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment. (`--json` for programmatic use)
 - **forge-phase-loop**: `pnpm forge-phase-loop <N>` — single-iteration auto-completion. Runs check, generates `.forge/phase-loop/fix-brief.md` with structured fix instructions for each omitted item. Supports `--max` (default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check→fix→re-check until clean.
@@ -70,10 +76,6 @@ flowchart LR
 - **forge-ui-check**: `pnpm forge-ui-check <N>` — scans DEV-PLAN.md for UI checklist items, checks file existence, auto-generates Playwright tests (form/button/input/nav/page assertions) with `--url` for dynamic browser validation.
 - **forge-ui-loop**: `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs check, generates `.forge/ui-loop/fix-brief.md`, supports `--url`/`--max`/`--reset`. YOLO: check → fix → re-check until UI passes.
 - **forge-loop**: `pnpm forge-loop` — 下班前跑这条命令，第二天来就完事了。
-- **forge-loop --fde**: `pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取项目上下文，完成时输出 `.forge/evidence/phase-N-report.md` 证据报告（测试通过率 + 交付清单 + 文件变更）。
-- **forge-ops**: `pnpm forge-ops <url>` — 运营监控闭环。健康检查 → 验证套件 → 基线对比 → 回归检测 → 自动修复。支持 `--interval` 循环模式、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
-- **skill-eval judge v2**: Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。强调工作流在真实项目中产生可重复结果的能力。
-- **forge-ui-check fix**: Phase 无独立章节时不再误报，跳过而非 exit 1。自动检查哪些阶段没做完，逐个执行 dev-builder，检测遗漏，修 bug，跑测试，循环直到全部通过。支持 `--all`（全自动）、`--run`（自动开始）、`--serve`（启动网页）、`--url`（网页测试）、`--max`（最多几轮）、`--skip-plan/--skip-ui/--skip-test`（跳过某些检查）、`--reset`（重置）。
 
 ### v1.35.10 — 2026-05-30
 - **Output Status Protocol**: New `_shared/output-status-protocol.md` — every Phase/output ends with `[Decision]` / `[Assumption]` / `[Next]` / `[Status]` (DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT). Wired into product-spec-builder, dev-planner, bug-fixer, change-manager, dev-builder Output Style sections. ([Digidai/product-manager-skills](https://github.com/Digidai/product-manager-skills) output contract inspired)
