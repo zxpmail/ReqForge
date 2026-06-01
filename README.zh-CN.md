@@ -68,7 +68,7 @@ flowchart LR
 - **Windows 钩子修复**：CRLF 导致 Git Bash "cannot execute binary file"。`.gitattributes` 强制 `*.sh eol=lf`；hooks 分平台配置，Windows 使用 `.bat`。
 - **forge-ui-check**：`pnpm forge-ui-check <N>` — 扫描 DEV-PLAN.md UI 相关清单项，检查文件存在，自动生成 Playwright 测试（表单/按钮/输入框/导航/页面路由断言），`--url` 参数启动浏览器端验证。
 - **forge-ui-loop**：`pnpm forge-ui-loop <N>` — UI 自动修复循环。运行检查，生成 `.forge/ui-loop/fix-brief.md`，支持 `--url`/`--max`/`--reset`。YOLO 模式：检查→修复→再检查直到 UI 全部通过。
-- **forge-loop**：`pnpm forge-loop [<N>|--all]` — 统一 Phase 开发循环。自动编排：dev-builder 派发（--run）→ 交付清单⇔git diff → UI 文件验证 → Playwright 测试 → pnpm test → 自动创建缺失文件 → fix-brief.md 处理剩余项。支持 `--all`（自动检测并执行全部未完成阶段）、`--serve`（启动 dev server）、`--url`（Playwright）、`--skip-plan/ui/test`、`--max`、`--reset`。一条命令完成"执行→检测→修改→测试→再检查"全流程。
+- **forge-loop**：`pnpm forge-loop` — 下班前跑这条，第二天来就完事了。自动扫哪些阶段没做完，逐个执行 dev-builder，查遗漏，修 bug，跑测试，循环到全部通过。支持 `--all`（全自动）、`--run`（开始干活）、`--serve`（启动网页）、`--url`（网页测试）、`--max`（最多几轮）、`--skip-plan/--skip-ui/--skip-test`（跳过某些检查）、`--reset`（重置）。
 
 ### v1.35.8 — 2026-05-26
 - **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`

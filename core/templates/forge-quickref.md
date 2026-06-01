@@ -209,38 +209,31 @@ node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教�
 node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
 ```
 
-## 统一循环（forge-loop）
+## 下班一条命令（forge-loop）
 
 ```bash
-pnpm forge-loop                               # 查看未完成的阶段列表
-pnpm forge-loop --all                         # 自动逐个执行所有未完成的阶段
-pnpm forge-loop <N>                           # 全量循环：执行→检测→修改→测试
-pnpm forge-loop <N> --run                     # 自动执行 dev-builder（Phase 未启动时）
-pnpm forge-loop <N> --serve "pnpm dev"        # 启动 dev server
-pnpm forge-loop <N> --url http://localhost:5173  # 含 Playwright 动态测试
-pnpm forge-loop <N> --max 10                  # 最多 10 次迭代（默认 5）
-pnpm forge-loop <N> --skip-plan               # 跳过交付清单检查
-pnpm forge-loop <N> --skip-ui                 # 跳过 UI 检查
-pnpm forge-loop <N> --skip-test               # 跳过 pnpm test
-pnpm forge-loop <N> --reset                   # 重置循环状态
+pnpm forge-loop                               # 看看还有哪些阶段没做完
+pnpm forge-loop --all                         # 全自动：把所有没做完的阶段逐个做完
+pnpm forge-loop 3                             # 只做 Phase 3
+pnpm forge-loop 3 --run                       # 还没开始？先跑 dev-builder 干活
+pnpm forge-loop 3 --serve "pnpm dev"          # 启动网页服务
+pnpm forge-loop 3 --url http://localhost:5173 # 检查网页对不对
+pnpm forge-loop 3 --max 10                    # 最多搞 10 轮（默认 5）
+pnpm forge-loop 3 --skip-test                # 跳过测试
+pnpm forge-loop 3 --reset                    # 重置重来
 ```
 
-每次迭代：
-1. **执行** → 启动 dev server（--serve）
-2. **检测** → 交付清单⇔git diff + UI 文件 + Playwright + pnpm test
-3. **修改** → 自动创建缺失目录/文件骨架；余下 → fix-brief.md
-4. **测试** → pnpm test + Playwright
-5. **循环** → 全部通过？完成 / 超限？停止
+**做什么**：自动检查清单→修 bug→跑测试→修 bug→跑测试→…直到全部通过。
 
-**YOLO 下班一条命令（全部未完成阶段）**：
+**下班怎么用**：
 ```bash
-claude --yolo --loop "
-pnpm forge-loop --all --run --serve 'pnpm dev' --url http://localhost:5173 --max 5
-如果输出说'尚未启动'，先执行 dev-builder 并提交
-如果 .forge/loop/fix-brief.md 存在，执行所有修复指令
-重复直到所有阶段完成
-"
+claude --dangerously-skip-permissions
+# 进去后输入：
+/loop pnpm forge-loop --all --run --max 5
+如果 fix-brief.md 存在就执行修复
+重复直到全部完成
 ```
+然后关电脑下班，第二天来查结果。
 ```
 
 ---
