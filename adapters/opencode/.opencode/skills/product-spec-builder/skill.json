@@ -2,6 +2,8 @@
   "name": "product-spec-builder",
   "version": "1.1.0",
   "description": "When user says they want to build a product/app/tool, or wants to add features, change requirements, adjust UI",
+  "tier": "interactive",
+  "intent": "Guide the user through structured requirement discovery via Socratic Q&A — produce a rigorous Product-Spec.md that captures scope, workflows, data model, and constraints before any code is written",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {
@@ -28,7 +30,5 @@
     }
   ],
   "agents": [],
-  "hooks": [],
-  "tier": "interactive",
-  "intent": "Guide the user through structured requirement discovery via Socratic Q&A — produce a rigorous Product-Spec.md that captures scope, workflows, data model, and constraints before any code is written"
+  "hooks": []
 }

@@ -177,6 +177,7 @@ pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
 
 - 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
 - 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照；judge 效果评估需 AI agent spawn 独立 sub-agent）
+- **ref-lint**：`skill-eval run` 自动扫描 SKILL.md 中数字引用与列表长度不一致（如"四个维度"但列表只有 3 项）
 - Skill 编写模式：`core/docs/skill-authoring-patterns.md`（工作流设计 + 失败模式编码 + 反例黑名单 + rubric 自查）
 
 ---

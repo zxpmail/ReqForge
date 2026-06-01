@@ -151,6 +151,45 @@ Judge 评估需要 AI agent 来 spawn 独立 sub-agent，CLI 只负责生成 bri
 - 测试 prompt 的质量决定 judge 有效性 — 应覆盖 happy path 和边缘场景
 - 跨 session judge 一致性无保证 — 同一 Skill 在不同 session 的评分可能波动
 
+## Ref-lint — 数字引用一致性检查
+
+> OpenSpec 实战启发：SKILL.md 中"四个维度"后面模板只有 3 行，AI 按旧模板输出就漏了一维。改了定义没改引用 = 执行层走旧路径。
+
+`pnpm skill-eval <name>` 运行时**自动**对 SKILL.md 做 ref-lint 检查（无需额外命令）：
+
+### 检测逻辑
+
+1. 扫描 SKILL.md 中数字 + 量词的模式（如"四个维度"、"3 steps"、"five layers"）
+2. 向后查找最近的 markdown 列表（5 行内）
+3. 计数实际列表项，与数字对比
+4. 不一致 → `⚠️ warn`（如 `L12 "四个维度" claims 4 but list at L14 has 3 items`）
+
+### 支持的数字格式
+
+| 格式 | 示例 |
+|------|------|
+| 中文数字 | 一二三…十 |
+| 阿拉伯数字 | 2, 3, 4… |
+| 英文数字 | one, two, three…twelve |
+
+### 支持的量词
+
+中文：个/项/维度/步骤/层/阶段/条/点/处/行/部分/章节
+
+英文：dimension/step/layer/phase/stage/item/point/rule/principle/task/check（含复数）
+
+### 跳过条件
+
+- 数字 < 2 或 > 20（"一个"无意义，"二十个"超出合理范围）
+- 5 行内无 markdown 列表（可能是跨章节引用，无法自动匹配）
+- 列表项为 0
+
+### 设计原则
+
+- **确定性检查 > AI judge**：正则 + 计数是机器可判定的，不依赖 AI 理解力
+- **warn 而非 error**：可能存在合理的跨章节引用，人工确认即可
+- **零配置**：随 `skill-eval run` 自动执行，无需额外命令或配置
+
 ## 与 skill-builder 的关系
 
 `/skill-builder` 交付新 Skill 时 **必须**：

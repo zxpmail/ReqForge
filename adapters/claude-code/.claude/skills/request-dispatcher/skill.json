@@ -2,6 +2,8 @@
   "name": "request-dispatcher",
   "version": "1.0.0",
   "description": "Routes ambiguous user requests to the correct Forge Skill",
+  "tier": "interactive",
+  "intent": "Analyze ambiguous or cross-cutting user requests against project state and available Skills, recommend the best match — the first interaction point for unclear intents",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {
@@ -23,7 +25,5 @@
     }
   ],
   "agents": [],
-  "hooks": [],
-  "tier": "interactive",
-  "intent": "Analyze ambiguous or cross-cutting user requests against project state and available Skills, recommend the best match — the first interaction point for unclear intents"
+  "hooks": []
 }

@@ -57,6 +57,7 @@ requires: []
 <!-- begin: output-style -->
 [Output Style]
     → `references/output-style.md`
+    → Bug 报告 / 修复完成必须附加 `../_shared/output-status-protocol.md`（Status: BLOCKED 或 NEEDS_CONTEXT 时必须说明原因）
 
 <!-- end: output-style -->
 <!-- begin: file-structure -->

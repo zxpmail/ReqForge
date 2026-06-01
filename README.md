@@ -102,6 +102,7 @@ flowchart LR
 - **Evolution proposals (兌)**: dev-builder Phase Completion triggers evolution-engine scan; presents actionable pattern-based proposals to user as Y/N choices. Closes the feedback→evolution loop proactively. ([八卦信息论 巽兌 protocol audit] inspired)
 - **Skill quality judge**: `pnpm skill-eval judge <name>` — independent sub-agent evaluates Skill quality against a 5-dim rubric (structure/specificity/failure-mode/anti-patterns/effectiveness). Results recorded to `judge-history.json`. ([darwin-skill](https://github.com/alchaincyf/darwin-skill) inspired)
 - **Skill authoring patterns**: [`core/docs/skill-authoring-patterns.md`](core/docs/skill-authoring-patterns.md) — practical reference for SKILL.md authors: workflow design, failure-mode encoding, anti-pattern blacklists, rubric self-check table.
+- **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md — detects mismatches like "four dimensions" followed by a 3-item list. Zero-config, runs with `pnpm skill-eval <name>`. ([OpenSpec verify bug](https://mp.weixin.qq.com/s/iSWtR665phTo5dv8sHFgqA) inspired)
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill、zoom-out、架构保健、GitHub issue 切片（吸收思路，不整包合并）

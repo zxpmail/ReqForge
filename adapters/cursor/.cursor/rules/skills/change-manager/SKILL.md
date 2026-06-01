@@ -46,6 +46,7 @@ requires: []
 <!-- begin: output-style -->
 [Output Style]
     → `references/output-style.md`
+    → 每 Phase（propose/apply/verify/archive）完成后必须附加 `../_shared/output-status-protocol.md`
 
 <!-- end: output-style -->
 <!-- begin: file-structure -->

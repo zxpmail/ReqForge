@@ -4,6 +4,11 @@ All notable changes to Forge are documented here.
 
 ## [Unreleased]
 
+### Added
+- **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md during `skill-eval run` — detects mismatches between claimed counts (e.g. "four dimensions") and actual markdown list lengths; supports CN/Arabic/EN numerals with 20+ quantifiers.
+
+## [v1.35.8] - 2026-05-26
+
 ## [v1.35.8] - 2026-05-26
 
 ### Changed

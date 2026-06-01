@@ -397,6 +397,12 @@ export function runSkillEval(options: SkillEvalOptions): SkillEvalResult {
     }
   }
 
+  // Ref-lint: numeric reference consistency check on SKILL.md
+  const skillPath = findSkillMd(cwd, options.skillName);
+  if (skillPath) {
+    checks.push(...refLintSkillMd(fs.readFileSync(skillPath, "utf-8")));
+  }
+
   return finalize(checks, options.strict);
 }
 
@@ -463,6 +469,109 @@ export function initSkillEval(
   }
 
   return evalDir;
+}
+
+// --- Ref-lint: numeric reference consistency ---
+
+const CN_NUM: Record<string, number> = {
+  一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10,
+};
+
+function parseCnNum(s: string): number | null {
+  if (s.length === 1 && CN_NUM[s] !== undefined) return CN_NUM[s];
+  if (s === "十") return 10;
+  if (s.startsWith("十") && s.length === 2) return 10 + (CN_NUM[s[1]] ?? 0);
+  if (s.endsWith("十") && s.length === 2) return (CN_NUM[s[0]] ?? 0) * 10;
+  return null;
+}
+
+const EN_NUM: Record<string, number> = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  eleven: 11, twelve: 12,
+};
+
+const REF_PATTERN = /(?:([一二三四五六七八九十]{1,2})|(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)|(\d+))\s*(?:个|项|维[度量表]|步[骤]|层|阶[段级]|条|点|处|行|部分|章节|dimensions?|steps?|layers?|phases?|stages?|items?|points?|rules?|principles?|tasks?|checks?)/gi;
+
+interface RefMatch {
+  line: number;
+  text: string;
+  claimed: number;
+  listLine: number;
+  actual: number;
+}
+
+export function refLintSkillMd(content: string): EvalCheck[] {
+  const checks: EvalCheck[] = [];
+  const lines = content.split("\n");
+
+  const matches: RefMatch[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    let m: RegExpExecArray | null;
+    const localRef = REF_PATTERN;
+    localRef.lastIndex = 0;
+    while ((m = localRef.exec(line)) !== null) {
+      const claimed = m[1] ? parseCnNum(m[1]) : (m[2] ? (EN_NUM[m[2].toLowerCase()] ?? null) : parseInt(m[3], 10));
+      if (claimed === null || claimed < 2 || claimed > 20) continue;
+
+      // Look ahead for the nearest markdown list (within 5 lines)
+      let listStart = -1;
+      for (let j = i + 1; j <= Math.min(i + 5, lines.length - 1); j++) {
+        if (/^\s*[-*+]\s/.test(lines[j]) || /^\s*\d+[.)]\s/.test(lines[j])) {
+          listStart = j;
+          break;
+        }
+      }
+      if (listStart === -1) continue;
+
+      // Count consecutive list items
+      let actual = 0;
+      for (let j = listStart; j < lines.length; j++) {
+        if (/^\s*[-*+]\s/.test(lines[j]) || /^\s*\d+[.)]\s/.test(lines[j])) {
+          actual++;
+        } else if (lines[j].trim() === "") {
+          break;
+        } else if (actual > 0) {
+          break;
+        }
+      }
+      if (actual === 0) continue;
+
+      matches.push({
+        line: i + 1,
+        text: m[0],
+        claimed,
+        listLine: listStart + 1,
+        actual,
+      });
+    }
+  }
+
+  // Deduplicate: keep only the first match per list region
+  const seen = new Set<number>();
+  for (const m of matches) {
+    if (seen.has(m.listLine)) continue;
+    seen.add(m.listLine);
+
+    if (m.claimed !== m.actual) {
+      checks.push({
+        id: `ref-lint-L${m.line}`,
+        severity: "warn",
+        ok: false,
+        message: `L${m.line} "${m.text}" claims ${m.claimed} but list at L${m.listLine} has ${m.actual} items`,
+      });
+    } else {
+      checks.push({
+        id: `ref-lint-L${m.line}`,
+        severity: "warn",
+        ok: true,
+        message: `"${m.text}" matches list (${m.claimed} items)`,
+      });
+    }
+  }
+
+  return checks;
 }
 
 // --- Judge interfaces ---

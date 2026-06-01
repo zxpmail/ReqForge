@@ -94,6 +94,7 @@ flowchart LR
 - **进化提案（兌）**：dev-builder Phase 完成时触发 evolution-engine 扫描；向用户呈现基于反馈模式的可操作提案（Y/N 选择）。主动闭合反馈→进化循环。（受 [八卦信息论 巽兌 protocol audit] 启发）
 - **Skill 质量 judge**：`pnpm skill-eval judge <name>` — 独立 sub-agent 按 5 维 rubric（结构完整性/可执行具体性/失败模式编码/反例完备性/实测表现）评估 Skill 质量。结果记录至 `judge-history.json`。（受 [darwin-skill](https://github.com/alchaincyf/darwin-skill) 启发）
 - **Skill 编写模式参考**：[`core/docs/skill-authoring-patterns.md`](core/docs/skill-authoring-patterns.md) — SKILL.md 作者实战参考：工作流设计、失败模式编码、反例黑名单、rubric 自查表。
+- **skill-eval ref-lint**：SKILL.md 数字引用一致性自动检查 — 检测"四个维度"后列表只有 3 项等定义-引用不一致问题。零配置，随 `pnpm skill-eval <name>` 自动运行。（受 [OpenSpec verify bug](https://mp.weixin.qq.com/s/iSWtR665phTo5dv8sHFgqA) 启发）
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片

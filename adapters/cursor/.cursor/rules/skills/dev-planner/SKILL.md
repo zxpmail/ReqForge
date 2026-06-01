@@ -71,6 +71,7 @@ requires: []
 <!-- begin: output-style -->
 [Output Style]
     → `../_shared/output-style-concise.md`（Plan 额外要求：每 Phase 可独立编译运行；Task 列具体文件路径；禁止 TBD）
+    → DEV-PLAN 完成必须附加 `../_shared/output-status-protocol.md`
 
 <!-- end: output-style -->
 <!-- begin: gotchas -->
