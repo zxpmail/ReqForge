@@ -22,6 +22,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { loadBaseline, saveBaseline, compareBaseline } from "./forge-verify/baseline.mjs";
+import { sendAlert, formatError } from "./forge-ops/alerts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -56,6 +57,18 @@ if (!targetUrl) {
 }
 
 function ensureDir(p) { if (!existsSync(p)) mkdirSync(p, { recursive: true }); }
+
+// === Load config ===
+function loadConfig() {
+  const cfgPath = join(ROOT, ".forge", "ops", "config.json");
+  if (!existsSync(cfgPath)) return null;
+  try { return JSON.parse(readFileSync(cfgPath, "utf-8")); }
+  catch { return null; }
+}
+const opsConfig = loadConfig();
+if (opsConfig) {
+  sendAlert(`forge-ops loaded: ${opsConfig.endpoints?.length || 0} endpoint(s)`, "info");
+}
 
 // === Step 1: Monitor — health check ===
 function healthCheck(url) {
@@ -259,9 +272,13 @@ function runOnce() {
     console.log(`   Regression: ${detection.diff.added.length} check(s) regressed`);
   }
 
+  if (!health.ok) sendAlert(`Health check failed: ${health.error || health.status}`, "error");
+
   const issues = diagnose(health, detection);
   if (issues.length === 0) {
     console.log(`   ✅ All clear`);
+  } else {
+    sendAlert(`forge-ops: ${issues.length} issue(s) detected`, "warn");
   }
 
   // Save baseline if requested
