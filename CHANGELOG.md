@@ -6,6 +6,9 @@ All notable changes to Forge are documented here.
 
 ### Added
 - **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md during `skill-eval run` — detects mismatches between claimed counts (e.g. "four dimensions") and actual markdown list lengths; supports CN/Arabic/EN numerals with 20+ quantifiers.
+- **forge-phase-check**: new `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N delivery checklist, cross-references against `git diff` file changes, and outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment.
+- **forge-phase-loop**: new `pnpm forge-phase-loop <N>` — single-iteration phase auto-completion tool. Runs forge-phase-check, generates `.forge/phase-loop/fix-brief.md` with structured AI-readable fix instructions for each omitted item. Supports `--max <M>` (max iterations, default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check → fix → re-check until clean.
+- **forge-phase-check --json**: added `--json` output flag for programmatic consumption by forge-phase-loop.
 
 ### Fixed
 - **Windows hook execution**: all `.sh` files had CRLF line endings, causing Git Bash shebang failure (`#!/usr/bin/sh\r` → "cannot execute binary file"). Added `.gitattributes` enforcing `eol=lf` for `.sh` files and normalized all existing files to LF. `.bat` files kept at CRLF.

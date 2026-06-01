@@ -61,6 +61,12 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.11 — 2026-06-01
+- **forge-phase-check**：`pnpm forge-phase-check <N>` — 解析 DEV-PLAN.md Phase N 清单，通过 `git diff` 对照交付内容/关键文件/验收标准，输出遗漏/完成/冗余报告。纯机械比对，不靠 AI 判断。（支持 `--json` 输出）
+- **forge-phase-loop**：`pnpm forge-phase-loop <N>` — 单次迭代自动完成循环。运行检查，有遗漏则生成 `.forge/phase-loop/fix-brief.md`，每条含精确修复指令。支持 `--max`（默认 5）和 `--reset`。配合 YOLO 模式实现 检查→修复→再检查 自动循环直到完成。
+- **ref-lint**：`skill-eval run` 自动检查 SKILL.md 中声明数量与实际列表不一致（如说"四个维度"但只列了 3 项）。支持中文/阿拉伯数字/英文数字量词。
+- **Windows 钩子修复**：CRLF 导致 Git Bash "cannot execute binary file"。`.gitattributes` 强制 `*.sh eol=lf`；hooks 分平台配置，Windows 使用 `.bat`。
+
 ### v1.35.8 — 2026-05-26
 - **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`
 

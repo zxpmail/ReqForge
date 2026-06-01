@@ -209,6 +209,32 @@ node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教�
 node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
 ```
 
+## Phase 完成检查（forge-phase-check）
+
+```bash
+pnpm forge-phase-check <N>              # 检查 Phase N 的交付清单完整性
+pnpm forge-phase-check <N> --base <ref> # 与指定基线对比（默认: main）
+```
+
+机械地比对各阶段交付清单与真实文件变更，输出遗漏/完成/冗余报告。
+不靠 AI 判断 — 纯清单⇔文件对照。
+
+---
+
+## Phase 自动循环（forge-phase-loop）
+
+```bash
+pnpm forge-phase-loop <N>               # 单次迭代：检查+生成fix brief
+pnpm forge-phase-loop <N> --max 10      # 最多迭代 10 次（默认 5）
+pnpm forge-phase-loop <N> --reset       # 重置循环状态
+```
+
+YOLO 模式下的自动循环工具。每次迭代运行 forge-phase-check，有遗漏则生成
+`.forge/phase-loop/fix-brief.md`（AI 可读的精确修复指令），AI 执行修复后
+再检查，直到 clean 或达到最大次数。
+
+---
+
 ## 作用域过滤（巽 — Filter）
 
 ```bash
