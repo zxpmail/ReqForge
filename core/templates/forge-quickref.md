@@ -22,6 +22,8 @@
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
 | `.forge/tests/` | Playwright E2E 测试模板（config + auth + Phase 验证） |
 | `.forge/active-scope.json` | 当前 Phase 文件作用域（巽 — 越界检查） |
+| `.forge/evidence/` | FDE 模式交付证据报告（测试通过率 + 清单完成度 + 文件变更） |
+| `.forge/ops/` | 运营监控报告（健康检查 + 回归检测 + 自动修复） |
 | `memory/handoff.md` | 跨 session / 跨客户端接力摘要（Phase 完成或上下文将满时生成） |
 
 ---
@@ -178,9 +180,23 @@ pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
 - 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
 - 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照；judge 效果评估需 AI agent spawn 独立 sub-agent）
 - **ref-lint**：`skill-eval run` 自动扫描 SKILL.md 中数字引用与列表长度不一致（如"四个维度"但列表只有 3 项）
+- **6 维 Rubric**: 结构完整性(10%) · 可执行具体性(20%) · 失败模式编码(15%) · 反例完备性(10%) · **工作流质量与可重复性(30%)** · 实测效果与基线对比(15%)
 - Skill 编写模式：`core/docs/skill-authoring-patterns.md`（工作流设计 + 失败模式编码 + 反例黑名单 + rubric 自查）
 
 ---
+
+## 运营监控（forge-ops）
+
+```bash
+pnpm forge-ops https://myapp.com                          # 单次健康检查 + 基线对比
+pnpm forge-ops https://myapp.com --interval 300 --fix     # 循环监控 + 自动修复
+pnpm forge-ops https://myapp.com --baseline save          # 保存当前状态为基线
+pnpm forge-ops https://myapp.com --baseline compare       # 对比基线
+```
+
+**做什么**：上线后的运营闭环。每个 tick—健康检查 HTTP 端点 → 运行验证套件 → 对比基线 → 检测回归 → 生成 fix-brief → 出报告。
+
+输出 → `.forge/ops/report.md`（含健康状态、验证通过率、基线 delta、问题清单）。
 
 ## 维护者验证（ReqForge 框架仓）
 
@@ -220,6 +236,7 @@ pnpm forge-loop 3 --serve "pnpm dev"          # 启动网页服务
 pnpm forge-loop 3 --url http://localhost:5173 # 检查网页对不对
 pnpm forge-loop 3 --max 10                    # 最多搞 10 轮（默认 5）
 pnpm forge-loop 3 --skip-test                # 跳过测试
+pnpm forge-loop 3 --fde                      # FDE 模式：上下文感知 + 证据报告
 pnpm forge-loop 3 --reset                    # 重置重来
 ```
 
@@ -234,6 +251,36 @@ claude --dangerously-skip-permissions
 重复直到全部完成
 ```
 然后关电脑下班，第二天来查结果。
+```
+
+### FDE（Forward Deployed）模式
+
+```bash
+pnpm forge-fde <N>                        # FDE 模式：上下文感知 + 证据报告
+pnpm forge-fde --all --run --max 10       # 全自动 FDE 交付循环
+pnpm forge-fde 3 --fde --url localhost:5173
+```
+
+**和 forge-loop 的区别**：
+- 执行前先读取 Product-Spec.md 和 DEV-PLAN.md 了解上下文
+- 每轮检测输出附带阶段目标和 Spec 背景
+- 完成时生成 `.forge/evidence/phase-N-report.md`（结果证据链：测试通过率、交付清单完成度、文件变更清单、UI 检查结果）
+- 适合**需要可追溯交付证据**的场景（发布审查、客户交付、合规）
+
+**证据报告示例**（.forge/evidence/phase-N-report.md）：
+```
+# Forward Deployed Report — Phase 3
+
+**Status**: passed
+| Check | Result | Detail |
+|-------|--------|--------|
+| 交付清单 | ✅ | 8/8 通过 |
+| UI 检查 | ✅ | 通过 |
+| 测试 | ✅ | 通过 |
+
+**文件变更**: 12 个文件
+**自动创建**: 2 个文件
+**结论**: 可交付 — 所有门禁通过。
 ```
 
 ---

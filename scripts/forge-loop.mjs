@@ -42,6 +42,7 @@ let skipUi = false;
 let skipTest = false;
 let reset = false;
 let allMode = false;
+let fdeMode = false;
 
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--max" && args[i + 1]) { maxIterations = parseInt(args[++i], 10); continue; }
@@ -52,6 +53,7 @@ for (let i = 0; i < args.length; i++) {
   if (args[i] === "--skip-test") { skipTest = true; continue; }
   if (args[i] === "--reset") { reset = true; continue; }
   if (args[i] === "--all" || args[i] === "--auto") { allMode = true; continue; }
+  if (args[i] === "--fde") { fdeMode = true; continue; }
   if (/^\d+$/.test(args[i])) { phaseNum = parseInt(args[i], 10); }
 }
 
@@ -115,6 +117,7 @@ if (!phaseNum) {
   console.error("Usage: node scripts/forge-loop.mjs [<N>] [options]");
   console.error("  <N>               Phase number (omit to list incomplete, --all to auto-execute)");
   console.error("  --all             Auto-execute all incomplete phases sequentially");
+  console.error("  --fde             Forward Deployed Engineer mode — context-aware + evidence report");
   console.error("  --serve <cmd>     Start dev server (e.g. 'pnpm dev')");
   console.error("  --url <url>       Dev server URL for Playwright");
   console.error("  --max <M>         Max iterations per phase (default: 5)");
@@ -196,7 +199,12 @@ function checkUi() {
     );
     return { ok: true, issues: [] };
   } catch (e) {
-    return { ok: false, issues: [{ type: "ui", detail: (e.stdout || "").slice(0, 500) }] };
+    const out = (e.stdout || "") + (e.stderr || "");
+    // Phase 无 UI 章节或清单不算失败
+    if (out.includes("not found") || out.includes("无 UI") || out.includes("无独立章节")) {
+      return { ok: true, issues: [] };
+    }
+    return { ok: false, issues: [{ type: "ui", detail: out.slice(0, 500) }] };
   }
 }
 
@@ -357,6 +365,86 @@ function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iterat
   return brief.join("\n");
 }
 
+// === FDE: Context gathering (Forward Deployed Engineer) ===
+function gatherFdeContext() {
+  const ctx = { spec: null, plan: null };
+  const specPath = join(ROOT, "Product-Spec.md");
+  if (existsSync(specPath)) {
+    const text = readFileSync(specPath, "utf-8").slice(0, 1500);
+    ctx.spec = text;
+  }
+  const planPath = join(ROOT, "DEV-PLAN.md");
+  if (existsSync(planPath)) {
+    const lines = readFileSync(planPath, "utf-8").split("\n");
+    let inPhase = false, phaseText = [];
+    for (const line of lines) {
+      const m = line.match(/^## Phase (\d+):/);
+      if (m) { inPhase = parseInt(m[1], 10) === phaseNum; if (inPhase) phaseText.push(line); continue; }
+      if (inPhase && line.match(/^## /)) break;
+      if (inPhase) phaseText.push(line);
+    }
+    ctx.phaseSection = phaseText.join("\n").slice(0, 2000);
+  }
+  return ctx;
+}
+
+// === FDE: Generate evidence report ===
+function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, autoCreated, finalStatus) {
+  const evidenceDir = join(ROOT, ".forge", "evidence");
+  ensureDir(evidenceDir);
+  const report = {
+    phase: phaseNum,
+    timestamp: new Date().toISOString(),
+    mode: "fde",
+    status: finalStatus,
+    evidence: {
+      checklist: { ok: planResult.ok, passed: planResult.completed?.length || 0, omitted: planResult.omitted?.length || 0, total: planResult.totalItems || 0 },
+      ui: { ok: uiResult.ok },
+      test: { ok: testResult.ok },
+    },
+    autoCreated: autoCreated,
+    filesChanged: [],
+  };
+  // Capture git diff for evidence
+  try {
+    let mergeBase;
+    try { mergeBase = execSync("git merge-base HEAD main", { cwd: ROOT, encoding: "utf-8", timeout: 15000 }).trim(); }
+    catch { mergeBase = "main"; }
+    const diff = execSync(`git diff --name-only "${mergeBase}"...HEAD`, { cwd: ROOT, encoding: "utf-8", timeout: 15000, stdio: "pipe" }).trim();
+    report.filesChanged = diff ? diff.split("\n") : [];
+  } catch {}
+
+  const reportPath = join(evidenceDir, `phase-${phaseNum}-report.json`);
+  writeFileSync(reportPath, JSON.stringify(report, null, 2));
+
+  // Human-readable summary
+  const summaryLines = [
+    `# Forward Deployed Report — Phase ${phaseNum}`,
+    ``,
+    `**Status**: ${finalStatus}`,
+    `**Time**: ${report.timestamp}`,
+    ``,
+    `## Evidence`,
+    ``,
+    `| Check | Result | Detail |`,
+    `|-------|--------|--------|`,
+    `| 交付清单 | ${planResult.ok ? "✅" : "❌"} | ${report.evidence.checklist.passed}/${report.evidence.checklist.total} 通过，${report.evidence.checklist.omitted} 遗漏 |`,
+    `| UI 检查 | ${uiResult.ok ? "✅" : "❌"} | ${uiResult.ok ? "通过" : "需修复"} |`,
+    `| 测试 | ${testResult.ok ? "✅" : "❌"} | ${testResult.ok ? "通过" : "失败"} |`,
+    ``,
+    `**文件变更**: ${report.filesChanged.length} 个文件`,
+    report.filesChanged.map(f => `  - \`${f}\``).join("\n"),
+    ``,
+    autoCreated.length > 0 ? `**自动创建**: ${autoCreated.length} 个文件\n${autoCreated.map(f => `  - \`${f}\``).join("\n")}\n` : "",
+    finalStatus === "passed" ? "**结论**: 可交付 — 所有门禁通过。" : "**结论**: 需要进一步修复。",
+    ``,
+  ];
+  const summaryPath = join(evidenceDir, `phase-${phaseNum}-report.md`);
+  writeFileSync(summaryPath, summaryLines.join("\n"));
+
+  return { reportPath: reportPath, summaryPath: summaryPath };
+}
+
 // === Check if phase has been started ===
 function hasPhaseStarted() {
   try {
@@ -457,6 +545,21 @@ if (!hasPhaseStarted()) {
   process.exit(0);
 }
 
+if (fdeMode) {
+  console.log(`\n🔍 Forward Deployed Engineer — Phase ${phaseNum}`);
+  console.log(`───────────────────────────────────────────`);
+  const ctx = gatherFdeContext();
+  if (ctx.spec) {
+    const title = ctx.spec.split("\n")[0]?.replace(/^#\s*/, "") || "Product-Spec.md";
+    console.log(`  📄 Spec: ${title.slice(0, 80)}`);
+  }
+  if (ctx.phaseSection) {
+    const firstLine = ctx.phaseSection.split("\n")[0]?.replace(/^##\s*/, "") || "";
+    console.log(`  🎯 Phase: ${firstLine.slice(0, 80)}`);
+  }
+  console.log(`───────────────────────────────────────────\n`);
+}
+
 console.log(`\n═══════════════════════════════════════`);
 console.log(`  Phase ${phaseNum} — Iteration ${state.iteration + 1}/${maxIterations}`);
 console.log(`═══════════════════════════════════════\n`);
@@ -493,6 +596,10 @@ const allOk = planAfterFix.ok && testResult.ok && uiResult.ok;
 if (allOk) {
   state.status = "complete";
   writeState(state);
+  if (fdeMode) {
+    const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "passed");
+    console.log(`\n📊 FDE Evidence Report → ${evidencePaths.summaryPath}`);
+  }
   console.log(`\n✅ Phase ${phaseNum} 全部通过！`);
   stopServer();
   if (chainNext()) process.exit(0);
@@ -504,6 +611,10 @@ state.iteration += 1;
 if (state.iteration >= maxIterations) {
   state.status = "max-reached";
   writeState(state);
+  if (fdeMode) {
+    const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "max-reached");
+    console.log(`\n📊 FDE Evidence Report → ${evidencePaths.summaryPath}`);
+  }
   console.log(`\n⚠️ Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}。`);
   stopServer();
   if (chainNext()) process.exit(0);

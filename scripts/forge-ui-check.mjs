@@ -74,7 +74,7 @@ for (let i = 0; i < lines.length; i++) {
     else if (phaseStart !== -1 && n !== phaseNum && n > 0) { phaseEnd = i; break; }
   }
 }
-if (phaseStart === -1) { console.error(`Phase ${phaseNum} not found`); process.exit(1); }
+if (phaseStart === -1) { console.log(`Phase ${phaseNum} 无独立章节，跳过 UI 检查。`); process.exit(0); }
 
 const phaseLines = lines.slice(phaseStart, phaseEnd);
 

@@ -717,12 +717,17 @@ ${rubricLines.join("\n\n")}
 
 ## Instructions
 
-1. Read the SKILL.md file fully
+1. Read the SKILL.md file fully — understand the workflow, not just individual steps
 2. For each test prompt: execute it with the Skill loaded, and note the output quality
 3. Also consider: if you ran the same prompt WITHOUT the Skill, would the output be worse?
-4. Score each dimension 1-10 with specific evidence
-5. Calculate total: Σ(score × weight) × ${scaleFactor.toFixed(2)} (capped at 100)
-6. Write a judge-report.json with the following schema:
+4. Score each dimension 1-10 with specific evidence (quote from SKILL.md or test run)
+5. **Workflow reproducibility assessment**: For the "工作流质量与可重复性" dimension, consider:
+   - Does the Skill produce a complete working result (not just a fragment)?
+   - Would the same prompt produce similar quality if run again?
+   - Does the workflow include verification/fix loops?
+   - Could a developer use the output in a real project without major rework?
+6. Calculate total: Σ(score × weight) × ${scaleFactor.toFixed(2)} (capped at 100)
+7. Write a judge-report.json with the following schema:
    {
      "version": 1,
      "skill": "${options.skillName}",
