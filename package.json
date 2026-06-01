@@ -22,6 +22,7 @@
     "forge-scope": "node scripts/forge-scope.mjs",
     "forge-phase-check": "node scripts/forge-phase-check.mjs",
     "forge-phase-loop": "node scripts/forge-phase-loop.mjs",
+    "forge-loop": "node scripts/forge-loop.mjs",
     "forge-ui-check": "node scripts/forge-ui-check.mjs",
     "forge-ui-loop": "node scripts/forge-ui-loop.mjs",
     "test-demo-golden-path": "node test-demo/run-golden-path.mjs",

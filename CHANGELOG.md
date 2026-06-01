@@ -11,6 +11,7 @@ All notable changes to Forge are documented here.
 - **forge-phase-check --json**: added `--json` output flag for programmatic consumption by forge-phase-loop.
 - **forge-ui-check**: new `pnpm forge-ui-check <N>` — scans DEV-PLAN.md Phase N for UI-related checklist items, performs static file existence checks, and auto-generates Playwright tests (form/button/input/nav/page route assertions) for dynamic browser validation when `--url` is provided.
 - **forge-ui-loop**: new `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs forge-ui-check, generates `.forge/ui-loop/fix-brief.md` with actionable UI fix instructions. Supports `--url`, `--max`, `--reset`. YOLO-ready: check → fix → re-check until UI passes.
+- **forge-loop**: new `pnpm forge-loop <N>` — unified Phase completion loop. Single entry point that runs delivery checklist check (forge-phase-check), UI file existence, and Playwright tests (with `--url`) in one pass. Generates unified `.forge/loop/fix-brief.md`. Supports `--skip-plan`, `--skip-ui`, `--url`, `--max`, `--reset`. Replaces the need to run separate loops for plan and UI checks.
 
 ### Fixed
 - **Windows hook execution**: all `.sh` files had CRLF line endings, causing Git Bash shebang failure (`#!/usr/bin/sh\r` → "cannot execute binary file"). Added `.gitattributes` enforcing `eol=lf` for `.sh` files and normalized all existing files to LF. `.bat` files kept at CRLF.

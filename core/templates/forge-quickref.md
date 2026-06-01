@@ -209,6 +209,35 @@ node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教�
 node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
 ```
 
+## 统一循环（forge-loop）
+
+```bash
+pnpm forge-loop <N>                           # 全量检查：交付清单 + UI 文件
+pnpm forge-loop <N> --url http://localhost:5173  # 含 Playwright 动态测试
+pnpm forge-loop <N> --max 10                  # 最多 10 次迭代（默认 5）
+pnpm forge-loop <N> --skip-plan               # 跳过交付清单检查
+pnpm forge-loop <N> --skip-ui                 # 跳过 UI 检查
+pnpm forge-loop <N> --reset                   # 重置循环状态
+```
+
+单次迭代自动执行三项验证：
+1. **交付清单** — DEV-PLAN.md ⇔ git diff（forge-phase-check）
+2. **UI 文件** — 静态文件存在性检查
+3. **Playwright** — 自动生成断言并执行（需 --url）
+
+有失败项 → 生成 `.forge/loop/fix-brief.md` → AI 执行修复 → 再检查 → clean。
+
+**YOLO 下班指令**：
+```bash
+claude --yolo --loop "
+pnpm forge-loop 3 --url http://localhost:5173 --max 5
+读取 .forge/loop/fix-brief.md 执行所有修复指令
+重复直到 state.json 显示 complete 或 max-reached
+"
+```
+
+---
+
 ## Phase 完成检查（forge-phase-check）
 
 ```bash
