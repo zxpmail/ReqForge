@@ -1,0 +1,13 @@
+# Force LF line endings for shell scripts (Windows Git Bash compatibility)
+*.sh text eol=lf
+# Keep CRLF for Windows batch files
+*.bat text eol=crlf
+# Normalize source code
+*.ts text eol=lf
+*.mjs text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.css text eol=lf
+*.html text eol=lf
