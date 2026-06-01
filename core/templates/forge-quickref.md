@@ -245,6 +245,33 @@ node scripts/forge-scope.mjs show                                             # 
 
 ---
 
+## UI 检查（forge-ui-check）
+
+```bash
+pnpm forge-ui-check <N>                       # 静态检查 UI 文件存在性
+pnpm forge-ui-check <N> --url http://...      # 启动 Playwright 动态检查
+pnpm forge-ui-check <N> --clean               # 测试后清理生成文件
+```
+
+解析 DEV-PLAN.md Phase N 的 UI 相关清单项，自动生成 Playwright 断言
+（表单/按钮/输入框/导航/页面路由等），执行并输出 pass/fail 报告。
+
+---
+
+## UI 自动循环（forge-ui-loop）
+
+```bash
+pnpm forge-ui-loop <N>                        # 单次迭代：检查 UI + 生成 fix brief
+pnpm forge-ui-loop <N> --url http://...       # 支持 Playwright 动态检查
+pnpm forge-ui-loop <N> --max 10               # 最多迭代 10 次（默认 5）
+pnpm forge-ui-loop <N> --reset                # 重置循环状态
+```
+
+YOLO 模式下的 UI 自动修复循环。有 UI 问题则生成 `.forge/ui-loop/fix-brief.md`，
+AI 执行修复后重新检查，直到全部通过或超限。
+
+---
+
 ## E2E 测试（Playwright）
 
 ```bash

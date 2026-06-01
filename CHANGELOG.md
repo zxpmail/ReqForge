@@ -9,6 +9,8 @@ All notable changes to Forge are documented here.
 - **forge-phase-check**: new `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N delivery checklist, cross-references against `git diff` file changes, and outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment.
 - **forge-phase-loop**: new `pnpm forge-phase-loop <N>` — single-iteration phase auto-completion tool. Runs forge-phase-check, generates `.forge/phase-loop/fix-brief.md` with structured AI-readable fix instructions for each omitted item. Supports `--max <M>` (max iterations, default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check → fix → re-check until clean.
 - **forge-phase-check --json**: added `--json` output flag for programmatic consumption by forge-phase-loop.
+- **forge-ui-check**: new `pnpm forge-ui-check <N>` — scans DEV-PLAN.md Phase N for UI-related checklist items, performs static file existence checks, and auto-generates Playwright tests (form/button/input/nav/page route assertions) for dynamic browser validation when `--url` is provided.
+- **forge-ui-loop**: new `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs forge-ui-check, generates `.forge/ui-loop/fix-brief.md` with actionable UI fix instructions. Supports `--url`, `--max`, `--reset`. YOLO-ready: check → fix → re-check until UI passes.
 
 ### Fixed
 - **Windows hook execution**: all `.sh` files had CRLF line endings, causing Git Bash shebang failure (`#!/usr/bin/sh\r` → "cannot execute binary file"). Added `.gitattributes` enforcing `eol=lf` for `.sh` files and normalized all existing files to LF. `.bat` files kept at CRLF.

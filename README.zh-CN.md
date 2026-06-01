@@ -66,6 +66,8 @@ flowchart LR
 - **forge-phase-loop**：`pnpm forge-phase-loop <N>` — 单次迭代自动完成循环。运行检查，有遗漏则生成 `.forge/phase-loop/fix-brief.md`，每条含精确修复指令。支持 `--max`（默认 5）和 `--reset`。配合 YOLO 模式实现 检查→修复→再检查 自动循环直到完成。
 - **ref-lint**：`skill-eval run` 自动检查 SKILL.md 中声明数量与实际列表不一致（如说"四个维度"但只列了 3 项）。支持中文/阿拉伯数字/英文数字量词。
 - **Windows 钩子修复**：CRLF 导致 Git Bash "cannot execute binary file"。`.gitattributes` 强制 `*.sh eol=lf`；hooks 分平台配置，Windows 使用 `.bat`。
+- **forge-ui-check**：`pnpm forge-ui-check <N>` — 扫描 DEV-PLAN.md UI 相关清单项，检查文件存在，自动生成 Playwright 测试（表单/按钮/输入框/导航/页面路由断言），`--url` 参数启动浏览器端验证。
+- **forge-ui-loop**：`pnpm forge-ui-loop <N>` — UI 自动修复循环。运行检查，生成 `.forge/ui-loop/fix-brief.md`，支持 `--url`/`--max`/`--reset`。YOLO 模式：检查→修复→再检查直到 UI 全部通过。
 
 ### v1.35.8 — 2026-05-26
 - **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`

@@ -67,6 +67,8 @@ flowchart LR
 - **forge-phase-loop**: `pnpm forge-phase-loop <N>` — single-iteration auto-completion. Runs check, generates `.forge/phase-loop/fix-brief.md` with structured fix instructions for each omitted item. Supports `--max` (default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check→fix→re-check until clean.
 - **ref-lint**: `skill-eval run` now checks SKILL.md for mismatched numeric references (e.g. "four dimensions" but only 3 items listed). CN/Arabic/EN numeral support with 20+ quantifiers. ([OpenSpec article](https://mp.weixin.qq.com/s/iSWtR665phTo5dv8sHFgqA) inspired)
 - **Windows hook fix**: CRLF `.sh` files caused "cannot execute binary file" on Git Bash. `.gitattributes` enforces `*.sh eol=lf`. Platform-split settings: hooks in `settings.unix.json` (`.sh`) / `settings.windows.json` (`.bat`), `settings.json` empty.
+- **forge-ui-check**: `pnpm forge-ui-check <N>` — scans DEV-PLAN.md for UI checklist items, checks file existence, auto-generates Playwright tests (form/button/input/nav/page assertions) with `--url` for dynamic browser validation.
+- **forge-ui-loop**: `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs check, generates `.forge/ui-loop/fix-brief.md`, supports `--url`/`--max`/`--reset`. YOLO: check → fix → re-check until UI passes.
 
 ### v1.35.10 — 2026-05-30
 - **Output Status Protocol**: New `_shared/output-status-protocol.md` — every Phase/output ends with `[Decision]` / `[Assumption]` / `[Next]` / `[Status]` (DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT). Wired into product-spec-builder, dev-planner, bug-fixer, change-manager, dev-builder Output Style sections. ([Digidai/product-manager-skills](https://github.com/Digidai/product-manager-skills) output contract inspired)
