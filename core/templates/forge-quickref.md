@@ -212,28 +212,33 @@ node scripts/forge-trace.mjs summary [<N>]                          # 查看摘�
 ## 统一循环（forge-loop）
 
 ```bash
-pnpm forge-loop <N>                           # 全量检查：交付清单 + UI 文件
+pnpm forge-loop <N>                           # 全量循环：执行→检测→修改→测试
+pnpm forge-loop <N> --run                     # 自动执行 dev-builder（Phase 未启动时）
+pnpm forge-loop <N> --serve "pnpm dev"        # 启动 dev server
 pnpm forge-loop <N> --url http://localhost:5173  # 含 Playwright 动态测试
 pnpm forge-loop <N> --max 10                  # 最多 10 次迭代（默认 5）
 pnpm forge-loop <N> --skip-plan               # 跳过交付清单检查
 pnpm forge-loop <N> --skip-ui                 # 跳过 UI 检查
+pnpm forge-loop <N> --skip-test               # 跳过 pnpm test
 pnpm forge-loop <N> --reset                   # 重置循环状态
 ```
 
-单次迭代自动执行三项验证：
-1. **交付清单** — DEV-PLAN.md ⇔ git diff（forge-phase-check）
-2. **UI 文件** — 静态文件存在性检查
-3. **Playwright** — 自动生成断言并执行（需 --url）
+每次迭代：
+1. **执行** → 启动 dev server（--serve）
+2. **检测** → 交付清单⇔git diff + UI 文件 + Playwright + pnpm test
+3. **修改** → 自动创建缺失目录/文件骨架；余下 → fix-brief.md
+4. **测试** → pnpm test + Playwright
+5. **循环** → 全部通过？完成 / 超限？停止
 
-有失败项 → 生成 `.forge/loop/fix-brief.md` → AI 执行修复 → 再检查 → clean。
-
-**YOLO 下班指令**：
+**YOLO 下班一条命令**：
 ```bash
 claude --yolo --loop "
-pnpm forge-loop 3 --url http://localhost:5173 --max 5
-读取 .forge/loop/fix-brief.md 执行所有修复指令
+pnpm forge-loop 3 --run --serve 'pnpm dev' --url http://localhost:5173 --max 5
+如果输出说'尚未启动'，先执行 dev-builder for Phase 3 并提交
+如果 .forge/loop/fix-brief.md 存在，执行所有修复指令
 重复直到 state.json 显示 complete 或 max-reached
 "
+```
 ```
 
 ---

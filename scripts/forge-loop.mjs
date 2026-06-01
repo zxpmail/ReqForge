@@ -302,6 +302,25 @@ function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iterat
   return brief.join("\n");
 }
 
+// === Check if phase has been started ===
+function hasPhaseStarted() {
+  try {
+    // If we have state, phase has been worked on
+    if (existsSync(join(STATE_DIR, "state.json"))) return true;
+    // Check git diff — any file changes indicate work in progress
+    let mergeBase;
+    try { mergeBase = execSync(`git merge-base HEAD main`, { cwd: ROOT, encoding: "utf-8", timeout: 15000 }).trim(); }
+    catch { mergeBase = "main"; }
+    const out = execSync(
+      `git diff --name-only "${mergeBase}"...HEAD`,
+      { cwd: ROOT, encoding: "utf-8", timeout: 30000, stdio: "pipe" },
+    ).trim();
+    return out.length > 0;
+  } catch {
+    return false;
+  }
+}
+
 // === Main ===
 const state = readState();
 
@@ -313,6 +332,49 @@ if (state.status === "max-reached") {
 }
 if (state.status === "complete") {
   console.log(`✅ Phase ${phaseNum} 之前已完成。`);
+  process.exit(0);
+}
+
+// Building → was dispatched to dev-builder, now check if started
+if (state.status === "building" && hasPhaseStarted()) {
+  state.status = "ready"; // was building, now has changes → enter verification
+  writeState(state);
+}
+
+// Phase not started → tell Claude to run dev-builder first
+if (!hasPhaseStarted()) {
+  console.log(`⏳ Phase ${phaseNum} 尚未启动。`);
+  console.log(``);
+  if (args.includes("--run")) {
+    // Auto-dispatch dev-builder
+    state.status = "building";
+    writeState(state);
+    console.log(`准备执行 dev-builder for Phase ${phaseNum}。`);
+    console.log(``);
+    console.log(`请实现以下清单中的全部内容：`);
+    // Print the Phase checklist for context
+    const planPath = join(ROOT, "DEV-PLAN.md");
+    if (existsSync(planPath)) {
+      const plan = readFileSync(planPath, "utf-8");
+      const lines = plan.split("\n");
+      let inPhase = false;
+      for (const line of lines) {
+        const m = line.match(/^## Phase (\d+):/);
+        if (m) { inPhase = parseInt(m[1], 10) === phaseNum; if (inPhase) console.log(`\n${line}`); continue; }
+        if (inPhase && line.match(/^## /)) break;
+        if (inPhase) console.log(line);
+      }
+    }
+    console.log(``);
+    console.log(`实现完成后运行：`);
+    console.log(`  pnpm forge-loop ${phaseNum}`);
+  } else {
+    console.log(`该 Phase 还未开始实现。使用 --run 自动执行 dev-builder。`);
+    console.log(``);
+    console.log(`或者手动执行：`);
+    console.log(`  运行 dev-builder for Phase ${phaseNum}`);
+    console.log(`  完成后: pnpm forge-loop ${phaseNum}`);
+  }
   process.exit(0);
 }
 
