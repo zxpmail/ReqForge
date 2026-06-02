@@ -912,6 +912,7 @@ pnpm dep-graph stats  # 查看图统计
 | CLAUDE.md Stop Hook 元审查 | diff 对照分层规则；只写 review 不改源 | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) — 可选；互补 stop-gate / evolution-engine |
 | [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | 100+ 可运行 Agent/RAG/MCP 模板 | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) — 菜谱 + Forge 交付门叠加 |
 | Claude Code 七个工作流 | CLAUDE.md→Plan→Subagent→Worktree→Hooks→MCP | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) — 固定问法 ↔ Forge Skill/Hook |
+| Hermes SOUL.md 操作员人格 | 反驳/追责/使命地图；非「有用助手」 | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) — 个人 Agent；Forge 用 Spec/taste/门控 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -936,6 +937,7 @@ pnpm dep-graph stats  # 查看图统计
 | CLAUDE.md Stop Hook | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · 规则漂移审查（可选） |
 | awesome-llm-apps | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · 模板探索 vs Spec→Ship |
 | Claude Code 7 工作流 | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) · 习惯按钮 ↔ 交付 Harness |
+| Hermes SOUL.md | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) · 操作员人格 vs 工程 Harness |
 
 ---
 

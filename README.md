@@ -960,6 +960,7 @@ External harnesses reviewed for positioning (not dependencies):
 | CLAUDE.md Stop Hook meta-review | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · optional drift check; complements stop-gate |
 | [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · runnable templates + Forge delivery gates |
 | Claude Code seven workflows | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) · fixed prompts mapped to Forge skills/hooks |
+| Hermes SOUL.md operator persona | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) · pushback/accountability vs Spec gates |
 
 ---
 
