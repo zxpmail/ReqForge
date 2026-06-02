@@ -961,6 +961,7 @@ External harnesses reviewed for positioning (not dependencies):
 | [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · runnable templates + Forge delivery gates |
 | Claude Code seven workflows | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) · fixed prompts mapped to Forge skills/hooks |
 | Hermes SOUL.md operator persona | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) · pushback/accountability vs Spec gates |
+| Systems around AI (Mayank Agarwal) | [systems-around-ai-comparison.md](core/docs/systems-around-ai-comparison.md) · harness > model; memory/eval/orchestration ↔ Forge gates |
 
 ---
 
