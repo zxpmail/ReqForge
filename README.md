@@ -955,6 +955,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) · Light Grill / zoom-out / architecture health |
 | talk-normal (optional overlay) | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 anti-slop on `AGENTS.md`; Forge keeps delivery gates |
 | OpenAI Images 2.0 (thinking era) | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) · plan→render→verify parallels Harness; no image API in core |
+| Agent Harness Engineering survey | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG taxonomy ↔ Forge L/V strengths |
 
 ---
 

@@ -1,6 +1,7 @@
 # Agent Harness 七层对照（ReqForge 映射）
 
 > 教学参考：[AGENT魔方 · 从零开始理解 Agent 番外篇：Harness 是什么？](https://bbs.huaweicloud.com/blogs/476342)（`Agent = Model + Harness`）  
+> 学术七层 **ETCLOVG**：[Agent Harness Engineering 综述对照](./agent-harness-engineering-survey-comparison.md)（[微信解读](https://mp.weixin.qq.com/s/gFeutn69NzIb2muQqVIWkQ)）  
 > 生产自检：[harness-maturity-checklist.md](./harness-maturity-checklist.md) · 库文档伙伴：[context7-comparison.md](./context7-comparison.md) · Shell 输出压缩：[rtk-comparison.md](./rtk-comparison.md) · Harness 纪律参照：[nanochat-comparison.md](./nanochat-comparison.md) · Council 评审：[llm-council-comparison.md](./llm-council-comparison.md) · Skill 进化论文：[skill-evolution-comparison.md](./skill-evolution-comparison.md)
 
 ---
