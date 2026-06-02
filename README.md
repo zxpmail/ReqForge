@@ -962,6 +962,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Claude Code seven workflows | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) · fixed prompts mapped to Forge skills/hooks |
 | Hermes SOUL.md operator persona | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) · pushback/accountability vs Spec gates |
 | Systems around AI (Mayank Agarwal) | [systems-around-ai-comparison.md](core/docs/systems-around-ai-comparison.md) · harness > model; memory/eval/orchestration ↔ Forge gates |
+| withastro Flue / Rosie | [withastro-flue-comparison.md](core/docs/withastro-flue-comparison.md) · deployable agent runtime vs Forge installable delivery harness |
 
 ---
 

@@ -914,6 +914,7 @@ pnpm dep-graph stats  # 查看图统计
 | Claude Code 七个工作流 | CLAUDE.md→Plan→Subagent→Worktree→Hooks→MCP | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) — 固定问法 ↔ Forge Skill/Hook |
 | Hermes SOUL.md 操作员人格 | 反驳/追责/使命地图；非「有用助手」 | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) — 个人 Agent；Forge 用 Spec/taste/门控 |
 | 围绕 AI 建系统的人正领先 | 模型外基础设施、记忆复利、编排智能；Claude Code 为信号 | [systems-around-ai-comparison.md](core/docs/systems-around-ai-comparison.md) — Harness 交付门 + Bitter Lesson 取舍 |
+| [withastro](https://github.com/withastro/) Flue / Rosie | Agent Harness 框架（可部署）+ Skill 包管理 | [withastro-flue-comparison.md](core/docs/withastro-flue-comparison.md) — Flue 运行时 vs Forge 交付安装包 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
