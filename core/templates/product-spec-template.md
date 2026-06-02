@@ -57,6 +57,22 @@ This template is used to generate a structurally complete Product Spec document.
 ## Functional Requirements
 <Organize by "Core Features" and "Supplementary Features". For each feature, describe: user does what -> system does what -> what is achieved>
 
+## Safety & Consequence Tiers (S0 / S1 / S2)
+
+> Split **what must never be model-improvised** from normal features. Rules: `.forge/security-guidance.md`.
+
+| Tier | Meaning | Spec must specify | Acceptance |
+|------|---------|-------------------|------------|
+| **S0 — Facts** | Emergency numbers, medical/legal claims, regulated rates — harm if wrong | `constants/` or config; no LLM-only output | Unit test on exact values |
+| **S1 — Actions** | Payments, dispatch, bulk notify, irreversible delete, publish | Confirm step in User Flow | No side effect without confirm |
+| **S2 — Generative** | Normal features | Agent + review | Tests + review |
+
+| Requirement | Tier | Source / confirm | Test or check |
+|-------------|------|------------------|---------------|
+| … | S0 / S1 / S2 | … | … |
+
+If none: **"No S0/S1 in v1"**.
+
 ## UI Layout
 <Describe the overall layout structure and detailed design of each area. Include:>
 - Overall layout (number of columns, proportions, fixed elements, etc.)
