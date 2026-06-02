@@ -12,6 +12,7 @@
 | You want to… | Use loadout | Start with |
 |--------------|-------------|------------|
 | Build a **new web app** end-to-end (spec → design → code → release) | **`web-app`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
+| Adopt **Claude Code 7 workflows** (memory → plan → hooks) | **`full`** or **`web-app`** | See [claude-code-seven-workflows-comparison.md](./claude-code-seven-workflows-comparison.md) — Forge superset with Spec gates |
 | Add a **scoped feature** to an existing product (brownfield) | **`full`** or **`web-app`** | `/change-manager` propose → apply → verify |
 | Build a **CLI or library** (no UI design skills) | **`cli-tool`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
 | **Greenfield / brownfield dev, token-conscious** (no design/release) | **`lite`** | spec → plan → build → review; brownfield via change-manager |
