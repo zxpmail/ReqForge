@@ -1,22 +1,22 @@
 {
   "hooks": {
     "PreToolUse": {
-      "run": ".cursor\\rules\\hooks\\hallucination-gate.bat"
+      "run": "cmd /c .cursor\rules\hooks\hallucination-gate.bat"
     },
     "PreCommit": {
-      "run": ".cursor\\rules\\hooks\\pre-commit-check.bat"
+      "run": "cmd /c .cursor\rules\hooks\pre-commit-check.bat"
     },
     "BeforeCommand": {
-      "run": ".cursor\\rules\\hooks\\phase-exit-guard.bat && .cursor\\rules\\hooks\\stop-gate.bat && .cursor\\rules\\hooks\\retry-gate.bat && .cursor\\rules\\hooks\\detect-feedback-signal.bat"
+      "run": "cmd /c .cursor\rules\hooks\phase-exit-guard.bat && cmd /c .cursor\rules\hooks\stop-gate.bat && cmd /c .cursor\rules\hooks\retry-gate.bat && cmd /c .cursor\rules\hooks\detect-feedback-signal.bat"
     },
     "AfterCommand": {
-      "run": ".cursor\\rules\\hooks\\mark-review-needed.bat && .cursor\\rules\\hooks\\memory-check.bat"
+      "run": "cmd /c .cursor\rules\hooks\mark-review-needed.bat && cmd /c .cursor\rules\hooks\memory-check.bat"
     },
     "PostToolUse": {
-      "run": ".cursor\\rules\\hooks\\memory-guard.bat"
+      "run": "cmd /c .cursor\rules\hooks\memory-guard.bat"
     },
     "OnInit": {
-      "run": ".cursor\\rules\\hooks\\check-evolution.bat"
+      "run": "cmd /c .cursor\rules\hooks\check-evolution.bat"
     }
   }
 }

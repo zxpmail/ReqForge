@@ -1,22 +1,22 @@
 {
   "hooks": {
     "PreToolUse": {
-      "run": ".opencode\\hooks\\hallucination-gate.bat"
+      "run": "cmd /c .opencode\hooks\hallucination-gate.bat"
     },
     "PreCommit": {
-      "run": ".opencode\\hooks\\pre-commit-check.bat"
+      "run": "cmd /c .opencode\hooks\pre-commit-check.bat"
     },
     "BeforeCommand": {
-      "run": ".opencode\\hooks\\phase-exit-guard.bat && .opencode\\hooks\\stop-gate.bat && .opencode\\hooks\\retry-gate.bat && .opencode\\hooks\\detect-feedback-signal.bat"
+      "run": "cmd /c .opencode\hooks\phase-exit-guard.bat && cmd /c .opencode\hooks\stop-gate.bat && cmd /c .opencode\hooks\retry-gate.bat && cmd /c .opencode\hooks\detect-feedback-signal.bat"
     },
     "AfterCommand": {
-      "run": ".opencode\\hooks\\mark-review-needed.bat && .opencode\\hooks\\memory-check.bat"
+      "run": "cmd /c .opencode\hooks\mark-review-needed.bat && cmd /c .opencode\hooks\memory-check.bat"
     },
     "PostToolUse": {
-      "run": ".opencode\\hooks\\memory-guard.bat"
+      "run": "cmd /c .opencode\hooks\memory-guard.bat"
     },
     "OnInit": {
-      "run": ".opencode\\hooks\\check-evolution.bat"
+      "run": "cmd /c .opencode\hooks\check-evolution.bat"
     }
   }
 }

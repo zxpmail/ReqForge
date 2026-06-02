@@ -169,6 +169,13 @@ function subtreeIncluded(
   return false;
 }
 
+/** Hook destination relative to target root, per adapter client */
+const HOOK_DEST: Record<InstallClient, string> = {
+  "claude-code": ".claude/hooks",
+  cursor: ".cursor/rules/hooks",
+  opencode: ".opencode/hooks",
+};
+
 const QUICKREF_SRC = "core/templates/forge-quickref.md";
 const DEVMAP_SRC = "core/templates/dev-map-template.md";
 const SECURITY_GUIDANCE_SRC = "core/templates/security-guidance-template.md";
@@ -366,6 +373,44 @@ export function applyWindowsSettings(settingsDir: string, log: (msg: string) => 
   return true;
 }
 
+/** Copy hook scripts from core/hooks/ to the target project's hook directory */
+export function installHooks(
+  client: InstallClient,
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const hookRelDir = HOOK_DEST[client];
+  if (!hookRelDir) {
+    log(`  ⚠️  No hook destination defined for ${client}`);
+    return;
+  }
+  const srcDir = path.join(forgeRoot, "core/hooks");
+  const destDir = path.join(path.resolve(targetRoot), hookRelDir.replace(/\//g, path.sep));
+
+  if (!fs.existsSync(srcDir)) {
+    log(`  ⚠️  Hook source not found: ${srcDir}`);
+    return;
+  }
+
+  fs.mkdirSync(destDir, { recursive: true });
+
+  let copied = 0;
+  for (const name of fs.readdirSync(srcDir)) {
+    if (name === "AGENTS.md") continue;
+    if (name.endsWith(".md")) continue;
+    const srcFile = path.join(srcDir, name);
+    if (!fs.statSync(srcFile).isFile()) continue;
+    const destFile = path.join(destDir, name);
+    if (fs.existsSync(destFile) && !force) continue;
+    fs.copyFileSync(srcFile, destFile);
+    copied++;
+  }
+
+  log(`  ✅ ${copied} hook scripts → ${destDir}`);
+}
+
 export function installForge(
   client: InstallClient,
   targetRoot: string,
@@ -395,6 +440,9 @@ export function installForge(
   if (loadout) {
     log(`   (skills filtered to loadout "${loadout.name}"; _shared always included)`);
   }
+
+  // Copy hook scripts from core/hooks/ to the target project's hooks directory
+  installHooks(client, targetRoot, forgeRoot, log, options.force);
 
   if (loadout) {
     applyLoadoutHooksInDest(client, dest, loadout, log);

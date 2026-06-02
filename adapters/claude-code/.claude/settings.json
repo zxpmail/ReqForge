@@ -1,22 +1,45 @@
 {
   "hooks": {
-    "PreToolUse": {
-      "run": "sh .claude/hooks/hallucination-gate.sh"
-    },
-    "PreCommit": {
-      "run": "sh .claude/hooks/pre-commit-check.sh"
-    },
-    "BeforeCommand": {
-      "run": "sh .claude/hooks/phase-exit-guard.sh && sh .claude/hooks/stop-gate.sh && sh .claude/hooks/retry-gate.sh && sh .claude/hooks/detect-feedback-signal.sh"
-    },
-    "AfterCommand": {
-      "run": "sh .claude/hooks/mark-review-needed.sh && sh .claude/hooks/memory-check.sh"
-    },
-    "PostToolUse": {
-      "run": "sh .claude/hooks/memory-guard.sh"
-    },
-    "OnInit": {
-      "run": "sh .claude/hooks/check-evolution.sh"
-    }
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/hallucination-gate.sh" }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/phase-exit-guard.sh" },
+          { "type": "command", "command": "bash .claude/hooks/stop-gate.sh" },
+          { "type": "command", "command": "bash .claude/hooks/retry-gate.sh" },
+          { "type": "command", "command": "bash .claude/hooks/detect-feedback-signal.sh" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/memory-guard.sh" },
+          { "type": "command", "command": "bash .claude/hooks/check-sync.sh" }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/mark-review-needed.sh" },
+          { "type": "command", "command": "bash .claude/hooks/memory-check.sh" }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          { "type": "command", "command": "bash .claude/hooks/check-evolution.sh" }
+        ]
+      }
+    ]
   }
 }
