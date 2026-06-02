@@ -908,6 +908,7 @@ pnpm dep-graph stats  # 查看图统计
 | [talk-normal](https://github.com/hexiecs/talk-normal) | 通用 system prompt 去 AI 腔 | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) — **可选叠加** `AGENTS.md`；Forge 管交付不替代 |
 | OpenAI Images 2.0（思考时代） | 视觉：规划→渲染→自验；Instant/Thinking 双模 | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) — 与 Harness 同构启示；**不**内嵌图像 API |
 | Agent Harness Engineering 综述 | ETCLOVG 七层、Framework→Platform | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) — 学术 taxonomy ↔ Forge L/V 强项 |
+| 微信 iLink + ACP 桥接 | 个人号接 Claude/Codex；OpenClaw / wechat-acp | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) — 通道层；Forge 管验收不替代收件箱 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -928,6 +929,7 @@ pnpm dep-graph stats  # 查看图统计
 | talk-normal（可选叠加） | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 去 AI 腔；Forge 管交付门控 |
 | OpenAI Images 2.0 | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) · 视觉「思考时代」↔ Spec/Plan/Verify |
 | Harness Engineering 综述 | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG + 七问检查表 |
+| 微信 iLink / ACP | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) · 移动入口 vs IDE 交付 |
 
 ---
 

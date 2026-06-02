@@ -46,6 +46,15 @@ pnpm preflight --strict
 }
 ```
 
+## Personal WeChat Bot (iLink / ACP) vs Official Account
+
+| Channel | Typical tool | Forge doc |
+|---------|--------------|-----------|
+| **Service account draft** (`draft/add`, mmbiz CDN) | `pnpm preflight` + checks below | This file |
+| **Personal DM → coding Agent** (iLink, `wechat-acp`) | External bridge; not `forge-install` | [wechat-ilink-acp-comparison.md](./wechat-ilink-acp-comparison.md) |
+
+Do not mix preflight rules for公众号 API with personal Bot bridges.
+
 ## WeChat draft flow (example)
 
 1. AI writes `draft/*.md` / HTML (Skill).
