@@ -1,6 +1,7 @@
 # ReqForge 与 Awesome LLM Apps 对照
 
 > 参考：[Shubhamsaboo/awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) — 100+ 可运行的 Agent / RAG / MCP / Voice 模板库，Apache-2.0，强调「3 条命令跑起来」。  
+> 中文导读（同主题）：[这个开源项目，正在被全球程序员疯狂 Star…](https://mp.weixin.qq.com/s/tlPwOqi16vQzVoKLykTv4g)（公众号「给点知识」/ AI研究院，推介同一仓库）  
 > 与 [founders-playbook-comparison.md](./founders-playbook-comparison.md)（验证先于构建）、[skill-evolution-comparison.md](./skill-evolution-comparison.md)（Skill 进化）、[loadout-scenarios.md](./loadout-scenarios.md)（选型）互补。
 
 ---
@@ -27,6 +28,17 @@
 | 许可 | Apache-2.0，可商用 fork |
 
 **不是**：统一 CLI、统一 Spec 格式、跨项目的 phase-check / forge-loop。
+
+### 微信长文补充的表述（与仓库一致）
+
+| 角度 | 文章强调 | Forge 用法 |
+|------|----------|------------|
+| **痛点** | 每次 AI 项目重搭 RAG/Agent/记忆「轮子」 | 模板降 **脚手架** 成本；Forge 降 **交付与回归** 成本 |
+| **RAG 真复杂度** | 上传→清洗→切块→嵌入→库→检索→拼 Prompt→生成→流式等 **11 步** 每步有坑 | 在 `Product-Spec.md` § Integrations / 验收写清 pipeline 与失败指标，勿只写「做个 RAG」 |
+| **MCP** | AI 的「USB-C」，接浏览器/GitHub/Notion 等 | loadout 可选 MCP；接线学模板，**门禁**仍用测试 + review |
+| **Vendor-agnostic** | 改配置切换 Claude/GPT/Qwen/DeepSeek | 与 Forge 多 adapter 一致；密钥不进 core |
+| **Self-Improving Skills** | Agent 自调 Prompt | 对照 [skill-evolution-comparison](./skill-evolution-comparison.md)；Forge 要人审 + `skill-eval` |
+| **趋势叙事** | AI 应用「开源砖厂」→ 创新在「做什么」 | 对应 [founders-playbook](./founders-playbook-comparison.md) 验证先于构建 + Spec 锁定范围 |
 
 ---
 
@@ -126,3 +138,4 @@ flowchart LR
 - 仓库：[github.com/Shubhamsaboo/awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps)
 - Quick Start 示例：`starter_ai_agents/ai_travel_agent`
 - 教程：[theunwindai.com](https://www.theunwindai.com)
+- 微信导读：[mp.weixin.qq.com/s/tlPwOqi16vQzVoKLykTv4g](https://mp.weixin.qq.com/s/tlPwOqi16vQzVoKLykTv4g)
