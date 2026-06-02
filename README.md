@@ -953,6 +953,7 @@ External harnesses reviewed for positioning (not dependencies):
 | SkillOpt ↔ Forge (eval + evolution discipline) | [skillopt-comparison.md](core/docs/skillopt-comparison.md) |
 | Harness as mirror (Tencent) | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · `.forge/project-taste.md` |
 | Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) · Light Grill / zoom-out / architecture health |
+| talk-normal (optional overlay) | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 anti-slop on `AGENTS.md`; Forge keeps delivery gates |
 
 ---
 

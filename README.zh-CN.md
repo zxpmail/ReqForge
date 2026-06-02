@@ -905,6 +905,7 @@ pnpm dep-graph stats  # 查看图统计
 | [SkillOpt](https://microsoft.github.io/SkillOpt/) | 有预算 Skill 编辑 + 验证门 | [skillopt-comparison.md](core/docs/skillopt-comparison.md) — rejected-edits、进化纪律 |
 | 腾讯「Harness 镜子」 | 显形 / 三块石碑 / 不可能三角 | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — `.forge/project-taste.md` |
 | [Matt Pocock Skills](https://github.com/mattpocock/skills) | 可拼装日常工程 vs 全流程 | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill 等 |
+| [talk-normal](https://github.com/hexiecs/talk-normal) | 通用 system prompt 去 AI 腔 | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) — **可选叠加** `AGENTS.md`；Forge 管交付不替代 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -922,6 +923,7 @@ pnpm dep-graph stats  # 查看图统计
 | SkillOpt ↔ Forge | [skillopt-comparison.md](core/docs/skillopt-comparison.md) |
 | Harness 镜子（腾讯） | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · `.forge/project-taste.md` |
 | Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) |
+| talk-normal（可选叠加） | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 去 AI 腔；Forge 管交付门控 |
 
 ---
 

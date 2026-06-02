@@ -12,6 +12,7 @@
 - 「应该没问题」/「大概过了」/「之前测过」——无当场命令输出 = 未完成
 - 无验证就宣称 DONE
 - 不确定时装懂；应用 WebSearch 或明确说不知道
+- Closing 菜单（「如果你愿意，我还可以…」）——需要分支时写进 Workflow，不要留给用户可见回复（通用对话可叠加 [talk-normal](https://github.com/hexiecs/talk-normal)）
 
 **必须**
 - 完成声明附 **验证命令 + 输出**（同条消息内 freshly run）

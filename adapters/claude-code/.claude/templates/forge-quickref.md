@@ -139,6 +139,18 @@
 
 ---
 
+## 可选叠加（非 Forge 核心）
+
+| 工具 | 用途 | 与 Forge 关系 |
+|------|------|----------------|
+| [talk-normal](https://github.com/hexiecs/talk-normal) | 去掉**通用对话** AI 腔（废话、Closing 菜单） | **叠加**于 `AGENTS.md`；不替代 Spec/审查/测试。见 [talk-normal-comparison.md](../docs/talk-normal-comparison.md) |
+| [Context7](https://github.com/upstash/context7) | 库文档注入 MCP | 与 dev-builder 叠加 |
+| [RTK](https://github.com/rtk-ai/rtk) | Bash 输出压缩 | 可选，见 [rtk-comparison.md](../docs/rtk-comparison.md) |
+
+安装 talk-normal：`git clone …/talk-normal && bash install.sh`（`# --- talk-normal BEGIN/END ---` 标记块，新会话生效）。
+
+---
+
 ## Skill 命令速查
 
 | 阶段 | 命令 |

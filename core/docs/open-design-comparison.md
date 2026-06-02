@@ -22,7 +22,7 @@
 |---------|----------------|
 | Turn-1 discovery 表单 | `design-brief-builder/references/design-discovery-questionnaire.md` |
 | 5 视觉方向学派 + 确定性描述 | `references/visual-direction-presets.md` |
-| Anti–AI-slop / 反模板化 | `references/anti-ai-slop-checklist.md` |
+| Anti–AI-slop / 反模板化 | `references/anti-ai-slop-checklist.md`；通用对话可选 [talk-normal-comparison.md](./talk-normal-comparison.md) |
 | 五维设计自检 | `design-maker/references/design-self-critique.md` |
 | Design System 作 Markdown 引用 | Brief 可选 `reference_design_system`；链到社区 awesome-design-md，不 vendoring 129 套 |
 
