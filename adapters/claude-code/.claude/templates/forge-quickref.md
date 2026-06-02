@@ -326,6 +326,24 @@ YOLO 模式下的自动循环工具。每次迭代运行 forge-phase-check，有
 
 ---
 
+## Hash-anchored editing（forge-hashline）
+
+```bash
+pnpm forge-hashline hash <file>                                 # 打印文件 SHA256
+pnpm forge-hashline hash <file> --lines N:M                     # 打印行范围哈希
+pnpm forge-hashline verify <file> <hash>                        # 验证哈希匹配
+pnpm forge-hashline edit <file> <hash> --new-string "..."       # 验证后替换内容
+pnpm forge-hashline edit <file> <hash> --from <content-file>    # 从文件读取替换内容
+```
+
+**做什么**：用内容哈希锚点替代字符串匹配编辑。先验证文件未经篡改（哈希匹配），再执行写入。不匹配则拒绝（STALE_ANCHOR），防止脏写入。
+
+**与 fix-brief 集成**：`forge-loop` 和 `forge-phase-loop` 生成的 `fix-brief.md` 自动附带 `**Hashline**:` 条目。
+
+源自 oh-my-pi hashline 设计。
+
+---
+
 ## 作用域过滤（巽 — Filter）
 
 ```bash

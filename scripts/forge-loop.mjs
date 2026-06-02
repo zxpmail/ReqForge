@@ -26,6 +26,7 @@ import { execSync, spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
+import { computeFileHash } from "./forge-hashline.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -396,6 +397,19 @@ function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iterat
       brief.push(`**操作**: ${sa}`);
       const files = (o.item.text.match(/`[^`]+`/g) || []).map(f => f.replace(/`/g, ""));
       if (files.length > 0) brief.push(`**目标文件**: ${files.join("、")}`);
+      // Hashline anchors for reliable edits
+      if (files.length > 0) {
+        const lineHashes = files.map(f => {
+          const abs = join(ROOT, f);
+          if (existsSync(abs)) {
+            try { return `  \`${f}\` → \`${computeFileHash(abs)}\``; }
+            catch { return `  \`${f}\` → (计算失败)`; }
+          }
+          return `  \`${f}\` → (新文件)  # 创建后将生成哈希`;
+        });
+        brief.push("**Hashline**:");
+        brief.push(...lineHashes);
+      }
       if (o.item.section === "keyfiles") brief.push("**要求**: 创建列出的文件，实现其完整功能。");
       else if (o.item.section === "deliverables") brief.push("**要求**: 实现所述功能，包含边界情况处理。");
       else if (o.item.section === "acceptance") brief.push("**要求**: 确保满足验收条件。");

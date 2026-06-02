@@ -27,6 +27,7 @@
     "forge-ops": "node scripts/forge-ops.mjs",
     "forge-ui-check": "node scripts/forge-ui-check.mjs",
     "forge-ui-loop": "node scripts/forge-ui-loop.mjs",
+    "forge-hashline": "node scripts/forge-hashline.mjs",
     "test-demo-golden-path": "node test-demo/run-golden-path.mjs",
     "validate-skill": "node scripts/validate-skill.mjs",
     "validate-skill:bash": "bash scripts/validate-skill.sh",

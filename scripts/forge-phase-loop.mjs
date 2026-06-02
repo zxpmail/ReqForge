@@ -24,6 +24,7 @@ import { execSync } from "child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
+import { computeFileHash } from "./forge-hashline.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -159,6 +160,17 @@ function generateFixBrief(report, iteration) {
     if (fileMatches) {
       const files = fileMatches.map(f => f.replace(/`/g, ""));
       lines.push(`**目标文件**: ${files.join("、")}`);
+      // Hashline anchors for reliable edits
+      const lineHashes = files.map(f => {
+        const abs = join(ROOT, f);
+        if (existsSync(abs)) {
+          try { return `  \`${f}\` → \`${computeFileHash(abs)}\``; }
+          catch { return `  \`${f}\` → (计算失败)`; }
+        }
+        return `  \`${f}\` → (新文件)  # 创建后将生成哈希`;
+      });
+      lines.push("**Hashline**:");
+      lines.push(...lineHashes);
     }
 
     // Add section-specific guidance
