@@ -906,6 +906,7 @@ pnpm dep-graph stats  # 查看图统计
 | 腾讯「Harness 镜子」 | 显形 / 三块石碑 / 不可能三角 | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — `.forge/project-taste.md` |
 | [Matt Pocock Skills](https://github.com/mattpocock/skills) | 可拼装日常工程 vs 全流程 | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill 等 |
 | [talk-normal](https://github.com/hexiecs/talk-normal) | 通用 system prompt 去 AI 腔 | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) — **可选叠加** `AGENTS.md`；Forge 管交付不替代 |
+| OpenAI Images 2.0（思考时代） | 视觉：规划→渲染→自验；Instant/Thinking 双模 | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) — 与 Harness 同构启示；**不**内嵌图像 API |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -924,6 +925,7 @@ pnpm dep-graph stats  # 查看图统计
 | Harness 镜子（腾讯） | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · `.forge/project-taste.md` |
 | Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) |
 | talk-normal（可选叠加） | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 去 AI 腔；Forge 管交付门控 |
+| OpenAI Images 2.0 | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) · 视觉「思考时代」↔ Spec/Plan/Verify |
 
 ---
 
