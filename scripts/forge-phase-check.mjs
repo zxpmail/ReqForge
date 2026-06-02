@@ -123,6 +123,23 @@ function getGitDiff(base) {
     } catch {
       mergeBase = base;
     }
+    // If we're ON the base branch, merge-base == HEAD → empty diff.
+    // Try upstream tracking branch first (captures all unmerged commits),
+    // fall back to HEAD~1 (last commit only).
+    const head = execSync(`git rev-parse HEAD`, { cwd: ROOT, encoding: "utf-8", timeout: 10000 }).trim();
+    if (mergeBase === head) {
+      try {
+        mergeBase = execSync(
+          `git rev-parse @{upstream}`,
+          { cwd: ROOT, encoding: "utf-8", timeout: 10000, stdio: ["pipe", "pipe", "pipe"] },
+        ).trim();
+      } catch {
+        mergeBase = execSync(
+          `git rev-parse HEAD~1`,
+          { cwd: ROOT, encoding: "utf-8", timeout: 10000, stdio: ["pipe", "pipe", "pipe"] },
+        ).trim();
+      }
+    }
     const out = execSync(
       `git diff --name-only "${mergeBase}"...HEAD`,
       { cwd: ROOT, encoding: "utf-8", timeout: 30000, stdio: ["pipe", "pipe", "pipe"] },

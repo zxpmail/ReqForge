@@ -77,6 +77,10 @@ andrej-karpathy-skills (4 principles)
 
 ---
 
+## 相关
+
+- Karpathy AI Ascent 2026「Coding AGI 拐点 / Agentic Engineering」访谈对照 → [karpathy-coding-agi-comparison.md](./karpathy-coding-agi-comparison.md)
+
 ## 参考
 
 - [andrej-karpathy-skills CLAUDE.md](https://github.com/multica-ai/andrej-karpathy-skills/blob/main/CLAUDE.md) — 原始四原则

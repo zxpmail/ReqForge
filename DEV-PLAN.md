@@ -6,7 +6,7 @@
 
 ---
 
-## 当前进度（架构 Phase 1–15 · v1.31.0）
+## 当前进度（架构 Phase 1–16 · v1.35.12）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
@@ -25,7 +25,7 @@
 | 13 change-manager | ✅ 完成 | 存量变更流 + openspec-comparison.md |
 | 14 发布 preflight | ✅ 完成 | `scripts/preflight.ts`、`pnpm preflight`、`.forge/preflight.json`；[external-publish-preflight.md](core/docs/external-publish-preflight.md) |
 | 15 用户 Skill eval | ✅ 完成 | `scripts/skill-eval.ts`、`pnpm skill-eval`、`.forge/skills/*/eval/`；[skill-eval.md](core/docs/skill-eval.md) |
-| 16 运营监控 | ◐ 开发中 | `scripts/forge-ops.mjs`、`pnpm forge-ops` |
+| 16 运营监控 | ✅ 完成 | `scripts/forge-ops/*`、`scripts/forge-ops/alerts.mjs`、`.forge/ops/config.json` |
 
 **架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync` → `pnpm preflight`（可选自检）→ `pnpm skill-eval <name>`（用户自定义 Skill）
 

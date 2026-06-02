@@ -458,7 +458,16 @@ function hasPhaseStarted() {
       `git diff --name-only "${mergeBase}"...HEAD`,
       { cwd: ROOT, encoding: "utf-8", timeout: 30000, stdio: "pipe" },
     ).trim();
-    return out.length > 0;
+    if (out.length > 0) return true;
+    // Check if key files from the phase definition already exist on disk
+    const items = parsePhaseItems();
+    for (const item of items) {
+      const files = (item.match(/`[^`]+`/g) || []).map(f => f.replace(/`/g, ""));
+      for (const f of files) {
+        if (existsSync(join(ROOT, f))) return true;
+      }
+    }
+    return false;
   } catch {
     return false;
   }
@@ -591,7 +600,14 @@ if (autoCreated.length > 0) {
 
 // ---- 4. Re-detect after auto-fix ----
 const planAfterFix = autoCreated.length > 0 ? checkPlan() : planResult;
-const allOk = planAfterFix.ok && testResult.ok && uiResult.ok;
+// Acceptance-only omissions (e.g. "测试通过") are process checks, not files.
+// Forgive them if tests pass — forge-phase-check can't diff test outcomes.
+const planOk = planAfterFix.ok || (
+  planAfterFix.omitted.length > 0 &&
+  planAfterFix.omitted.every(o => o.item?.section === "acceptance") &&
+  testResult.ok
+);
+const allOk = planOk && testResult.ok && uiResult.ok;
 
 if (allOk) {
   state.status = "complete";
