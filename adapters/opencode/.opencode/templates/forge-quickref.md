@@ -184,6 +184,7 @@ pnpm preflight --build-dir dist    # 构建后扫描产物
 ```bash
 pnpm skill-eval init my-skill           # → .forge/skills/my-skill/eval/
 pnpm skill-eval my-skill                # 静态检查 + 对 eval-output/ 断言
+pnpm skill-eval trigger my-skill           # 触发准确率模拟评估（20 条查询）
 pnpm skill-eval judge-prep my-skill     # 初始化 judge 配置（rubric 定义）
 pnpm skill-eval judge my-skill          # 打印 judge briefing（给 AI agent 用）
 pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
@@ -249,6 +250,8 @@ pnpm forge-loop 3 --url http://localhost:5173 # 检查网页对不对
 pnpm forge-loop 3 --max 10                    # 最多搞 10 轮（默认 5）
 pnpm forge-loop 3 --skip-test                # 跳过测试
 pnpm forge-loop 3 --fde                      # FDE 模式：上下文感知 + 证据报告
+pnpm forge-loop 3 --strict                  # 严格模式：测试失败即停，输出 review.md
+pnpm forge-loop 3 --linear                  # 线性模式：单次检测→测试→报告，不迭代
 pnpm forge-loop 3 --reset                    # 重置重来
 ```
 

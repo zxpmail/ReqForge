@@ -91,6 +91,45 @@ Skill 本体通常在适配层目录，例如 `.claude/skills/<name>/SKILL.md`�
 
 `pnpm skill-eval init` 会生成空模板。详见 [skillopt-comparison.md](./skillopt-comparison.md)。
 
+## Trigger — 触发准确率评估
+
+> 基于 description 关键词匹配的触发准确率模拟评估，快速验证 Skill 的触发边界。
+
+`pnpm skill-eval trigger <skill-name>` 自动生成 20 条测试查询（10 正例 + 10 负例），使用关键词匹配模拟预测触发结果，输出准确率报告。
+
+### 工作原理
+
+1. 读取 `SKILL.md` 的 `description` 字段，提取有意义的关键词（去停用词、要求中文或 4+ 英文字母）
+2. 生成 20 条测试查询：正例基于描述关键词构造，负例用近亲场景（形似但不应触发）
+3. 对每条查询做关键词匹配预测（`should_trigger` / `should_not_trigger`）
+4. 对比预测与真实标签，输出准确率报告
+
+### 报告示例
+
+```
+Trigger Rate: ████████████████████░ 95.0% (19/20) ✅ PASS
+
+| Metric | Value |
+|--------|-------|
+| Total cases | 20 |
+| Correct | 19 |
+| Wrong | 1 |
+| Positive (should trigger) | 10 |
+| Negative (should NOT trigger) | 10 |
+| Trigger Rate | 95.0% |
+| Verdict | ✅ PASS (≥80%) |
+
+Misclassified:
+  False Negatives (should trigger, predicted no):
+  - "优化博客列表显示" → keyword match failed. Try adding "显示" keywords
+```
+
+### 已知限制
+
+- 关键词匹配是 AI 触发行为的简化模拟，实际 AI 触发准确率可能高于或低于此模拟值
+- 停用词列表影响召回率：过松产生误报，过紧产生漏报
+- 建议与人工对照测试互补：用 `triggers.json` 在 AI 客户端开/关 Skill 各跑一遍验证
+
 ## Judge — 独立效果评估
 
 > darwin-skill 启发：用独立 sub-agent 按 rubric 评估 Skill 质量，而非仅做静态结构检查。
