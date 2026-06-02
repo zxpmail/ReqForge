@@ -80,6 +80,7 @@ andrej-karpathy-skills (4 principles)
 ## 相关
 
 - Karpathy AI Ascent 2026「Coding AGI 拐点 / Agentic Engineering」访谈对照 → [karpathy-coding-agi-comparison.md](./karpathy-coding-agi-comparison.md)
+- Levie「万亿 Agent」+ Karpathy「像在作弊」/ 最后一公里 → [levie-karpathy-agent-era-comparison.md](./levie-karpathy-agent-era-comparison.md)
 
 ## 参考
 

@@ -90,6 +90,7 @@ Forge 默认路径面向 **Agentic Engineering**，不是「聊天生成即交�
 |------|------|
 | [karpathy-skills-comparison.md](./karpathy-skills-comparison.md) | **怎么做对一次改动**（四原则、Machine Gates） |
 | **本文** | **为什么现在必须 Harness**（拐点、范式、可验证性、Agent 原生、Understanding 边界） |
+| [levie-karpathy-agent-era-comparison.md](./levie-karpathy-agent-era-comparison.md) | **宏观 Agent 时代 + 微观杠杆**；最后一公里 vs happy path |
 
 ---
 
