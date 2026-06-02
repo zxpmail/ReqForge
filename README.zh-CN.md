@@ -910,6 +910,7 @@ pnpm dep-graph stats  # 查看图统计
 | Agent Harness Engineering 综述 | ETCLOVG 七层、Framework→Platform | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) — 学术 taxonomy ↔ Forge L/V 强项 |
 | 微信 iLink + ACP 桥接 | 个人号接 Claude/Codex；OpenClaw / wechat-acp | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) — 通道层；Forge 管验收不替代收件箱 |
 | CLAUDE.md Stop Hook 元审查 | diff 对照分层规则；只写 review 不改源 | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) — 可选；互补 stop-gate / evolution-engine |
+| [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | 100+ 可运行 Agent/RAG/MCP 模板 | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) — 菜谱 + Forge 交付门叠加 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -932,6 +933,7 @@ pnpm dep-graph stats  # 查看图统计
 | Harness Engineering 综述 | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG + 七问检查表 |
 | 微信 iLink / ACP | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) · 移动入口 vs IDE 交付 |
 | CLAUDE.md Stop Hook | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · 规则漂移审查（可选） |
+| awesome-llm-apps | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · 模板探索 vs Spec→Ship |
 
 ---
 

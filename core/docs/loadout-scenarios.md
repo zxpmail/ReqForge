@@ -20,6 +20,7 @@
 | **Evolve Harness rules** from feedback | **`full`** or **`web-app`** | fix issue → feedback recorded → `/evolution-engine` |
 | **Create a new Skill** for Forge | **`full`** | `/skill-builder` |
 | **Trim hook overhead** on a tiny repo | **`minimal`** + `pnpm apply-loadout minimal <client>` | same Skills, fewer hooks |
+| **Fork an LLM app template** ([awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps)) then productize | **`web-app`** or **`full`** | clone template → `forge-install` → `/product-spec-builder` (see [awesome-llm-apps-comparison.md](./awesome-llm-apps-comparison.md)) |
 
 Full scenario tables below.
 
@@ -48,6 +49,7 @@ Full scenario tables below.
 | New **web** product | `web-app` | spec → design-brief → design-maker (optional) → plan → build → review → release | — |
 | New **CLI / API / lib** | `cli-tool` | spec → plan → build → review → release | design-maker |
 | **Hackathon / spike** | `minimal` | spec (Quick) → build → review | plan, change-manager, release (optional) |
+| **Template-first** (RAG/Agent demo from awesome-llm-apps) | `web-app` or `full` | run template → spec captures delta → plan → build → review | treating demo README as Spec |
 | **Standard app (no design skill install)** | `lite` | spec → plan → build → review | design-maker, release-builder, evolution |
 | **Full control** (incl. skill-builder) | `full` | same as web-app + skill-builder available | — |
 

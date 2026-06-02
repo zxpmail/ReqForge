@@ -958,6 +958,7 @@ External harnesses reviewed for positioning (not dependencies):
 | Agent Harness Engineering survey | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG taxonomy ↔ Forge L/V strengths |
 | WeChat iLink + ACP bridge | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) · channel layer only; Forge owns verify/release |
 | CLAUDE.md Stop Hook meta-review | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · optional drift check; complements stop-gate |
+| [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · runnable templates + Forge delivery gates |
 
 ---
 
