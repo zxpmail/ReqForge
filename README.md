@@ -386,7 +386,9 @@ pnpm forge-install claude-code --target ../my-app --loadout minimal --force
 ./scripts/install.sh opencode /path/to/my-app
 ```
 
-On Windows, `settings.windows.json` is applied automatically. Use `--windows` on other platforms if needed.
+Hook scripts (`core/hooks/*.{sh,bat,ps1}`) are auto-copied to the target project's
+hook directory (e.g. `.claude/hooks/`). On Windows, `settings.windows.json` (with `.bat` calls)
+is applied automatically. Use `--windows` on other platforms if needed.
 
 `forge-install` also writes into the project root (if missing):
 
@@ -410,6 +412,14 @@ Create or open your app directory, then copy **only** the adapter folder for you
 | **Claude Code** | `adapters/claude-code/.claude/` | `<your-project>/.claude/` |
 | **Cursor** | `adapters/cursor/.cursor/` | `<your-project>/.cursor/` |
 | **OpenCode** | `adapters/opencode/.opencode/` | `<your-project>/.opencode/` |
+
+Then copy hook scripts separately (required for hooks to work):
+
+| Client | Copy from | Into your project |
+|--------|-----------|------------------|
+| **Claude Code** | `core/hooks/` | `<your-project>/.claude/hooks/` |
+| **Cursor** | `core/hooks/` | `<your-project>/.cursor/rules/hooks/` |
+| **OpenCode** | `core/hooks/` | `<your-project>/.opencode/hooks/` |
 
 **Examples** (replace paths with your actual locations):
 
