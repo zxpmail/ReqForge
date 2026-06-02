@@ -4,6 +4,7 @@ import * as path from "path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   initSkillEval,
+  refLintSkillMd,
   runCaseAssertions,
   runSkillEval,
   validateTriggers,
@@ -94,5 +95,58 @@ describe("runCaseAssertions", () => {
     });
     expect(checks.some((c) => !c.ok)).toBe(true);
     fs.rmSync(tmp, { recursive: true, force: true });
+  });
+});
+
+describe("refLintSkillMd", () => {
+  it("flags mismatch between numeric reference and list length", () => {
+    const md = [
+      "## Rubric",
+      "four dimensions:",
+      "- Completeness",
+      "- Correctness",
+      "- Coherence",
+    ].join("\n");
+    const checks = refLintSkillMd(md);
+    const fail = checks.find((c) => !c.ok);
+    expect(fail).toBeDefined();
+    expect(fail!.message).toContain("claims 4");
+    expect(fail!.message).toContain("has 3");
+  });
+
+  it("passes when reference matches list length", () => {
+    const md = [
+      "三个步骤：",
+      "- 第一步",
+      "- 第二步",
+      "- 第三步",
+    ].join("\n");
+    const checks = refLintSkillMd(md);
+    expect(checks.every((c) => c.ok)).toBe(true);
+  });
+
+  it("handles Arabic numerals", () => {
+    const md = [
+      "5 个阶段",
+      "- 阶段 1",
+      "- 阶段 2",
+      "- 阶段 3",
+    ].join("\n");
+    const checks = refLintSkillMd(md);
+    const fail = checks.find((c) => !c.ok);
+    expect(fail).toBeDefined();
+    expect(fail!.message).toContain("claims 5");
+  });
+
+  it("ignores single-item references", () => {
+    const md = "一个重要的事\n- 要注意";
+    const checks = refLintSkillMd(md);
+    expect(checks.length).toBe(0);
+  });
+
+  it("ignores references with no nearby list", () => {
+    const md = "四个维度很重要。\n\n一些其他文本。";
+    const checks = refLintSkillMd(md);
+    expect(checks.length).toBe(0);
   });
 });

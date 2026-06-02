@@ -2,7 +2,36 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.35.12] - 2026-06-01
+
+### Added
+- **forge-ops**: new `pnpm forge-ops <url>` — production monitoring loop: health check → verify suite → baseline comparison → regression detection → fix brief → report. Supports `--interval <sec>`, `--baseline save|compare`, `--fix`. Output: `.forge/ops/report.md`. (Phase 16 candidate)
+- **forge-loop --fde**: Forward Deployed Engineer mode — reads Product-Spec.md + DEV-PLAN.md context before execution, generates structured evidence report (`.forge/evidence/phase-N-report.md`) on completion. `pnpm forge-fde` convenience alias.
+- **Evidence chain**: `forge-loop --fde` outputs machine-readable evidence report with test pass rate, delivery checklist completion, UI check results, file change list, and pass/fail verdict per deliverable.
+- **skill-eval judge v2 rubric**: expanded from 5 to 6 dimensions — added "工作流质量与可重复性" (workflow quality & repeatability, 30% weight) focusing on result consistency, verification loops, and real-project usability. Baseline comparison dimension added. judge-config template bumped to version 2.
+
+### Fixed
+- **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
+- **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
+
 ## [Unreleased]
+
+### Added
+- **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md during `skill-eval run` — detects mismatches between claimed counts (e.g. "four dimensions") and actual markdown list lengths; supports CN/Arabic/EN numerals with 20+ quantifiers.
+- **forge-phase-check**: new `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N delivery checklist, cross-references against `git diff` file changes, and outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment.
+- **forge-phase-loop**: new `pnpm forge-phase-loop <N>` — single-iteration phase auto-completion tool. Runs forge-phase-check, generates `.forge/phase-loop/fix-brief.md` with structured AI-readable fix instructions for each omitted item. Supports `--max <M>` (max iterations, default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check → fix → re-check until clean.
+- **forge-phase-check --json**: added `--json` output flag for programmatic consumption by forge-phase-loop.
+- **forge-ui-check**: new `pnpm forge-ui-check <N>` — scans DEV-PLAN.md Phase N for UI-related checklist items, performs static file existence checks, and auto-generates Playwright tests (form/button/input/nav/page route assertions) for dynamic browser validation when `--url` is provided.
+- **forge-ui-loop**: new `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs forge-ui-check, generates `.forge/ui-loop/fix-brief.md` with actionable UI fix instructions. Supports `--url`, `--max`, `--reset`. YOLO-ready: check → fix → re-check until UI passes.
+- **forge-loop**: new `pnpm forge-loop <N>` — unified Phase completion loop. Single entry point that runs delivery checklist check (forge-phase-check), UI file existence, and Playwright tests (with `--url`) in one pass. Generates unified `.forge/loop/fix-brief.md`. Supports `--skip-plan`, `--skip-ui`, `--url`, `--max`, `--reset`. Replaces the need to run separate loops for plan and UI checks.
+
+### Fixed
+- **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
+- **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
+- **Windows hook execution**: all `.sh` files had CRLF line endings, causing Git Bash shebang failure (`#!/usr/bin/sh\r` → "cannot execute binary file"). Added `.gitattributes` enforcing `eol=lf` for `.sh` files and normalized all existing files to LF. `.bat` files kept at CRLF.
+- **Windows hook execution (round 2)**: `settings.json` had hooks using `sh` which always fire on all platforms. Moved hooks to platform-specific files only: `settings.unix.json` (`.sh`), `settings.windows.json` (`.bat`). `settings.json` now empty hookless base.
+
+## [v1.35.8] - 2026-05-26
 
 ## [v1.35.8] - 2026-05-26
 

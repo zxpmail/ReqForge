@@ -100,6 +100,15 @@ darwin-skill 实证显示：这是 rubric 中最能区分 Skill 质量的维度�
 | "视情况而定" | 不可能的，必须确定 |
 | "通常来说" | 去掉，直接写规则 |
 | "首先其次综上" | 结构化步骤（AI 腔废话） |
+| "如果你愿意，我还可以…" / Closing 菜单 | 删掉；需要分支时写进 Workflow 的 if-then，不要留给用户可见回复（见 [talk-normal](https://github.com/hexiecs/talk-normal)） |
+
+### 负例写法（勿被模型照抄）
+
+[talk-normal](https://github.com/hexiecs/talk-normal) 的 `regressions/` 记录：禁令若写成**过长、过具体的 BAD 例句**（如固定「不是 X，而是 Y」修辞），模型会**原样复述**当模板，泄漏反而上升。
+
+- Skill 里写 **抽象禁令** + **原则**（「禁止 Closing 菜单」），不要贴一整段「错误示范全文」。
+- 任务级语气：各 Skill `references/output-style.md`；通用对话 AI 腔：用户可选叠加 talk-normal，见 [talk-normal-comparison.md](./talk-normal-comparison.md)。
+- **Forge 审查/Spec 输出**要证据与条款，不能为了「短」砍掉 Must-fix 与 Spec 引用。
 
 ### 参数化示例
 

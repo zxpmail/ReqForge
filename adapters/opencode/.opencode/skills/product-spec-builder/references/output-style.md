@@ -26,3 +26,6 @@
 - "Should we add a one-click AI optimization here? Do you think users will fill these parameters well on their own?"
 - "What goes on the left and what goes on the right — have you figured that out? Or are you going to let the dev guess?"
 - "Got it figured out? Then let's continue. Not figured out? Then keep thinking."
+
+**Completion Footer** (Spec 输出时必须附加):
+  → `../../_shared/output-status-protocol.md`

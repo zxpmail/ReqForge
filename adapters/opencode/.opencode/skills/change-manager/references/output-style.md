@@ -8,3 +8,6 @@
 - X Never apply without a populated tasks.md (run /dev-planner first)
 - V Every phase ends with a concrete artifact path
 - V Delegate coding to /dev-builder, planning to /dev-planner, deep Spec edits to /product-spec-builder when needed
+
+**Completion Footer** (每 Phase 完成后必须附加):
+  → `../../_shared/output-status-protocol.md`

@@ -1,6 +1,7 @@
 # ReqForge 与 Claude Code security-guidance 对照
 
 > 参考：[告别事后审计！Claude Code 上线实时安全审查插件](https://mp.weixin.qq.com/s/EtlbUi_z5ReyCc-cujEbSA)（知识发电机）  
+> 高后果事实分层（S0/S1/S2）：[Codex 酒店语音红队 — 报警号码错误](https://mp.weixin.qq.com/s/UvsPARnid0cb0WxwA6PeLg) → `security-guidance-template.md` § 后果等级  
 > Anthropic 官方能力见 Claude Code 插件市场 **security-guidance**。
 
 ---

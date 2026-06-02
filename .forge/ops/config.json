@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "endpoints": [
+    {
+      "url": "http://localhost:3000/health",
+      "interval_sec": 300,
+      "timeout_sec": 10
+    }
+  ],
+  "notifications": {
+    "console": true
+  }
+}

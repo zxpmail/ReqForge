@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.8-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.12-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -61,6 +61,21 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.12 — 2026-06-01
+- **forge-loop --fde**：`pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取 Product-Spec 和 DEV-PLAN 上下文，完成时输出 `.forge/evidence/phase-N-report.md` 交付证据报告（测试通过率 + 清单完成度 + 文件变更）。
+- **forge-ops**：`pnpm forge-ops <url>` — 运营监控闭环。健康检查→验证套件→基线对比→回归检测→自动修复。支持 `--interval` 循环、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
+- **skill-eval judge v2**：Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。评估工作流在真实项目中产生可重复结果的能力。
+- **forge-ui-check 修复**：Phase 无独立章节时跳过而非报错，修复 forge-loop 死循环。
+
+### v1.35.11 — 2026-06-01
+- **forge-phase-check**：`pnpm forge-phase-check <N>` — 解析 DEV-PLAN.md Phase N 清单，通过 `git diff` 对照交付内容/关键文件/验收标准，输出遗漏/完成/冗余报告。纯机械比对，不靠 AI 判断。（支持 `--json` 输出）
+- **forge-phase-loop**：`pnpm forge-phase-loop <N>` — 单次迭代自动完成循环。运行检查，有遗漏则生成 `.forge/phase-loop/fix-brief.md`，每条含精确修复指令。支持 `--max`（默认 5）和 `--reset`。配合 YOLO 模式实现 检查→修复→再检查 自动循环直到完成。
+- **ref-lint**：`skill-eval run` 自动检查 SKILL.md 中声明数量与实际列表不一致（如说"四个维度"但只列了 3 项）。支持中文/阿拉伯数字/英文数字量词。
+- **Windows 钩子修复**：CRLF 导致 Git Bash "cannot execute binary file"。`.gitattributes` 强制 `*.sh eol=lf`；hooks 分平台配置，Windows 使用 `.bat`。
+- **forge-ui-check**：`pnpm forge-ui-check <N>` — 扫描 DEV-PLAN.md UI 相关清单项，检查文件存在，自动生成 Playwright 测试（表单/按钮/输入框/导航/页面路由断言），`--url` 参数启动浏览器端验证。
+- **forge-ui-loop**：`pnpm forge-ui-loop <N>` — UI 自动修复循环。运行检查，生成 `.forge/ui-loop/fix-brief.md`，支持 `--url`/`--max`/`--reset`。YOLO 模式：检查→修复→再检查直到 UI 全部通过。
+- **forge-loop**：`pnpm forge-loop` — 下班前跑这条，第二天来就完事了。
+
 ### v1.35.8 — 2026-05-26
 - **提示词瘦身**：`change-manager` 主 SKILL 索引化（~11k→~4.7k）；存量变更流程 → `references/workflow.md`
 
@@ -94,6 +109,7 @@ flowchart LR
 - **进化提案（兌）**：dev-builder Phase 完成时触发 evolution-engine 扫描；向用户呈现基于反馈模式的可操作提案（Y/N 选择）。主动闭合反馈→进化循环。（受 [八卦信息论 巽兌 protocol audit] 启发）
 - **Skill 质量 judge**：`pnpm skill-eval judge <name>` — 独立 sub-agent 按 5 维 rubric（结构完整性/可执行具体性/失败模式编码/反例完备性/实测表现）评估 Skill 质量。结果记录至 `judge-history.json`。（受 [darwin-skill](https://github.com/alchaincyf/darwin-skill) 启发）
 - **Skill 编写模式参考**：[`core/docs/skill-authoring-patterns.md`](core/docs/skill-authoring-patterns.md) — SKILL.md 作者实战参考：工作流设计、失败模式编码、反例黑名单、rubric 自查表。
+- **skill-eval ref-lint**：SKILL.md 数字引用一致性自动检查 — 检测"四个维度"后列表只有 3 项等定义-引用不一致问题。零配置，随 `pnpm skill-eval <name>` 自动运行。（受 [OpenSpec verify bug](https://mp.weixin.qq.com/s/iSWtR665phTo5dv8sHFgqA) 启发）
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md)；Light Grill、zoom-out、架构保健、GitHub issue 切片
@@ -854,6 +870,9 @@ pnpm dep-graph stats  # 查看图统计
 | `pnpm set-github-metadata` | 把 `.github/repo-metadata.json` 同步到 GitHub About/Topics；令牌放 `.env.local` 的 `GITHUB_TOKEN=`（见 `.env.local.example`） |
 | `pnpm dep-graph affected [files...]` | blast-radius：列出受变更影响的文件（无参数时用 git diff） |
 | `pnpm dep-graph risk [files...]` | 变更风险评分 |
+| `pnpm forge-loop [<N>] [--all] [--run] [--fde]` | 统一 Phase 循环 — 检测→修复→验证 |
+| `pnpm forge-fde <N>` | FDE 模式：上下文感知循环 + `.forge/evidence/` 证据报告 |
+| `pnpm forge-ops <url> [--interval <sec>]` | 生产环境监控 — 健康检查 → 基线对比 → 检测 → 修复 |
 | `pnpm forge-install <client> --target <dir>` | 将适配层安装到用户项目；写入 `.forge/quickref.md`、`project-taste.md`、`preflight.json`、`skills/_template/eval/` 等 |
 | `pnpm preflight [--build-dir dist]` | 发布前门禁（git/版本/产物隐私 + `.forge/preflight.json`） |
 | `pnpm skill-eval init <name>` / `pnpm skill-eval <name>` | 用户项目自定义 Skill 评估包（触发用例 + 产物断言） |
@@ -886,6 +905,16 @@ pnpm dep-graph stats  # 查看图统计
 | [SkillOpt](https://microsoft.github.io/SkillOpt/) | 有预算 Skill 编辑 + 验证门 | [skillopt-comparison.md](core/docs/skillopt-comparison.md) — rejected-edits、进化纪律 |
 | 腾讯「Harness 镜子」 | 显形 / 三块石碑 / 不可能三角 | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) — `.forge/project-taste.md` |
 | [Matt Pocock Skills](https://github.com/mattpocock/skills) | 可拼装日常工程 vs 全流程 | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill 等 |
+| [talk-normal](https://github.com/hexiecs/talk-normal) | 通用 system prompt 去 AI 腔 | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) — **可选叠加** `AGENTS.md`；Forge 管交付不替代 |
+| OpenAI Images 2.0（思考时代） | 视觉：规划→渲染→自验；Instant/Thinking 双模 | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) — 与 Harness 同构启示；**不**内嵌图像 API |
+| Agent Harness Engineering 综述 | ETCLOVG 七层、Framework→Platform | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) — 学术 taxonomy ↔ Forge L/V 强项 |
+| 微信 iLink + ACP 桥接 | 个人号接 Claude/Codex；OpenClaw / wechat-acp | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) — 通道层；Forge 管验收不替代收件箱 |
+| CLAUDE.md Stop Hook 元审查 | diff 对照分层规则；只写 review 不改源 | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) — 可选；互补 stop-gate / evolution-engine |
+| [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | 100+ 可运行 Agent/RAG/MCP 模板 | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) — 菜谱 + Forge 交付门叠加 |
+| Claude Code 七个工作流 | CLAUDE.md→Plan→Subagent→Worktree→Hooks→MCP | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) — 固定问法 ↔ Forge Skill/Hook |
+| Hermes SOUL.md 操作员人格 | 反驳/追责/使命地图；非「有用助手」 | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) — 个人 Agent；Forge 用 Spec/taste/门控 |
+| 围绕 AI 建系统的人正领先 | 模型外基础设施、记忆复利、编排智能；Claude Code 为信号 | [systems-around-ai-comparison.md](core/docs/systems-around-ai-comparison.md) — Harness 交付门 + Bitter Lesson 取舍 |
+| [withastro](https://github.com/withastro/) Flue / Rosie | Agent Harness 框架（可部署）+ Skill 包管理 | [withastro-flue-comparison.md](core/docs/withastro-flue-comparison.md) — Flue 运行时 vs Forge 交付安装包 |
 
 **ReqForge 维护者文档**（非第三方对照）：
 
@@ -903,6 +932,14 @@ pnpm dep-graph stats  # 查看图统计
 | SkillOpt ↔ Forge | [skillopt-comparison.md](core/docs/skillopt-comparison.md) |
 | Harness 镜子（腾讯） | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · `.forge/project-taste.md` |
 | Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) |
+| talk-normal（可选叠加） | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 去 AI 腔；Forge 管交付门控 |
+| OpenAI Images 2.0 | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) · 视觉「思考时代」↔ Spec/Plan/Verify |
+| Harness Engineering 综述 | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG + 七问检查表 |
+| 微信 iLink / ACP | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) · 移动入口 vs IDE 交付 |
+| CLAUDE.md Stop Hook | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · 规则漂移审查（可选） |
+| awesome-llm-apps | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · 模板探索 vs Spec→Ship |
+| Claude Code 7 工作流 | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) · 习惯按钮 ↔ 交付 Harness |
+| Hermes SOUL.md | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) · 操作员人格 vs 工程 Harness |
 
 ---
 

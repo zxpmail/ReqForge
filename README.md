@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.8-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.12-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -62,6 +62,21 @@ flowchart LR
 
 ## What's New
 
+### v1.35.12 — 2026-06-01
+- **forge-loop --fde**: `pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取项目上下文，完成时输出 `.forge/evidence/phase-N-report.md` 证据报告（测试通过率 + 交付清单 + 文件变更）。
+- **forge-ops**: `pnpm forge-ops <url>` — 运营监控闭环。健康检查 → 验证套件 → 基线对比 → 回归检测 → 自动修复。支持 `--interval` 循环模式、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
+- **skill-eval judge v2**: Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。强调工作流在真实项目中产生可重复结果的能力。
+- **forge-ui-check fix**: Phase 无独立章节时不再误报，跳过而非 exit 1。
+
+### v1.35.11 — 2026-06-01
+- **forge-phase-check**: `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N checklist, cross-references `git diff` against deliverables/keyfiles/acceptance items. Outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment. (`--json` for programmatic use)
+- **forge-phase-loop**: `pnpm forge-phase-loop <N>` — single-iteration auto-completion. Runs check, generates `.forge/phase-loop/fix-brief.md` with structured fix instructions for each omitted item. Supports `--max` (default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check→fix→re-check until clean.
+- **ref-lint**: `skill-eval run` now checks SKILL.md for mismatched numeric references (e.g. "four dimensions" but only 3 items listed). CN/Arabic/EN numeral support with 20+ quantifiers. ([OpenSpec article](https://mp.weixin.qq.com/s/iSWtR665phTo5dv8sHFgqA) inspired)
+- **Windows hook fix**: CRLF `.sh` files caused "cannot execute binary file" on Git Bash. `.gitattributes` enforces `*.sh eol=lf`. Platform-split settings: hooks in `settings.unix.json` (`.sh`) / `settings.windows.json` (`.bat`), `settings.json` empty.
+- **forge-ui-check**: `pnpm forge-ui-check <N>` — scans DEV-PLAN.md for UI checklist items, checks file existence, auto-generates Playwright tests (form/button/input/nav/page assertions) with `--url` for dynamic browser validation.
+- **forge-ui-loop**: `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs check, generates `.forge/ui-loop/fix-brief.md`, supports `--url`/`--max`/`--reset`. YOLO: check → fix → re-check until UI passes.
+- **forge-loop**: `pnpm forge-loop` — 下班前跑这条命令，第二天来就完事了。
+
 ### v1.35.10 — 2026-05-30
 - **Output Status Protocol**: New `_shared/output-status-protocol.md` — every Phase/output ends with `[Decision]` / `[Assumption]` / `[Next]` / `[Status]` (DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT). Wired into product-spec-builder, dev-planner, bug-fixer, change-manager, dev-builder Output Style sections. ([Digidai/product-manager-skills](https://github.com/Digidai/product-manager-skills) output contract inspired)
 - **ETHOS principles**: Three shared output principles (`Thinking Before Templating`, `Opinions With Tradeoffs`, `Compression Over Completeness`) added to `_shared/output-style-concise.md`
@@ -102,6 +117,7 @@ flowchart LR
 - **Evolution proposals (兌)**: dev-builder Phase Completion triggers evolution-engine scan; presents actionable pattern-based proposals to user as Y/N choices. Closes the feedback→evolution loop proactively. ([八卦信息论 巽兌 protocol audit] inspired)
 - **Skill quality judge**: `pnpm skill-eval judge <name>` — independent sub-agent evaluates Skill quality against a 5-dim rubric (structure/specificity/failure-mode/anti-patterns/effectiveness). Results recorded to `judge-history.json`. ([darwin-skill](https://github.com/alchaincyf/darwin-skill) inspired)
 - **Skill authoring patterns**: [`core/docs/skill-authoring-patterns.md`](core/docs/skill-authoring-patterns.md) — practical reference for SKILL.md authors: workflow design, failure-mode encoding, anti-pattern blacklists, rubric self-check table.
+- **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md — detects mismatches like "four dimensions" followed by a 3-item list. Zero-config, runs with `pnpm skill-eval <name>`. ([OpenSpec verify bug](https://mp.weixin.qq.com/s/iSWtR665phTo5dv8sHFgqA) inspired)
 
 ### v1.34.0 — 2026-05-28
 - **Matt Pocock Skills 对照**：[mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) — Light Grill、zoom-out、架构保健、GitHub issue 切片（吸收思路，不整包合并）
@@ -884,6 +900,9 @@ pnpm dep-graph stats  # Print graph statistics
 | `pnpm set-github-metadata` | Push description + topics from `.github/repo-metadata.json`; put token in `.env.local` as `GITHUB_TOKEN=` (see `.env.local.example`) |
 | `pnpm dep-graph affected [files...]` | Blast-radius: list transitively affected files (git diff if no args) |
 | `pnpm dep-graph risk [files...]` | Risk score for a set of changes |
+| `pnpm forge-loop [<N>] [--all] [--run] [--fde]` | Unified phase completion loop — detect → fix → verify |
+| `pnpm forge-fde <N>` | FDE mode: context-aware loop + `.forge/evidence/` report |
+| `pnpm forge-ops <url> [--interval <sec>]` | Production monitoring — health check → baseline → detect → fix |
 | `pnpm forge-install <client> --target <dir>` | Install adapter + `.forge/quickref.md`, `project-taste.md`, `preflight.json`, `skills/_template/eval/`, etc. |
 | `pnpm forge-install <client> --loadout <name>` | Same, but only loadout skills/agents + loadout hooks + `.forge/loadout-active.json` |
 | `pnpm preflight [--build-dir dist]` | Release gate before publish (see `core/docs/external-publish-preflight.md`) |
@@ -934,6 +953,16 @@ External harnesses reviewed for positioning (not dependencies):
 | SkillOpt ↔ Forge (eval + evolution discipline) | [skillopt-comparison.md](core/docs/skillopt-comparison.md) |
 | Harness as mirror (Tencent) | [tencent-harness-mirror-comparison.md](core/docs/tencent-harness-mirror-comparison.md) · `.forge/project-taste.md` |
 | Matt Pocock Skills ↔ Forge | [mattpocock-skills-comparison.md](core/docs/mattpocock-skills-comparison.md) · Light Grill / zoom-out / architecture health |
+| talk-normal (optional overlay) | [talk-normal-comparison.md](core/docs/talk-normal-comparison.md) · L0 anti-slop on `AGENTS.md`; Forge keeps delivery gates |
+| OpenAI Images 2.0 (thinking era) | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) · plan→render→verify parallels Harness; no image API in core |
+| Agent Harness Engineering survey | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG taxonomy ↔ Forge L/V strengths |
+| WeChat iLink + ACP bridge | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) · channel layer only; Forge owns verify/release |
+| CLAUDE.md Stop Hook meta-review | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · optional drift check; complements stop-gate |
+| [awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps) | [awesome-llm-apps-comparison.md](core/docs/awesome-llm-apps-comparison.md) · runnable templates + Forge delivery gates |
+| Claude Code seven workflows | [claude-code-seven-workflows-comparison.md](core/docs/claude-code-seven-workflows-comparison.md) · fixed prompts mapped to Forge skills/hooks |
+| Hermes SOUL.md operator persona | [hermes-soul-md-comparison.md](core/docs/hermes-soul-md-comparison.md) · pushback/accountability vs Spec gates |
+| Systems around AI (Mayank Agarwal) | [systems-around-ai-comparison.md](core/docs/systems-around-ai-comparison.md) · harness > model; memory/eval/orchestration ↔ Forge gates |
+| withastro Flue / Rosie | [withastro-flue-comparison.md](core/docs/withastro-flue-comparison.md) · deployable agent runtime vs Forge installable delivery harness |
 
 ---
 

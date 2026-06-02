@@ -22,6 +22,8 @@
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
 | `.forge/tests/` | Playwright E2E 测试模板（config + auth + Phase 验证） |
 | `.forge/active-scope.json` | 当前 Phase 文件作用域（巽 — 越界检查） |
+| `.forge/evidence/` | FDE 模式交付证据报告（测试通过率 + 清单完成度 + 文件变更） |
+| `.forge/ops/` | 运营监控报告（健康检查 + 回归检测 + 自动修复） |
 | `memory/handoff.md` | 跨 session / 跨客户端接力摘要（Phase 完成或上下文将满时生成） |
 
 ---
@@ -137,6 +139,18 @@
 
 ---
 
+## 可选叠加（非 Forge 核心）
+
+| 工具 | 用途 | 与 Forge 关系 |
+|------|------|----------------|
+| [talk-normal](https://github.com/hexiecs/talk-normal) | 去掉**通用对话** AI 腔（废话、Closing 菜单） | **叠加**于 `AGENTS.md`；不替代 Spec/审查/测试。见 [talk-normal-comparison.md](../docs/talk-normal-comparison.md) |
+| [Context7](https://github.com/upstash/context7) | 库文档注入 MCP | 与 dev-builder 叠加 |
+| [RTK](https://github.com/rtk-ai/rtk) | Bash 输出压缩 | 可选，见 [rtk-comparison.md](../docs/rtk-comparison.md) |
+
+安装 talk-normal：`git clone …/talk-normal && bash install.sh`（`# --- talk-normal BEGIN/END ---` 标记块，新会话生效）。
+
+---
+
 ## Skill 命令速查
 
 | 阶段 | 命令 |
@@ -170,6 +184,7 @@ pnpm preflight --build-dir dist    # 构建后扫描产物
 ```bash
 pnpm skill-eval init my-skill           # → .forge/skills/my-skill/eval/
 pnpm skill-eval my-skill                # 静态检查 + 对 eval-output/ 断言
+pnpm skill-eval trigger my-skill           # 触发准确率模拟评估（20 条查询）
 pnpm skill-eval judge-prep my-skill     # 初始化 judge 配置（rubric 定义）
 pnpm skill-eval judge my-skill          # 打印 judge briefing（给 AI agent 用）
 pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
@@ -177,9 +192,24 @@ pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
 
 - 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
 - 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照；judge 效果评估需 AI agent spawn 独立 sub-agent）
+- **ref-lint**：`skill-eval run` 自动扫描 SKILL.md 中数字引用与列表长度不一致（如"四个维度"但列表只有 3 项）
+- **6 维 Rubric**: 结构完整性(10%) · 可执行具体性(20%) · 失败模式编码(15%) · 反例完备性(10%) · **工作流质量与可重复性(30%)** · 实测效果与基线对比(15%)
 - Skill 编写模式：`core/docs/skill-authoring-patterns.md`（工作流设计 + 失败模式编码 + 反例黑名单 + rubric 自查）
 
 ---
+
+## 运营监控（forge-ops）
+
+```bash
+pnpm forge-ops https://myapp.com                          # 单次健康检查 + 基线对比
+pnpm forge-ops https://myapp.com --interval 300 --fix     # 循环监控 + 自动修复
+pnpm forge-ops https://myapp.com --baseline save          # 保存当前状态为基线
+pnpm forge-ops https://myapp.com --baseline compare       # 对比基线
+```
+
+**做什么**：上线后的运营闭环。每个 tick—健康检查 HTTP 端点 → 运行验证套件 → 对比基线 → 检测回归 → 生成 fix-brief → 出报告。
+
+输出 → `.forge/ops/report.md`（含健康状态、验证通过率、基线 delta、问题清单）。
 
 ## 维护者验证（ReqForge 框架仓）
 
@@ -208,6 +238,112 @@ node scripts/forge-trace.mjs dead-end <N> --approach "<方案>" --lesson "<教�
 node scripts/forge-trace.mjs summary [<N>]                          # 查看摘要
 ```
 
+## 下班一条命令（forge-loop）
+
+```bash
+pnpm forge-loop                               # 看看还有哪些阶段没做完
+pnpm forge-loop --all                         # 全自动：把所有没做完的阶段逐个做完
+pnpm forge-loop 3                             # 只做 Phase 3
+pnpm forge-loop 3 --run                       # 还没开始？先跑 dev-builder 干活
+pnpm forge-loop 3 --serve "pnpm dev"          # 启动网页服务
+pnpm forge-loop 3 --url http://localhost:5173 # 检查网页对不对
+pnpm forge-loop 3 --max 10                    # 最多搞 10 轮（默认 5）
+pnpm forge-loop 3 --skip-test                # 跳过测试
+pnpm forge-loop 3 --fde                      # FDE 模式：上下文感知 + 证据报告
+pnpm forge-loop 3 --strict                  # 严格模式：测试失败即停，输出 review.md
+pnpm forge-loop 3 --linear                  # 线性模式：单次检测→测试→报告，不迭代
+pnpm forge-loop 3 --reset                    # 重置重来
+```
+
+**做什么**：自动检查清单→修 bug→跑测试→修 bug→跑测试→…直到全部通过。
+
+**下班怎么用**：
+```bash
+claude --dangerously-skip-permissions
+# 进去后输入：
+/loop pnpm forge-loop --all --run --max 5
+如果 fix-brief.md 存在就执行修复
+重复直到全部完成
+```
+然后关电脑下班，第二天来查结果。
+```
+
+### FDE（Forward Deployed）模式
+
+```bash
+pnpm forge-fde <N>                        # FDE 模式：上下文感知 + 证据报告
+pnpm forge-fde --all --run --max 10       # 全自动 FDE 交付循环
+pnpm forge-fde 3 --fde --url localhost:5173
+```
+
+**和 forge-loop 的区别**：
+- 执行前先读取 Product-Spec.md 和 DEV-PLAN.md 了解上下文
+- 每轮检测输出附带阶段目标和 Spec 背景
+- 完成时生成 `.forge/evidence/phase-N-report.md`（结果证据链：测试通过率、交付清单完成度、文件变更清单、UI 检查结果）
+- 适合**需要可追溯交付证据**的场景（发布审查、客户交付、合规）
+
+**证据报告示例**（.forge/evidence/phase-N-report.md）：
+```
+# Forward Deployed Report — Phase 3
+
+**Status**: passed
+| Check | Result | Detail |
+|-------|--------|--------|
+| 交付清单 | ✅ | 8/8 通过 |
+| UI 检查 | ✅ | 通过 |
+| 测试 | ✅ | 通过 |
+
+**文件变更**: 12 个文件
+**自动创建**: 2 个文件
+**结论**: 可交付 — 所有门禁通过。
+```
+
+---
+
+## Phase 完成检查（forge-phase-check）
+
+```bash
+pnpm forge-phase-check <N>              # 检查 Phase N 的交付清单完整性
+pnpm forge-phase-check <N> --base <ref> # 与指定基线对比（默认: main）
+```
+
+机械地比对各阶段交付清单与真实文件变更，输出遗漏/完成/冗余报告。
+不靠 AI 判断 — 纯清单⇔文件对照。
+
+---
+
+## Phase 自动循环（forge-phase-loop）
+
+```bash
+pnpm forge-phase-loop <N>               # 单次迭代：检查+生成fix brief
+pnpm forge-phase-loop <N> --max 10      # 最多迭代 10 次（默认 5）
+pnpm forge-phase-loop <N> --reset       # 重置循环状态
+```
+
+YOLO 模式下的自动循环工具。每次迭代运行 forge-phase-check，有遗漏则生成
+`.forge/phase-loop/fix-brief.md`（AI 可读的精确修复指令），AI 执行修复后
+再检查，直到 clean 或达到最大次数。
+
+---
+
+## Hash-anchored editing（forge-hashline）
+
+```bash
+pnpm forge-hashline hash <file>                                 # 打印文件 SHA256
+pnpm forge-hashline hash <file> --lines N:M                     # 打印行范围哈希
+pnpm forge-hashline verify <file> <hash>                        # 验证哈希匹配
+pnpm forge-hashline edit <file> <hash> --new-string "..."       # 验证后替换内容
+pnpm forge-hashline edit <file> <hash> --from <content-file>    # 从文件读取替换内容
+```
+
+**做什么**：用内容哈希锚点替代字符串匹配编辑。先验证文件未经篡改（哈希匹配），再执行写入。不匹配则拒绝（STALE_ANCHOR），防止脏写入。
+
+**与 fix-brief 集成**：`forge-loop` 和 `forge-phase-loop` 生成的 `fix-brief.md` 自动附带 `**Hashline**:` 条目。
+
+源自 oh-my-pi hashline 设计。
+
+---
+
 ## 作用域过滤（巽 — Filter）
 
 ```bash
@@ -215,6 +351,33 @@ node scripts/forge-scope.mjs init <N> --modify "src/" --readonly "src/lib/"  # �
 node scripts/forge-scope.mjs check                                            # 检查是否越界
 node scripts/forge-scope.mjs show                                             # 查看当前作用域
 ```
+
+---
+
+## UI 检查（forge-ui-check）
+
+```bash
+pnpm forge-ui-check <N>                       # 静态检查 UI 文件存在性
+pnpm forge-ui-check <N> --url http://...      # 启动 Playwright 动态检查
+pnpm forge-ui-check <N> --clean               # 测试后清理生成文件
+```
+
+解析 DEV-PLAN.md Phase N 的 UI 相关清单项，自动生成 Playwright 断言
+（表单/按钮/输入框/导航/页面路由等），执行并输出 pass/fail 报告。
+
+---
+
+## UI 自动循环（forge-ui-loop）
+
+```bash
+pnpm forge-ui-loop <N>                        # 单次迭代：检查 UI + 生成 fix brief
+pnpm forge-ui-loop <N> --url http://...       # 支持 Playwright 动态检查
+pnpm forge-ui-loop <N> --max 10               # 最多迭代 10 次（默认 5）
+pnpm forge-ui-loop <N> --reset                # 重置循环状态
+```
+
+YOLO 模式下的 UI 自动修复循环。有 UI 问题则生成 `.forge/ui-loop/fix-brief.md`，
+AI 执行修复后重新检查，直到全部通过或超限。
 
 ---
 

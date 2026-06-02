@@ -397,6 +397,12 @@ export function runSkillEval(options: SkillEvalOptions): SkillEvalResult {
     }
   }
 
+  // Ref-lint: numeric reference consistency check on SKILL.md
+  const skillPath = findSkillMd(cwd, options.skillName);
+  if (skillPath) {
+    checks.push(...refLintSkillMd(fs.readFileSync(skillPath, "utf-8")));
+  }
+
   return finalize(checks, options.strict);
 }
 
@@ -463,6 +469,109 @@ export function initSkillEval(
   }
 
   return evalDir;
+}
+
+// --- Ref-lint: numeric reference consistency ---
+
+const CN_NUM: Record<string, number> = {
+  一: 1, 二: 2, 三: 3, 四: 4, 五: 5, 六: 6, 七: 7, 八: 8, 九: 9, 十: 10,
+};
+
+function parseCnNum(s: string): number | null {
+  if (s.length === 1 && CN_NUM[s] !== undefined) return CN_NUM[s];
+  if (s === "十") return 10;
+  if (s.startsWith("十") && s.length === 2) return 10 + (CN_NUM[s[1]] ?? 0);
+  if (s.endsWith("十") && s.length === 2) return (CN_NUM[s[0]] ?? 0) * 10;
+  return null;
+}
+
+const EN_NUM: Record<string, number> = {
+  one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10,
+  eleven: 11, twelve: 12,
+};
+
+const REF_PATTERN = /(?:([一二三四五六七八九十]{1,2})|(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve)|(\d+))\s*(?:个|项|维[度量表]|步[骤]|层|阶[段级]|条|点|处|行|部分|章节|dimensions?|steps?|layers?|phases?|stages?|items?|points?|rules?|principles?|tasks?|checks?)/gi;
+
+interface RefMatch {
+  line: number;
+  text: string;
+  claimed: number;
+  listLine: number;
+  actual: number;
+}
+
+export function refLintSkillMd(content: string): EvalCheck[] {
+  const checks: EvalCheck[] = [];
+  const lines = content.split("\n");
+
+  const matches: RefMatch[] = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    let m: RegExpExecArray | null;
+    const localRef = REF_PATTERN;
+    localRef.lastIndex = 0;
+    while ((m = localRef.exec(line)) !== null) {
+      const claimed = m[1] ? parseCnNum(m[1]) : (m[2] ? (EN_NUM[m[2].toLowerCase()] ?? null) : parseInt(m[3], 10));
+      if (claimed === null || claimed < 2 || claimed > 20) continue;
+
+      // Look ahead for the nearest markdown list (within 5 lines)
+      let listStart = -1;
+      for (let j = i + 1; j <= Math.min(i + 5, lines.length - 1); j++) {
+        if (/^\s*[-*+]\s/.test(lines[j]) || /^\s*\d+[.)]\s/.test(lines[j])) {
+          listStart = j;
+          break;
+        }
+      }
+      if (listStart === -1) continue;
+
+      // Count consecutive list items
+      let actual = 0;
+      for (let j = listStart; j < lines.length; j++) {
+        if (/^\s*[-*+]\s/.test(lines[j]) || /^\s*\d+[.)]\s/.test(lines[j])) {
+          actual++;
+        } else if (lines[j].trim() === "") {
+          break;
+        } else if (actual > 0) {
+          break;
+        }
+      }
+      if (actual === 0) continue;
+
+      matches.push({
+        line: i + 1,
+        text: m[0],
+        claimed,
+        listLine: listStart + 1,
+        actual,
+      });
+    }
+  }
+
+  // Deduplicate: keep only the first match per list region
+  const seen = new Set<number>();
+  for (const m of matches) {
+    if (seen.has(m.listLine)) continue;
+    seen.add(m.listLine);
+
+    if (m.claimed !== m.actual) {
+      checks.push({
+        id: `ref-lint-L${m.line}`,
+        severity: "warn",
+        ok: false,
+        message: `L${m.line} "${m.text}" claims ${m.claimed} but list at L${m.listLine} has ${m.actual} items`,
+      });
+    } else {
+      checks.push({
+        id: `ref-lint-L${m.line}`,
+        severity: "warn",
+        ok: true,
+        message: `"${m.text}" matches list (${m.claimed} items)`,
+      });
+    }
+  }
+
+  return checks;
 }
 
 // --- Judge interfaces ---
@@ -608,12 +717,17 @@ ${rubricLines.join("\n\n")}
 
 ## Instructions
 
-1. Read the SKILL.md file fully
+1. Read the SKILL.md file fully — understand the workflow, not just individual steps
 2. For each test prompt: execute it with the Skill loaded, and note the output quality
 3. Also consider: if you ran the same prompt WITHOUT the Skill, would the output be worse?
-4. Score each dimension 1-10 with specific evidence
-5. Calculate total: Σ(score × weight) × ${scaleFactor.toFixed(2)} (capped at 100)
-6. Write a judge-report.json with the following schema:
+4. Score each dimension 1-10 with specific evidence (quote from SKILL.md or test run)
+5. **Workflow reproducibility assessment**: For the "工作流质量与可重复性" dimension, consider:
+   - Does the Skill produce a complete working result (not just a fragment)?
+   - Would the same prompt produce similar quality if run again?
+   - Does the workflow include verification/fix loops?
+   - Could a developer use the output in a real project without major rework?
+6. Calculate total: Σ(score × weight) × ${scaleFactor.toFixed(2)} (capped at 100)
+7. Write a judge-report.json with the following schema:
    {
      "version": 1,
      "skill": "${options.skillName}",
@@ -730,6 +844,330 @@ export function installSkillEvalTemplate(
   log(`  ✅ ${dest}`);
 }
 
+// === Trigger Rate Evaluation ===
+
+export interface TriggerEvalCase {
+  id: string;
+  prompt: string;
+  should_trigger: boolean;
+  predicted: boolean | null;
+  correct: boolean | null;
+}
+
+export interface TriggerEvalResult {
+  skillName: string;
+  description: string;
+  totalCases: number;
+  positiveCases: number;
+  negativeCases: number;
+  correct: number;
+  wrong: number;
+  triggerRate: number;
+  cases: TriggerEvalCase[];
+  passed: boolean;
+}
+
+/**
+ * Extract frontmatter `description` from a SKILL.md file.
+ */
+function extractDescriptionFromSkillMd(filePath: string): string | null {
+  const text = fs.readFileSync(filePath, "utf-8");
+  const match = text.match(/^description:\s*(.+)$/m);
+  return match ? match[1].trim() : null;
+}
+
+/**
+ * Extract keywords from a description for matching.
+ * Strips common words, splits on punctuation/spaces.
+ */
+function extractKeywords(desc: string): string[] {
+  const cleaned = desc
+    .toLowerCase()
+    .replace(/["'()]/g, "")
+    .replace(/[，。、；：]/g, " ");
+  const words = cleaned.split(/[\s,]+/).filter(w => w.length >= 2);
+  const stopWords = new Set([
+    "use", "when", "the", "for", "and", "that", "this", "with", "from",
+    "your", "not", "are", "you", "all", "has", "have", "been", "will",
+    "can", "its", "say", "says", "said", "report", "reports",
+    "getting", "something", "doing", "does", "done",
+    "used", "user", "feature", "right", "through", "stage",
+    "locates", "cause", "process", "systematic", "debugging",
+    "what", "where", "which", "who", "whom", "why", "how",
+    "about", "after", "also", "before", "each", "every", "more",
+    "must", "need", "needs", "other", "over", "same", "should",
+    "some", "such", "than", "their", "them", "then", "there",
+    "these", "they", "into", "could", "would", "might",
+  ]);
+  // Only keep meaningful keywords: Chinese chars (2+) or specific English terms
+  const meaningful = words.filter(w => {
+    if (stopWords.has(w)) return false;
+    if (w.length <= 2) return false;
+    // Keep if contains Chinese characters or is a domain-specific English term
+    const hasChinese = /[一-鿿]/.test(w);
+    return hasChinese || w.length >= 4;
+  });
+  return [...new Set(meaningful)];
+}
+
+function generateTriggerTestQueries(
+  skillName: string,
+  description: string,
+): TriggerEvalCase[] {
+  const keywords = extractKeywords(description);
+  const cases: TriggerEvalCase[] = [];
+
+  // --- Positive cases (should trigger) ---
+  // Derive from description keywords — pick meaningful ones
+  const posTriggers = keywords.filter(k => {
+    // Filter out negative exclusions like "不适用于"
+    if (k.includes("不") || k === "not_" || k.startsWith("not")) return false;
+    // Filter out short or generic terms
+    if (k.length <= 2) return false;
+    // Filter out bigrams that are clearly negative
+    if (k.includes("不适用") || k.includes("不应用")) return false;
+    return true;
+  }).slice(0, 8);
+
+  // Use unique positive triggers
+  const posQueries = new Set<string>();
+  posQueries.add(`请帮我${skillName.replace(/-/g, "")}`);
+  for (const kw of posTriggers.slice(0, 6)) {
+    const query = kw.includes("_")
+      ? kw.replace("_", " ")
+      : `我需要${kw}一下`;
+    if (query.length >= 4) posQueries.add(query);
+  }
+  // Fill remaining with template queries
+  const fillQuery = `执行${skillName.replace(/-/g, "")}任务`;
+  let fillAttempts = 0;
+  while (posQueries.size < 10 && posQueries.size < posTriggers.length + 2 && fillAttempts < 5) {
+    posQueries.add(fillQuery);
+    fillAttempts++;
+  }
+
+  for (const q of posQueries) {
+    cases.push({
+      id: `pos-${cases.length}`,
+      prompt: q,
+      should_trigger: true,
+      predicted: null,
+      correct: null,
+    });
+  }
+
+  // --- Negative cases (should NOT trigger) ---
+  const negQueries: string[] = [
+    `写一个fibonacci函数`,
+    `解释一下什么是REST API`,
+    `帮我算一下1+1等于多少`,
+    `hello world`,
+    `今天天气怎么样`,
+    `帮我推荐一本技术书`,
+    `什么是微服务架构`,
+    `这段代码的时间复杂度是多少`,
+    `帮我理解一下这个算法`,
+    `给我讲个笑话`,
+  ];
+
+  // Add near-miss negatives based on description keywords
+  if (keywords.some(k => k.includes("bug") || k.includes("fix") || k.includes("error") || k.includes("broken"))) {
+    negQueries[5] = "帮我review一下这段代码";
+    negQueries[6] = "这个功能设计文档写好了吗";
+  }
+  if (keywords.some(k => k.includes("commit") || k.includes("git"))) {
+    negQueries[5] = "帮我写PR描述";
+    negQueries[6] = "帮我看看这个branch的提交历史";
+  }
+  if (keywords.some(k => k.includes("review") || k.includes("代码"))) {
+    negQueries[5] = "帮我写一个新功能";
+    negQueries[6] = "这个项目的架构设计文档在哪里";
+  }
+  if (keywords.some(k => k.includes("test") || k.includes("测试"))) {
+    negQueries[5] = "帮我部署到生产环境";
+    negQueries[6] = "这个API的性能优化方案";
+  }
+
+  for (const q of negQueries) {
+    if (cases.length >= 20) break;
+    cases.push({
+      id: `neg-${cases.length}`,
+      prompt: q,
+      should_trigger: false,
+      predicted: null,
+      correct: null,
+    });
+  }
+
+  return cases.slice(0, 20);
+}
+
+/**
+ * Predict whether a prompt should trigger the skill based on description keyword matching.
+ */
+function predictTrigger(prompt: string, description: string): boolean {
+  const descKeywords = extractKeywords(description);
+  const promptLower = prompt.toLowerCase();
+
+  // Check negative exclusion patterns in description
+  const negPatterns = description.match(/不适用于[^。.]+/g) || [];
+  for (const np of negPatterns) {
+    const terms = extractKeywords(np);
+    for (const t of terms) {
+      if (t.includes("不")) continue; // skip "不" itself
+      if (promptLower.includes(t)) return false;
+    }
+  }
+
+  // Return true if prompt contains any positive keyword from description
+  for (const kw of descKeywords) {
+    const searchTerm = kw.includes("_") ? kw.replace("_", " ") : kw;
+    if (searchTerm.length <= 2) continue;
+    if (promptLower.includes(searchTerm)) return true;
+    // Check Chinese character overlap
+    const chineseChars = searchTerm.match(/[一-鿿]/g);
+    if (chineseChars && chineseChars.length >= 2) {
+      const allPresent = chineseChars.every(c => promptLower.includes(c));
+      if (allPresent) return true;
+    }
+  }
+
+  return false;
+}
+
+export function runTriggerEval(options: {
+  cwd?: string;
+  skillName: string;
+}): TriggerEvalResult {
+  const cwd = path.resolve(options.cwd || process.cwd());
+  const skillPath = findSkillMd(cwd, options.skillName);
+
+  if (!skillPath) {
+    throw new Error(
+      `SKILL.md not found for skill "${options.skillName}"\n` +
+      `Searched: core/skills/, .claude/skills/, .cursor/rules/skills/, .opencode/skills/, .forge/skills/`,
+    );
+  }
+
+  const description = extractDescriptionFromSkillMd(skillPath);
+  if (!description) {
+    throw new Error(`No "description:" field found in SKILL.md frontmatter`);
+  }
+
+  const cases = generateTriggerTestQueries(options.skillName, description);
+  let correct = 0;
+  let wrong = 0;
+
+  for (const c of cases) {
+    c.predicted = predictTrigger(c.prompt, description);
+    c.correct = c.predicted === c.should_trigger;
+    if (c.correct) correct++;
+    else wrong++;
+  }
+
+  const posCases = cases.filter(c => c.should_trigger).length;
+  const negCases = cases.filter(c => !c.should_trigger).length;
+  const totalCases = cases.length;
+  const triggerRate = totalCases > 0 ? correct / totalCases : 0;
+
+  return {
+    skillName: options.skillName,
+    description,
+    totalCases,
+    positiveCases: posCases,
+    negativeCases: negCases,
+    correct,
+    wrong,
+    triggerRate,
+    cases,
+    passed: triggerRate >= 0.8,
+  };
+}
+
+export function formatTriggerReport(result: TriggerEvalResult): string {
+  const lines: string[] = [];
+  const pct = Math.round(result.triggerRate * 100);
+
+  lines.push(`# Trigger Rate Report — ${result.skillName}`);
+  lines.push(``);
+  lines.push(`**Description**: ${result.description}`);
+  lines.push(``);
+  lines.push(`## Summary`);
+  lines.push(``);
+  lines.push(`| Metric | Value |`);
+  lines.push(`|--------|-------|`);
+  lines.push(`| Total Cases | ${result.totalCases} |`);
+  lines.push(`| Positive (should trigger) | ${result.positiveCases} |`);
+  lines.push(`| Negative (should NOT trigger) | ${result.negativeCases} |`);
+  lines.push(`| Correct | ${result.correct} |`);
+  lines.push(`| Wrong | ${result.wrong} |`);
+  lines.push(`| Trigger Rate | ${pct}% |`);
+  lines.push(``);
+
+  // Progress bar
+  const barLen = 20;
+  const done = Math.round((pct / 100) * barLen);
+  lines.push(`[${"#".repeat(done)}${"-".repeat(barLen - done)}] ${pct}%`);
+  lines.push(``);
+
+  // Verdict
+  if (pct >= 90) {
+    lines.push(`**Verdict**: ✅ Excellent (≥90%)`);
+  } else if (pct >= 80) {
+    lines.push(`**Verdict**: 👍 Good (≥80%) — consider tightening description for near-misses`);
+  } else if (pct >= 60) {
+    lines.push(`**Verdict**: ⚠️ Needs improvement (<80%) — review misclassified cases below`);
+  } else {
+    lines.push(`**Verdict**: ❌ Poor (<60%) — description needs rewrite`);
+  }
+  lines.push(``);
+
+  // Misclassified cases
+  const misclassified = result.cases.filter(c => !c.correct);
+  if (misclassified.length > 0) {
+    lines.push(`## Misclassified Cases (${misclassified.length})`);
+    lines.push(``);
+    for (const c of misclassified) {
+      const expected = c.should_trigger ? "✅ should trigger" : "❌ should NOT trigger";
+      const got = c.predicted ? "→ predicted YES" : "→ predicted NO";
+      lines.push(`- **${c.id}**: "${c.prompt}"`);
+      lines.push(`  ${expected} ${got}`);
+    }
+    lines.push(``);
+
+    // Grouped analysis
+    const falsePositives = misclassified.filter(c => !c.should_trigger && c.predicted);
+    const falseNegatives = misclassified.filter(c => c.should_trigger && !c.predicted);
+    if (falsePositives.length > 0) {
+      lines.push(`### False Positives (${falsePositives.length}) — description too broad`);
+      lines.push(`These prompts triggered but shouldn't have. Add exclusion terms to description:`);
+      lines.push(`\`不适用于：${falsePositives.map(c => c.prompt).join("、")}\``);
+      lines.push(``);
+    }
+    if (falseNegatives.length > 0) {
+      lines.push(`### False Negatives (${falseNegatives.length}) — description too narrow`);
+      lines.push(`These prompts didn't trigger but should have. Add trigger terms to description:`);
+      lines.push(`\`触发词补充：${falseNegatives.map(c => c.prompt).join("、")}\``);
+      lines.push(``);
+    }
+  }
+
+  // Correct cases sample
+  const correct = result.cases.filter(c => c.correct).slice(0, 5);
+  if (correct.length > 0) {
+    lines.push(`## Correct Cases (sample ${correct.length}/${result.correct})`);
+    for (const c of correct) {
+      lines.push(`- ✅ "${c.prompt}" → ${c.should_trigger ? "trigger" : "no trigger"}`);
+    }
+    lines.push(``);
+  }
+
+  lines.push(`---`);
+  lines.push(`Recommendation: ${misclassified.length === 0 ? "Description is well-tuned." : `Fix ${misclassified.length} misclassification(s) and re-run.`}`);
+
+  return lines.join("\n");
+}
+
 function printHelp(): void {
   console.log(`Usage:
   pnpm skill-eval init <skill-name> [--force]
@@ -743,13 +1181,15 @@ Judge: independent sub-agent evaluation of Skill quality (5-dim rubric).
   judge-prep        Init judge-config.json
   judge             Print structured judge briefing for AI agent
   judge-record      Validate and record completed judge report
+Trigger: test description accuracy with auto-generated queries.
+  trigger           Generate 20 test queries, test description matching, report rate
 
 Docs: core/docs/skill-eval.md
 `);
 }
 
 export function parseSkillEvalArgs(argv: string[]): {
-  command: "init" | "run" | "judge-prep" | "judge" | "judge-record" | "help";
+  command: "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "help";
   skillName: string | null;
   cwd: string;
   evalDir?: string;
@@ -758,7 +1198,7 @@ export function parseSkillEvalArgs(argv: string[]): {
   force: boolean;
 } {
   const out = {
-    command: "help" as "init" | "run" | "judge-prep" | "judge" | "judge-record" | "help",
+    command: "help" as "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "help",
     skillName: null as string | null,
     cwd: process.cwd(),
     evalDir: undefined as string | undefined,
@@ -806,7 +1246,10 @@ export function parseSkillEvalArgs(argv: string[]): {
   } else if (rest[0] === "judge-record" && rest[1]) {
     out.command = "judge-record";
     out.skillName = rest[1];
-  } else if (rest[0] && rest[0] !== "init" && !["judge-prep", "judge", "judge-record"].includes(rest[0])) {
+  } else if (rest[0] === "trigger" && rest[1]) {
+    out.command = "trigger";
+    out.skillName = rest[1];
+  } else if (rest[0] && rest[0] !== "init" && !["judge-prep", "judge", "judge-record", "trigger"].includes(rest[0])) {
     out.command = "run";
     out.skillName = rest[0];
   }
@@ -869,6 +1312,15 @@ function main(): void {
       process.exit(1);
     }
     return;
+  }
+
+  if (args.command === "trigger") {
+    const result = runTriggerEval({
+      cwd: args.cwd,
+      skillName: args.skillName,
+    });
+    console.log(formatTriggerReport(result));
+    process.exit(result.passed ? 0 : 1);
   }
 
   const result = runSkillEval({

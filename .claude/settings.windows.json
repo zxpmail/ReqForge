@@ -4,16 +4,13 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash core/hooks/hallucination-gate.sh" }
+          { "type": "command", "command": "core/hooks/hallucination-gate.bat" }
         ]
       },
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash core/hooks/phase-exit-guard.sh" },
-          { "type": "command", "command": "bash core/hooks/stop-gate.sh" },
-          { "type": "command", "command": "bash core/hooks/retry-gate.sh" },
-          { "type": "command", "command": "bash core/hooks/detect-feedback-signal.sh" }
+          { "type": "command", "command": "core/hooks/phase-exit-guard.bat && core/hooks/stop-gate.bat && core/hooks/retry-gate.bat && core/hooks/detect-feedback-signal.bat" }
         ]
       }
     ],
@@ -21,15 +18,13 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash core/hooks/memory-guard.sh" },
-          { "type": "command", "command": "bash core/hooks/check-sync.sh" }
+          { "type": "command", "command": "core/hooks/memory-guard.bat && core/hooks/check-sync.bat" }
         ]
       },
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash core/hooks/mark-review-needed.sh" },
-          { "type": "command", "command": "bash core/hooks/memory-check.sh" }
+          { "type": "command", "command": "core/hooks/mark-review-needed.bat && core/hooks/memory-check.bat" }
         ]
       }
     ],
@@ -37,7 +32,7 @@
       {
         "matcher": "",
         "hooks": [
-          { "type": "command", "command": "bash core/hooks/check-evolution.sh" }
+          { "type": "command", "command": "core/hooks/check-evolution.bat" }
         ]
       }
     ]

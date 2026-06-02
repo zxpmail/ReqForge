@@ -64,6 +64,7 @@ requires: []
 <!-- begin: output-style -->
 [Output Style]
     → `../_shared/output-style-concise.md`
+    → Phase 完成必须附加 `../_shared/output-status-protocol.md`（Status: DONE / DONE_WITH_CONCERNS / BLOCKED / NEEDS_CONTEXT）
 
 <!-- end: output-style -->
 <!-- begin: file-structure -->

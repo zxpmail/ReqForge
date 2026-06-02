@@ -12,6 +12,7 @@
 | You want to… | Use loadout | Start with |
 |--------------|-------------|------------|
 | Build a **new web app** end-to-end (spec → design → code → release) | **`web-app`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
+| Adopt **Claude Code 7 workflows** (memory → plan → hooks) | **`full`** or **`web-app`** | See [claude-code-seven-workflows-comparison.md](./claude-code-seven-workflows-comparison.md) — Forge superset with Spec gates |
 | Add a **scoped feature** to an existing product (brownfield) | **`full`** or **`web-app`** | `/change-manager` propose → apply → verify |
 | Build a **CLI or library** (no UI design skills) | **`cli-tool`** | `/product-spec-builder` → `/dev-planner` → `/dev-builder` |
 | **Greenfield / brownfield dev, token-conscious** (no design/release) | **`lite`** | spec → plan → build → review; brownfield via change-manager |
@@ -20,6 +21,7 @@
 | **Evolve Harness rules** from feedback | **`full`** or **`web-app`** | fix issue → feedback recorded → `/evolution-engine` |
 | **Create a new Skill** for Forge | **`full`** | `/skill-builder` |
 | **Trim hook overhead** on a tiny repo | **`minimal`** + `pnpm apply-loadout minimal <client>` | same Skills, fewer hooks |
+| **Fork an LLM app template** ([awesome-llm-apps](https://github.com/Shubhamsaboo/awesome-llm-apps)) then productize | **`web-app`** or **`full`** | clone template → `forge-install` → `/product-spec-builder` (see [awesome-llm-apps-comparison.md](./awesome-llm-apps-comparison.md)) |
 
 Full scenario tables below.
 
@@ -48,6 +50,7 @@ Full scenario tables below.
 | New **web** product | `web-app` | spec → design-brief → design-maker (optional) → plan → build → review → release | — |
 | New **CLI / API / lib** | `cli-tool` | spec → plan → build → review → release | design-maker |
 | **Hackathon / spike** | `minimal` | spec (Quick) → build → review | plan, change-manager, release (optional) |
+| **Template-first** (RAG/Agent demo from awesome-llm-apps) | `web-app` or `full` | run template → spec captures delta → plan → build → review | treating demo README as Spec |
 | **Standard app (no design skill install)** | `lite` | spec → plan → build → review | design-maker, release-builder, evolution |
 | **Full control** (incl. skill-builder) | `full` | same as web-app + skill-builder available | — |
 

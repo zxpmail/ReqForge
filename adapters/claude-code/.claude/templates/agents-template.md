@@ -1,188 +1,143 @@
 ---
 name: agents-template
-description: Template for generating project AGENTS.md constraint files
+description: Comprehensive AGENTS.md template — 通用行为规则 + 项目填空
 ---
 
-<!-- forge: AGENTS.md template v1.0 -->
-# Project Rules
+<!-- forge: AGENTS.md template v2.0 -->
 
-> This file defines how AI agents behave in this project. It is a constraint file, not a prompt collection.
+> 通用规则（保持不动）+ ✏️ 项目填空（按实际情况填写）
 
-## Tech Stack
+# AGENTS.md
 
-Pin all versions to exact patch. AI must use these versions — no guessing, no `latest`, no ranges.
+## 基本守则
 
-```
-<!-- Fill in your project's actual versions -->
-Runtime: [language] [exact-version]
-Framework: [framework] [exact-version]
-Package Manager: [manager] [exact-version]
-Database: [database] [exact-version]
-```
+- **直说**。不要奉承，不要讨好式开场。不同意就直接指出，说明理由。判断 vs 事实要分清。
+- **不知道的先验证**。API、CLI 参数、包版本、模型名、价格、平台行为——训练数据可能已过时。依赖前先查。
+- **给精确信息**。优先给出命令、文件路径、配置字段，少给空泛建议。
+- **完成任务**，不是停在草稿。流程：实现 → 验证 → 清理 → 汇报。
+- **自己推进**。如果下一步已被任务、计划、检查结果或项目说明暗示，就直接做，不要问"下一步怎么办"。
+- **聚焦改动**。不顺手做无关清理或机会主义重构。发现无关问题可以提，但不要顺手修。
+- **高风险先问**。涉及数据丢失、密钥、计费、部署、生产系统、破坏性命令或大范围架构变化，必须问我。
 
-## Behavior Boundaries
+## 编码前
 
-### Green (execute without confirmation)
-- Variable naming, code style, tests, obvious bug fixes
-- Documentation updates, dev dependency changes
+- 先读项目说明。查 `AGENTS.md`、`README`、相关文档、测试和已有代码模式。
+- 不要只根据文件名猜测，要看实际内容。
+- 优先复用仓库已有工具链和代码风格，不引入新模式。
+- 最小改动，避免大范围重写。不添加猜测性功能、抽象或错误处理。
+- 匹配被编辑文件的现有风格。
 
-### Yellow (confirm before proceeding)
-- External dependencies, database schema changes
-- Core business logic, new routes, API changes
+## 指令优先级
 
-### Red (always require explicit approval)
-- Deleting data, force push, production configuration
-- Authentication/authorization changes
+冲突时：系统/安全规则 → 我的最新明确请求 → 文件级说明 → 仓库级 → 本文件。
+涉及安全、数据丢失、凭证、部署、计费的冲突，停下问我。
 
-## Project Structure
+## 验证
 
-```
-[Fill in your project structure]
-```
+- 没跑过相关检查不要说完成。优先跑最小范围但相关的检查（typecheck/lint/test/build）。
+- 改动影响共享行为、公开 API、核心逻辑时，跑更广泛的检查。
+- 检查因为你的改动失败 → 先修再交。缺少依赖/权限跑不了 → 明确列出哪些没验证。
+- UI 改动 → 打开页面确认可见可用。脚本改动 → 用有代表性输入跑一次。
+- 关键规则优先用可执行检查/hook/脚本兜底，不只靠文字。
 
-Rule: AI-generated code must follow the above structure. Do not place files outside these directories without asking.
+## 搜索与代码修改
 
-## Agent 执行纪律（任务级）
+- 重命名函数、类型、变量、文件、路由、命令时，搜索：直接引用、类型引用、字符串字面量、动态 import、re-export、barrel files、测试、mock、文档。一次不够。
+- 改变行为前先查测试。新建东西前先复用本地已有。
+- 除非我要求，不静默移除已有行为，不删除原本就存在的死代码。
 
-> 与 Forge 注入的 Iron Laws / HARD-GATE 叠加，不替代 Spec·Plan 确认与 Hook。完整说明：[session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md)
+## 命令与工具
 
-1. **先列计划，批准再动手** — 非琐碎任务先列步骤，用户明确批准后再改文件或跑破坏性命令。
-2. **改之前先读** — 编辑任何文件前必须先读取该文件（及直接依赖）。
-3. **别重复造轮子** — 尽量缩小改动范围；优先复用已有抽象与函数；禁止穿透重实现同一逻辑。
-4. **不确定先说，不要猜** — 无先例则停下询问；不要自行发明需求。
-5. **中途转向，先问再动** — 影响用户的改动前先确认；范围变化则重新制定计划。
-6. **计划外的问题先报告** — 与当前任务无关的废弃代码或可疑行为只报告，不顺手修。
-7. **改了什么必须汇报** — 提交前展示完整 diff（大改动用 stat + 关键摘要），获批准后再 commit。
-8. **没跑过测试不算完成** — 宣布就绪前对改动相关包跑 lint、类型检查、能覆盖本次变更的测试。
+- 优先用项目脚本。先读 `scripts/`、`Makefile`、`package.json`、`pyproject.toml` 等再选命令。
+- 不随意切换包管理器。不添加/升级生产依赖，除非有理由。
+- 不绕过 pre-commit hooks（不用 `--no-verify`）。
+- 能自动化的用 CLI/API，不手动网页操作。
 
-## Hard Constraints
+## Git
 
-- Never delete code without asking
-- Never restore deleted content without asking
-- Never run force push
-- Never hardcode secrets, API keys, or tokens in code
-- Always use the specified package manager
-- Always confirm the current branch before committing
+- 不 push 到 main，用 feature branch。不 force-push、不重写历史、不 reset。
+- 提交前检查 diff。不把密钥、本地路径、生成噪音放进 commit。message 简洁清晰。
 
-## Context Preservation
+## 密钥与凭证
 
-Three memory files are maintained in `memory/`:
-- `project-memory.md` — Architecture, constraints, known pitfalls
-- `decisions-log.md` — ADR-format architectural decisions
-- `task-history.md` — Recent task summaries (last 30)
+- 不硬编码到源码。从环境变量或已有 secret 机制读取。
+- `.env` 文件确保 Git 忽略。提交前检查是否含密钥。
+- 发现已提交的密钥 → 停下，指出风险，建议轮换。
 
-Read all three at session start. Update after each task.
+## 文档与记忆
 
-### Cross-Client Handoff
+- `AGENTS.md` 是入口不是知识库。稳定规则放这里，项目事实放 README/docs，多步骤计划放 `PLANS.md`，细粒度工作流放 Skills。
+- 行为、命令、API、部署方式变化时更新文档。README 和 AGENTS.md 之间不重复内容。
 
-When switching AI clients (Claude Code ↔ Cursor ↔ OpenCode) or handing off to another agent mid-Phase:
+## 长任务
 
-**Before leaving** — update `memory/handoff.md` (or let dev-builder generate it at Phase completion). Include: current Phase, completed/pending items, blockers, changed files, key ADRs.
+复杂功能/重构/迁移/高风险改动：实现前先创建计划（目标、受影响文件、验证步骤）。事实变化时更新。高风险决策停下问我。不要把写计划当逃避实现的理由。
 
-**After arriving** — read in order; do not rely on chat history from the previous client:
+## 自我改进
 
-1. `memory/handoff.md` (if present)
-2. `memory/project-memory.md` + `memory/decisions-log.md`
-3. `DEV-PLAN.md` — current Phase section only
-4. `.forge/active-scope.json`
-5. `.forge/trace/phase-<N>.json` for the active Phase
-6. This file (`AGENTS.md`)
+- 我纠正你之后，先完成当前任务，再判断是否应沉淀为规则。
+- 新规则稳定、可复用、防重复犯错时才加。优先收紧已有规则而非添加。
+- 一次会话超过两条新规则 → 判断是否过度拟合。文件太长/重复 → 优先删除或合并。
 
-Then continue work. Never restate context only in conversation — the files are the handoff protocol.
+## 最终回复
 
-## Cross-Platform Hooks
-
-This project may include platform-specific hook scripts:
-- `.sh` — Linux/Mac
-- `.bat` — Windows cmd
-- `.ps1` — Windows PowerShell
-
-Hooks fire automatically at key events (commit, edit, startup).
+汇报：改了什么 → 验证了什么 → 哪些没验证（原因） → 触及的重要文件 → 剩余风险和建议。
+简洁、实用。不要让我自己检查才知道工作是否可用。
 
 ---
 
-## Parallel Worktree Workflow
+## ✏️ 技术栈
 
-When working on multiple independent tasks in parallel (e.g., backend feature + frontend feature), use git worktrees so each task has its own working directory, tests, and commits.
-
-### Setup
-
-```bash
-# Script helper (cross-platform)
-python scripts/new_worktree.py "<task-name>" --link-deps
-
-# Or manual:
-git worktree add -b feat/<user>/<short-summary> ../_worktrees/<repo>/<task>
-```
-
-### Worktree Path Convention
+所有版本锁定到精确 patch 版本。不要猜，不要 `latest`，不要范围。
 
 ```
-<repo-parent>/_worktrees/<repo-name>/<task-slug>
+Runtime: [语言] [精确版本]
+Framework: [框架] [精确版本]
+Package Manager: [管理器] [精确版本]
+Database: [数据库] [精确版本]
 ```
 
-### Branch Naming Convention
+## ✏️ 项目结构
 
 ```
-<Type>/<user>/<short-task>
-  Type: feat | chore | fix | hotfix | refactor
-  user: git user.name or user.email (before @)
-  short-task: max 3 words, kebab-case
+[填写项目目录树]
 ```
 
-Examples:
-- `feat/alice/user-auth`
-- `fix/bob/login-crash`
-- `refactor/alice/api-routes`
+规则：agent 生成的代码必须遵循上述结构。不得在列出的目录之外放置文件，除非先询问。
 
-### Rules
+## ✏️ 行为边界
 
-1. **Each task = brand new branch** — never reuse old branches
-2. **Keep main worktree clean** — all work in task worktrees
-3. **Small frequent commits** — commit after each passing check
-4. **Sync regularly** — keep task branches in sync with the mainline branch (ask the user which local branch to track)
-5. **No hardcoded paths** — derive paths from git repo root
+### 绿灯（无需确认直接执行）
+- [变量命名、代码风格、测试、明显 bug 修复]
+- [文档更新、开发依赖变更]
 
-### Dependency Sharing
+### 黄灯（执行前确认）
+- [外部依赖、数据库 schema 变更]
+- [核心业务逻辑、新路由、API 变更]
 
-Avoid reinstalling dependencies in every worktree. Link from the main worktree:
+### 红灯（始终需明确批准）
+- [删除数据、force push、生产配置]
+- [认证/授权变更]
 
-```bash
-# macOS/Linux
-bash scripts/link_worktree_deps.sh --main <main-root> --worktree <worktree-root>
+## 跨客户端交接
 
-# Windows
-powershell -ExecutionPolicy Bypass -File scripts/link_worktree_deps.ps1 -Main <main-root> -Worktree <worktree-root>
-```
+**离开前** — 更新 `memory/handoff.md`：当前阶段、已完成/待办项、blocker、变更文件、关键 ADR。
 
-Use `--force` to overwrite existing links.
+**到达后** — 按序读取（不依赖聊天历史）：`handoff.md` → `project-memory.md` + `decisions-log.md` → `DEV-PLAN.md` 当前章节 → `.forge/active-scope.json` → `.forge/trace/phase-N.json` → 此文件。
 
-### Multi-Agent Coordination
+## 记忆系统
 
-When multiple AI agents work in parallel on different worktrees:
+| 文件 | 用途 | 读取 | 更新 |
+|------|------|------|------|
+| `project-memory.md` | 架构、约束、已知坑点 | Session 启动 | 任务完成后 |
+| `decisions-log.md` | ADR 格式架构决策 | Session 启动 | 决策做出时 |
+| `task-history.md` | 最近任务摘要（30 条） | Session 启动 | 任务完成后 |
 
-1. **Claim your task** — pick from the todo list, create a worktree
-2. **Commit independently** — each worktree commits its own changes
-3. **Integrate via clean branch** — don't commit on a dirty main worktree
-4. **Cherry-pick** — create a clean integration worktree, cherry-pick task commits, run checks, then merge
+## 硬约束
 
-### Integration Checklist
+- 不经询问不删除/恢复代码 · 不 force push · 不硬编码密钥
+- 始终使用指定包管理器 · 提交前确认当前分支
 
-Before claiming a task is done:
+---
 
-- [ ] All changes committed in task worktree
-- [ ] Tests pass in isolation
-- [ ] Integration worktree passes all checks
-- [ ] Diff reviewed by user
-- [ ] Branch merged to mainline
-- [ ] Worktree cleaned up
-
-## Memory System
-
-Three files in `memory/` track project context across AI sessions:
-
-| File | Purpose | Read at | Update after |
-|------|---------|---------|--------------|
-| `project-memory.md` | Architecture, constraints, known pitfalls | Session start | Task completion |
-| `decisions-log.md` | ADR-format architectural decisions | Session start | When decision made |
-| `task-history.md` | Recent task summaries (last 30) | Session start | Task completion |
+*基于 ReqForge [`agents-template.md`](https://github.com/zxpmail/ReqForge) 生成。*
