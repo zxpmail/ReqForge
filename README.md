@@ -957,6 +957,7 @@ External harnesses reviewed for positioning (not dependencies):
 | OpenAI Images 2.0 (thinking era) | [openai-images-2-comparison.md](core/docs/openai-images-2-comparison.md) · plan→render→verify parallels Harness; no image API in core |
 | Agent Harness Engineering survey | [agent-harness-engineering-survey-comparison.md](core/docs/agent-harness-engineering-survey-comparison.md) · ETCLOVG taxonomy ↔ Forge L/V strengths |
 | WeChat iLink + ACP bridge | [wechat-ilink-acp-comparison.md](core/docs/wechat-ilink-acp-comparison.md) · channel layer only; Forge owns verify/release |
+| CLAUDE.md Stop Hook meta-review | [claude-md-stop-hook-comparison.md](core/docs/claude-md-stop-hook-comparison.md) · optional drift check; complements stop-gate |
 
 ---
 

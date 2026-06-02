@@ -48,6 +48,8 @@
 
 Agent 借口对照 → `dev-builder/references/anti-rationalization.md`
 
+**可选（用户项目）**：Stop Hook 对照 `git diff` 审查分层 `CLAUDE.md` 是否过时 → [claude-md-stop-hook-comparison.md](./claude-md-stop-hook-comparison.md)（不替代本纪律或 `stop-gate`）。
+
 ---
 
 ## 在哪里写测试（框架仓库）
