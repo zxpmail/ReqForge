@@ -14,6 +14,14 @@ All notable changes to Forge are documented here.
 - **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
 - **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
 
+## [v1.35.13] - 2026-06-03
+
+### Added
+- **forge-hashline**: `pnpm forge-hashline hash|verify|edit <file>` — SHA256 content-hash anchored editing. Atomic write via tmp+rename, CRLF→LF normalization, block hashing with `--lines N:M`. Integrated into forge-loop/forge-phase-loop fix-brief.md as `**Hashline**:` anchor entries.
+- **sync --discover**: `pnpm sync:discover` — drift detection between core/ and adapters/. Reports drifted (hash mismatch), orphan (adapter-only), missing (core-only).
+- **forge-loop --strict/--linear**: `--strict` stops on first test failure with review.md; `--linear` runs single pass without iteration.
+- **skill-eval trigger**: auto-generates 20 diverse queries from SKILL.md, runs static checker, logs results. Judge pipeline: `judge-prep` → `judge` → `judge-record`.
+
 ## [Unreleased]
 
 ### Added

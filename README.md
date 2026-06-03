@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.12-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.35.13-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -62,11 +62,11 @@ flowchart LR
 
 ## What's New
 
-### v1.35.12 — 2026-06-01
-- **forge-loop --fde**: `pnpm forge-fde` — Forward Deployed Engineer 模式，执行前读取项目上下文，完成时输出 `.forge/evidence/phase-N-report.md` 证据报告（测试通过率 + 交付清单 + 文件变更）。
-- **forge-ops**: `pnpm forge-ops <url>` — 运营监控闭环。健康检查 → 验证套件 → 基线对比 → 回归检测 → 自动修复。支持 `--interval` 循环模式、`--baseline save|compare`、`--fix`。输出 `.forge/ops/report.md`。
-- **skill-eval judge v2**: Rubric 从 5 维扩展到 6 维，新增"工作流质量与可重复性"(30%)和"实测效果与基线对比"(15%)。强调工作流在真实项目中产生可重复结果的能力。
-- **forge-ui-check fix**: Phase 无独立章节时不再误报，跳过而非 exit 1。
+### v1.35.13 — 2026-06-03
+- **forge-hashline**: `pnpm forge-hashline hash|verify|edit <file>` — SHA256 content-hash anchored editing. `hash` prints file hash, `verify` checks integrity, `edit` replaces content only if hash matches (STALE_ANCHOR rejection prevents dirty writes). Supports `--lines N:M` for block hashing. CRLF→LF normalization for cross-platform consistency. Integrated into forge-loop/forge-phase-loop fix-brief.md as `**Hashline**:` anchor entries.
+- **sync --discover**: `pnpm sync:discover` — drift detection between core/ and adapters/. Compares file hashes and reports drifted (same path, different content), orphan (adapter-only), missing (core-only). 624 files in sync across 3 adapters at inception.
+- **forge-loop --strict/--linear**: `--strict` stops on first test failure and outputs `review.md`; `--linear` runs single detect→test→report pass without iteration loop.
+- **skill-eval trigger**: `pnpm skill-eval trigger <skill>` — auto-generates 20 diverse queries from SKILL.md, runs static checker, logs results. Judge scaffolding: `judge-prep` initializes rubric config, `judge` prints AI-readable brief, `judge-record` saves results.
 
 ### v1.35.11 — 2026-06-01
 - **forge-phase-check**: `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N checklist, cross-references `git diff` against deliverables/keyfiles/acceptance items. Outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment. (`--json` for programmatic use)
