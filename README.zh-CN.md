@@ -62,7 +62,8 @@ flowchart LR
 ## 近期更新
 
 ### v1.35.13 — 2026-06-03
-- **forge-hashline**：`pnpm forge-hashline hash|verify|edit <file>` — SHA256 内容哈希锚点编辑。`hash` 打印文件哈希，`verify` 校验完整性，`edit` 哈希匹配时才替换内容（STALE_ANCHOR 拒绝脏写入）。支持 `--lines N:M` 块级哈希。CRLF→LF 归一化保证跨平台一致性。已集成到 forge-loop/forge-phase-loop fix-brief.md `**Hashline**:` 锚点条目。
+- **forge-hashline verify-brief/apply-brief**：`pnpm forge-hashline verify-brief <brief-path>` — 解析 fix-brief.md 的 `**Hashline**:` 条目，逐一校验文件哈希。`--after-fix` 模式验证 AI 是否真正执行了修改（检测 UNCHANGED/MISSING/STALE）。`pnpm forge-hashline apply-brief <brief-path>` 自动创建标记为 `(新文件)` 的骨架。已集成到 forge-loop/forge-phase-loop：生成 brief 时自动验证锚点、下一轮迭代自动验证修改、自动创建新文件。打破字符串匹配重试死循环。
+- **forge-hashline**：`pnpm forge-hashline hash|verify|edit <file>` — SHA256 内容哈希锚点编辑。`hash` 打印文件哈希，`verify` 校验完整性，`edit` 哈希匹配时才替换内容（STALE_ANCHOR 拒绝脏写入）。支持 `--lines N:M` 块级哈希。CRLF→LF 归一化保证跨平台一致性。
 - **sync --discover**：`pnpm sync:discover` — core/ 与 adapters/ 漂移检测。比对文件哈希，报告 drifted（路径相同内容不同）、orphan（仅适配层存在）、missing（仅 core 存在）。初始检测 3 个适配器 624 文件全部同步。
 - **forge-loop --strict/--linear**：`--strict` 测试失败即停并输出 `review.md`；`--linear` 单次检测→测试→报告，不迭代循环。
 - **skill-eval trigger**：`pnpm skill-eval trigger <skill>` — 从 SKILL.md 自动生成 20 条多样化查询，运行静态检查，记录结果。Judge 脚手架：`judge-prep` 初始化 rubric，`judge` 打印 AI 可读简报，`judge-record` 保存结果。

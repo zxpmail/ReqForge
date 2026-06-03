@@ -14,11 +14,18 @@
  *                                                             # Verify + replace
  *   node scripts/forge-hashline.mjs edit <file> <hash> --from <content-file>
  *                                                             # Replace from file
+ *   node scripts/forge-hashline.mjs verify-brief <brief-path>  # Check hashes before fix
+ *   node scripts/forge-hashline.mjs verify-brief <brief-path> --after-fix
+ *                                                             # Check hashes after fix
+ *   node scripts/forge-hashline.mjs apply-brief <brief-path>   # Auto-create new files from brief
  *
  * Options:
  *   --lines N:M     Line range (1-based, inclusive)
  *   --new-string    New content (inline)
  *   --from <file>   New content (from file)
+ *   --root <dir>    Project root (default: repo root)
+ *   --after-fix     Verify mode: check files were actually modified
+ *   --json          Output machine-readable JSON (verify-brief only)
  *   --help, -h      Show help
  */
 
@@ -115,6 +122,185 @@ export function safeReplaceBlock(filePath, startLine, endLine, claimedHash, newB
   return { ok: true, fuzzy };
 }
 
+// === Brief Parsing & Verification ===
+
+/**
+ * Parse hashline entries from a fix-brief.md file.
+ * Each hashline block starts with `**Hashline**:` and contains lines like:
+ *   `path/to/file` → `sha256:abc...`
+ *   `path/to/file` → (新文件)  # 创建后将生成哈希
+ */
+export function parseBriefHashes(briefPath) {
+  if (!existsSync(briefPath)) return { entries: [], error: "ENOENT" };
+  const content = readFileSync(briefPath, "utf-8");
+  const lines = content.split("\n");
+  const entries = [];
+  let inHashline = false;
+
+  for (const line of lines) {
+    if (line.includes("**Hashline**:")) {
+      inHashline = true;
+      continue;
+    }
+    if (!inHashline) continue;
+
+    // Line: `path/to/file` → `sha256:abc...`
+    const match = line.match(/^\s*`([^`]+)`\s*→\s*`(sha256:[a-f0-9]+)`/);
+    if (match) {
+      entries.push({ file: match[1], hash: match[2], isNew: false });
+      continue;
+    }
+
+    // Line: `path/to/file` → (新文件)
+    const newFileMatch = line.match(/^\s*`([^`]+)`\s*→\s*\(新文件\)/);
+    if (newFileMatch) {
+      entries.push({ file: newFileMatch[1], hash: null, isNew: true });
+      continue;
+    }
+
+    // Empty line or non-hashline content → end of block
+    if (line.trim() === "" || !line.startsWith("  `")) {
+      inHashline = false;
+    }
+  }
+
+  return { entries };
+}
+
+/**
+ * Verify brief hashline entries against current file state.
+ *
+ * @param {string} briefPath - Path to fix-brief.md
+ * @param {string} mode - "before" (pre-fix check) or "after" (post-fix check)
+ * @param {string} [rootDir] - Project root for resolving relative paths
+ * @returns {{ ok: boolean, results: Array, summary: object }}
+ */
+export function verifyBrief(briefPath, mode, rootDir) {
+  rootDir = rootDir || ROOT;
+  const { entries, error } = parseBriefHashes(briefPath);
+  if (error === "ENOENT") return { ok: false, error: "ENOENT", message: `Brief not found: ${briefPath}` };
+
+  const results = [];
+  let ok = true;
+
+  for (const entry of entries) {
+    const absPath = join(rootDir, entry.file);
+    const r = { file: entry.file };
+
+    if (mode === "before" || mode === "pre") {
+      // Pre-fix: verify brief is still fresh
+      if (entry.isNew) {
+        if (existsSync(absPath)) {
+          r.status = "ALREADY_EXISTS";
+          r.detail = "File already exists";
+          ok = false;
+        } else {
+          r.status = "OK";
+          r.detail = "Ready to create";
+        }
+      } else {
+        if (!existsSync(absPath)) {
+          r.status = "MISSING";
+          r.detail = "Expected file not found";
+          ok = false;
+        } else {
+          const actualHash = computeFileHash(absPath);
+          const { match } = hashMatches(entry.hash, actualHash);
+          if (match) {
+            r.status = "OK";
+            r.detail = "Hash matches";
+          } else {
+            r.status = "STALE";
+            r.claimed = entry.hash;
+            r.actual = actualHash;
+            r.detail = "Hash mismatch — file changed since brief was generated";
+            ok = false;
+          }
+        }
+      }
+    } else {
+      // After-fix: verify edits were actually applied
+      if (entry.isNew) {
+        if (existsSync(absPath)) {
+          r.status = "OK";
+          r.detail = "File created";
+        } else {
+          r.status = "MISSING";
+          r.detail = "File was not created";
+          ok = false;
+        }
+      } else {
+        if (!existsSync(absPath)) {
+          r.status = "MISSING";
+          r.detail = "File was deleted";
+          ok = false;
+        } else {
+          const actualHash = computeFileHash(absPath);
+          const { match } = hashMatches(entry.hash, actualHash);
+          if (!match) {
+            r.status = "OK";
+            r.detail = "Hash changed — file was edited";
+          } else {
+            r.status = "UNCHANGED";
+            r.claimed = entry.hash;
+            r.actual = actualHash;
+            r.detail = "Hash still matches — file was NOT edited";
+            ok = false;
+          }
+        }
+      }
+    }
+
+    results.push(r);
+  }
+
+  const summary = {
+    total: results.length,
+    ok: results.filter(r => r.status === "OK").length,
+    stale: results.filter(r => r.status === "STALE" || r.status === "UNCHANGED").length,
+    missing: results.filter(r => r.status === "MISSING").length,
+    other: results.filter(r => r.status !== "OK" && r.status !== "STALE" && r.status !== "UNCHANGED" && r.status !== "MISSING").length,
+  };
+
+  return { ok, results, summary };
+}
+
+/**
+ * Apply a fix-brief: auto-create (新文件) entries.
+ * For hash-anchored edits, only verifies — actual editing is done by the AI.
+ *
+ * @param {string} briefPath - Path to fix-brief.md
+ * @param {string} [rootDir] - Project root
+ * @returns {{ ok: boolean, created: string[], errors: string[] }}
+ */
+export function applyBrief(briefPath, rootDir) {
+  rootDir = rootDir || ROOT;
+  const { entries, error } = parseBriefHashes(briefPath);
+  if (error === "ENOENT") return { ok: false, error: "ENOENT", message: `Brief not found: ${briefPath}` };
+
+  const created = [];
+  const errors = [];
+
+  for (const entry of entries) {
+    if (!entry.isNew) continue;
+    const absPath = join(rootDir, entry.file);
+    if (existsSync(absPath)) {
+      // Already exists, skip
+      continue;
+    }
+    try {
+      const dir = dirname(absPath);
+      if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+      writeFileSync(absPath, "", "utf-8");
+      created.push(entry.file);
+    } catch (e) {
+      errors.push(`${entry.file}: ${e.message}`);
+    }
+  }
+
+  return { ok: errors.length === 0, created, errors };
+}
+
 // === Manifest ===
 
 export function generateManifest(files, rootDir) {
@@ -152,12 +338,17 @@ Usage:
   node scripts/forge-hashline.mjs verify <file> <hash>      Verify hash (exit 0/1)
   node scripts/forge-hashline.mjs edit <file> <hash> --new-string "..."   Verify + replace
   node scripts/forge-hashline.mjs edit <file> <hash> --from <content-file>  Replace from file
+  node scripts/forge-hashline.mjs verify-brief <brief-path>            Check all brief hashes
+  node scripts/forge-hashline.mjs verify-brief <brief-path> --after-fix Check edits applied
+  node scripts/forge-hashline.mjs apply-brief <brief-path>             Auto-create new files
 
 Options:
   --lines N:M     Line range (1-based, inclusive)
   --new-string    New content (inline)
   --from <file>   New content (from file)
   --root <dir>    Project root (default: repo root)
+  --after-fix     Verify mode: check files were actually modified
+  --json          Output machine-readable JSON (verify-brief only)
   -h, --help      Show help
 `);
 }
@@ -259,6 +450,66 @@ function main() {
     }
     console.error(result.message || result.error);
     process.exit(1);
+  }
+
+  if (cmd === "verify-brief") {
+    if (!rest[0]) { console.error("Missing: <brief-path>"); process.exit(1); }
+    const briefPath = rest[0];
+    const mode = rest.includes("--after-fix") ? "after" : "before";
+    const jsonMode = rest.includes("--json");
+    const rootIdx = rest.indexOf("--root");
+
+    const result = verifyBrief(briefPath, mode, rootIdx !== -1 && rest[rootIdx + 1] ? rest[rootIdx + 1] : undefined);
+
+    if (result.error === "ENOENT") {
+      console.error(`ENOENT: ${briefPath}`);
+      process.exit(1);
+    }
+
+    if (jsonMode) {
+      console.log(JSON.stringify(result, null, 2));
+      process.exit(result.ok ? 0 : 1);
+    }
+
+    const label = mode === "after" ? "After-fix" : "Before-fix";
+    console.log(`${label} verify — ${briefPath}`);
+    console.log("─".repeat(50));
+    for (const r of result.results) {
+      const icon = r.status === "OK" ? "✅" : r.status === "STALE" || r.status === "UNCHANGED" ? "⚠️" : r.status === "MISSING" ? "❌" : "❓";
+      console.log(` ${icon} \`${r.file}\` — ${r.detail}`);
+      if (r.claimed && r.actual && r.status !== "OK") {
+        console.log(`    claimed: ${r.claimed}`);
+        console.log(`    actual:  ${r.actual}`);
+      }
+    }
+    console.log("─".repeat(50));
+    console.log(`Summary: ${result.summary.ok} OK · ${result.summary.stale} stale · ${result.summary.missing} missing`);
+    process.exit(result.ok ? 0 : 1);
+  }
+
+  if (cmd === "apply-brief") {
+    if (!rest[0]) { console.error("Missing: <brief-path>"); process.exit(1); }
+    const briefPath = rest[0];
+    const rootIdx = rest.indexOf("--root");
+
+    const result = applyBrief(briefPath, rootIdx !== -1 && rest[rootIdx + 1] ? rest[rootIdx + 1] : undefined);
+
+    if (result.error === "ENOENT") {
+      console.error(`ENOENT: ${briefPath}`);
+      process.exit(1);
+    }
+
+    if (result.created.length > 0) {
+      console.log(`Created ${result.created.length} file(s):`);
+      for (const f of result.created) console.log(`  ✅ ${f}`);
+    } else {
+      console.log("No new files to create (all exist or none marked as new).");
+    }
+    if (result.errors.length > 0) {
+      for (const e of result.errors) console.error(`  ❌ ${e}`);
+      process.exit(1);
+    }
+    process.exit(0);
   }
 
   console.error(`Unknown command: ${cmd}`);

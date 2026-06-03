@@ -26,7 +26,7 @@ import { execSync, spawn } from "child_process";
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
-import { computeFileHash } from "./forge-hashline.mjs";
+import { computeFileHash, verifyBrief, applyBrief } from "./forge-hashline.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -642,6 +642,24 @@ if (fdeMode) {
   console.log(`───────────────────────────────────────────\n`);
 }
 
+// ── Hashline: verify previous fix-brief was applied ──
+const briefPath = join(STATE_DIR, "fix-brief.md");
+if (state.status === "in-progress" && existsSync(briefPath)) {
+  const vr = verifyBrief(briefPath, "after", ROOT);
+  if (!vr.ok) {
+    const unapplied = vr.results.filter(r => r.status === "MISSING" || r.status === "UNCHANGED");
+    if (unapplied.length > 0) {
+      console.log(`\n⚠️ 修复验证 — ${unapplied.length} 项未正确应用：`);
+      for (const r of unapplied) {
+        console.log(`  ${r.status === "MISSING" ? "❌" : "⚠️"} \`${r.file}\` — ${r.detail}`);
+      }
+      console.log(`  继续执行检查，但修复可能不完整。\n`);
+    }
+  } else {
+    console.log(`✅ 前次修复全部验证通过。\n`);
+  }
+}
+
 console.log(`\n═══════════════════════════════════════`);
 console.log(`  Phase ${phaseNum} — Iteration ${state.iteration + 1}/${maxIterations}`);
 console.log(`═══════════════════════════════════════\n`);
@@ -728,6 +746,24 @@ writeState(state);
 const brief = generateFixBrief(planAfterFix.omitted, autoCreated, testResult, uiResult, state.iteration);
 ensureDir(STATE_DIR);
 writeFileSync(join(STATE_DIR, "fix-brief.md"), brief);
+
+// Hashline: verify newly generated brief has fresh anchors
+const vr = verifyBrief(join(STATE_DIR, "fix-brief.md"), "before", ROOT);
+if (!vr.ok) {
+  const stale = vr.results.filter(r => r.status === "STALE" || r.status === "MISSING");
+  if (stale.length > 0) {
+    console.log(`\n⚠️ Hashline 验证：${stale.length} 项锚点已过期，建议重新生成 brief。`);
+    for (const r of stale) {
+      console.log(`  ${r.status === "MISSING" ? "❌" : "⚠️"} \`${r.file}\` — ${r.detail}`);
+    }
+  }
+}
+
+// Auto-create new files from brief
+const ab = applyBrief(join(STATE_DIR, "fix-brief.md"), ROOT);
+if (ab.created.length > 0) {
+  console.log(`  自动创建 ${ab.created.length} 个新文件`);
+}
 
 console.log(`\n📋 修复指令 → ${join(STATE_DIR, "fix-brief.md")}`);
 console.log(`  自动创建 ${autoCreated.length} 个文件，剩余 ${planAfterFix.omitted.length} 项需 AI 修复`);

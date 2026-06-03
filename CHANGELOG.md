@@ -17,6 +17,9 @@ All notable changes to Forge are documented here.
 ## [v1.35.13] - 2026-06-03
 
 ### Added
+- **forge-hashline verify-brief**: `pnpm forge-hashline verify-brief <brief-path>` — parses fix-brief.md hashline entries, verifies all hash anchors match current files (before-fix) or detects whether files were actually modified (after-fix with `--after-fix`). Reports OK/STALE/UNCHANGED/MISSING per entry. `--json` for machine-readable output.
+- **forge-hashline apply-brief**: `pnpm forge-hashline apply-brief <brief-path>` — auto-creates files marked as `(新文件)` in fix-brief.md.
+- **Hashline verification loop**: forge-loop and forge-phase-loop now run `verify-brief` on brief generation (freshness check) and on next iteration (application check), plus `apply-brief` for auto-creating new files. Breaks the string-matching retry deadlock in fix→verify cycles.
 - **forge-hashline**: `pnpm forge-hashline hash|verify|edit <file>` — SHA256 content-hash anchored editing. Atomic write via tmp+rename, CRLF→LF normalization, block hashing with `--lines N:M`. Integrated into forge-loop/forge-phase-loop fix-brief.md as `**Hashline**:` anchor entries.
 - **sync --discover**: `pnpm sync:discover` — drift detection between core/ and adapters/. Reports drifted (hash mismatch), orphan (adapter-only), missing (core-only).
 - **forge-loop --strict/--linear**: `--strict` stops on first test failure with review.md; `--linear` runs single pass without iteration.

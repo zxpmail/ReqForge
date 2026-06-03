@@ -336,11 +336,19 @@ pnpm forge-hashline hash <file> --lines N:M                     # 打印行范�
 pnpm forge-hashline verify <file> <hash>                        # 验证哈希匹配
 pnpm forge-hashline edit <file> <hash> --new-string "..."       # 验证后替换内容
 pnpm forge-hashline edit <file> <hash> --from <content-file>    # 从文件读取替换内容
+pnpm forge-hashline verify-brief <brief-path>                   # 检查 fix-brief 哈希是否仍有效
+pnpm forge-hashline verify-brief <brief-path> --after-fix       # 检查 fix-brief 的修改是否已应用
+pnpm forge-hashline verify-brief <brief-path> --json            # JSON 格式输出
+pnpm forge-hashline apply-brief <brief-path>                    # 自动创建 fix-brief 中的新文件
 ```
 
 **做什么**：用内容哈希锚点替代字符串匹配编辑。先验证文件未经篡改（哈希匹配），再执行写入。不匹配则拒绝（STALE_ANCHOR），防止脏写入。
 
 **与 fix-brief 集成**：`forge-loop` 和 `forge-phase-loop` 生成的 `fix-brief.md` 自动附带 `**Hashline**:` 条目。
+
+**verify-brief**：`forge-loop` 每次迭代时自动执行。before-fix（brief 刚生成）验证所有哈希锚点有效；after-fix（下一轮迭代）验证 AI 确实修改了文件。UNCHANGED = AI 没改、STALE = 文件被人动过、MISSING = 新文件没创建。验证不通过则提前报错，避免脏循环。
+
+**apply-brief**：自动创建 fix-brief 中标记为 `(新文件)` 的文件骨架。已在 `forge-loop` 生成 fix-brief 后自动执行。
 
 源自 oh-my-pi hashline 设计。
 

@@ -13,6 +13,9 @@ const {
   safeReplaceFile,
   safeReplaceBlock,
   generateManifest,
+  parseBriefHashes,
+  verifyBrief,
+  applyBrief,
 } = mod;
 
 const TMP = join(tmpdir(), "forge-hashline-test");
@@ -146,5 +149,217 @@ describe("generateManifest", () => {
     expect(key.endsWith("manifest-test.txt")).toBe(true);
     expect(result.manifest[key].hash).toMatch(/^sha256:/);
     expect(typeof result.manifest[key].size).toBe("number");
+  });
+});
+
+describe("parseBriefHashes", () => {
+  const briefFile = join(TMP, "fix-brief-test.md");
+
+  beforeAll(() => {
+    mkdirSync(TMP, { recursive: true });
+  });
+
+  it("returns ENOENT for missing file", () => {
+    const r = parseBriefHashes("/nonexistent/brief.md");
+    expect(r.error).toBe("ENOENT");
+  });
+
+  it("parses hashline entries from markdown brief", () => {
+    const brief = [
+      `# Fix Brief`,
+      ``,
+      `**Hashline**:`,
+      `  \`src/file-a.ts\` → \`sha256:abc123def456abc123def456abc123def456abc123def456abc123def456\``,
+      `  \`src/file-b.ts\` → (新文件)  # 创建后将生成哈希`,
+      ``,
+      `Some other content`,
+    ].join("\n");
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = parseBriefHashes(briefFile);
+    expect(r.error).toBeUndefined();
+    expect(r.entries).toHaveLength(2);
+    expect(r.entries[0].file).toBe("src/file-a.ts");
+    expect(r.entries[0].isNew).toBe(false);
+    expect(r.entries[0].hash).toMatch(/^sha256:/);
+    expect(r.entries[1].file).toBe("src/file-b.ts");
+    expect(r.entries[1].isNew).toBe(true);
+    expect(r.entries[1].hash).toBeNull();
+  });
+
+  it("stops hashline block at empty line", () => {
+    const brief = [
+      `**Hashline**:`,
+      `  \`src/file-a.ts\` → \`sha256:abc123def456abc123def456abc123def456abc123def456abc123def456\``,
+      ``,
+      `**Other section**: not a hashline`,
+    ].join("\n");
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = parseBriefHashes(briefFile);
+    expect(r.entries).toHaveLength(1);
+  });
+
+  it("returns empty array for brief without hashline", () => {
+    writeFileSync(briefFile, "# No hashline here", "utf-8");
+    const r = parseBriefHashes(briefFile);
+    expect(r.entries).toHaveLength(0);
+  });
+
+  afterAll(() => {
+    try { rmSync(TMP, { recursive: true, force: true }); } catch {}
+  });
+});
+
+describe("verifyBrief", () => {
+  const testDir = join(TMP, "verify-test");
+  const briefFile = join(testDir, "brief.md");
+
+  beforeAll(() => {
+    mkdirSync(testDir, { recursive: true });
+    writeFileSync(join(testDir, "existing-file.ts"), "hello world", "utf-8");
+  });
+
+  afterAll(() => {
+    try { rmSync(TMP, { recursive: true, force: true }); } catch {}
+  });
+
+  it("before mode: returns OK for files with matching hash", () => {
+    const hash = computeFileHash(join(testDir, "existing-file.ts"));
+    const brief = `**Hashline**:\n  \`existing-file.ts\` → \`${hash}\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "before", testDir);
+    expect(r.ok).toBe(true);
+    expect(r.results[0].status).toBe("OK");
+  });
+
+  it("before mode: returns STALE for files with changed hash", () => {
+    const badHash = "sha256:0000000000000000000000000000000000000000000000000000000000000000";
+    const brief = `**Hashline**:\n  \`existing-file.ts\` → \`${badHash}\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "before", testDir);
+    expect(r.ok).toBe(false);
+    expect(r.results[0].status).toBe("STALE");
+  });
+
+  it("before mode: returns MISSING for nonexistent file", () => {
+    const hash = "sha256:abc123def456abc123def456abc123def456abc123def456abc123def456abc1";
+    const brief = `**Hashline**:\n  \`nonexistent.ts\` → \`${hash}\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "before", testDir);
+    expect(r.ok).toBe(false);
+    expect(r.results[0].status).toBe("MISSING");
+  });
+
+  it("before mode: returns ALREADY_EXISTS for new file that exists", () => {
+    const brief = `**Hashline**:\n  \`existing-file.ts\` → (新文件)  # already exists\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "before", testDir);
+    expect(r.ok).toBe(false);
+    expect(r.results[0].status).toBe("ALREADY_EXISTS");
+  });
+
+  it("before mode: allows new file that does not exist", () => {
+    const brief = `**Hashline**:\n  \`new-file.ts\` → (新文件)  # will create\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "before", testDir);
+    expect(r.ok).toBe(true);
+    expect(r.results[0].status).toBe("OK");
+  });
+
+  it("after mode: returns OK when existing file hash changed (was edited)", () => {
+    const originalHash = computeFileHash(join(testDir, "existing-file.ts"));
+    const brief = `**Hashline**:\n  \`existing-file.ts\` → \`${originalHash}\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    // Edit the file so hash changes
+    writeFileSync(join(testDir, "existing-file.ts"), "modified content", "utf-8");
+    const r = verifyBrief(briefFile, "after", testDir);
+    expect(r.ok).toBe(true);
+    expect(r.results[0].status).toBe("OK");
+    expect(r.results[0].detail).toContain("Hash changed");
+  });
+
+  it("after mode: returns UNCHANGED when file hash still matches (was not edited)", () => {
+    writeFileSync(join(testDir, "existing-file.ts"), "hello world", "utf-8");
+    const originalHash = computeFileHash(join(testDir, "existing-file.ts"));
+    const brief = `**Hashline**:\n  \`existing-file.ts\` → \`${originalHash}\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    // Do NOT edit the file
+    const r = verifyBrief(briefFile, "after", testDir);
+    expect(r.ok).toBe(false);
+    expect(r.results[0].status).toBe("UNCHANGED");
+  });
+
+  it("after mode: returns MISSING when new file was not created", () => {
+    const brief = `**Hashline**:\n  \`should-exist.ts\` → (新文件)\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "after", testDir);
+    expect(r.ok).toBe(false);
+    expect(r.results[0].status).toBe("MISSING");
+  });
+
+  it("after mode: returns OK when new file was created", () => {
+    writeFileSync(join(testDir, "should-exist.ts"), "new content", "utf-8");
+    const brief = `**Hashline**:\n  \`should-exist.ts\` → (新文件)\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "after", testDir);
+    expect(r.ok).toBe(true);
+    expect(r.results[0].status).toBe("OK");
+    expect(r.results[0].detail).toContain("File created");
+  });
+
+  it("returns error for missing brief file", () => {
+    const r = verifyBrief("/nonexistent/brief.md", "before");
+    expect(r.error).toBe("ENOENT");
+  });
+
+  it("accepts 'pre' as alias for 'before'", () => {
+    writeFileSync(join(testDir, "for-pre.ts"), "data", "utf-8");
+    const hash = computeFileHash(join(testDir, "for-pre.ts"));
+    const brief = `**Hashline**:\n  \`for-pre.ts\` → \`${hash}\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = verifyBrief(briefFile, "pre", testDir);
+    expect(r.ok).toBe(true);
+  });
+});
+
+describe("applyBrief", () => {
+  const testDir = join(TMP, "apply-test");
+  const briefFile = join(testDir, "brief.md");
+
+  beforeAll(() => {
+    mkdirSync(testDir, { recursive: true });
+  });
+
+  afterAll(() => {
+    try { rmSync(TMP, { recursive: true, force: true }); } catch {}
+  });
+
+  it("creates new files marked as (新文件)", () => {
+    const brief = `**Hashline**:\n  \`new-file-a.ts\` → (新文件)\n  \`sub/new-file-b.ts\` → (新文件)\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = applyBrief(briefFile, testDir);
+    expect(r.ok).toBe(true);
+    expect(r.created).toEqual(["new-file-a.ts", "sub/new-file-b.ts"]);
+    expect(existsSync(join(testDir, "new-file-a.ts"))).toBe(true);
+    expect(existsSync(join(testDir, "sub", "new-file-b.ts"))).toBe(true);
+  });
+
+  it("does not recreate existing files", () => {
+    writeFileSync(join(testDir, "existing.ts"), "data", "utf-8");
+    const brief = `**Hashline**:\n  \`existing.ts\` → (新文件)\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = applyBrief(briefFile, testDir);
+    expect(r.created).toHaveLength(0);
+  });
+
+  it("skips hash-anchored entries (not marked as new)", () => {
+    const brief = `**Hashline**:\n  \`some-file.ts\` → \`sha256:abc123def456abc123def456abc123def456abc123def456abc123def456\`\n`;
+    writeFileSync(briefFile, brief, "utf-8");
+    const r = applyBrief(briefFile, testDir);
+    expect(r.created).toHaveLength(0);
+  });
+
+  it("returns error for missing brief", () => {
+    const r = applyBrief("/nonexistent/brief.md");
+    expect(r.error).toBe("ENOENT");
   });
 });
