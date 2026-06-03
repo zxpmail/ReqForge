@@ -380,6 +380,7 @@ export function installHooks(
   forgeRoot: string,
   log: (msg: string) => void,
   force?: boolean,
+  windows?: boolean,
 ): void {
   const hookRelDir = HOOK_DEST[client];
   if (!hookRelDir) {
@@ -394,12 +395,29 @@ export function installHooks(
     return;
   }
 
+  const isWindows = windows ?? process.platform === "win32";
+
   fs.mkdirSync(destDir, { recursive: true });
+
+  // Remove stale cross-platform files that don't match current platform
+  const keepExt = isWindows ? ".bat" : ".sh";
+  for (const name of fs.readdirSync(destDir)) {
+    if (name === "AGENTS.md" || name.endsWith(".md")) continue;
+    const ext = name.slice(name.lastIndexOf("."));
+    if (ext !== keepExt && (ext === ".sh" || ext === ".bat" || ext === ".ps1")) {
+      try { fs.rmSync(path.join(destDir, name)); } catch {}
+    }
+  }
 
   let copied = 0;
   for (const name of fs.readdirSync(srcDir)) {
     if (name === "AGENTS.md") continue;
     if (name.endsWith(".md")) continue;
+
+    // Platform filtering: Windows → .bat only, Unix → .sh only
+    if (isWindows && (name.endsWith(".sh") || name.endsWith(".ps1"))) continue;
+    if (!isWindows && (name.endsWith(".bat") || name.endsWith(".ps1"))) continue;
+
     const srcFile = path.join(srcDir, name);
     if (!fs.statSync(srcFile).isFile()) continue;
     const destFile = path.join(destDir, name);
@@ -442,7 +460,7 @@ export function installForge(
   }
 
   // Copy hook scripts from core/hooks/ to the target project's hooks directory
-  installHooks(client, targetRoot, forgeRoot, log, options.force);
+  installHooks(client, targetRoot, forgeRoot, log, options.force, options.windows);
 
   if (loadout) {
     applyLoadoutHooksInDest(client, dest, loadout, log);
