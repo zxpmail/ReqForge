@@ -219,6 +219,8 @@ pnpm test && pnpm forge-smoke
 
 改 `core/` 后：`pnpm sync`
 
+**drift 检测**：`pnpm sync --discover` — 比较 core 与 adapter 文件哈希，报告漂移/孤立/缺失。
+
 ---
 
 ## 事后验证（forge-verify）

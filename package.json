@@ -12,6 +12,7 @@
   },
   "scripts": {
     "sync": "ts-node scripts/sync.ts",
+    "sync:discover": "ts-node scripts/sync.ts --discover",
     "forge-install": "ts-node scripts/install.ts",
     "dep-graph": "ts-node scripts/dependency-graph.ts",
     "preflight": "ts-node scripts/preflight.ts",
