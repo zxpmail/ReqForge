@@ -60,6 +60,7 @@ requires: []
     │   ├── openspec-handoff.md
     │   ├── output-style.md
     │   ├── change-assessment-checklist.md
+    │   ├── anti-rationalization.md
     │   └── workflow.md              # propose → apply → verify → archive
     └── templates/
         ├── change-proposal-template.md
@@ -79,6 +80,12 @@ requires: []
     **Whole-repo dev-builder**: apply must pass change scope (files/tasks from changes/<name>/ only), not entire DEV-PLAN backlog.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    迭代过程中遇阻力时读取：识别跳过 propose/verify/archive 环节的常见借口。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - `changes/<change-name>/proposal.md`

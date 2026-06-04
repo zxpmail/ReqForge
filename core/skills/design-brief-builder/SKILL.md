@@ -61,7 +61,8 @@ requires: []
         ├── sufficiency-judgment.md
         ├── design-discovery-questionnaire.md
         ├── visual-direction-presets.md
-        └── anti-ai-slop-checklist.md
+        ├── anti-ai-slop-checklist.md
+        └── anti-rationalization.md
     ../_shared/
     ```
 
@@ -74,6 +75,12 @@ requires: []
     **Copying without thinking**: Adapt reference products; don't clone blindly.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping interview / skipping WebSearch 等场景时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Design-Brief.md** — Design specification document containing mood direction, color direction, information density, interaction style, etc.

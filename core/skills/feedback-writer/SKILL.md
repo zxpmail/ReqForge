@@ -113,11 +113,19 @@ requires: []
     **Skipping scoring**: Writing qualitative feedback without Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping recording / skipping scoring / false positive 时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: file-structure -->
 [File Structure]
     ```
     feedback-writer/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md                           # Main Skill definition (this file)
+    └── references/
+        └── anti-rationalization.md
     ```
 
 <!-- end: file-structure -->

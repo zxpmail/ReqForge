@@ -77,7 +77,8 @@ requires: []
     design-maker/
     ├── SKILL.md
     └── references/
-        └── design-self-critique.md        # 五维自检 + anti-slop（交付前）
+        ├── design-self-critique.md        # 五维自检 + anti-slop（交付前）
+        └── anti-rationalization.md
     ```
 
 <!-- end: file-structure -->
@@ -89,6 +90,12 @@ requires: []
     **Inconsistent spacing/color system**: Using ad-hoc values instead of a design token system. Every color, spacing, and font size should come from a defined palette, not "this looks about right."
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping planning / skipping component system / skipping state variants 时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Design Deliverables** (created via design tool MCP):

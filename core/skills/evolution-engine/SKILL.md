@@ -69,11 +69,19 @@ requires: []
     **Circular evolution**: Rule A graduates from feedback, then generates more feedback, then graduates again as Rule A'. This is the ratchet spinning without progress. After graduating a rule, skip that pattern for N cycles.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 premature graduation / skipping cross-reference / skipping Verify-by 时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: file-structure -->
 [File Structure]
     ```
     evolution-engine/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md                           # Main Skill definition (this file)
+    └── references/
+        └── anti-rationalization.md
     ```
 
 <!-- end: file-structure -->

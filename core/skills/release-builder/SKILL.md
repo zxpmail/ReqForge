@@ -70,6 +70,7 @@ requires: []
         ├── release-strategy.md         # Web / Desktop / CLI
         ├── rollback-strategy.md
         ├── finishing-branch-checklist.md
+        ├── anti-rationalization.md
         └── yolo-mode.md
     ```
 
@@ -82,6 +83,12 @@ requires: []
     **Build cache pollution**: `rm -rf dist &&` before final build when in doubt.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping smoke test / skipping privacy audit / skipping rollback plan 时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Build artifacts** — .next/, dist/, release/ and other build output directories
