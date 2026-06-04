@@ -108,6 +108,20 @@ requires: []
     → `references/rollback-strategy.md`
 
 <!-- end: rollback-strategy -->
+<!-- begin: release-dimension-checklist -->
+[Dimension Checklist]
+    See [references/release-dimension-checklist.md](references/release-dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Build Artifact Integrity**: complete build, no debug artifacts in production
+    - **Environment Parity**: aligned OS, runtime, and dependency versions
+    - **Configuration/Secrets Management**: runtime injection, startup validation
+    - **Database Migration Readiness**: backward-compatible, reversible, idempotent
+    - **Dependency Vulnerability Scan**: no critical/high unfixable vulns in prod deps
+    - **Rollback Strategy**: one-command revert, data-preserving
+    - **Smoke Test Plan**: primary user flow verified end-to-end
+
+<!-- end: release-dimension-checklist -->
 <!-- begin: workflow -->
 [Workflow]
     1. Read `references/first-principles.md`

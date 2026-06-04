@@ -94,6 +94,18 @@ requires: []
     → `references/change-assessment-checklist.md`
 
 <!-- end: change-assessment-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Change scope boundaries**: explicit IN/OUT statement to prevent creep
+    - **Backward compatibility**: check API, schema, serialization for breaking changes
+    - **Testing coverage**: every changed file needs a test update
+    - **Rollback plan**: define minutes-to-execute undo strategy
+    - **Dependency impact**: trace ripple effect via dep-graph
+
+<!-- end: dimension-checklist -->
 <!-- begin: workflow -->
 [Workflow]
     Parse user intent: **propose** | **apply** | **verify** | **archive** (default: propose if only a change name/description given).

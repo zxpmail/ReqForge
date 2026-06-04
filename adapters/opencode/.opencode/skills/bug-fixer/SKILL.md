@@ -96,6 +96,21 @@ requires: []
     - **memory/decisions-log.md** — Append if the fix involved a significant technical decision
 
 <!-- end: output-artifacts -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Error classification**: categorize bug type (compile/runtime/logic/UI/data)
+    - **Reproduction steps**: deterministic repro required before any fix
+    - **Stack trace reading**: extract root-frame user code, exception type, message
+    - **Error message analysis**: treat error messages as primary evidence
+    - **Regression scope**: git bisect/blame to find introducing commit
+    - **Environment factors**: compare failing vs. known-working environment
+    - **Input validation**: trace triggering input, check boundaries and encoding
+    - **State management**: inspect state before/after, check caches and mutation
+
+<!-- end: dimension-checklist -->
 <!-- begin: debugging-rule-checklist -->
 [Debugging Rule Checklist]
     **调试中读取** `references/debugging-rule-checklist.md`

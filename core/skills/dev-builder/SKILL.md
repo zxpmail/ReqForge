@@ -125,6 +125,19 @@ requires: []
     **Phase 结束 Step 3 必须按此文执行** `references/phase-completion-assessment.md`
 
 <!-- end: phase-completion-assessment -->
+<!-- begin: development-dimension-checklist -->
+[Dimension Checklist]
+    See [references/development-dimension-checklist.md](references/development-dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Code Structure & Modularity**: consistent module layout, clear layer separation
+    - **Type Safety**: strict static typing, boundary validation
+    - **Error Handling**: categorized errors, async handlers, readable user-facing messages
+    - **Testing Coverage**: unit + integration + e2e covering all branches
+    - **Security Basics**: input validation, auth, CSRF/XSS protection
+    - **API Design Consistency**: uniform endpoints, correct status codes, versioning
+
+<!-- end: development-dimension-checklist -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]
