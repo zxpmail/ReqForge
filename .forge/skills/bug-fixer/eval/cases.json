@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "skill": "bug-fixer",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "happy-path-500-fix",
+      "split": "train",
+      "prompt": "登录页面报 500 错误了，服务端返回 'Cannot read properties of null (reading id)'，数据库用的是 PostgreSQL，ORM 是 Prisma。排查并修复这个 bug。",
+      "artifacts_subdir": "bug-fixer-500",
+      "assertions": {
+        "fileExists": [
+          "memory/task-history.md",
+          "memory/project-memory.md",
+          "memory/decisions-log.md"
+        ],
+        "maxBytes": [
+          { "file": "memory/task-history.md", "max": 10000 },
+          { "file": "memory/decisions-log.md", "max": 10000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "task-history-entry",
+            "file": "memory/task-history.md",
+            "mustMatch": "type=fix|bug-fixer|bug"
+          },
+          {
+            "id": "decisions-log-root-cause",
+            "file": "memory/decisions-log.md",
+            "mustMatch": "根因|root.cause|null|undefined"
+          }
+        ]
+      }
+    },
+    {
+      "id": "regression-after-refactor",
+      "split": "train",
+      "prompt": "重构了订单列表的分页逻辑后，第二页数据一直是空的，排查并修复。",
+      "artifacts_subdir": "bug-fixer-regression",
+      "assertions": {
+        "fileExists": [
+          "memory/task-history.md",
+          "memory/project-memory.md"
+        ],
+        "maxBytes": [
+          { "file": "memory/task-history.md", "max": 10000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "task-history-entry",
+            "file": "memory/task-history.md",
+            "mustMatch": "type=fix"
+          },
+          {
+            "id": "fix-references-regression",
+            "file": "memory/project-memory.md",
+            "mustMatch": "分页|pagination|offset|page"
+          }
+        ]
+      }
+    }
+  ]
+}

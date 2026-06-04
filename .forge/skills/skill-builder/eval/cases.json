@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "skill": "skill-builder",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "new-skill-created",
+      "split": "train",
+      "prompt": "创建一个名为 db-migration-checker 的新 Skill，用于自动对比数据库迁移脚本在生产和测试环境的差异并生成报告。",
+      "artifacts_subdir": "new-skill-created",
+      "assertions": {
+        "fileExists": [
+          "skills/db-migration-checker/SKILL.md",
+          ".forge/skills/db-migration-checker/eval/triggers.json",
+          ".forge/skills/db-migration-checker/eval/cases.json"
+        ],
+        "maxBytes": [
+          { "file": "skills/db-migration-checker/SKILL.md", "max": 30000 },
+          { "file": ".forge/skills/db-migration-checker/eval/triggers.json", "max": 5000 },
+          { "file": ".forge/skills/db-migration-checker/eval/cases.json", "max": 5000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-task-section",
+            "file": "skills/db-migration-checker/SKILL.md",
+            "mustMatch": "\\[Task\\]"
+          },
+          {
+            "id": "has-first-principles",
+            "file": "skills/db-migration-checker/SKILL.md",
+            "mustMatch": "\\[First Principles\\]"
+          },
+          {
+            "id": "has-gotchas",
+            "file": "skills/db-migration-checker/SKILL.md",
+            "mustMatch": "\\[Gotchas\\]"
+          },
+          {
+            "id": "has-workflow",
+            "file": "skills/db-migration-checker/SKILL.md",
+            "mustMatch": "\\[Workflow\\]"
+          },
+          {
+            "id": "kebab-case-dir",
+            "file": "skills/db-migration-checker/SKILL.md",
+            "mustMatch": "name: db-migration-checker"
+          },
+          {
+            "id": "has-eval-triggers",
+            "file": ".forge/skills/db-migration-checker/eval/triggers.json",
+            "mustMatch": "should_trigger"
+          },
+          {
+            "id": "has-eval-cases",
+            "file": ".forge/skills/db-migration-checker/eval/cases.json",
+            "mustMatch": "fileExists|regexChecks"
+          }
+        ]
+      }
+    }
+  ]
+}

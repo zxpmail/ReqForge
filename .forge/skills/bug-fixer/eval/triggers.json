@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "bug-fixer",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval bug-fixer",
+  "cases": [
+    {
+      "id": "should-trigger-explicit-error",
+      "prompt": "登录页面报 500 错误了，帮我排查一下根因并修复",
+      "should_trigger": true,
+      "note": "明确报告运行时异常，应触发 bug-fixer"
+    },
+    {
+      "id": "should-trigger-casual-breakage",
+      "prompt": "点保存按钮页面没反应，控制台有个红字报错，帮我看下",
+      "should_trigger": true,
+      "note": "口语化描述功能异常 + 控制台报错"
+    },
+    {
+      "id": "should-not-feature-request",
+      "prompt": "在个人中心页加一个修改头像的功能，用裁剪上传",
+      "should_trigger": false,
+      "note": "差一点相关：涉及页面修改，但本质是加新功能 → dev-builder"
+    },
+    {
+      "id": "should-not-code-quality",
+      "prompt": "这段代码逻辑能跑但可读性太差，变量命名也乱，review 一下",
+      "should_trigger": false,
+      "note": "差一点相关：用户主动说「能跑」，只是代码质量 → code-review"
+    }
+  ]
+}

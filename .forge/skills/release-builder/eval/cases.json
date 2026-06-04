@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "skill": "release-builder",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "npm-cli-publish",
+      "split": "train",
+      "prompt": "CLI 工具开发完成，package.json 版本 1.3.0，跑构建发到 npm registry，打 git tag v1.3.0。",
+      "artifacts_subdir": "npm-cli-publish",
+      "assertions": {
+        "fileExists": [
+          "package.json"
+        ],
+        "maxBytes": [
+          { "file": "package.json", "max": 10000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "version-bumped",
+            "file": "package.json",
+            "mustMatch": "\"version\"\\s*:\\s*\"1\\.3\\.0\""
+          }
+        ]
+      }
+    },
+    {
+      "id": "web-deploy-check",
+      "split": "held-out",
+      "prompt": "Next.js 项目构建并部署到 Vercel，域名 app.example.com。构建前清除缓存。",
+      "artifacts_subdir": "web-deploy-check",
+      "assertions": {
+        "fileExists": [
+          ".next/build-manifest.json",
+          "package.json",
+          "deploy-result.md"
+        ],
+        "maxBytes": [
+          { "file": "package.json", "max": 10000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "deploy-url-reported",
+            "file": "deploy-result.md",
+            "mustMatch": "deploy-result|app\\.example"
+          }
+        ]
+      }
+    }
+  ]
+}

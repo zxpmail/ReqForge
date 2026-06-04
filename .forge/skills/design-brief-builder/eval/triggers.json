@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "design-brief-builder",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval design-brief-builder",
+  "cases": [
+    {
+      "id": "should-trigger-vague-direction",
+      "prompt": "我想要一个偏科技感的现代设计风格，帮我出一份设计方向文档",
+      "should_trigger": true,
+      "note": "用户表达模糊视觉偏好，需要设计访谈明确方向 → design-brief-builder"
+    },
+    {
+      "id": "should-trigger-explicit-brief",
+      "prompt": "Product-Spec.md 写好了，接下来确定视觉方向，产出 Design-Brief.md",
+      "should_trigger": true,
+      "note": "明确要求产出 Design-Brief，这是 design-brief-builder 的直接入口"
+    },
+    {
+      "id": "should-not-mockup-generation",
+      "prompt": "出几张大促活动页的 banner 设计图，风格要喜庆一点",
+      "should_trigger": false,
+      "note": "差一点相关：都涉及设计，但用户要的是具体设计图 → design-maker"
+    },
+    {
+      "id": "should-not-feature-definition",
+      "prompt": "这个记账应用需要支持多币种、预算管理、账单拆分功能",
+      "should_trigger": false,
+      "note": "差一点相关：用户说的「功能」容易误判为设计需求，实际是产品功能定义 → product-spec-builder"
+    }
+  ]
+}

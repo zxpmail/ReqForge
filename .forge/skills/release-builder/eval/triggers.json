@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "release-builder",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval release-builder",
+  "cases": [
+    {
+      "id": "should-trigger-web-deploy",
+      "prompt": "功能都测完了，准备发到生产环境吧。域名是 app.example.com，先帮我构建然后部署到 Vercel。",
+      "should_trigger": true,
+      "note": "用户明确要求发布到生产环境，含目标域名和平台"
+    },
+    {
+      "id": "should-trigger-cli-publish",
+      "prompt": "npm 包版本从 1.2.0 升到 1.3.0，跑一下构建然后发到 registry 上，别忘了打 git tag。",
+      "should_trigger": true,
+      "note": "用户要求发布 npm 包，含版本号升级和 git tag"
+    },
+    {
+      "id": "should-not-implement-deploy-script",
+      "prompt": "帮我写一个 GitHub Actions 部署脚本，push 到 main 分支时自动构建并部署到服务器。",
+      "should_trigger": false,
+      "note": "差一点相关：与部署相关但意图是编写 CI 脚本而非执行发布，应交给 dev-builder"
+    },
+    {
+      "id": "should-not-build-error",
+      "prompt": "构建报错了，dist 目录里生成的文件全是空的，你帮我看看是什么原因。",
+      "should_trigger": false,
+      "note": "差一点相关：涉及构建产物但意图是诊断构建失败，应交给 bug-fixer"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "skill": "request-dispatcher",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "ambiguous-improve-dispatch",
+      "split": "train",
+      "prompt": "用户说「帮我把这个项目改进一下」，Product-Spec.md 存在，代码存在，无 active changes/。",
+      "artifacts_subdir": "ambiguous-improve-dispatch",
+      "assertions": {
+        "fileExists": [
+          "dispatch-recommendation.md"
+        ],
+        "maxBytes": [
+          { "file": "dispatch-recommendation.md", "max": 5000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-skill-name",
+            "file": "dispatch-recommendation.md",
+            "mustMatch": "Dispatch recommendation|recommend"
+          }
+        ]
+      }
+    }
+  ]
+}

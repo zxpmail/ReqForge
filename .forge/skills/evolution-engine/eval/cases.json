@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "skill": "evolution-engine",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "all-proposal-types",
+      "split": "train",
+      "prompt": "扫描 feedback 目录，检查哪些规则需要升级、哪些 Skill 需要优化，生成完整提案",
+      "artifacts_subdir": "evolution-engine-all-types",
+      "assertions": {
+        "fileExists": [
+          "feedback/FEEDBACK-INDEX.md",
+          "changes/proposals.md"
+        ],
+        "maxBytes": [
+          { "file": "feedback/FEEDBACK-INDEX.md", "max": 50000 },
+          { "file": "changes/proposals.md", "max": 100000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-rule-graduation",
+            "file": "changes/proposals.md",
+            "mustMatch": "Rule Graduation|规则升级"
+          },
+          {
+            "id": "has-skill-optimization",
+            "file": "changes/proposals.md",
+            "mustMatch": "Skill Optimization|Skill 优化"
+          },
+          {
+            "id": "has-new-skill",
+            "file": "changes/proposals.md",
+            "mustMatch": "New Skill|新 Skill"
+          },
+          {
+            "id": "each-proposal-has-red",
+            "file": "changes/proposals.md",
+            "mustMatch": "RED observation|RED 观察"
+          },
+          {
+            "id": "each-proposal-has-green",
+            "file": "changes/proposals.md",
+            "mustMatch": "GREEN change|GREEN 变更"
+          },
+          {
+            "id": "each-proposal-has-verify",
+            "file": "changes/proposals.md",
+            "mustMatch": "Verify by|验证方式"
+          },
+          {
+            "id": "cites-occurrence-count",
+            "file": "changes/proposals.md",
+            "mustMatch": "(occur|出现|累计).*\\d+"
+          }
+        ]
+      }
+    },
+    {
+      "id": "single-graduation-only",
+      "split": "held-out",
+      "prompt": "feedback 只有一条重复 3 次以上的模式，只做规则升级提案",
+      "artifacts_subdir": "evolution-engine-single-graduation",
+      "assertions": {
+        "fileExists": [
+          "feedback/FEEDBACK-INDEX.md",
+          "changes/proposals.md"
+        ],
+        "maxBytes": [
+          { "file": "changes/proposals.md", "max": 50000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-graduation",
+            "file": "changes/proposals.md",
+            "mustMatch": "Rule Graduation|规则升级"
+          },
+          {
+            "id": "has-graduation-target",
+            "file": "changes/proposals.md",
+            "mustMatch": "SKILL\\.md|CLAUDE\\.md|写入|修改"
+          },
+          {
+            "id": "cites-occurrence",
+            "file": "changes/proposals.md",
+            "mustMatch": "occur|出现"
+          }
+        ]
+      }
+    }
+  ]
+}

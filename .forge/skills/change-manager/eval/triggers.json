@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "change-manager",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval change-manager",
+  "cases": [
+    {
+      "id": "should-trigger-brownfield-feature",
+      "prompt": "现有项目已经有 Product-Spec.md 了，我想加一个用户积分体系，帮我走变更流程",
+      "should_trigger": true,
+      "note": "已有 Spec 的增量变更，明确需要 change-manager 的 propose→apply→verify→archive 流程"
+    },
+    {
+      "id": "should-trigger-spec-change",
+      "prompt": "需求变了，Product-Spec.md 里要加一个邮件通知模块，先出方案再实现",
+      "should_trigger": true,
+      "note": "brownfield 变更，需要变更提案和分阶段执行"
+    },
+    {
+      "id": "should-not-greenfield",
+      "prompt": "从零开始写一个电商网站的需求文档，不需要代码",
+      "should_trigger": false,
+      "note": "差一点相关：都会涉及 Product-Spec，但 greenfield → product-spec-builder"
+    },
+    {
+      "id": "should-not-bug-fix-only",
+      "prompt": "用户头像上传总是失败，检查到是 S3 签名过期问题，修一下",
+      "should_trigger": false,
+      "note": "差一点相关：涉及修改代码，但纯 bug 修复 → bug-fixer"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "skill": "design-maker",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "completion-report",
+      "split": "train",
+      "prompt": "根据 Product-Spec.md 和 Design-Brief.md 生成完整设计稿，完成后输出设计完成报告",
+      "artifacts_subdir": "design-maker-completion-report",
+      "assertions": {
+        "fileExists": [
+          "DESIGN-COMPLETION.md",
+          "Product-Spec.md",
+          "Design-Brief.md"
+        ],
+        "maxBytes": [
+          { "file": "DESIGN-COMPLETION.md", "max": 100000 },
+          { "file": "Product-Spec.md", "max": 100000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-page-list",
+            "file": "DESIGN-COMPLETION.md",
+            "mustMatch": "页面(列表|清单)|完成(的|的页面)"
+          },
+          {
+            "id": "has-state-variants",
+            "file": "DESIGN-COMPLETION.md",
+            "mustMatch": "状态变(体|量)|空状态|加载状态|错误状态"
+          },
+          {
+            "id": "has-component-list",
+            "file": "DESIGN-COMPLETION.md",
+            "mustMatch": "组件|design tokens|设计令牌"
+          },
+          {
+            "id": "has-self-critique-score",
+            "file": "DESIGN-COMPLETION.md",
+            "mustMatch": "自检|self-critique|评分|score"
+          }
+        ]
+      }
+    }
+  ]
+}

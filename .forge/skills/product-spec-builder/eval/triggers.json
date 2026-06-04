@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "product-spec-builder",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval product-spec-builder",
+  "cases": [
+    {
+      "id": "should-trigger-0-to-1",
+      "prompt": "我想做一个面向独立开发者的项目协作工具，核心功能是自动把 GitHub issue 排成 Sprint 看板，你帮我梳理一下需求，写一份产品规格文档。",
+      "should_trigger": true,
+      "note": "0-to-1 模式：从零开始构建产品需求，带具体场景描述"
+    },
+    {
+      "id": "should-trigger-iteration",
+      "prompt": "现在 Product-Spec 里用户角色只有管理员和普通成员，但实际还需要一个「观察者」角色只能看不能改。你帮我加一下并更新 Spec。",
+      "should_trigger": true,
+      "note": "迭代模式：已有 Product-Spec，要求修改用户角色定义"
+    },
+    {
+      "id": "should-not-dev-plan",
+      "prompt": "Spec 已经确认了，你根据这个帮我拆一下开发阶段，每个阶段排什么任务什么顺序。",
+      "should_trigger": false,
+      "note": "差一点相关：提到 Spec 但意图是创建开发计划，应交给 dev-planner"
+    },
+    {
+      "id": "should-not-visual-design",
+      "prompt": "我们的产品需要一个更现代的风格，蓝色主色调改成深色系，按钮圆角加大。你帮我调整一下设计规范。",
+      "should_trigger": false,
+      "note": "差一点相关：需求变更但聚焦视觉风格，应交给 design-brief-builder 而非重新走 spec 流程"
+    }
+  ]
+}

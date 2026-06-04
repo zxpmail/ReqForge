@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "skill-builder",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval skill-builder",
+  "cases": [
+    {
+      "id": "should-trigger-new-skill",
+      "prompt": "我想加一个新 Skill，用来做自动化的数据库迁移检查。开发同学改表结构之后能自动对比生产环境和测试环境的差异并生成报告。",
+      "should_trigger": true,
+      "note": "用户描述了一个完整的 Skill 需求场景，需要 skill-builder 创建 SKILL.md"
+    },
+    {
+      "id": "should-trigger-evolution-proposal",
+      "prompt": "EVOLUTION.md Level 4 那条提案我看了，同意。你按那个方案把新 Skill 建出来吧。",
+      "should_trigger": true,
+      "note": "来自 evolution-engine 的提案确认，需要 skill-builder 实现"
+    },
+    {
+      "id": "should-not-modify-existing",
+      "prompt": "现有的 code-review Skill 在检查 CSS 方面太弱了，应该加一条「检查未使用的样式类」规则，你直接改一下 SKILL.md。",
+      "should_trigger": false,
+      "note": "差一点相关：涉及 Skill 但意图是修改现有 Skill 而非创建新 Skill，直接编辑 SKILL.md 即可"
+    },
+    {
+      "id": "should-not-evolve-rules",
+      "prompt": "反馈文件里已经积累了 5 条关于 dev-builder 跳过测试的错误了，你分析一下这些模式，提炼成一条新规则加到 dev-builder 的 Gotchas 里。",
+      "should_trigger": false,
+      "note": "差一点相关：涉及 Skill 改进但源自从反馈模式演化规则，应交给 evolution-engine"
+    }
+  ]
+}

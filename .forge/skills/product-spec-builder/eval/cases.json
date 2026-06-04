@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "skill": "product-spec-builder",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "0-to-1-spec-output",
+      "split": "train",
+      "prompt": "我想做一个面向独立开发者的项目协作工具，核心功能是自动把 GitHub issue 排成 Sprint 看板。帮我生成 Product-Spec.md。",
+      "artifacts_subdir": "0-to-1-spec-output",
+      "assertions": {
+        "fileExists": [
+          "Product-Spec.md"
+        ],
+        "maxBytes": [
+          { "file": "Product-Spec.md", "max": 80000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-h1-title",
+            "file": "Product-Spec.md",
+            "mustMatch": "^#\\s+.+"
+          },
+          {
+            "id": "has-spec-section",
+            "file": "Product-Spec.md",
+            "mustMatch": "Product Spec|产品规格|需求文档"
+          },
+          {
+            "id": "has-user-stories",
+            "file": "Product-Spec.md",
+            "mustMatch": "用户故事|User Story|功能描述"
+          }
+        ]
+      }
+    },
+    {
+      "id": "iteration-spec-update",
+      "split": "held-out",
+      "prompt": "已有 Product-Spec.md，用户要求在现有用户角色中新增「观察者」角色，只能查看不能操作。更新 Spec 并记录 changelog。",
+      "artifacts_subdir": "iteration-spec-update",
+      "assertions": {
+        "fileExists": [
+          "Product-Spec.md",
+          "Product-Spec-CHANGELOG.md"
+        ],
+        "maxBytes": [
+          { "file": "Product-Spec.md", "max": 80000 },
+          { "file": "Product-Spec-CHANGELOG.md", "max": 20000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "changelog-has-entry",
+            "file": "Product-Spec-CHANGELOG.md",
+            "mustMatch": "Changelog|变更记录"
+          }
+        ]
+      }
+    }
+  ]
+}

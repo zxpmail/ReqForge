@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "skill": "dev-builder",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "phase-completion",
+      "split": "train",
+      "prompt": "实现 Phase 1 用户认证模块，完成后执行 Phase 完成评估",
+      "artifacts_subdir": "dev-builder-phase",
+      "assertions": {
+        "fileExists": [
+          "memory/task-history.md",
+          "memory/decisions-log.md",
+          ".needs-review"
+        ],
+        "maxBytes": [
+          { "file": "memory/task-history.md", "max": 50000 },
+          { "file": "memory/decisions-log.md", "max": 50000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "task-history-has-phase",
+            "file": "memory/task-history.md",
+            "mustMatch": "Phase \\d|phase \\d|Task|Status: (DONE|BLOCKED|DONE_WITH_CONCERNS)"
+          },
+          {
+            "id": "decisions-log-has-entries",
+            "file": "memory/decisions-log.md",
+            "mustMatch": "## \\d{4}-\\d{2}-\\d{2}|决定|decision"
+          },
+          {
+            "id": "needs-review-status",
+            "file": ".needs-review",
+            "mustMatch": "needs_review|clear"
+          },
+          {
+            "id": "has-git-commits",
+            "file": "memory/task-history.md",
+            "mustMatch": "commit|feat:|fix:|chore:|refactor:"
+          }
+        ]
+      }
+    }
+  ]
+}

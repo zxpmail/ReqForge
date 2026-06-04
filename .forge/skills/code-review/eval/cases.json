@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "skill": "code-review",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "happy-path-moderate-review",
+      "split": "train",
+      "prompt": "用户管理模块刚实现完，包含注册、登录、个人信息编辑三个功能。对照 Product-Spec.md 做一次完整 code review，包含功能完整性和代码质量两个维度。",
+      "artifacts_subdir": "code-review-user-module",
+      "assertions": {
+        "fileExists": [
+          "Product-Spec.md",
+          "DEV-PLAN.md"
+        ],
+        "maxBytes": [
+          { "file": "Product-Spec.md", "max": 200000 },
+          { "file": "DEV-PLAN.md", "max": 100000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "review-finds-or-approves",
+            "file": "Product-Spec.md",
+            "mustMatch": "用户|注册|登录|个人"
+          }
+        ]
+      }
+    },
+    {
+      "id": "review-after-bugfix",
+      "split": "train",
+      "prompt": "刚才修复了三个安全漏洞，现在对整个认证模块做一次 code review，重点检查安全和回归。",
+      "artifacts_subdir": "code-review-security",
+      "assertions": {
+        "fileExists": [
+          "Product-Spec.md",
+          "DEV-PLAN.md"
+        ],
+        "maxBytes": [
+          { "file": "Product-Spec.md", "max": 200000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "spec-mentions-auth",
+            "file": "Product-Spec.md",
+            "mustMatch": "认证|auth|安全|security|登录"
+          }
+        ]
+      }
+    }
+  ]
+}

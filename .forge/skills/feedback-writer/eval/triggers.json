@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "feedback-writer",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval feedback-writer",
+  "cases": [
+    {
+      "id": "should-trigger-user-correction",
+      "prompt": "不对，你刚才那个做法有问题。我之前跟你说过不要直接在 main 分支上改代码，你又忘了。",
+      "should_trigger": true,
+      "note": "用户明确纠正 AI 行为，包含具体错误描述，应触发 feedback-writer 记录"
+    },
+    {
+      "id": "should-trigger-capability-assessment",
+      "prompt": "这个 Skill 执行完了，我整体感觉还行，但中间有两步你跳过了，导致我手动补了一个文件。你记录一下这次的执行质量吧。",
+      "should_trigger": true,
+      "note": "用户要求对 Skill 执行做能力评估记录，需要 scoring"
+    },
+    {
+      "id": "should-not-evolution-request",
+      "prompt": "最近三次用户反馈都是同一个模式：Agent 在写测试时总漏边界条件。你帮我把这个规律提炼成一条新规则加到 Skill 里。",
+      "should_trigger": false,
+      "note": "差一点相关：涉及反馈模式但意图是演化规则，应交给 evolution-engine 而非 feedback-writer"
+    },
+    {
+      "id": "should-not-bug-fix",
+      "prompt": "你说得对，我确实写错了。登录接口的参数名应该是 email 不是 username，你赶紧改过来。",
+      "should_trigger": false,
+      "note": "差一点相关：用户确认 AI 犯错，但后续指令是修复代码而非记录反馈，应走 bug-fixer"
+    }
+  ]
+}

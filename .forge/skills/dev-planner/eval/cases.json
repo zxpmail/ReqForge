@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "skill": "dev-planner",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "plan-generation",
+      "split": "train",
+      "prompt": "根据 Product-Spec.md 生成 DEV-PLAN.md，按 MVP 范围分 4 个 Phase，每个 Phase 独立可运行",
+      "artifacts_subdir": "dev-planner-generation",
+      "assertions": {
+        "fileExists": [
+          "DEV-PLAN.md",
+          "Product-Spec.md"
+        ],
+        "maxBytes": [
+          { "file": "DEV-PLAN.md", "max": 100000 },
+          { "file": "Product-Spec.md", "max": 100000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-phase-headings",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "## Phase \\d|Phase \\d:"
+          },
+          {
+            "id": "has-tech-stack",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "技术栈|Tech Stack|技术选型"
+          },
+          {
+            "id": "has-mvp-scope",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "MVP Scope|MVP 范围|最小可行产品"
+          },
+          {
+            "id": "has-dependency-order",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "依赖(关系|顺序)|Dependency|Phase \\d.*Phase \\d"
+          },
+          {
+            "id": "has-file-inventory",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "文件(清单|列表)|File Inventory|涉及文件"
+          },
+          {
+            "id": "has-concrete-details",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "具体文件|具体路径|src/|app/"
+          }
+        ]
+      }
+    },
+    {
+      "id": "plan-iteration",
+      "split": "held-out",
+      "prompt": "Product-Spec.md 更新了，需要更新 DEV-PLAN.md，已完成的 Phase 保持不变",
+      "artifacts_subdir": "dev-planner-iteration",
+      "assertions": {
+        "fileExists": [
+          "DEV-PLAN.md"
+        ],
+        "maxBytes": [
+          { "file": "DEV-PLAN.md", "max": 100000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-completed-phases",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "\\[x\\]|✓|已完成"
+          },
+          {
+            "id": "has-pending-phases",
+            "file": "DEV-PLAN.md",
+            "mustMatch": "\\[ \\]|待完成|未开始"
+          }
+        ]
+      }
+    }
+  ]
+}

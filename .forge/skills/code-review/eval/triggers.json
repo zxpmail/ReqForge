@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "code-review",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval code-review",
+  "cases": [
+    {
+      "id": "should-trigger-post-implementation",
+      "prompt": "用户模块刚实现完，帮我 review 一下代码质量和功能完整性",
+      "should_trigger": true,
+      "note": "实现完成后主动要求代码质量审查，应触发 code-review"
+    },
+    {
+      "id": "should-trigger-spec-alignment",
+      "prompt": "把当前代码和 Product-Spec.md 对照一下，看有没有遗漏或偏差",
+      "should_trigger": true,
+      "note": "要求对照 Spec 做功能完整性审查"
+    },
+    {
+      "id": "should-not-bug-report",
+      "prompt": "搜索功能点完没反应，也不报错，帮我看下哪里逻辑不对",
+      "should_trigger": false,
+      "note": "差一点相关：都涉及检查代码，但用户报告的是运行时行为异常 → bug-fixer"
+    },
+    {
+      "id": "should-not-greenfield-feature",
+      "prompt": "给仪表盘加个实时数据图表，用 ECharts 实现",
+      "should_trigger": false,
+      "note": "差一点相关：涉及写代码，但用户要的是新功能 → dev-builder"
+    }
+  ]
+}

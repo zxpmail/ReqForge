@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "dev-builder",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval dev-builder",
+  "cases": [
+    {
+      "id": "should-trigger-initialization",
+      "prompt": "DEV-PLAN.md 已经确认了，开始开发 Phase 1，先搭项目骨架，安装依赖，配好开发环境",
+      "should_trigger": true,
+      "note": "明确有 DEV-PLAN.md，要求开始搭建项目，匹配 Initialization Mode"
+    },
+    {
+      "id": "should-trigger-continuous",
+      "prompt": "Phase 1 验收通过，开始开发 Phase 2 — 实现用户注册登录模块，按照 DEV-PLAN.md 的 Task 列表来",
+      "should_trigger": true,
+      "note": "连续开发模式，上一 Phase 完成，要求实施下一 Phase"
+    },
+    {
+      "id": "should-not-bug-fix",
+      "prompt": "登录接口报错了，帮我看看代码里是不是有 bug，修一下",
+      "should_trigger": false,
+      "note": "差一点误触发：都涉及代码，但意图是诊断和修复 bug，应交给 bug-fixer"
+    },
+    {
+      "id": "should-not-code-review",
+      "prompt": "我刚提交的 PR 代码质量怎么样，帮我 review 一下，看看有没有安全隐患",
+      "should_trigger": false,
+      "note": "差一点误触发：都触及代码，但意图是 review 而非开发，应交给 code-review"
+    }
+  ]
+}

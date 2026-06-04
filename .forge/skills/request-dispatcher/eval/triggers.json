@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "request-dispatcher",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval request-dispatcher",
+  "cases": [
+    {
+      "id": "should-trigger-ambiguous-improve",
+      "prompt": "帮我改进一下这个项目，感觉哪里都不太对。",
+      "should_trigger": true,
+      "note": "高度模糊请求，未指定改进方向（功能/质量/UI），需要 request-dispatcher 分析意图"
+    },
+    {
+      "id": "should-trigger-mixed-intent",
+      "prompt": "登录页面有个 bug，另外首页的样式我也想换一下。还有这个项目什么时候能上线？",
+      "should_trigger": true,
+      "note": "用户同时提出 bug + 设计 + 发布三个不同意图，需要 dispatch 判断优先级"
+    },
+    {
+      "id": "should-not-clear-bug-report",
+      "prompt": "注册接口返回了 500，我的邮箱是 test@test.com，密码是 123456，你复现一下然后修掉。",
+      "should_trigger": false,
+      "note": "差一点相关：描述了一个问题但意图非常明确——修 bug，应直接路由到 bug-fixer"
+    },
+    {
+      "id": "should-not-clear-feature-request",
+      "prompt": "能不能加一个导出 CSV 的功能？就在现在的报表页加个按钮就行。",
+      "should_trigger": false,
+      "note": "差一点相关：用户说「能不能」看似模糊，但实际是明确的功能请求，走 change-manager 或 product-spec-builder"
+    }
+  ]
+}

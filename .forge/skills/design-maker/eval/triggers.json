@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "design-maker",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval design-maker",
+  "cases": [
+    {
+      "id": "should-trigger-generate-mockups",
+      "prompt": "Product-Spec.md 和 Design-Brief.md 都准备好了，帮我生成完整的设计稿，包含所有页面的空状态、加载状态和错误状态",
+      "should_trigger": true,
+      "note": "明确需要生成设计稿，且提到状态变体覆盖，核心匹配 design-maker"
+    },
+    {
+      "id": "should-trigger-adjust-design",
+      "prompt": "设计稿评审过了，有几个地方要改：首页卡片布局调整间距，个人中心页增加列表为空的空状态设计",
+      "should_trigger": true,
+      "note": "用户已有设计稿需要修改，涉及页面布局和状态变体补充，核心匹配"
+    },
+    {
+      "id": "should-not-visual-direction",
+      "prompt": "帮我确定一下视觉风格方向，主色调用蓝色还是绿色，字体选什么，整体走什么风格",
+      "should_trigger": false,
+      "note": "差一点误触发：定义视觉方向和风格偏好，应交给 design-brief-builder，而非 design-maker"
+    },
+    {
+      "id": "should-not-start-coding",
+      "prompt": "设计稿看完了，开始按设计稿写前端代码，从首页开始实现",
+      "should_trigger": false,
+      "note": "差一点误触发：提到设计稿但意图是编码实现，应交给 dev-builder"
+    }
+  ]
+}

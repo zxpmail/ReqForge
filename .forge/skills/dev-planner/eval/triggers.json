@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "dev-planner",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval dev-planner",
+  "cases": [
+    {
+      "id": "should-trigger-generation",
+      "prompt": "Product-Spec.md 已经定稿了，帮我生成 DEV-PLAN.md，按 MVP 范围分阶段，每个阶段要独立可编译运行",
+      "should_trigger": true,
+      "note": "明确有 Product-Spec.md，要求输出 DEV-PLAN.md，匹配 Generation Mode"
+    },
+    {
+      "id": "should-trigger-iteration",
+      "prompt": "需求文档更新了，Product-Spec.md 加了个新的数据导出功能，帮我更新开发计划，已完成的 Phase 保持不变",
+      "should_trigger": true,
+      "note": "Spec 变更要求更新 DEV-PLAN.md，匹配 Iteration Mode"
+    },
+    {
+      "id": "should-not-requirements",
+      "prompt": "我有个做任务管理的想法，帮我写一下产品需求文档，把功能整理清楚",
+      "should_trigger": false,
+      "note": "差一点误触发：都涉及文档生成，但意图是需求调研而非开发规划，应交给 product-spec-builder"
+    },
+    {
+      "id": "should-not-start-coding",
+      "prompt": "计划确认好了，开始编码实现 Phase 1，按照 DEV-PLAN.md 的 Task 顺序来",
+      "should_trigger": false,
+      "note": "差一点误触发：提到计划但意图是开始编码，应交给 dev-builder"
+    }
+  ]
+}

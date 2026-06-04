@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "evolution-engine",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval evolution-engine",
+  "cases": [
+    {
+      "id": "should-trigger-graduation-check",
+      "prompt": "看看 feedback 目录里积累的数据，有没有重复出现 3 次以上的模式需要升级成正式规则",
+      "should_trigger": true,
+      "note": "明确要求检查 feedback 的重复模式升级，匹配 Rule Graduation 信号检测"
+    },
+    {
+      "id": "should-trigger-evolution-suggestions",
+      "prompt": "检查一下进化建议，最近有没有 Skill 得分偏低需要优化的",
+      "should_trigger": true,
+      "note": "用户要求检查 Skill 优化建议，匹配进化建议分析"
+    },
+    {
+      "id": "should-not-feedback-writer",
+      "prompt": "刚才这次开发有点问题，帮我记录一条反馈到 feedback 目录",
+      "should_trigger": false,
+      "note": "差一点误触发：都涉及 feedback，但意图是单条记录而非模式分析，应交给 feedback-writer"
+    },
+    {
+      "id": "should-not-skill-builder",
+      "prompt": "我们发现经常需要做数据报表，这个场景目前没有 Skill 覆盖，帮我创建一个新的 Skill",
+      "should_trigger": false,
+      "note": "差一点误触发：都涉及 Skill 变更，但意图是直接创建新 Skill 而非分析演化信号，应交给 skill-builder"
+    }
+  ]
+}

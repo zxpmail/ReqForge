@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "skill": "design-brief-builder",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "happy-path-tech-product",
+      "split": "train",
+      "prompt": "产品是一个面向开发者的 API 管理工具，目标用户是后端工程师。我想要一个简洁、专业、偏深色主题的视觉风格。产品需求在 Product-Spec.md 里，帮我生成 Design-Brief.md。",
+      "artifacts_subdir": "design-brief-api-tool",
+      "assertions": {
+        "fileExists": [
+          "Design-Brief.md",
+          "Product-Spec.md"
+        ],
+        "maxBytes": [
+          { "file": "Design-Brief.md", "max": 100000 },
+          { "file": "Product-Spec.md", "max": 200000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "brief-has-mood-direction",
+            "file": "Design-Brief.md",
+            "mustMatch": "氛围|mood|风格|方向|vibe"
+          },
+          {
+            "id": "brief-has-color-direction",
+            "file": "Design-Brief.md",
+            "mustMatch": "色彩|颜色|调色板|palette|color"
+          },
+          {
+            "id": "brief-has-interaction-style",
+            "file": "Design-Brief.md",
+            "mustMatch": "交互|动效|interaction|animation|反馈"
+          }
+        ]
+      }
+    },
+    {
+      "id": "happy-path-consumer-app",
+      "split": "train",
+      "prompt": "做一个面向 C 端的健身打卡 App，目标用户是 25-35 岁的都市白领。希望看起来年轻有活力但不浮夸，参考 Keep 和 Apple Fitness 的风格。帮我生成 Design-Brief。",
+      "artifacts_subdir": "design-brief-fitness",
+      "assertions": {
+        "fileExists": [
+          "Design-Brief.md",
+          "Product-Spec.md"
+        ],
+        "maxBytes": [
+          { "file": "Design-Brief.md", "max": 100000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "brief-has-mood-direction",
+            "file": "Design-Brief.md",
+            "mustMatch": "氛围|mood|风格|方向|vibe"
+          },
+          {
+            "id": "brief-has-typography",
+            "file": "Design-Brief.md",
+            "mustMatch": "字体|排版|typography|字型"
+          },
+          {
+            "id": "brief-has-accessibility",
+            "file": "Design-Brief.md",
+            "mustMatch": "无障碍|accessibility|对比|contrast"
+          }
+        ]
+      }
+    }
+  ]
+}

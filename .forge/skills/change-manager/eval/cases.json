@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "skill": "change-manager",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "happy-path-propose",
+      "split": "train",
+      "prompt": "现有项目已有 Product-Spec.md，需要在现有订单系统上加一个「订单导出 CSV」功能。帮我走变更流程，从 propose 开始。",
+      "artifacts_subdir": "change-manager-csv-export",
+      "assertions": {
+        "fileExists": [
+          "changes/csv-export/proposal.md",
+          "changes/csv-export/specs.md",
+          "changes/csv-export/tasks.md",
+          "changes/csv-export/design.md"
+        ],
+        "maxBytes": [
+          { "file": "changes/csv-export/proposal.md", "max": 50000 },
+          { "file": "changes/csv-export/specs.md", "max": 80000 },
+          { "file": "changes/csv-export/tasks.md", "max": 50000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "proposal-has-scope",
+            "file": "changes/csv-export/proposal.md",
+            "mustMatch": "变更范围|scope|影响"
+          },
+          {
+            "id": "specs-has-requirements",
+            "file": "changes/csv-export/specs.md",
+            "mustMatch": "需求|requirement|CSV|export"
+          },
+          {
+            "id": "tasks-has-phases",
+            "file": "changes/csv-export/tasks.md",
+            "mustMatch": "Phase|task|实现"
+          }
+        ]
+      }
+    },
+    {
+      "id": "archive-after-apply",
+      "split": "train",
+      "prompt": "之前提议的 CSV 导出变更已经实现完成了，帮我走 verify 和 archive 流程。变更名 csv-export。",
+      "artifacts_subdir": "change-manager-archive",
+      "assertions": {
+        "fileExists": [
+          "changes/csv-export/verify.md",
+          "changes/archive/csv-export"
+        ],
+        "maxBytes": [
+          { "file": "changes/csv-export/verify.md", "max": 30000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "verify-has-results",
+            "file": "changes/csv-export/verify.md",
+            "mustMatch": "验证|verify|passed|通过|结果"
+          }
+        ]
+      }
+    }
+  ]
+}
