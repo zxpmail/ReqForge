@@ -113,6 +113,23 @@ requires: []
     - **Dependency impact**: trace ripple effect via dep-graph
 
 <!-- end: dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Scope boundary clarity | 2 | YES | 2 = Explicit IN/OUT statement, no scope creep during apply; 1 = IN defined but OUT vague; 0 = No scope boundary specified |
+    | 2 | Proposal completeness | 2 | YES | 2 = RED observation + GREEN change + Verify-by all present; 1 = Missing one element; 0 = Incomplete proposal |
+    | 3 | Backward compatibility | 2 | — | 2 = API/schema/serialization checked for breaking changes; 1 = Checked but missed some; 0 = Not assessed |
+    | 4 | Apply fidelity | 2 | — | 2 = Only change-scoped files modified, no DEV-PLAN backlog creep; 1 = Minor scope creep; 0 = Full backlog changes mixed in |
+    | 5 | Testing coverage | 2 | YES | 2 = Every changed file has a test update, tests pass; 1 = Tests added but gaps; 0 = No test updates |
+    | 6 | Rollback readiness | 2 | — | 2 = Minutes-to-execute undo strategy defined; 1 = Rollback considered but not scripted; 0 = No rollback plan |
+    | 7 | Archive completeness | 2 | — | 2 = CHANGELOG + Spec merged, files moved to archive/; 1 = Archived but missing doc updates; 0 = Orphan folder left |
+    | 8 | Verification evidence | 2 | YES | 2 = Demonstrated before/after, tests pass, no regression; 1 = Claims done without demonstration; 0 = No verification |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/change-manager` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     Parse user intent: **propose** | **apply** | **verify** | **archive** (default: propose if only a change name/description given).

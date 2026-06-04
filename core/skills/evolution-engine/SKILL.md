@@ -75,6 +75,23 @@ requires: []
     遇 premature graduation / skipping cross-reference / skipping Verify-by 时读取。
 
 <!-- end: anti-rationalization-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Signal accuracy | 2 | YES | 2 = ≥3 occurrences threshold respected, no premature graduation; 1 = Threshold applied but edge case slipped; 0 = Proposal based on single entry |
+    | 2 | RED observation quality | 2 | YES | 2 = Cites specific behavior with feedback excerpt; 1 = Generic description; 0 = Missing or "obvious problem" |
+    | 3 | GREEN change specificity | 2 | — | 2 = Exact target file + section + text to add/change; 1 = Target file named but section vague; 0 = "Update the Skill" |
+    | 4 | Verify-by criterion | 2 | YES | 2 = Observable, time-bounded, falsifiable; 1 = Vague ("should improve"); 0 = Missing |
+    | 5 | False correlation check | 2 | — | 2 = Cross-referenced task-history to validate pattern; 1 = Checked but conflicting data; 0 = No cross-reference |
+    | 6 | Denominator awareness | 2 | — | 2 = Usage count checked before acting on scores; 1 = Checked but ignored; 0 = Raw scores without context |
+    | 7 | WebSearch integration | 2 | — | 2 = Searched for best practices before proposing; 1 = Relevant known patterns used; 0 = Invented from scratch |
+    | 8 | Failure-class routing | 2 | — | 2 = skill-defect vs execution-lapse distinguished, proposal matches; 1 = Tagged but routing wrong; 0 = No routing |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/evolution-engine` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: file-structure -->
 [File Structure]
     ```

@@ -97,6 +97,23 @@ requires: []
     **生成 Brief 前读取** `references/sufficiency-judgment.md`
 
 <!-- end: interview-dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Interview thoroughness | 2 | YES | 2 = All 5+ design dimensions covered (color, typography, density, interaction, mood); 1 = 3-4 dimensions; 0 = <3 dimensions |
+    | 2 | Concreteness | 2 | — | 2 = Options over open-ended questions for every preference; 1 = Mixed open/closed; 0 = Open-ended questions throughout |
+    | 3 | Visual direction specificity | 2 | YES | 2 = Colors, typography, spacing, density, interaction all defined; 1 = Partial direction; 0 = Vague ("modern") |
+    | 4 | Reference grounding | 2 | — | 2 = WebSearch for trends + reference products named and analyzed; 1 = Search done but not applied; 0 = No external research |
+    | 5 | Accessibility consideration | 2 | — | 2 = Contrast ratios, hierarchy, touch targets discussed in Brief; 1 = Mentioned but not specified; 0 = Absent |
+    | 6 | Spec alignment | 2 | — | 2 = Visual direction supports all Product-Spec.md user flows; 1 = Minor misalignment; 0 = Contradicts Spec |
+    | 7 | Sufficiency judgment | 2 | YES | 2 = Executed `references/sufficiency-judgment.md` and passed; 1 = Executed but gaps found; 0 = Skipped |
+    | 8 | Anti-ai-slop executed | 2 | — | 2 = `references/anti-ai-slop-checklist.md` completed before output; 1 = Partial check; 0 = Skipped |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/design-brief-builder` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]

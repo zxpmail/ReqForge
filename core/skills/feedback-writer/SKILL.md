@@ -119,6 +119,23 @@ requires: []
     遇 skipping recording / skipping scoring / false positive 时读取。
 
 <!-- end: anti-rationalization-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Signal discrimination | 2 | YES | 2 = Only actual AI behavior issues recorded, tool/environment frustration filtered; 1 = One false positive; 0 = Multiple false positives |
+    | 2 | Dedup accuracy | 2 | YES | 2 = Checked FEEDBACK-INDEX before writing, merged correctly; 1 = Checked but should have merged; 0 = Created duplicate |
+    | 3 | Scoring completeness | 2 | — | 2 = All 4 scores filled (Precision/Coverage/Efficiency/Satisfaction); 1 = 2-3 scores; 0 = <2 scores |
+    | 4 | Context completeness | 2 | — | 2 = What AI did + correct behavior + which Skill + scenario; 1 = Missing one element; 0 = Vague description |
+    | 5 | Failure classification | 2 | — | 2 = failure_class set correctly (skill-defect/execution-lapse/unset); 1 = Set but wrong; 0 = Missing |
+    | 6 | Merge correctness | 2 | — | 2 = Merged with matching topic, occurrences updated +1; 1 = Updated but didn't merge; 0 = Separate file for same issue |
+    | 7 | Actionable body | 2 | — | 2 = Body includes RED observation for evolution-engine; 1 = Body describes issue but no RED; 0 = Minimal body |
+    | 8 | Index update | 2 | YES | 2 = FEEDBACK-INDEX.md updated with correct link; 1 = Index updated but wrong format; 0 = Skipped index update |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/feedback-writer` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: file-structure -->
 [File Structure]
     ```

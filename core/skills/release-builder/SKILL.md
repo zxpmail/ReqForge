@@ -129,6 +129,23 @@ requires: []
     - **Smoke Test Plan**: primary user flow verified end-to-end
 
 <!-- end: release-dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Build integrity | 2 | YES | 2 = Clean build, no debug artifacts, minified for production; 1 = Build succeeds but has warnings or debug artifacts; 0 = Build fails |
+    | 2 | Smoke test | 2 | YES | 2 = Core user flow verified end-to-end; 1 = Partial check (compilation only); 0 = No smoke test |
+    | 3 | Privacy audit | 2 | — | 2 = Grepped for paths/keys/credentials, none leaked; 1 = Checked but missed something benign; 0 = Not audited |
+    | 4 | Dependency vulnerability scan | 2 | — | 2 = No critical/high vulnerabilities in production deps; 1 = Vulnerabilities found but mitigated; 0 = Not scanned |
+    | 5 | Version consistency | 2 | YES | 2 = package.json + git tag + artifact name all match; 1 = One mismatch; 0 = Multiple mismatches |
+    | 6 | Rollback plan | 2 | — | 2 = One-command revert defined, data-preserving; 1 = Plan exists but manual; 0 = No rollback strategy |
+    | 7 | Environment parity | 2 | — | 2 = OS/runtime/dependency versions aligned with target; 1 = Checked but minor drift; 0 = "Works on my machine" |
+    | 8 | Changelog + tag | 2 | — | 2 = CHANGELOG updated, git tag created, release notes drafted; 1 = Partial; 0 = Missing |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/release-builder` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Read `references/first-principles.md`

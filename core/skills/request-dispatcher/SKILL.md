@@ -102,6 +102,22 @@ requires: []
     | "They said improve, that covers everything" | "Improve" is the most ambiguous word. Use the ambiguity patterns to narrow down before acting. |
     | "I'll handle it myself instead of dispatching" | Dispatching isn't delegation — it's using the right methodology for the job. Every Skill has specific procedures you don't have loaded. |
 
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Intent classification | 2 | YES | 2 = Correctly maps user message to intent type via matrix; 1 = Ambiguous but close; 0 = Wrong classification |
+    | 2 | State cross-reference | 2 | YES | 2 = Checks artifact existence before recommending; 1 = Partial check; 0 = Skips state check |
+    | 3 | Prerequisite verification | 2 | — | 2 = Target Skill's Dependency Check would pass; 1 = Prerequisite exists but unmet; 0 = Blind dispatch |
+    | 4 | Ambiguity resolution | 2 | — | 2 = Disambiguates before dispatching when uncertain; 1 = Asks but with bias; 0 = Guesses without asking |
+    | 5 | Dispatch minimality | 2 | YES | 2 = Only used for ambiguous 10%, not overriding static rules; 1 = Used when static rule sufficed; 0 = Routine over-routing |
+    | 6 | Active change awareness | 2 | — | 2 = Checks active changes/ before recommending; 1 = Checks but ignores; 0 = No check |
+    | 7 | Recommendation clarity | 2 | — | 2 = One Skill name + one-sentence justification; 1 = Multiple options without clarity; 0 = No clear recommendation |
+    | 8 | Decision matrix usage | 2 | — | 2 = Cites matrix row when matched; 1 = Matrix used but not cited; 0 = Ignores decision matrix |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/request-dispatcher` to compute.
+
 [Workflow] — See [Dispatch Decision Strategy] for routing rules before executing steps below.
 
     Step 1: Classify user intent
