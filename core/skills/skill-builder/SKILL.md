@@ -30,15 +30,16 @@ requires: []
 <!-- end: dependency-check -->
 <!-- begin: first-principles -->
 [First Principles]
-    **Template First**: Always read the templates/skill-template.md skeleton first, then fill in the structure. Never write from scratch.
-
-    **Reference Existing**: Before creating, read 1-2 existing Skills as reference to keep style consistent. Do not invent new formats.
-
-    **Minimum Necessary**: Only create the Sections that are needed. Never add empty content or irrelevant rules just to "look complete."
-
-    **Web-First**: If the new Skill involves an unfamiliar domain, WebSearch the domain's best practices and common pitfalls first, then design the dimension checklist and strategy.
+    → `references/first-principles.md`
+    核心：Template First / Reference Existing / Minimum Necessary / Web-First。
 
 <!-- end: first-principles -->
+<!-- begin: output-style -->
+[Output Style]
+    → `references/output-style.md`
+    Tone: Architect explaining a blueprint — structured, precise, prescriptive.
+
+<!-- end: output-style -->
 <!-- begin: file-structure -->
 [File Structure]
     ```
@@ -47,7 +48,11 @@ requires: []
     ├── templates/
     │   └── skill-template.md              # Skeleton template for new Skills
     └── references/
-        └── dimension-checklist.md
+        ├── first-principles.md
+        ├── output-style.md
+        ├── workflow.md
+        ├── dimension-checklist.md
+        └── anti-rationalization.md
     ```
 
 <!-- end: file-structure -->
@@ -63,6 +68,12 @@ requires: []
     - **Dependency Check**: required deps have failure guidance
 
 <!-- end: dimension-checklist -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping template / skipping reference / TBD placeholders 时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: gotchas -->
 [Gotchas]
     **Skipping template**: "I know the structure well enough" — read the template anyway. Every time you skip, you'll miss something: a section heading, a required field, or the consistent format.
@@ -171,81 +182,10 @@ requires: []
     Reference [Quality Rubric] for scoring criteria and the Workflow section below for the creation sequence.
 
 <!-- begin: workflow -->
-[Workflow] — See [Review Strategy] for quality assessment and [Quality Rubric] for scoring.
+[Workflow]
+    → `references/workflow.md`
+    6 步流程：Requirements → Reference → Structure → Fill → Create → Register。
 <!-- end: workflow -->
-    <!-- begin: step-1:-requirements-gathering -->
-    [Step 1: Requirements Gathering]
-        Understand what new Skill the user wants:
-        - What problem does this Skill solve?
-        - When is it triggered? (auto-trigger conditions / manual invocation)
-        - What are the inputs? (prerequisite files, user input, project state)
-        - What are the outputs? (files, reports, code changes)
-        - If from an EVOLUTION.md fourth-layer proposal -> read the original records in feedback/ to understand the need's background
-
-    <!-- end: step-1:-requirements-gathering -->
-    <!-- begin: step-2:-reference-existing -->
-    [Step 2: Reference Existing]
-        Based on interaction mode (not domain), find 1-2 closest existing Skills as reference:
-        - **Dialogue Collection Type** (requires multi-turn conversation to collect info) -> reference product-spec-builder, design-brief-builder
-        - **Autonomous Analysis Type** (reads input and autonomously produces output) -> reference dev-planner, code-review
-        - **Execution Operation Type** (directly executes operations to produce results) -> reference dev-builder, release-builder
-        - **Diagnosis & Fix Type** (diagnoses the problem first, then fixes) -> reference bug-fixer
-        The new Skill could be for any domain — not necessarily software development. It could be content writing, data analysis, competitive research, etc.
-        Match by interaction mode, not by domain.
-        Understand the reference Skill's structure, dimension naming, strategy style, output format.
-
-    <!-- end: step-2:-reference-existing -->
-    <!-- begin: step-3:-determine-structure -->
-    [Step 3: Determine Structure]
-        Read the templates/skill-template.md skeleton
-        Determine which Sections are needed:
-        - Required 5 -> keep all
-        - Recommended -> decide based on domain needs
-        - On-Demand -> decide based on Skill type
-        Determine domain-specific naming: what DOMAIN should be in [DOMAIN Dimension Checklist] and [DOMAIN Strategy]
-
-    <!-- end: step-3:-determine-structure -->
-    <!-- begin: step-4:-fill-content -->
-    [Step 4: Fill Content]
-        Fill each Section one by one:
-        - [Task] — one sentence; if multiple modes, describe each
-        - [Dependency Check] — list required and optional dependencies
-        - [First Principles] — 3-5 items, the last one being web-first
-        - [Dimension Checklist] — what needs attention in this domain? Split into must-have / recommended / optional
-        - [Strategy] — how to do it in this domain? What methodology to use?
-        - [Workflow] — in what order? Reference the dimension checklist and strategy
-        If the domain is unfamiliar -> WebSearch best practices
-
-    <!-- end: step-4:-fill-content -->
-    <!-- begin: step-5:-create-files -->
-    [Step 5: Create Files]
-        Create SKILL.md under skills/[skill-name]/ (relative to framework root)
-        If template files exist -> create templates/ subdirectory
-        Self-check after writing:
-        - Are all required Sections present?
-        - Is the format consistent ([Title] + 4-space indent)?
-        - Frontmatter only has name and description?
-        - Is the style consistent with referenced existing Skills?
-
-    <!-- end: step-5:-create-files -->
-    <!-- begin: step-5b:-skill-eval-pack -->
-    [Step 5b: Skill Eval Pack]
-        For user-project custom Skills (not only framework core skills):
-        1. Run `pnpm skill-eval init <skill-name>` in the project root → `.forge/skills/<skill-name>/eval/`
-        2. Edit **triggers.json**: ≥2 `should_trigger: true`, ≥2 `false`; negative cases must be near-miss (not "write fibonacci")
-        3. Edit **cases.json**: ≥1 output case with `fileExists` / `regexChecks` on paths under `eval-output/<subdir>/`
-        4. Run `pnpm skill-eval <skill-name>` — static check must pass before shipping the Skill
-        Trigger accuracy still needs manual A/B in the AI client (with Skill vs without). Output assertions run after a real agent run drops artifacts into `eval-output/`.
-
-    <!-- end: step-5b:-skill-eval-pack -->
-    <!-- begin: step-6:-register-in-main-control-file -->
-    [Step 6: Register in Main Control File]
-        The AI client will auto-discover new Skills under the skills/ directory.
-        However, the main control file needs to be supplemented with:
-        1. [Skill Dispatch] — add trigger line for the new Skill (auto / manual)
-        2. [Workflow] — if the new Skill needs a corresponding phase in the main flow, add the phase definition
-
-    <!-- end: step-6:-register-in-main-control-file -->
 <!-- begin: initialization -->
 [Initialization]
     Execute [Step 1: Requirements Gathering]

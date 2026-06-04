@@ -26,28 +26,21 @@ requires: []
     - memory/ files -> known pitfalls and recent task history
 
 [First Principles]
-    **Minimum Dispatch**: Do not dispatch what the static rules already handle. This Skill exists for the 10% edge case where the rules are ambiguous. If the answer is obvious from CLAUDE.md, use it — don't involve this Skill.
-    **State Before Intent**: Project state (which artifacts exist) is often more predictive than the user's wording. "I want to add a feature" means /change-manager if Product-Spec.md exists, /product-spec-builder if not — regardless of how the user phrased it.
-    **Ask, Don't Guess**: If truly ambiguous after intent + state analysis, ask the user a single clarifying question rather than guessing. Guessing wrong wastes more time than asking.
+    → `references/first-principles.md`
+    核心：Minimum Dispatch / State Before Intent / Ask Don't Guess。
 
 [Output Style]
-    **Tone**: Router operator — neutral, analytical, decisive. Output a recommendation, not a discussion.
-    **Principles**:
-    - V One recommendation, not a menu of options (unless truly ambiguous after full analysis)
-    - V Cite the Dispatch Decision Matrix row when matched
-    - V Include project state evidence in the recommendation
-    - X Never dispatch to a Skill whose prerequisites are not met
-    - X Never route to /dev-builder without DEV-PLAN.md, to /dev-planner without Product-Spec.md, etc.
-
-    **Typical Expressions**:
-    - "Dispatch recommendation: **/change-manager propose** — Product-Spec.md exists, no active change folder, user wants to add a feature. Matrix match: 'add feature' + Product-Spec exists + no active changes → /change-manager propose."
-    - "Ambiguous: user said 'improve this' without specifying target. Ask: 'Improve functionality (bug-fixer), quality (code-review), or UI (design skills)?'"
+    → `references/output-style.md`
+    Tone: neutral, analytical, decisive. One recommendation, not a menu.
 
 [File Structure]
     ```
     request-dispatcher/
     ├── SKILL.md
     └── references/
+        ├── first-principles.md
+        ├── output-style.md
+        ├── workflow.md
         ├── dimension-checklist.md
         └── anti-rationalization.md
     ```
@@ -97,13 +90,8 @@ requires: []
     **Ignoring active changes/**: User asks for a new feature while changes/ folder is active. — Active changes/ must be resolved (verify + archive) before starting new work. Route to /change-manager for the active change, not a new Skill.
 
 [Anti-Rationalization Checklist]
-
-    | Rationalization | Reality |
-    |---|---|
-    | "I know what they mean, just start coding" | You don't know. Follow the dispatch workflow — classify, check state, then act. |
-    | "This looks like a bug, let me just fix it" | Is it a confirmed bug or a quality concern? Bug → bug-fixer. Quality → code-review. Different skills. |
-    | "They said improve, that covers everything" | "Improve" is the most ambiguous word. Use the ambiguity patterns to narrow down before acting. |
-    | "I'll handle it myself instead of dispatching" | Dispatching isn't delegation — it's using the right methodology for the job. Every Skill has specific procedures you don't have loaded. |
+    → `references/anti-rationalization.md`
+    遇 premature dispatch / prerequisite blindness 时读取。
 
 [Dimension Checklist]
     See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
@@ -130,39 +118,9 @@ requires: []
 
     **Scoring**: Run `pnpm validate-skill --score core/skills/request-dispatcher` to compute.
 
-[Workflow] — See [Dispatch Decision Strategy] for routing rules before executing steps below.
-
-    Step 1: Classify user intent
-        Read the user's message and classify into one of:
-        - New product idea -> /product-spec-builder
-        - Change to existing product -> /change-manager
-        - Bug / error -> /bug-fixer
-        - Code quality -> /code-review
-        - Design / UI -> design skills
-        - Planning -> /dev-planner
-        - Implementation -> /dev-builder
-        - Release -> /release-builder
-        - Unclear -> proceed to Step 2
-
-    Step 2: Cross-reference project state
-        Check existence of: Product-Spec.md, DEV-PLAN.md, project code directory, active changes/<name>/
-        Use the [Dispatch Decision Strategy] to narrow down.
-        
-    Step 3: Disambiguate or ask
-        If still ambiguous after Step 1 + Step 2:
-        - Form a single yes/no or multiple-choice question
-        - Present 2-3 options with their tradeoffs
-        - Do NOT present more than 3 options
-        - Ask: "Which direction?" not "What do you want?"
-
-    Step 4: Recommend
-        Return to the main Agent:
-        "Dispatch recommendation: **[skill name]** — [one-sentence reason based on intent + state]"
-
-        If the decision matrix covers the case, cite it:
-        "Matrix match: '{pattern}' → {state conditions} → {skill}"
-
-        Cross-reference [Dispatch Dimension Checklist] before finalizing recommendation.
+[Workflow]
+    → `references/workflow.md`
+    4 步流程：Classify → Cross-reference → Disambiguate → Recommend。
 
 [Initialization]
     Step 1: Execute [Workflow]
