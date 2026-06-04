@@ -61,6 +61,7 @@ requires: []
     │   ├── output-style.md
     │   ├── change-assessment-checklist.md
     │   ├── anti-rationalization.md
+    │   ├── anti-ai-slop-checklist.md
     │   └── workflow.md              # propose → apply → verify → archive
     └── templates/
         ├── change-proposal-template.md
@@ -137,7 +138,8 @@ requires: []
     2. Read `references/first-principles.md`
     3. **必须先 Read `references/workflow.md`** — propose → apply → verify → archive
     4. Phase rigor → `references/change-assessment-checklist.md`
-    5. apply / dev-builder 边界 → `references/openspec-handoff.md`
+    5. 交付前执行 `references/anti-ai-slop-checklist.md` 自检
+    6. apply / dev-builder 边界 → `references/openspec-handoff.md`
 
 <!-- end: workflow -->
 <!-- begin: initialization -->

@@ -63,6 +63,7 @@ requires: []
         ├── output-style.md
         ├── judgment-spectrum.md
         ├── anti-rationalization.md
+        ├── anti-ai-slop-checklist.md
         ├── review-dimension-checklist.md
         ├── review-strategy.md
         ├── workflow.md                 # Step 1–5（必读）
@@ -132,7 +133,8 @@ requires: []
     2. Read `references/first-principles.md`
     3. **必须先 Read `references/workflow.md`** — Step 1–5（baseline → dispatch → scan → aggregate → report）
     4. 维度与方法 → `review-dimension-checklist.md` + `review-strategy.md`
-    5. `FORGE_MODE=yolo` → `references/yolo-mode.md`
+    5. 交付 report 前执行 `references/anti-ai-slop-checklist.md` 自检
+    6. `FORGE_MODE=yolo` → `references/yolo-mode.md`
 
 <!-- end: workflow -->
 <!-- begin: yolo-mode -->

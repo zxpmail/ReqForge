@@ -71,6 +71,7 @@ requires: []
         ├── rollback-strategy.md
         ├── finishing-branch-checklist.md
         ├── anti-rationalization.md
+        ├── anti-ai-slop-checklist.md
         └── yolo-mode.md
     ```
 
@@ -151,7 +152,8 @@ requires: []
     1. Read `references/first-principles.md`
     2. **必须先 Read `references/workflow.md`** — Step 1–8 完整发布链
     3. 策略分支 → `references/release-strategy.md`；失败回滚 → `references/rollback-strategy.md`
-    4. `FORGE_MODE=yolo` → `references/yolo-mode.md`
+    4. 发布前执行 `references/anti-ai-slop-checklist.md` 自检
+    5. `FORGE_MODE=yolo` → `references/yolo-mode.md`
 
 <!-- end: workflow -->
 <!-- begin: yolo-mode -->
