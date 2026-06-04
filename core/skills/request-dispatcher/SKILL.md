@@ -7,15 +7,20 @@ updated: 2026-05-26
 requires: []
 ---
 
+<!-- begin: task -->
 [Task]
     Analyze ambiguous user requests and route them to the correct ReqForge Skill. When the main Agent's static dispatch rules (from CLAUDE.md [Skill Dispatch]) cannot uniquely determine the target Skill, this Skill provides a structured decision framework: classify intent → cross-reference project state → disambiguate → recommend Skill.
 
+<!-- end: task -->
+<!-- begin: not-for -->
 [Not For]
     - Clear-cut requests that match a single Skill trigger -> use the target Skill directly
     - Writing code -> use /dev-builder instead
     - Bug fixing -> use /bug-fixer instead
     - Requirements gathering -> use /product-spec-builder instead
 
+<!-- end: not-for -->
+<!-- begin: dependency-check -->
 [Dependency Check]
     Required:
     - User's natural language request -> the ambiguous message text
@@ -25,14 +30,20 @@ requires: []
     - git log -> recent changes for context
     - memory/ files -> known pitfalls and recent task history
 
+<!-- end: dependency-check -->
+<!-- begin: first-principles -->
 [First Principles]
     → `references/first-principles.md`
     核心：Minimum Dispatch / State Before Intent / Ask Don't Guess。
 
+<!-- end: first-principles -->
+<!-- begin: output-style -->
 [Output Style]
     → `references/output-style.md`
     Tone: neutral, analytical, decisive. One recommendation, not a menu.
 
+<!-- end: output-style -->
+<!-- begin: file-structure -->
 [File Structure]
     ```
     request-dispatcher/
@@ -45,9 +56,13 @@ requires: []
         └── anti-rationalization.md
     ```
 
+<!-- end: file-structure -->
+<!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Dispatch recommendation** (screen output) — one-line Skill name + one-sentence justification
 
+<!-- end: output-artifacts -->
+<!-- begin: dispatch-dimension-checklist -->
 [Dispatch Dimension Checklist]
     Before recommending a Skill, verify:
 
@@ -58,6 +73,8 @@ requires: []
     | **Project State** | Required artifacts exist for the target Skill | No active changes/ folder conflict |
     | **Ambiguity Resolved** | Recommendation resolves the ambiguity | User would not be surprised by the routing |
 
+<!-- end: dispatch-dimension-checklist -->
+<!-- begin: dispatch-decision-strategy -->
 [Dispatch Decision Strategy]
 
     | User says... | Product-Spec.md exists? | Active changes/? | Code exists? | Route to |
@@ -83,16 +100,22 @@ requires: []
     - "Make it production-ready" -> ask: "Bug fixes first (bug-fixer), code quality (code-review), or release pipeline (release-builder)?"
     - User mentions both a bug and a feature -> route to the dominant intent first; fix bug before adding features
 
+<!-- end: dispatch-decision-strategy -->
+<!-- begin: gotchas -->
 [Gotchas]
     **Premature dispatch**: "This looks like X, let me dispatch immediately." — Without completing the three-step analysis (intent → state → disambiguate), you may route to the wrong Skill. Always complete all three steps.
     **Prerequisite blindness**: Dispatching to /dev-planner without Product-Spec.md, or /code-review without code. — Always verify the target Skill's prerequisites before recommending. A recommendation that bounces is worse than a clarifying question.
     **Over-routing**: Using request-dispatcher for every request instead of just the ambiguous 10%. — The static rules in CLAUDE.md [Skill Dispatch] handle 90% of cases. Only invoke this Skill when the static rules don't clearly match.
     **Ignoring active changes/**: User asks for a new feature while changes/ folder is active. — Active changes/ must be resolved (verify + archive) before starting new work. Route to /change-manager for the active change, not a new Skill.
 
+<!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
 [Anti-Rationalization Checklist]
     → `references/anti-rationalization.md`
     遇 premature dispatch / prerequisite blindness 时读取。
 
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
 [Dimension Checklist]
     See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
 
@@ -102,6 +125,8 @@ requires: []
     - **Project State**: required artifacts exist for the target Skill
     - **Ambiguity Resolved**: recommendation resolves the ambiguity
 
+<!-- end: dimension-checklist -->
+<!-- begin: quality-rubric -->
 [Quality Rubric]
     8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
 
@@ -117,10 +142,14 @@ requires: []
     | 8 | Decision matrix usage | 2 | — | 2 = Cites matrix row when matched; 1 = Matrix used but not cited; 0 = Ignores decision matrix |
 
     **Scoring**: Run `pnpm validate-skill --score core/skills/request-dispatcher` to compute.
-
+<!-- end: quality-rubric -->
+<!-- begin: workflow -->
 [Workflow]
     → `references/workflow.md`
     4 步流程：Classify → Cross-reference → Disambiguate → Recommend。
 
+<!-- end: workflow -->
+<!-- begin: initialization -->
 [Initialization]
     Step 1: Execute [Workflow]
+<!-- end: initialization -->

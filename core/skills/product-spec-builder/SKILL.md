@@ -105,6 +105,20 @@ requires: []
 
 <!-- end: output-style -->
 <!-- begin: requirements-dimension-checklist -->
+[Dimension Checklist]
+    See [references/requirements-dimensions.md](references/requirements-dimensions.md) for the full requirements dimension checklist.
+
+    Must-have dimensions:
+    - **Product Positioning**: what this is, what problem it solves
+    - **Target Users**: who will use it and why
+    - **Core Features**: essential features that define the product
+    - **User Flow**: complete path from opening to task completion
+    - **AI Capability Needs**: which features need AI and what type
+
+[Anti-Rationalization Checklist]
+    → `references/hard-gate-rationalization.md`
+    在 Product-Spec.md 保存且用户确认前，禁止进入 /dev-planner 或 /dev-builder。
+
 [Requirements Dimension Checklist]
     访谈需收集的维度 + 信息充分性判定。
     **0-to-1 / Iteration 提问时读取** `references/requirements-dimensions.md`。

@@ -87,6 +87,16 @@ requires: []
 
 <!-- end: output-artifacts -->
 <!-- begin: interview-dimension-checklist -->
+[Dimension Checklist]
+    See [references/interview-dimension-checklist.md](references/interview-dimension-checklist.md) for the full interview dimension checklist.
+
+    Must-have dimensions:
+    - **Mood Direction**: 3 keywords + ≥1 reference product
+    - **Color Direction**: cool/warm/neutral + dark/light + brand color
+    - **Information Density**: feature count matched to layout density
+    - **Core Feature Visuals**: every Spec UI feature gets visual direction
+    - **Accessibility**: contrast, hierarchy, touch targets
+
 [Interview Dimension Checklist]
     **访谈阶段读取** `references/interview-dimension-checklist.md`
 

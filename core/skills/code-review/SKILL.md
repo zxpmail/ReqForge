@@ -83,6 +83,16 @@ requires: []
 
 <!-- end: judgment-spectrum -->
 <!-- begin: review-dimension-checklist -->
+[Dimension Checklist]
+    See [references/review-dimension-checklist.md](references/review-dimension-checklist.md) for the full review dimension checklist.
+
+    Must-have dimensions:
+    - **Functional Completeness**: every Spec requirement has a code implementation
+    - **Surgical Changes Audit**: every changed line traces to the original request
+    - **Simplicity First Audit**: no over-engineering or speculative abstraction
+    - **Security Scan**: hardcoded credentials, XSS, SQL injection, path leakage
+    - **Type Safety**: no `any`, `@ts-ignore`, unsafe casts
+
 [Review Dimension Checklist]
     Moderate/complex → 4 parallel specialized agents (see `workflow.md` Step 2). Simple → aggregator quick pass only.
     **按需读取** `references/review-dimension-checklist.md`
