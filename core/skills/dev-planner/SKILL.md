@@ -104,6 +104,26 @@ requires: []
     Must satisfy before output: tech stack verified, Phase breakdown + key files + dependency order, all Spec features covered. Details in `references/analysis-dimension-checklist.md` §Information Sufficiency.
 
 <!-- end: information-sufficiency-criteria -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    10-item, 20 point scoring system. Ship threshold: **>= 16** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Phase independence | 2 | YES | 2 = Each Phase produces compilable, runnable, testable output; 1 = Most Phases deliverable but one depends on future phases; 0 = Phases are just task groupings with no runnable milestone |
+    | 2 | Dependency ordering | 2 | YES | 2 = Phases follow correct technical order: infra -> data -> API -> UI; 1 = Minor ordering issues but non-blocking; 0 = Backend phase scheduled after frontend that depends on it |
+    | 3 | MVP clarity | 2 | YES | 2 = Phase 1 is a true MVP with working core functionality, not just setup; 1 = Phase 1 is mostly boilerplate with minimal functionality; 0 = Phase 1 is pure project init with no user-visible output |
+    | 4 | Task granularity | 2 | -- | 2 = Tasks small enough for one session (2-4 hours); concrete deliverables; 1 = Some tasks reasonable, others too large; 0 = Tasks are vague epics with no clear completion point |
+    | 5 | Key file completeness | 2 | -- | 2 = Every Phase lists concrete files to create/modify with paths; 1 = Most Phases have file lists but some missing; 0 = No file-level detail, just "implement X" |
+    | 6 | Acceptance criteria | 2 | YES | 2 = Each Phase has verifiable completion criteria (testable); 1 = Criteria present but some vague or untestable; 0 = No acceptance criteria beyond "works correctly" |
+    | 7 | Risk awareness | 2 | -- | 2 = Identifies risky items (third-party deps, complex algorithms, perf) with mitigation; 1 = Some risks mentioned but no mitigation; 0 = No risk assessment |
+    | 8 | Technical stack alignment | 2 | -- | 2 = Plan respects chosen stack constraints; versions verified via WebSearch; 1 = Mostly aligned but some tasks assume unavailable APIs; 0 = Plan contradicts chosen tech stack |
+    | 9 | Estimability | 2 | -- | 2 = Each Phase has rough time estimate; cross-phase dependencies explicit; 1 = Estimates present but not tied to task complexity; 0 = No estimates or dependency mapping |
+    | 10 | Iteration responsiveness | 2 | -- | 2 = Plan cleanly accommodates Spec changes without invalidating completed Phases; 1 = Minor disruption from changes but manageable; 0 = Single Spec change forces full replan |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/dev-planner` to compute.
+
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]

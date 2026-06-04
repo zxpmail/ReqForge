@@ -128,6 +128,23 @@ requires: []
     **Completion 阶段读取** `references/three-layer-diagnostic-model.md`
 
 <!-- end: debugging-rule-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Root cause accuracy | 2 | YES | 2 = Identified actual root cause (not symptom), traced through data/control flow; 1 = Found proximate cause but not root; 0 = Fixed symptom only |
+    | 2 | Fix correctness | 2 | YES | 2 = Fix resolves the issue, all existing tests pass, no new bugs introduced; 1 = Fix works for reported case but may fail edge cases; 0 = Fix is incorrect or breaks other functionality |
+    | 3 | Regression prevention | 2 | — | 2 = Added test(s) covering the fix, verified they fail before and pass after; 1 = Manual verification only, no automated guard; 0 = No regression protection added |
+    | 4 | Diagnostic thoroughness | 2 | — | 2 = Checked logs, stack traces, reproduction steps, environment factors; 1 = Used some evidence but missed available signals; 0 = Guessed without evidence |
+    | 5 | Scope awareness | 2 | — | 2 = Understood blast radius, checked callers and dependents before fixing; 1 = Considered scope but missed some affected areas; 0 = Changed code without impact analysis |
+    | 6 | Fix minimality | 2 | — | 2 = Surgical change, only what's needed, no unnecessary refactoring; 1 = Some extra changes mixed in; 0 = Large rewrite or scope creep in fix |
+    | 7 | Verification evidence | 2 | YES | 2 = Demonstrated fix works (test output, error gone, manual repro passes); 1 = Claims fix works but no demonstration; 0 = No verification attempted |
+    | 8 | Documentation | 2 | — | 2 = Updated relevant docs, added comments for non-obvious fix, logged in task-history; 1 = Code-only fix without comments/docs; 0 = No documentation or logging |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/bug-fixer` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]

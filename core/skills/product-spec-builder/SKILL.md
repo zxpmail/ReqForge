@@ -117,6 +117,26 @@ requires: []
     **0-to-1 / Iteration 对话阶段读取** `references/conversation-strategy.md`（含 CoT 模板）
 
 <!-- end: requirements-dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    10-item, 20 point scoring system. Ship threshold: **>= 16** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | User need depth | 2 | YES | 2 = Captures real user problem, distinguishes need from assumed solution; 1 = Good problem description but occasionally conflates solution with need; 0 = Spec is just a feature list with no user-need context |
+    | 2 | Completeness | 2 | YES | 2 = Covers all functional areas, edge cases, error states, empty states; 1 = Main flows covered but edge cases and error states missing; 0 = Large feature areas or states missing entirely |
+    | 3 | Clarity | 2 | YES | 2 = Every requirement unambiguous with testable acceptance criteria; 1 = Most requirements clear but some vague or untestable; 0 = Requirements open to broad interpretation |
+    | 4 | Priority clarity | 2 | -- | 2 = Must-have vs nice-to-have clearly separated with rationale; 1 = Priorities present but blurred or missing rationale; 0 = Everything listed as equal priority |
+    | 5 | Technical feasibility awareness | 2 | -- | 2 = Spec avoids impossible or impractical requirements; technical risks flagged; 1 = Mostly feasible but some speculative requirements; 0 = Spec includes clearly infeasible requirements |
+    | 6 | Consistency | 2 | YES | 2 = No contradictions between sections; terminology is uniform; 1 = Minor inconsistencies but resolvable; 0 = Contradictions between different sections |
+    | 7 | Stakeholder coverage | 2 | -- | 2 = All user roles/personas considered with distinct needs; 1 = Primary user covered, secondary roles missed; 0 = Only one perspective represented |
+    | 8 | Iteration readiness | 2 | -- | 2 = Spec structured for incremental delivery; clear Phase-1 scope; 1 = Some structuring but not cleanly sliceable; 0 = Monolithic spec with no incremental path |
+    | 9 | Conflict detection | 2 | -- | 2 = In iteration mode, proactively detects and flags conflicts with existing Spec; 1 = Detects conflicts only when obvious; 0 = New requirements added without cross-referencing existing Spec |
+    | 10 | Precision of language | 2 | -- | 2 = Requirements use precise, measurable language (not "fast", "good", "modern"); 1 = Mostly precise but some subjective terms remain; 0 = Requirements rely on vague qualitative terms |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/product-spec-builder` to compute.
+
+<!-- end: quality-rubric -->
 <!-- begin: workflow-0-to-1-mode -->
 [Workflow (0-to-1 Mode)]
     从零到一完整阶段（探索 → 澄清 → 细化 → 生成 Spec）。

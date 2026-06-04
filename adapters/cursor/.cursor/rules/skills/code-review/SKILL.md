@@ -106,6 +106,26 @@ requires: []
     **按需读取** `references/review-strategy.md`
 
 <!-- end: review-strategy -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    10-item, 20 point scoring system. Ship threshold: **>= 16** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Coverage depth | 2 | YES | 2 = Every relevant file/function reviewed with substantive analysis; 1 = Most key files covered but some sections superficial; 0 = Large gaps, review misses entire subsystems |
+    | 2 | Spec alignment checking | 2 | YES | 2 = Every finding cross-referenced to Product-Spec.md requirement; 1 = Some findings linked to Spec but others lack traceability; 0 = Review does not reference Spec at all |
+    | 3 | Evidence quality | 2 | YES | 2 = Every finding includes specific file:line references and explanation; 1 = Most findings have references but some are vague; 0 = Conclusions stated without any code evidence |
+    | 4 | False positive discipline | 2 | -- | 2 = Reports only actionable issues, no style-nitpicking as blockers; 1 = Some trivial items mixed in but correctly de-emphasized; 0 = Review drowned in style/preference nits |
+    | 5 | Actionable findings | 2 | YES | 2 = Every issue includes a concrete fix suggestion; 1 = Most findings have suggestions but some are vague; 0 = "This is wrong" with no guidance on how to fix |
+    | 6 | Security awareness | 2 | -- | 2 = Actively checks for OWASP Top 10 patterns relevant to codebase; 1 = Checks obvious security issues but misses subtle ones; 0 = No security consideration at all |
+    | 7 | Performance awareness | 2 | -- | 2 = Identifies N+1 queries, unnecessary rerenders, large bundle risks; 1 = Catches obvious issues but misses systemic ones; 0 = No performance consideration |
+    | 8 | Blast radius consideration | 2 | -- | 2 = Suggested changes evaluated for impact on other modules; 1 = Mentions some risks but does not fully explore impact; 0 = Suggestions made without regard for side effects |
+    | 9 | Review report structure | 2 | -- | 2 = Clear summary, severity (critical/major/minor), actionable next steps; 1 = Report has structure but missing severity or unclear next steps; 0 = Unstructured stream of observations |
+    | 10 | Reproducibility | 2 | YES | 2 = Every finding includes reproduction steps or input that triggered it; 1 = Some findings reproducible, others not; 0 = Findings cannot be independently verified |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/code-review` to compute.
+
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]

@@ -138,6 +138,25 @@ requires: []
     - **API Design Consistency**: uniform endpoints, correct status codes, versioning
 
 <!-- end: development-dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    10-item, 20-point scoring system. Ship threshold: **≥ 16** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Spec alignment | 2 | YES | 2 = All implemented behavior matches Product-Spec.md; 1 = Minor deviation in non-core path; 0 = Implementation contradicts spec |
+    | 2 | Test coverage | 2 | YES | 2 = Unit + integration + e2e covering all branches and edge cases; 1 = Core paths covered but gaps in error/edge paths; 0 = No tests or critical paths untested |
+    | 3 | Code structure | 2 | — | 2 = Modular, clear layer separation, consistent file organization; 1 = Some tangling or inconsistent naming; 0 = Monolithic or chaotic structure |
+    | 4 | Type safety | 2 | — | 2 = Strict typing throughout, no `any`, no unsafe casts; 1 = Occasional `any` or loose types in non-critical areas; 0 = Widespread `any` or type errors |
+    | 5 | Error handling | 2 | — | 2 = Proper error boundaries, categorized errors, clear user-facing messages; 1 = Async errors caught but no boundary/category; 0 = Uncaught rejections or silent failures |
+    | 6 | State management | 2 | — | 2 = Correct data flow, immutable patterns, predictable mutation; 1 = Minor anti-patterns but functional; 0 = Mutations cause stale/incorrect state |
+    | 7 | Performance awareness | 2 | — | 2 = Query optimized, bundle size managed, render efficiency considered; 1 = Some inefficiencies but not blocking; 0 = N+1 queries, no memo, large bundles |
+    | 8 | Security basics | 2 | YES | 2 = Input validation, auth checks, XSS/CSRF prevention in place; 1 = Validation present but incomplete; 0 = No security measures, injection vectors open |
+    | 9 | Git discipline | 2 | — | 2 = Frequent atomic commits, meaningful messages, logical grouping; 1 = Commits bundled or vague messages; 0 = Single mega-commit or no versioned intermediate state |
+    | 10 | Phase completion completeness | 2 | YES | 2 = All checklist items addressed, no TODO/FIXME left; 1 = Minor items skipped but documented; 0 = Key deliverables missing or incomplete |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/dev-builder` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]
