@@ -78,7 +78,8 @@ requires: []
     ├── SKILL.md
     └── references/
         ├── design-self-critique.md        # 五维自检 + anti-slop（交付前）
-        └── anti-rationalization.md
+        ├── anti-rationalization.md
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->
@@ -96,6 +97,18 @@ requires: []
     遇 skipping planning / skipping component system / skipping state variants 时读取。
 
 <!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Page Coverage**: every Spec UI feature has a design page
+    - **State Completeness**: empty/loading/error/active for every interactive page
+    - **Component System**: reusable components before page composition
+    - **Spec Fidelity**: layout and content match Product-Spec.md item by item
+    - **Self-Critique**: references/design-self-critique.md executed, all ≥3
+
+<!-- end: dimension-checklist -->
 <!-- begin: quality-rubric -->
 [Quality Rubric]
     8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.

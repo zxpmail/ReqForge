@@ -46,7 +46,10 @@ requires: []
 [File Structure]
     ```
     request-dispatcher/
-    └── SKILL.md
+    ├── SKILL.md
+    └── references/
+        ├── dimension-checklist.md
+        └── anti-rationalization.md
     ```
 
 [Output Artifacts]
@@ -101,6 +104,15 @@ requires: []
     | "This looks like a bug, let me just fix it" | Is it a confirmed bug or a quality concern? Bug → bug-fixer. Quality → code-review. Different skills. |
     | "They said improve, that covers everything" | "Improve" is the most ambiguous word. Use the ambiguity patterns to narrow down before acting. |
     | "I'll handle it myself instead of dispatching" | Dispatching isn't delegation — it's using the right methodology for the job. Every Skill has specific procedures you don't have loaded. |
+
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Intent Match**: user message maps to a Skill's trigger description
+    - **Prerequisite Check**: target Skill's Dependency Check would pass
+    - **Project State**: required artifacts exist for the target Skill
+    - **Ambiguity Resolved**: recommendation resolves the ambiguity
 
 [Quality Rubric]
     8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.

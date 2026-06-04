@@ -119,6 +119,18 @@ requires: []
     遇 skipping recording / skipping scoring / false positive 时读取。
 
 <!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have criteria:
+    - **Signal Discrimination**: only actual AI behavior issues, not tool frustration
+    - **Scoring Completeness**: all 4 scores filled (Precision/Coverage/Efficiency/Satisfaction)
+    - **Dedup Check**: FEEDBACK-INDEX.md checked before writing
+    - **Context Capture**: what AI did + correct behavior + which Skill
+    - **Scoring**: see dimension-checklist.md for full scoring rubric
+
+<!-- end: dimension-checklist -->
 <!-- begin: quality-rubric -->
 [Quality Rubric]
     8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
@@ -142,7 +154,8 @@ requires: []
     feedback-writer/
     ├── SKILL.md                           # Main Skill definition (this file)
     └── references/
-        └── anti-rationalization.md
+        ├── anti-rationalization.md
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->

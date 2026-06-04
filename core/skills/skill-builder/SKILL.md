@@ -44,11 +44,25 @@ requires: []
     ```
     skill-builder/
     ├── SKILL.md                           # Main Skill definition (this file)
-    └── templates/
-        └── skill-template.md              # Skeleton template for new Skills
+    ├── templates/
+    │   └── skill-template.md              # Skeleton template for new Skills
+    └── references/
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Decidable Triggers**: description specifies when to use AND when not
+    - **Workflow Executability**: each step specifies concrete action
+    - **Gotchas from Practice**: ≥3 specific failure points with guidance
+    - **Boundary Clarity**: [Not For] section with explicit exclusions
+    - **Dependency Check**: required deps have failure guidance
+
+<!-- end: dimension-checklist -->
 <!-- begin: gotchas -->
 [Gotchas]
     **Skipping template**: "I know the structure well enough" — read the template anyway. Every time you skip, you'll miss something: a section heading, a required field, or the consistent format.

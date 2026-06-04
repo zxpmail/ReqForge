@@ -75,6 +75,18 @@ requires: []
     遇 premature graduation / skipping cross-reference / skipping Verify-by 时读取。
 
 <!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Data Support**: ≥3 feedback entries supporting the pattern
+    - **RED Observation**: specific Agent behavior cited
+    - **GREEN Change**: exact target file + section named
+    - **Verify-By**: observable, time-bounded criterion
+    - **Failure Classification**: skill-defect / execution-lapse / unset
+
+<!-- end: dimension-checklist -->
 <!-- begin: quality-rubric -->
 [Quality Rubric]
     8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
@@ -98,7 +110,8 @@ requires: []
     evolution-engine/
     ├── SKILL.md                           # Main Skill definition (this file)
     └── references/
-        └── anti-rationalization.md
+        ├── anti-rationalization.md
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->
