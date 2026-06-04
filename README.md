@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.13-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.36.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,14 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.36.0 — 2026-06-04
+- **Quality Rubric for all 13 skills**: domain-specific 8-16 item scoring rubric (ship threshold + critical-item-zero rule) for every core Skill. Run `pnpm validate-skill --score core/skills/<name>`.
+- **Dimension checklists for 9 skills**: formal `references/dimension-checklist.md` with Must-Have/Recommended/Optional tiers — bug-fixer, change-manager, dev-builder, release-builder, design-maker, evolution-engine, feedback-writer, request-dispatcher, skill-builder.
+- **Anti-rationalization for 6 skills**: change-manager, design-brief-builder, design-maker, evolution-engine, feedback-writer, release-builder — domain-specific Rationalization|Reality tables to prevent AI from skipping critical steps.
+- **Anti-ai-slop checklists for 5 skills**: bug-fixer, change-manager, dev-builder, code-review, release-builder — 7-9 item pass/fail pre-delivery self-checks wired into workflows.
+- **references/ filled for request-dispatcher and skill-builder**: gained first-principles, output-style, workflow, anti-rationalization files (skill-builder Output Style is new, previously absent).
+- **Eval packs verified**: all 13 skills pass `pnpm skill-eval <name>` static checks.
 
 ### v1.35.14 — 2026-06-04
 - **Skill eval packs for all 13 core skills**: every framework Skill now has `.forge/skills/<name>/eval/` with `triggers.json` (2 positive + 2 near-miss negative trigger cases) and `cases.json` (output assertions: fileExists + maxBytes + regexChecks). `pnpm skill-eval <name>` static check passes on all skills. Enables regression detection and trigger accuracy verification for every Skill.

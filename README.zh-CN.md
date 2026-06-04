@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.35.13-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.36.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,14 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.36.0 — 2026-06-04
+- **全部 13 个 Skill 的 Quality Rubric**：领域特定 8-16 项评分矩阵，含 ship threshold 和 critical-item-zero 规则。`pnpm validate-skill --score core/skills/<name>` 计算评分。
+- **9 个 Skill 的维度检查清单**：正式 `references/dimension-checklist.md`，Must-Have/Recommended/Optional 三级。新增：bug-fixer、change-manager、dev-builder、release-builder、design-maker、evolution-engine、feedback-writer、request-dispatcher、skill-builder。
+- **6 个 Skill 的反合理化清单**：change-manager、design-brief-builder、design-maker、evolution-engine、feedback-writer、release-builder — 领域专属 Rationalization|Reality 表，防止 AI 跳过关键步骤。
+- **5 个 Skill 的反 AI 味清单**：bug-fixer、change-manager、dev-builder、code-review、release-builder — 7-9 项交付前自检表，已接入工作流。
+- **references/ 补齐 request-dispatcher 和 skill-builder**：新增 first-principles、output-style、workflow、anti-rationalization 文件（skill-builder 的 Output Style 为全新创建）。
+- **Eval pack 验证通过**：全部 13 个 Skill 通过 `pnpm skill-eval <name>` 静态检查。
 
 ### v1.35.14 — 2026-06-04
 - **全部 13 个核心 Skill 的 eval 包**：每个框架 Skill 配 `.forge/skills/<name>/eval/`，含 `triggers.json`（2 正例 + 2 近误负例）和 `cases.json`（fileExists + maxBytes + regexChecks 产出断言）。`pnpm skill-eval <name>` 静态检查全部通过。支持回归检测和触发准确率验证。

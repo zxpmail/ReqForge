@@ -14,6 +14,20 @@ All notable changes to Forge are documented here.
 - **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
 - **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
 
+## [v1.36.0] - 2026-06-04
+
+### Added
+- **Quality Rubric for all 13 skills**: every Skill now has a domain-specific 8-16 item scoring rubric with ship threshold and critical-item-zero rule. Run `pnpm validate-skill --score core/skills/<name>` to compute.
+- **Dimension checklists for 9 skills**: formal `references/dimension-checklist.md` with Must-Have / Recommended / Optional tiers. New: bug-fixer, change-manager, dev-builder, release-builder, design-maker, evolution-engine, feedback-writer, request-dispatcher, skill-builder.
+- **Anti-rationalization for 6 skills**: change-manager, design-brief-builder, design-maker, evolution-engine, feedback-writer, release-builder — each with domain-specific Rationalization|Reality tables to prevent AI from skipping critical steps.
+- **Anti-ai-slop checklists for 5 skills**: bug-fixer, change-manager, dev-builder, code-review, release-builder — 7-9 item Chinese pass/fail checklists for pre-delivery self-check. Wired into all workflows.
+- **references/ filled for request-dispatcher and skill-builder**: request-dispatcher gained first-principles, output-style, workflow, anti-rationalization files. skill-builder gained first-principles, output-style (new), workflow, anti-rationalization (new) — previously these sections were inline-only or absent.
+- **Eval pack verification**: all 13 skills pass `pnpm skill-eval <name>` static checks (triggers.json + cases.json).
+
+### Changed
+- **request-dispatcher SKILL.md** -66 lines: extracted inline content to references/ files.
+- **skill-builder SKILL.md** -104 lines: extracted inline content to references/ files; added Output Style section (previously absent).
+
 ## [v1.35.14] - 2026-06-04
 
 ### Added
