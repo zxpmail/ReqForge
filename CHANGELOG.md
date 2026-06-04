@@ -14,6 +14,11 @@ All notable changes to Forge are documented here.
 - **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
 - **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
 
+## [v1.35.14] - 2026-06-04
+
+### Added
+- **Skill eval packs for all 13 core skills**: every framework Skill now has `.forge/skills/<name>/eval/` with `triggers.json` (2 positive + 2 near-miss negative trigger cases) and `cases.json` (output assertions: fileExists + maxBytes + regexChecks). `pnpm skill-eval <name>` static check passes on all skills. Enables regression detection and trigger accuracy verification.
+
 ## [v1.35.13] - 2026-06-03
 
 ### Added

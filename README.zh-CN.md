@@ -61,6 +61,10 @@ flowchart LR
 
 ## 近期更新
 
+### v1.35.14 — 2026-06-04
+- **全部 13 个核心 Skill 的 eval 包**：每个框架 Skill 配 `.forge/skills/<name>/eval/`，含 `triggers.json`（2 正例 + 2 近误负例）和 `cases.json`（fileExists + maxBytes + regexChecks 产出断言）。`pnpm skill-eval <name>` 静态检查全部通过。支持回归检测和触发准确率验证。
+- **参考 lenny-skills**：分析 [RefoundAI/lenny-skills](https://github.com/RefoundAI/lenny-skills) 86 个产品管理 Skill。采用 `references/` 子目录模式和独立 `[Questions]` 章节作为下一阶段质量改进方向。
+
 ### v1.35.13 — 2026-06-03
 - **forge-hashline verify-brief/apply-brief**：`pnpm forge-hashline verify-brief <brief-path>` — 解析 fix-brief.md 的 `**Hashline**:` 条目，逐一校验文件哈希。`--after-fix` 模式验证 AI 是否真正执行了修改（检测 UNCHANGED/MISSING/STALE）。`pnpm forge-hashline apply-brief <brief-path>` 自动创建标记为 `(新文件)` 的骨架。已集成到 forge-loop/forge-phase-loop：生成 brief 时自动验证锚点、下一轮迭代自动验证修改、自动创建新文件。打破字符串匹配重试死循环。
 - **forge-hashline**：`pnpm forge-hashline hash|verify|edit <file>` — SHA256 内容哈希锚点编辑。`hash` 打印文件哈希，`verify` 校验完整性，`edit` 哈希匹配时才替换内容（STALE_ANCHOR 拒绝脏写入）。支持 `--lines N:M` 块级哈希。CRLF→LF 归一化保证跨平台一致性。

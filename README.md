@@ -62,6 +62,10 @@ flowchart LR
 
 ## What's New
 
+### v1.35.14 — 2026-06-04
+- **Skill eval packs for all 13 core skills**: every framework Skill now has `.forge/skills/<name>/eval/` with `triggers.json` (2 positive + 2 near-miss negative trigger cases) and `cases.json` (output assertions: fileExists + maxBytes + regexChecks). `pnpm skill-eval <name>` static check passes on all skills. Enables regression detection and trigger accuracy verification for every Skill.
+- **References from lenny-skills**: [RefoundAI/lenny-skills](https://github.com/RefoundAI/lenny-skills) 86-product-skill repo reviewed. Adopted `references/` subdirectory pattern and standalone `[Questions]` section as next quality improvement directions.
+
 ### v1.35.13 — 2026-06-03
 - **forge-hashline verify-brief/apply-brief**: `pnpm forge-hashline verify-brief <brief-path>` — parses fix-brief.md `**Hashline**:` entries and checks every hash anchor against current files. `--after-fix` mode verifies AI actually applied the edits (UNCHANGED/MISSING/STALE detection). `pnpm forge-hashline apply-brief <brief-path>` auto-creates files marked as `(新文件)`. Integrated into forge-loop and forge-phase-loop: auto-verify on brief generation, auto-verify on next iteration, auto-create new files. Breaks the string-matching retry deadlock.
 - **forge-hashline**: `pnpm forge-hashline hash|verify|edit <file>` — SHA256 content-hash anchored editing. `hash` prints file hash, `verify` checks integrity, `edit` replaces content only if hash matches (STALE_ANCHOR rejection prevents dirty writes). Supports `--lines N:M` for block hashing. CRLF→LF normalization for cross-platform consistency.
