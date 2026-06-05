@@ -23,6 +23,31 @@ Hooks cannot replace task-level discipline. **Full text** → [session-execution
 
 Summary: plan→approve→act; read before edit; minimal diff; ask if uncertain; diff before commit; **verify loop until green**.
 
+## Skill Context Protocol
+
+Skill invocation loads the full SKILL.md. To reduce context waste and improve precision, run the retrieval plan after the Skill tool returns:
+
+```
+node scripts/forge-skill-retrieve.mjs plan <skill-name> --context '<json>'
+```
+
+Context JSON assembles from available info:
+```json
+{"phase": 3, "mode": "0-to-1", "step": "planning", "failure_class": "skill-defect"}
+```
+
+Omit fields that are unknown — the script uses defaults.
+
+The plan has three categories:
+
+| Category | Meaning |
+|----------|---------|
+| `mustRead` | Primary instructions. Focus on these sections now. |
+| `onDemand` | Available but not needed yet. Read when the workflow step directs you to. |
+| `skip` | Not relevant to current context. Do not read. |
+
+If the script fails (non-zero exit), read the full SKILL.md instead.
+
 ## Rationalization references
 
 - Spec/plan gates: `product-spec-builder/references/hard-gate-rationalization.md`
