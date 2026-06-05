@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.36.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.37.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,15 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.37.0 — 2026-06-05
+- **forge-evolve**: `pnpm forge-evolve status|scan|propose|apply` — evolution engine loop closure. Backfilled 3 feedback entries with failure_class and scores. Level 2 (occurrences >= 3) and Level 3 (low avg scores) candidate detection. Wired into forge-loop completion paths.
+- **forge-change**: `pnpm forge-change init|list|check|archive` — change management automation. Scaffolds change directories from templates, 8 E2E tests.
+- **forge-release**: `pnpm forge-release version|changelog|tag|check|all` — release automation pipeline. Version bump, changelog generation, git tag, pre-release check.
+- **forge-evidence**: three-tier evidence grading (dev/lead/client reports). Always-on in forge-loop.
+- **forge-skill-eval status + judge-all**: centralized eval dashboard + batch judge-config deployment to all 13 skills.
+- **forge-coverage + forge-scaffold + forge-step-capture + forge-skill-retrieve**: new automation scripts for coverage gaps, project scaffolding, trajectory capture, and skill retrieval.
+- **forge-ops 完整化**: Slack/Feishu notifications, auto-deploy mode, baseline comparison.
 
 ### v1.36.0 — 2026-06-04
 - **Quality Rubric for all 13 skills**: domain-specific 8-16 item scoring rubric (ship threshold + critical-item-zero rule) for every core Skill. Run `pnpm validate-skill --score core/skills/<name>`.

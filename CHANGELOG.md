@@ -44,26 +44,26 @@ All notable changes to Forge are documented here.
 - **forge-loop --strict/--linear**: `--strict` stops on first test failure with review.md; `--linear` runs single pass without iteration.
 - **skill-eval trigger**: auto-generates 20 diverse queries from SKILL.md, runs static checker, logs results. Judge pipeline: `judge-prep` → `judge` → `judge-record`.
 
-## [Unreleased]
+## [v1.37.0] - 2026-06-05
 
 ### Added
-- **skill-eval ref-lint**: automatic numeric reference consistency check on SKILL.md during `skill-eval run` — detects mismatches between claimed counts (e.g. "four dimensions") and actual markdown list lengths; supports CN/Arabic/EN numerals with 20+ quantifiers.
-- **forge-phase-check**: new `pnpm forge-phase-check <N>` — parses DEV-PLAN.md Phase N delivery checklist, cross-references against `git diff` file changes, and outputs omission/completion/redundancy report. Pure mechanical comparison, no AI judgment.
-- **forge-phase-loop**: new `pnpm forge-phase-loop <N>` — single-iteration phase auto-completion tool. Runs forge-phase-check, generates `.forge/phase-loop/fix-brief.md` with structured AI-readable fix instructions for each omitted item. Supports `--max <M>` (max iterations, default 5) and `--reset`. Designed for YOLO + loop workflows: iterate check → fix → re-check until clean.
-- **forge-phase-check --json**: added `--json` output flag for programmatic consumption by forge-phase-loop.
-- **forge-ui-check**: new `pnpm forge-ui-check <N>` — scans DEV-PLAN.md Phase N for UI-related checklist items, performs static file existence checks, and auto-generates Playwright tests (form/button/input/nav/page route assertions) for dynamic browser validation when `--url` is provided.
-- **forge-ui-loop**: new `pnpm forge-ui-loop <N>` — UI auto-completion loop. Runs forge-ui-check, generates `.forge/ui-loop/fix-brief.md` with actionable UI fix instructions. Supports `--url`, `--max`, `--reset`. YOLO-ready: check → fix → re-check until UI passes.
-- **forge-loop**: new `pnpm forge-loop <N>` — unified Phase completion loop. Single entry point that runs delivery checklist check (forge-phase-check), UI file existence, and Playwright tests (with `--url`) in one pass. Generates unified `.forge/loop/fix-brief.md`. Supports `--skip-plan`, `--skip-ui`, `--url`, `--max`, `--reset`. Replaces the need to run separate loops for plan and UI checks.
+- **forge-coverage**: `pnpm forge-coverage <specifier>` — test coverage gap detection and auto-stub generation. Scans vitest/luma coverage JSON, maps uncovered functions, generates stub files. Naming-convention fallback when coverage JSON unavailable.
+- **forge-scaffold**: `pnpm forge-scaffold <specifier>` — project scaffolding from Product-Spec.md. Generates DEV-PLAN.md stubs, directory structure, and package.json from feature descriptions.
+- **forge-step-capture**: trajectory capture and evolution proposal loop for forge-step-capture. Records step-level execution traces for failure attribution.
+- **forge-skill-retrieve**: skill dynamic retrieval engine — context-aware section selection from skill references based on user intent matching.
+- **forge-evidence**: `pnpm forge-evidence generate|aggregate|list` — three-tier evidence grading reports: dev (coverage, git diff, traces), lead (gate pass rates, trends), client (deliverables, acceptance criteria). Wired into forge-loop as always-on.
+- **forge-ops 完整化**: `pnpm forge-ops <url>` — production monitoring loop. Added sendSlack/sendFeishu webhook notifications, auto-deploy mode, baseline comparison. forge-loop sends ops alerts on completion paths.
+- **forge-release**: `pnpm forge-release version|changelog|tag|check|all` — release automation. Version bump, auto-changelog entry, git tag, pre-release checklist.
+- **forge-evolve**: `pnpm forge-evolve status|scan|propose|apply` — evolution engine loop closure. Scans .claude/feedback/ entries, identifies Level 2/3 candidates, generates evolution proposals.
+- **forge-change**: `pnpm forge-change init|list|check|archive` — change management CLI. Scaffolds change directories from templates, tracks active/archived status. 8 E2E tests.
+- **forge-skill-eval**: `pnpm forge-skill-eval status` — centralized eval dashboard across all 13 skills. Shows triggers/cases/judge-config/judge-history per skill.
+- **skill-eval judge-all**: batch judge-config.json deployment to all `.forge/skills/` packages. All 13 skills now have judge-config.json deployed.
 
-### Fixed
-- **forge-ui-check**: phases with progress-table entry but no detailed `## Phase N:` section no longer cause false-positive failures (exit 0 instead of 1, so forge-loop doesn't get stuck in dead loop).
-- **forge-loop checkUi**: catches "Phase not found"/"无 UI" errors and treats them as pass, preventing iteration deadlock on non-UI phases.
-- **Windows hook execution**: all `.sh` files had CRLF line endings, causing Git Bash shebang failure (`#!/usr/bin/sh\r` → "cannot execute binary file"). Added `.gitattributes` enforcing `eol=lf` for `.sh` files and normalized all existing files to LF. `.bat` files kept at CRLF.
-- **Windows hook execution (round 2)**: `settings.json` had hooks using `sh` which always fire on all platforms. Moved hooks to platform-specific files only: `settings.unix.json` (`.sh`), `settings.windows.json` (`.bat`). `settings.json` now empty hookless base.
+### Changed
+- **forge-loop**: coverage scan after auto-fix, ops alerts at allOk/max-reached, evidence always-on (no longer FDE-only), forge-evolve scan on completion paths.
+- **Feedback backfill**: 3 feedback entries backfilled with failure_class and scores for evolution engine processing.
 
-## [v1.35.8] - 2026-05-26
-
-## [v1.35.8] - 2026-05-26
+## [v1.36.0] - 2026-06-04
 
 ### Changed
 - **Prompt slimming**: `change-manager` SKILL.md index-only (~11k→~4.7k); propose/apply/verify/archive workflow → `references/`; must read `references/workflow.md`.
