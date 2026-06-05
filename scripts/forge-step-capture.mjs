@@ -720,6 +720,9 @@ Usage:
     --auto-apply
     --dry-run
 
+  coverage-gaps <phase> [options]
+    --project-dir <dir>  (default: current directory)
+
   summary <phase> [options]
     --json
 
@@ -913,6 +916,41 @@ function main() {
         console.log(`\n${result.proposals.length} evolution proposal(s) generated.`);
         if (autoApply) console.log(`${result.applied} proposal(s) applied.`);
       }
+      break;
+    }
+    case "coverage-gaps": {
+      const projectDir = kv["project-dir"] || ".";
+      const tracesPath = TRACE_FILE;
+      // Dynamic import to avoid circular deps
+      import("../scripts/forge-coverage.mjs").then(({ report }) => {
+        const gapReport = report(projectDir, { tracesPath });
+        const phaseTraces = getPhaseTraces(phase);
+        const testFails = phaseTraces.filter(t => t.step === "test" && t.status === "fail");
+        console.log(`\n=== Coverage Gaps for Phase ${phase} ===`);
+        console.log(`Test failures in traces: ${testFails.length}`);
+        if (gapReport.failureHotspots.length > 0) {
+          console.log(`\nFailure Hotspots:`);
+          for (const f of gapReport.failureHotspots) {
+            console.log(`  ${f.path} (${f.failureCount} failures)`);
+          }
+        }
+        if (gapReport.uncovered.length > 0) {
+          console.log(`\nUncovered:`);
+          for (const f of gapReport.uncovered) {
+            console.log(`  ${f.path}`);
+          }
+        }
+        if (gapReport.partial.length > 0) {
+          console.log(`\nPartial Coverage:`);
+          for (const f of gapReport.partial) {
+            console.log(`  ${f.path}`);
+          }
+        }
+        console.log(`\nMethod: ${gapReport.method}`);
+      }).catch(e => {
+        console.error(`Coverage scan failed: ${e.message}`);
+        process.exit(1);
+      });
       break;
     }
     default:
