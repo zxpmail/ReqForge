@@ -28,6 +28,7 @@ import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { computeFileHash, verifyBrief, applyBrief } from "./forge-hashline.mjs";
 import { recordStep, processPhase, startSession, endSession, recordDecision } from "./forge-step-capture.mjs";
+import { sendConsole } from "./forge-ops/alerts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -367,7 +368,7 @@ function generateLinearReport(planResult, uiResult, testResult) {
 }
 
 // === Generate fix brief ===
-function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iteration) {
+function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iteration, coverageData) {
   const brief = [];
   brief.push(`# Phase ${phaseNum} 修复指令 — Iteration ${iteration}/${maxIterations}`);
   brief.push("");
@@ -432,6 +433,22 @@ function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iterat
     brief.push("");
   }
 
+  // Coverage warning section
+  if (coverageData?.files?.length > 0) {
+    const low = coverageData.files.filter(f => (f.lines ?? f.estimatedCoverage ?? 0) < 50);
+    if (low.length > 0) {
+      brief.push("## 覆盖率缺口");
+      brief.push("");
+      brief.push("| File | Coverage |");
+      brief.push("|------|----------|");
+      for (const f of low) {
+        const cov = f.lines ?? f.estimatedCoverage ?? 0;
+        brief.push(`| \`${f.path}\` | ${cov}% |`);
+      }
+      brief.push("");
+    }
+  }
+
   brief.push("---");
   brief.push(`修复后重新运行：\`pnpm forge-loop ${phaseNum}${serveCmd ? ` --serve "${serveCmd}"` : ""}${baseUrl && !serveCmd ? ` --url ${baseUrl}` : ""}\``);
   brief.push("");
@@ -463,13 +480,13 @@ function gatherFdeContext() {
 }
 
 // === FDE: Generate evidence report ===
-function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, autoCreated, finalStatus) {
+function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, autoCreated, finalStatus, isFde) {
   const evidenceDir = join(ROOT, ".forge", "evidence");
   ensureDir(evidenceDir);
   const report = {
     phase: phaseNum,
     timestamp: new Date().toISOString(),
-    mode: "fde",
+    mode: isFde ? "fde" : "standard",
     status: finalStatus,
     evidence: {
       checklist: { ok: planResult.ok, passed: planResult.completed?.length || 0, omitted: planResult.omitted?.length || 0, total: planResult.totalItems || 0 },
@@ -516,17 +533,18 @@ function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, auto
   const summaryPath = join(evidenceDir, `phase-${phaseNum}-report.md`);
   writeFileSync(summaryPath, summaryLines.join("\n"));
 
-  // Generate tiered evidence reports via forge-evidence
-  const evScript = join(ROOT, "scripts", "forge-evidence.mjs");
-  if (existsSync(evScript)) {
-    const evDir = join(ROOT);
-    try {
-      execSync(`node "${evScript}" generate ${phaseNum} --tier dev --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
-      execSync(`node "${evScript}" generate ${phaseNum} --tier lead --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
-      execSync(`node "${evScript}" generate ${phaseNum} --tier client --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
-    } catch (e) {
-      // Tiered reports are non-critical; don't block the loop
-      if (verbose) console.log(`   ⚠️ forge-evidence tiered generation: ${e.message?.split("\n")[0]}`);
+  // Tiered reports only in FDE mode
+  if (isFde) {
+    const evScript = join(ROOT, "scripts", "forge-evidence.mjs");
+    if (existsSync(evScript)) {
+      const evDir = join(ROOT);
+      try {
+        execSync(`node "${evScript}" generate ${phaseNum} --tier dev --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
+        execSync(`node "${evScript}" generate ${phaseNum} --tier lead --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
+        execSync(`node "${evScript}" generate ${phaseNum} --tier client --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
+      } catch (e) {
+        // Tiered reports are non-critical; don't block the loop
+      }
     }
   }
 
@@ -728,6 +746,24 @@ if (autoCreated.length > 0) {
 }
 recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, sessionId: loopSessionId, step: "auto-fix", status: autoCreated.length > 0 ? "pass" : "skip", durationMs: Date.now() - fixStart, context: { phaseItemsCount: phaseItems.length }, failure: null });
 
+// ---- Coverage scan (advisory) ----
+let coverageData = null;
+try {
+  const covOut = execSync(
+    `node "${join(ROOT, "scripts", "forge-coverage.mjs")}" report --dir "${ROOT}" --json`,
+    { cwd: ROOT, encoding: "utf-8", timeout: 180000, stdio: ["pipe", "pipe", "pipe"] }
+  ).trim();
+  coverageData = JSON.parse(covOut);
+  if (coverageData?.summary) {
+    const s = coverageData.summary;
+    console.log(`   📊 Coverage: ${(s.statements ?? s.estimatedCoverage)?.toFixed(0) || "?"}% stmts, ${(s.branches ?? "?")}% branch`);
+    const low = coverageData.files?.filter(f => (f.lines ?? f.estimatedCoverage ?? 0) < 50) || [];
+    if (low.length > 0) console.log(`   ⚠️  ${low.length} 个文件覆盖率低于 50%`);
+  }
+} catch (e) {
+  // Coverage is advisory; don't block the loop
+}
+
 // ---- 4. Re-detect after auto-fix ----
 const planAfterFix = autoCreated.length > 0 ? checkPlan() : planResult;
 // Acceptance-only omissions (e.g. "测试通过") are process checks, not files.
@@ -744,9 +780,12 @@ if (allOk) {
   writeState(state);
   try { endSession(loopSessionId); } catch (e) { /* best-effort */ }
   try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
-  if (fdeMode) {
-    const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "passed");
-    console.log(`\n📊 FDE Evidence Report → ${evidencePaths.summaryPath}`);
+  const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "passed", fdeMode);
+  console.log(`\n📊 Evidence → ${evidencePaths.summaryPath}`);
+  sendConsole(`Phase ${phaseNum} 全部通过`, "success");
+  if (coverageData) {
+    const low = coverageData.files?.filter(f => (f.lines ?? f.estimatedCoverage ?? 0) < 50) || [];
+    if (low.length > 0) sendConsole(`覆盖缺口: ${low.length} 个文件低于 50%`, "warn");
   }
   console.log(`\n✅ Phase ${phaseNum} 全部通过！`);
   stopServer();
@@ -761,9 +800,12 @@ if (state.iteration >= maxIterations) {
   writeState(state);
   try { endSession(loopSessionId); } catch (e) { /* best-effort */ }
   try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
-  if (fdeMode) {
-    const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "max-reached");
-    console.log(`\n📊 FDE Evidence Report → ${evidencePaths.summaryPath}`);
+  const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "max-reached", fdeMode);
+  console.log(`\n📊 Evidence → ${evidencePaths.summaryPath}`);
+  sendConsole(`Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}`, "warn");
+  if (coverageData) {
+    const low = coverageData.files?.filter(f => (f.lines ?? f.estimatedCoverage ?? 0) < 50) || [];
+    if (low.length > 0) sendConsole(`覆盖缺口: ${low.length} 个文件低于 50%`, "warn");
   }
   console.log(`\n⚠️ Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}。`);
   stopServer();
@@ -776,7 +818,7 @@ state.status = "in-progress";
 state.autoFixed = (state.autoFixed || []).concat(autoCreated);
 writeState(state);
 
-const brief = generateFixBrief(planAfterFix.omitted, autoCreated, testResult, uiResult, state.iteration);
+const brief = generateFixBrief(planAfterFix.omitted, autoCreated, testResult, uiResult, state.iteration, coverageData);
 ensureDir(STATE_DIR);
 writeFileSync(join(STATE_DIR, "fix-brief.md"), brief);
 
