@@ -2,10 +2,17 @@
 type: feedback
 description: dev-builder phase execution single pass often misses tasks, requiring 3+ verification iterations
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 occurrences: 1
 graduated: false
+skipped: false
 source_skill: dev-builder
+failure_class: skill-defect
+scores:
+  precision: 2
+  coverage: 2
+  efficiency: 2
+  satisfaction: 2
 ---
 
 # dev-builder single pass verification insufficient

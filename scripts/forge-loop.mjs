@@ -787,6 +787,10 @@ if (allOk) {
     const low = coverageData.files?.filter(f => (f.lines ?? f.estimatedCoverage ?? 0) < 50) || [];
     if (low.length > 0) sendConsole(`覆盖缺口: ${low.length} 个文件低于 50%`, "warn");
   }
+  // Evolution scan
+  try {
+    execSync(`node "${join(ROOT, "scripts", "forge-evolve.mjs")}" scan`, { cwd: ROOT, stdio: "pipe", timeout: 30000 });
+  } catch {}
   console.log(`\n✅ Phase ${phaseNum} 全部通过！`);
   stopServer();
   if (chainNext()) process.exit(0);
@@ -807,6 +811,10 @@ if (state.iteration >= maxIterations) {
     const low = coverageData.files?.filter(f => (f.lines ?? f.estimatedCoverage ?? 0) < 50) || [];
     if (low.length > 0) sendConsole(`覆盖缺口: ${low.length} 个文件低于 50%`, "warn");
   }
+  // Evolution scan
+  try {
+    execSync(`node "${join(ROOT, "scripts", "forge-evolve.mjs")}" scan`, { cwd: ROOT, stdio: "pipe", timeout: 30000 });
+  } catch {}
   console.log(`\n⚠️ Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}。`);
   stopServer();
   if (chainNext()) process.exit(0);

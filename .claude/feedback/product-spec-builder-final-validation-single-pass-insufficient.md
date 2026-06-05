@@ -2,10 +2,17 @@
 type: feedback
 description: User reports one pass of product-spec-builder final validation is insufficient - typically needs 3 iterations to fix all issues
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 occurrences: 1
 graduated: false
+skipped: false
 source_skill: product-spec-builder
+failure_class: skill-defect
+scores:
+  precision: 3
+  coverage: 3
+  efficiency: 2
+  satisfaction: 2
 ---
 
 # product-spec-builder final validation single pass insufficient

@@ -2,10 +2,17 @@
 type: feedback
 description: product-spec-builder may introduce redundancy and errors during requirements gathering, lacks formal review step
 created: 2026-05-17
-updated: 2026-05-17
+updated: 2026-06-05
 occurrences: 1
 graduated: false
+skipped: false
 source_skill: product-spec-builder
+failure_class: skill-defect
+scores:
+  precision: 3
+  coverage: 2
+  efficiency: 3
+  satisfaction: 2
 ---
 
 # product-spec-builder review gap
