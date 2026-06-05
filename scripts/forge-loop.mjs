@@ -516,6 +516,20 @@ function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, auto
   const summaryPath = join(evidenceDir, `phase-${phaseNum}-report.md`);
   writeFileSync(summaryPath, summaryLines.join("\n"));
 
+  // Generate tiered evidence reports via forge-evidence
+  const evScript = join(ROOT, "scripts", "forge-evidence.mjs");
+  if (existsSync(evScript)) {
+    const evDir = join(ROOT);
+    try {
+      execSync(`node "${evScript}" generate ${phaseNum} --tier dev --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
+      execSync(`node "${evScript}" generate ${phaseNum} --tier lead --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
+      execSync(`node "${evScript}" generate ${phaseNum} --tier client --dir "${evDir}"`, { stdio: "pipe", timeout: 60000 });
+    } catch (e) {
+      // Tiered reports are non-critical; don't block the loop
+      if (verbose) console.log(`   ⚠️ forge-evidence tiered generation: ${e.message?.split("\n")[0]}`);
+    }
+  }
+
   return { reportPath: reportPath, summaryPath: summaryPath };
 }
 

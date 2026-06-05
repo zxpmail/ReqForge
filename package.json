@@ -25,6 +25,7 @@
     "forge-phase-loop": "node scripts/forge-phase-loop.mjs",
     "forge-loop": "node scripts/forge-loop.mjs",
     "forge-fde": "node scripts/forge-loop.mjs --fde",
+    "forge-evidence": "node scripts/forge-evidence.mjs",
     "forge-ops": "node scripts/forge-ops.mjs",
     "forge-ui-check": "node scripts/forge-ui-check.mjs",
     "forge-ui-loop": "node scripts/forge-ui-loop.mjs",
