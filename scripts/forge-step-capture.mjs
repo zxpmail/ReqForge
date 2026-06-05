@@ -35,6 +35,7 @@ export const TRACE_FILE = join(TRACE_DIR, "step-traces.jsonl");
  * @param {string} params.step - checklist | ui-check | test | auto-fix | verify-brief
  * @param {string} params.status - pass | fail | skip | error
  * @param {number} [params.durationMs]
+ * @param {string} [params.sessionId] - optional session link
  * @param {object} [params.context]
  * @param {object|null} [params.failure] - structured failure detail (null when status=pass)
  * @returns {{ traceId: string }}
@@ -45,6 +46,7 @@ export function recordStep(params) {
     type: "step_record",
     version: 1,
     traceId,
+    sessionId: params.sessionId || null,
     phase: params.phase,
     iteration: params.iteration ?? 0,
     maxIterations: params.maxIterations ?? 5,
@@ -162,6 +164,101 @@ export function attributeFailure(failure, context, iteration) {
 }
 
 // ─── Trace Query ───────────────────────────────────────────────────
+
+// ─── Session Management ───────────────────────────────────────────
+
+/**
+ * Start a forge-loop session.
+ * @param {number} phase
+ * @param {object} [context]
+ * @returns {{ sessionId: string }}
+ */
+export function startSession(phase, context = {}) {
+  const sessionId = randomUUID();
+  const record = {
+    type: "session_record",
+    version: 1,
+    sessionId,
+    phase,
+    event: "start",
+    timestamp: new Date().toISOString(),
+    context,
+  };
+  mkdirSync(TRACE_DIR, { recursive: true });
+  appendFileSync(TRACE_FILE, JSON.stringify(record) + "\n", "utf-8");
+  return { sessionId };
+}
+
+/**
+ * End a forge-loop session.
+ * @param {string} sessionId
+ */
+export function endSession(sessionId) {
+  const record = {
+    type: "session_record",
+    version: 1,
+    sessionId,
+    event: "end",
+    timestamp: new Date().toISOString(),
+  };
+  appendFileSync(TRACE_FILE, JSON.stringify(record) + "\n", "utf-8");
+}
+
+/**
+ * Record a decision point during execution.
+ * @param {object} params
+ * @param {string} params.sessionId
+ * @param {number} params.phase
+ * @param {number} [params.iteration]
+ * @param {string} params.step
+ * @param {object} params.decision - { question, options, chosen, reason, abandoned }
+ * @param {object} [params.context]
+ * @returns {{ traceId: string }}
+ */
+export function recordDecision(params) {
+  const traceId = randomUUID();
+  const record = {
+    type: "decision_record",
+    version: 1,
+    sessionId: params.sessionId,
+    parentTraceId: traceId,
+    timestamp: new Date().toISOString(),
+    phase: params.phase,
+    iteration: params.iteration ?? 0,
+    step: params.step,
+    decision: {
+      question: params.decision.question,
+      options: params.decision.options || [],
+      chosen: params.decision.chosen,
+      reason: params.decision.reason || "",
+      abandoned: params.decision.abandoned || [],
+    },
+    context: params.context || {},
+  };
+  appendFileSync(TRACE_FILE, JSON.stringify(record) + "\n", "utf-8");
+  return { traceId };
+}
+
+// ─── Trajectory Query ─────────────────────────────────────────────
+
+/**
+ * Get all trace records for a specific session.
+ * @param {string} sessionId
+ * @returns {object[]}
+ */
+export function getSessionTraces(sessionId) {
+  return readAllTraces().filter(t => t.sessionId === sessionId);
+}
+
+/**
+ * Get all trace records for a specific phase+iteration (trajectory).
+ * @param {number} phase
+ * @param {number} iteration
+ * @returns {object[]}
+ */
+export function getTrajectory(phase, iteration) {
+  return readAllTraces().filter(t => t.phase === phase && t.iteration === iteration);
+}
 
 /**
  * Read all step traces from the JSONL file.
@@ -395,6 +492,173 @@ function autoScore(pattern) {
   return { accuracy: 3, coverage: 3, efficiency: 3, satisfaction: 3 };
 }
 
+// ─── Evolution Proposal Loop ────────────────────────────────────────
+
+/**
+ * Map a detected pattern to an evolution proposal (matching evolution-engine [Proposal Format]).
+ *
+ * @param {object} pattern - from detectFailurePatterns
+ * @param {number} phase
+ * @returns {object} proposal - { type, summary, redObservation, greenChange, predictedEffect, verifyBy, targetFile, targetSection, suggestedText }
+ */
+export function proposeEvolution(pattern, phase) {
+  const targetFile = "core/skills/dev-builder/SKILL.md";
+  const step = pattern.step || "checklist";
+  const detail = pattern.detail || `phase ${phase} ${step} step`;
+
+  // Map pattern type to evolution proposal
+  if (pattern.pattern === "repeated_omission") {
+    return {
+      type: "skill-optimization",
+      summary: `dev-builder: "${detail}" omitted ${pattern.occurrences} times — should be in delivery checklist`,
+      redObservation: pattern.redObservation,
+      greenChange: {
+        target: targetFile,
+        section: "[Gotchas]",
+        text: `**Phase ${phase} ${step} omission**: "${detail}" was omitted ${pattern.occurrences} times during forge-loop execution. Ensure this item is included in the Phase delivery checklist for this phase.`,
+      },
+      predictedEffect: `Checklist omissions for "${detail}" should decrease or disappear in future phase ${phase} runs`,
+      verifyBy: `Re-run pnpm forge-loop ${phase} --max 5 — the omitted item should appear in the delivery checklist`,
+    };
+  }
+
+  if (pattern.pattern === "persistent_test_failure") {
+    return {
+      type: "skill-optimization",
+      summary: `dev-builder: tests failed ${pattern.occurrences} times for phase ${phase} — add test verification guidance`,
+      redObservation: pattern.redObservation,
+      greenChange: {
+        target: targetFile,
+        section: "[Gotchas]",
+        text: `**Phase ${phase} test verification**: Tests failed ${pattern.occurrences} times during automated execution. Before marking phase ${phase} complete, verify that all existing tests pass AND new tests cover the phase deliverables.`,
+      },
+      predictedEffect: `Test failures during phase ${phase} execution should decrease as guidance is followed`,
+      verifyBy: `Re-run pnpm forge-loop ${phase} --max 5 — test step should pass within fewer iterations`,
+    };
+  }
+
+  if (pattern.pattern === "repeated_failure") {
+    return {
+      type: "skill-optimization",
+      summary: `dev-builder: ${step} step failed ${pattern.occurrences} times for phase ${phase}`,
+      redObservation: pattern.redObservation,
+      greenChange: {
+        target: targetFile,
+        section: "[Gotchas]",
+        text: `**Phase ${phase} ${step} step**: The ${step} verification step failed ${pattern.occurrences} times during forge-loop execution. Pay special attention to ${step} requirements when implementing phase ${phase}.`,
+      },
+      predictedEffect: `Failure rate for ${step} step in phase ${phase} should decrease`,
+      verifyBy: `Re-run pnpm forge-loop ${phase} --max 5 — ${step} step should pass`,
+    };
+  }
+
+  // Fallback
+  return {
+    type: "skill-optimization",
+    summary: `dev-builder: ${pattern.pattern} detected for phase ${phase}`,
+    redObservation: pattern.redObservation,
+    greenChange: {
+      target: targetFile,
+      section: "[Gotchas]",
+      text: `**Phase ${phase}**: ${pattern.pattern} detected ${pattern.occurrences} times. Review phase requirements carefully.`,
+    },
+    predictedEffect: "Failure pattern should decrease",
+    verifyBy: `Re-run pnpm forge-loop ${phase} --max 5`,
+  };
+}
+
+/**
+ * Apply an evolution proposal's GREEN change to the target SKILL.md.
+ * Appends the suggested text to the specified section.
+ *
+ * @param {object} proposal - from proposeEvolution
+ * @param {object} [opts]
+ * @param {boolean} [opts.dryRun]
+ * @returns {{ applied: boolean, target: string, section: string, linesAdded: number }}
+ */
+export function applyEvolution(proposal, opts = {}) {
+  const targetPath = join(ROOT, proposal.greenChange.target);
+  const section = proposal.greenChange.section;
+  const text = proposal.greenChange.text;
+
+  if (!existsSync(targetPath)) {
+    return { applied: false, target: proposal.greenChange.target, section, linesAdded: 0, error: "FILE_NOT_FOUND" };
+  }
+
+  if (opts.dryRun) {
+    console.log(`\n[Dry Run] Would append to ${proposal.greenChange.target} [${section}]:`);
+    console.log(`  ${text}`);
+    return { applied: false, target: proposal.greenChange.target, section, linesAdded: 0, dryRun: true };
+  }
+
+  const content = readFileSync(targetPath, "utf-8");
+  const sectionRegex = new RegExp(`(\\[${section}\\][^\\n]*)`);
+  const match = content.match(sectionRegex);
+
+  if (!match) {
+    return { applied: false, target: proposal.greenChange.target, section, linesAdded: 0, error: "SECTION_NOT_FOUND" };
+  }
+
+  // Check if similar text already exists to avoid duplicates
+  const checkText = text.replace(/^[\s\S]*?\*\*/, "**").slice(0, 40);
+  if (content.includes(checkText)) {
+    return { applied: false, target: proposal.greenChange.target, section, linesAdded: 0, error: "ALREADY_EXISTS" };
+  }
+
+  // Append after the section header line
+  const linesAdded = text.split("\n").length;
+  const newContent = content.replace(
+    match[0],
+    match[0] + "\n" + text
+  );
+  writeFileSync(targetPath, newContent, "utf-8");
+
+  return { applied: true, target: proposal.greenChange.target, section, linesAdded };
+}
+
+/**
+ * One-click: detect patterns → propose evolution → apply.
+ *
+ * @param {number} phase
+ * @param {object} [opts]
+ * @param {boolean} [opts.dryRun]
+ * @param {boolean} [opts.autoApply]
+ * @returns {{ patterns: object[], proposals: object[], applied: number }}
+ */
+export function proposeAndApply(phase, opts = {}) {
+  const result = processPhase(phase, 3, true); // dry-run feedback gen
+  const proposals = [];
+
+  for (const pattern of result.patterns) {
+    const proposal = proposeEvolution(pattern, phase);
+    proposals.push(proposal);
+
+    if (opts.dryRun) {
+      console.log(`\n**Skill Optimization** (1 item)`);
+      console.log(`1. ${proposal.summary}`);
+      console.log(`   RED observation: ${proposal.redObservation}`);
+      console.log(`   GREEN change: ${proposal.greenChange.target} → [${proposal.greenChange.section}]`);
+      console.log(`   Predicted effect: ${proposal.predictedEffect}`);
+      console.log(`   Verify by: ${proposal.verifyBy}`);
+      console.log(`   Text: ${proposal.greenChange.text}`);
+      continue;
+    }
+
+    if (opts.autoApply) {
+      const appResult = applyEvolution(proposal, { dryRun: false });
+      if (appResult.applied) {
+        console.log(`  ✅ Applied: ${proposal.greenChange.target} [${proposal.greenChange.section}] (${appResult.linesAdded} lines)`);
+      } else if (appResult.error === "ALREADY_EXISTS") {
+        console.log(`  ⏭️ Already applied: ${proposal.greenChange.target} [${proposal.greenChange.section}]`);
+      } else {
+        console.log(`  ❌ Failed: ${appResult.error}`);
+      }
+    }
+  }
+
+  return { patterns: result.patterns, proposals, applied: proposals.length };
+}
+
 // ─── High-Level API ────────────────────────────────────────────────
 
 /**
@@ -435,8 +699,25 @@ Usage:
     --failure <json>
     --duration <ms>
 
+  session start <phase> [--context <json>]
+  session end <sessionId>
+
+  decision <phase> --session <sessionId> --step <name>
+    --question "<text>" --chosen "<text>"
+    [--options "a,b,c"] [--reason "<text>"] [--abandoned "x,y"]
+
+  trajectory <phase> [--iteration <N>] [--session <sessionId>]
+
   generate-feedback <phase> [options]
     --min-occurrences <N>  (default: 3)
+    --dry-run
+
+  generate-feedback <phase> [options]
+    --min-occurrences <N>  (default: 3)
+    --dry-run
+
+  propose-evolution <phase> [options]
+    --auto-apply
     --dry-run
 
   summary <phase> [options]
@@ -456,15 +737,31 @@ function main() {
   }
 
   const cmd = args[0];
-  const phase = args[1] ? parseInt(args[1], 10) : null;
-  if (!phase) {
-    console.error("Missing phase number");
-    printHelp();
-    process.exit(1);
+  let phase = null;
+  let subCmd = null;
+
+  // Handle special commands with different argument structures
+  if (cmd === "session") {
+    subCmd = args[1];
+    if (subCmd === "start") phase = args[2] ? parseInt(args[2], 10) : null;
+  } else {
+    phase = args[1] ? parseInt(args[1], 10) : null;
+    if (!phase && cmd !== "trajectory") {
+      console.error("Missing phase number");
+      printHelp();
+      process.exit(1);
+    }
   }
 
   const kv = {};
-  for (let i = 2; i < args.length; i++) {
+  // Determine where kv args start based on command
+  let kvStart = 2;
+  if (cmd === "session") kvStart = subCmd === "start" ? 3 : 3;
+  else if (cmd === "decision") kvStart = 2;
+  // For session end, args[2] is the sessionId, kv start at 3
+  if (cmd === "session" && subCmd === "end") kvStart = 3;
+
+  for (let i = kvStart; i < args.length; i++) {
     if (args[i].startsWith("--")) {
       const key = args[i].replace(/^--/, "");
       const val = (args[i + 1] && !args[i + 1].startsWith("--")) ? args[++i] : "true";
@@ -507,15 +804,87 @@ function main() {
       }
       break;
     }
-    case "summary": {
-      const traces = getPhaseTraces(phase);
-      const failed = traces.filter(t => t.status === "fail" || t.status === "error");
-      const passed = traces.filter(t => t.status === "pass");
-      if (kv.json === "true") {
-        console.log(JSON.stringify({ phase, totalTraces: traces.length, passed: passed.length, failed: failed.length }, null, 2));
+    case "session": {
+      if (subCmd === "start") {
+        const context = kv.context ? JSON.parse(kv.context) : {};
+        const result = startSession(phase, context);
+        console.log(JSON.stringify(result));
+      } else if (subCmd === "end") {
+        const sessionId = args[2];
+        if (!sessionId) { console.error("Missing sessionId"); process.exit(1); }
+        endSession(sessionId);
+        console.log(`Session ${sessionId} ended.`);
       } else {
-        console.log(`\n=== Phase ${phase} Step Traces ===`);
-        console.log(`Total records: ${traces.length}`);
+        console.error(`Unknown session subcommand: ${subCmd}`);
+        printHelp();
+        process.exit(1);
+      }
+      break;
+    }
+    case "decision": {
+      const decision = {
+        question: kv.question || "",
+        options: kv.options ? kv.options.split(",").map(s => s.trim()) : [],
+        chosen: kv.chosen || "",
+        reason: kv.reason || "",
+        abandoned: kv.abandoned ? kv.abandoned.split(",").map(s => s.trim()) : [],
+      };
+      const result = recordDecision({
+        sessionId: kv.session,
+        phase,
+        iteration: parseInt(kv.iteration || "0", 10),
+        step: kv.step || "unknown",
+        decision,
+        context: kv.context ? JSON.parse(kv.context) : {},
+      });
+      console.log(JSON.stringify(result));
+      break;
+    }
+    case "trajectory": {
+      const allTraces = readAllTraces();
+      let filtered = kv.session
+        ? getSessionTraces(kv.session)
+        : kv.iteration
+          ? getTrajectory(phase, parseInt(kv.iteration, 10))
+          : allTraces.filter(t => t.phase === phase);
+      if (kv.json === "true") {
+        console.log(JSON.stringify(filtered, null, 2));
+      } else {
+        console.log(`\n=== Phase ${phase} Trajectory ===`);
+        if (kv.session) console.log(`Session: ${kv.session}`);
+        if (kv.iteration) console.log(`Iteration: ${kv.iteration}`);
+        const sessions = filtered.filter(r => r.type === "session_record");
+        const decisions = filtered.filter(r => r.type === "decision_record");
+        const steps = filtered.filter(r => r.type === "step_record");
+        console.log(`Sessions: ${sessions.length}, Decisions: ${decisions.length}, Steps: ${steps.length}`);
+        console.log(`\nTimeline:`);
+        filtered.sort((a, b) => a.timestamp < b.timestamp ? -1 : 1);
+        for (const r of filtered) {
+          const time = r.timestamp.slice(11, 19);
+          if (r.type === "session_record") {
+            console.log(`  ${time} [session] ${r.event}${r.context?.mode ? ` (${r.context.mode})` : ""}`);
+          } else if (r.type === "decision_record") {
+            console.log(`  ${time} [decision] ${r.step}: ${(r.decision?.chosen || "?").slice(0, 50)}`);
+          } else if (r.type === "step_record") {
+            console.log(`  ${time} [step] ${r.step}: ${r.status}${r.attribution ? ` (${r.attribution.failureClass})` : ""}`);
+          }
+        }
+      }
+      break;
+    }
+    case "summary": {
+      const allTraces = readAllTraces();
+      const phaseTraces = allTraces.filter(t => t.phase === phase);
+      const failed = phaseTraces.filter(t => t.status === "fail" || t.status === "error");
+      const passed = phaseTraces.filter(t => t.status === "pass");
+      const sessions = phaseTraces.filter(t => t.type === "session_record");
+      const decisions = phaseTraces.filter(t => t.type === "decision_record");
+      const sessionsStarted = sessions.filter(s => s.event === "start").length;
+      if (kv.json === "true") {
+        console.log(JSON.stringify({ phase, totalTraces: phaseTraces.length, passed: passed.length, failed: failed.length, sessions: sessionsStarted, decisions: decisions.length }, null, 2));
+      } else {
+        console.log(`\n=== Phase ${phase} Traces ===`);
+        console.log(`Total records: ${phaseTraces.length} (Sessions: ${sessionsStarted}, Decisions: ${decisions.length}, Steps: ${passed.length + failed.length})`);
         console.log(`Passed: ${passed.length}, Failed: ${failed.length}`);
         if (failed.length > 0) {
           console.log(`\nFailures by step:`);
@@ -531,6 +900,18 @@ function main() {
             }
           }
         }
+      }
+      break;
+    }
+    case "propose-evolution": {
+      const dryRun = kv["dry-run"] === "true";
+      const autoApply = kv["auto-apply"] === "true";
+      const result = proposeAndApply(phase, { dryRun, autoApply });
+      if (result.patterns.length === 0) {
+        console.log("No failure patterns meeting threshold.");
+      } else {
+        console.log(`\n${result.proposals.length} evolution proposal(s) generated.`);
+        if (autoApply) console.log(`${result.applied} proposal(s) applied.`);
       }
       break;
     }
