@@ -25,6 +25,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 import { computeFileHash, verifyBrief, applyBrief } from "./forge-hashline.mjs";
+import { recordStep, processPhase } from "./forge-step-capture.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -237,7 +238,9 @@ if (state.status === "in-progress" && existsSync(briefPath)) {
 
 // Run check
 console.log(`🔍 Phase ${phaseNum} — Iteration ${state.iteration + 1}/${maxIterations}`);
+const checkStart = Date.now();
 const report = runCheck();
+recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, step: "checklist", status: report && report.omitted.length === 0 ? "pass" : "fail", durationMs: Date.now() - checkStart, context: { command: "forge-phase-check" }, failure: report && report.omitted.length > 0 ? { type: "checklist_omission", detail: `${report.omitted.length} items omitted`, omittedItems: report.omitted.map(o => o.item || o), filesChanged: report.changedFiles || [] } : null });
 
 if (!report) {
   console.error("❌ forge-phase-check 执行失败");
@@ -248,6 +251,7 @@ if (report.omitted.length === 0) {
   // ALL DONE
   state.status = "complete";
   writeState(state);
+  try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
 
   console.log("");
   console.log(`✅ Phase ${phaseNum} 全部完成！共 ${report.totalItems} 项清单均已匹配。`);
@@ -263,6 +267,7 @@ state.iteration += 1;
 if (state.iteration >= maxIterations) {
   state.status = "max-reached";
   writeState(state);
+  try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
 
   console.log("");
   console.log(`⚠️ Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}，仍有 ${report.omitted.length} 项遗漏。`);

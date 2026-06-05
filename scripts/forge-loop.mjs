@@ -27,6 +27,7 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "fs";
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { computeFileHash, verifyBrief, applyBrief } from "./forge-hashline.mjs";
+import { recordStep, processPhase } from "./forge-step-capture.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -669,16 +670,22 @@ if (serveCmd && state.iteration === 0) startServer(serveCmd);
 
 // ---- 2. Detect ----
 console.log(`▸ 检测交付清单...`);
+const planStart = Date.now();
 const planResult = checkPlan();
 if (!planResult.ok) console.log(`  ${planResult.omitted.length} 项遗漏`);
+recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, step: "checklist", status: planResult.ok ? "pass" : "fail", durationMs: Date.now() - planStart, context: { command: "forge-phase-check" }, failure: planResult.ok ? null : { type: "checklist_omission", detail: `${planResult.omitted.length} items omitted`, omittedItems: planResult.omitted.map(o => o.item || o), filesChanged: [] } });
 
 console.log(`▸ 检测 UI...`);
+const uiStart = Date.now();
 const uiResult = checkUi();
 if (!uiResult.ok) console.log(`  UI 问题`);
+recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, step: "ui-check", status: uiResult.ok ? "pass" : "fail", durationMs: Date.now() - uiStart, context: { command: "forge-ui-check", url: baseUrl || "" }, failure: uiResult.ok ? null : { type: "ui_failure", detail: (uiResult.issues?.[0]?.detail || "").slice(0, 200), omittedItems: [], filesChanged: [] } });
 
 console.log(`▸ 运行测试...`);
+const testStart = Date.now();
 const testResult = runTests();
 console.log(`  ${testResult.ok ? "✅ 通过" : "❌ 失败"}`);
+recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, step: "test", status: testResult.ok ? "pass" : "fail", durationMs: Date.now() - testStart, context: { command: "pnpm test" }, failure: testResult.ok ? null : { type: "test_failure", detail: (testResult.error || testResult.output || "").slice(0, 300), omittedItems: [], filesChanged: [] } });
 
 // ---- Linear / Strict mode: one pass, report, no iteration ----
 if (linearMode || (strictMode && !testResult.ok)) {
@@ -693,11 +700,13 @@ if (linearMode || (strictMode && !testResult.ok)) {
 // ---- 3. Fix: auto-create missing keyfiles ----
 console.log(`▸ 自动修复关键文件...`);
 const phaseItems = parsePhaseItems();
+const fixStart = Date.now();
 const autoCreated = autoCreateFiles(phaseItems);
 if (autoCreated.length > 0) {
   console.log(`  创建了 ${autoCreated.length} 个缺失文件/目录`);
   autoCreated.forEach(f => console.log(`    ✅ ${f}`));
 }
+recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, step: "auto-fix", status: autoCreated.length > 0 ? "pass" : "skip", durationMs: Date.now() - fixStart, context: { phaseItemsCount: phaseItems.length }, failure: null });
 
 // ---- 4. Re-detect after auto-fix ----
 const planAfterFix = autoCreated.length > 0 ? checkPlan() : planResult;
@@ -713,6 +722,7 @@ const allOk = planOk && testResult.ok && uiResult.ok;
 if (allOk) {
   state.status = "complete";
   writeState(state);
+  try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
   if (fdeMode) {
     const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "passed");
     console.log(`\n📊 FDE Evidence Report → ${evidencePaths.summaryPath}`);
@@ -728,6 +738,7 @@ state.iteration += 1;
 if (state.iteration >= maxIterations) {
   state.status = "max-reached";
   writeState(state);
+  try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
   if (fdeMode) {
     const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "max-reached");
     console.log(`\n📊 FDE Evidence Report → ${evidencePaths.summaryPath}`);

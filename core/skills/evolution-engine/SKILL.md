@@ -142,6 +142,19 @@ requires: []
         - Involves multiple Skills or is global -> graduate to the main control file [General Rules]
         Cross-reference [Proposal Quality Checklist] Data Support dimension before proceeding.
 
+        In addition to .claude/feedback/ files, also scan:
+        - `.forge/trace/step-traces.jsonl` — step-level execution records from
+          forge-loop runs. Look for entries where `attribution.failureClass` is set
+          and the same failure pattern repeats across iterations. Treat repeated
+          failure patterns (≥3 occurrences of same `step` + `failureClass`) as
+          implicit feedback — they indicate Skill gaps exposed during automated
+          execution.
+        - When a feedback file exists AND step traces support the same pattern,
+          cross-reference the trace's `attribution.reasoning` as additional evidence
+          in the proposal's RED observation field.
+        - If step traces reveal a failure pattern that has no corresponding feedback
+          file, note this as "auto-detected from forge-loop traces" in the proposal.
+
     Step 2: Check Skill Optimization Signals
         Scan scores fields in feedback/, grouped by source_skill
         Trigger conditions (any one met):

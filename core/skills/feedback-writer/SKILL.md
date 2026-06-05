@@ -184,6 +184,12 @@ requires: []
 <!-- end: routing-rules -->
 <!-- begin: workflow -->
 [Workflow]
+    Step 0: Check step traces (if available)
+        If the feedback-observer passed step_traces_path, read the relevant trace
+        records from `.forge/trace/step-traces.jsonl`. The trace's `attribution.failureClass`
+        and `attribution.reasoning` can serve as starting evidence for the feedback's
+        `failure_class` field. Cross-reference before writing.
+
     Step 1: Check index
         Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md)
     Step 2: Dedup
