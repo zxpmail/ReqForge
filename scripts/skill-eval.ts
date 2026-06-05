@@ -1189,23 +1189,27 @@ Docs: core/docs/skill-eval.md
 }
 
 export function parseSkillEvalArgs(argv: string[]): {
-  command: "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "help";
+  command: "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "judge-all" | "help";
   skillName: string | null;
   cwd: string;
   evalDir?: string;
   reportPath?: string;
   strict: boolean;
   force: boolean;
+  judgeAllSkills?: string[] | null;
 } {
   const out = {
-    command: "help" as "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "help",
+    command: "help" as "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "judge-all" | "help",
     skillName: null as string | null,
     cwd: process.cwd(),
     evalDir: undefined as string | undefined,
     reportPath: undefined as string | undefined,
     strict: false,
     force: false,
+    judgeAllSkills: null as string[] | null,
   };
+
+  let judgeAllSkills: string[] | null = null;
 
   const rest: string[] = [];
   for (let i = 0; i < argv.length; i++) {
@@ -1249,7 +1253,13 @@ export function parseSkillEvalArgs(argv: string[]): {
   } else if (rest[0] === "trigger" && rest[1]) {
     out.command = "trigger";
     out.skillName = rest[1];
-  } else if (rest[0] && rest[0] !== "init" && !["judge-prep", "judge", "judge-record", "trigger"].includes(rest[0])) {
+  } else if (rest[0] === "judge-all") {
+    out.command = "judge-all";
+    out.skillName = "all";
+    if (rest[1] === "--skills") {
+      out.judgeAllSkills = rest.slice(2).filter(s => !s.startsWith("-"));
+    }
+  } else if (rest[0] && rest[0] !== "init" && !["judge-prep", "judge", "judge-record", "trigger", "judge-all"].includes(rest[0])) {
     out.command = "run";
     out.skillName = rest[0];
   }
@@ -1311,6 +1321,52 @@ function main(): void {
       console.error(`Error: ${e.message}`);
       process.exit(1);
     }
+    return;
+  }
+
+  if (args.command === "judge-all") {
+    // Discover all skills with eval packages
+    const forgeSkills = path.resolve(args.cwd, DEFAULT_FORGE_SKILLS);
+    let skillDirs: string[] = [];
+    if (args.judgeAllSkills && args.judgeAllSkills.length > 0) {
+      skillDirs = args.judgeAllSkills;
+    } else if (fs.existsSync(forgeSkills)) {
+      skillDirs = fs.readdirSync(forgeSkills, { withFileTypes: true })
+        .filter(d => d.isDirectory() && !d.name.startsWith("_") && !d.name.startsWith("."))
+        .map(d => d.name)
+        .sort();
+    }
+
+    if (skillDirs.length === 0) {
+      console.log("No skills found to judge.");
+      return;
+    }
+
+    console.log(`\n=== Judge-All: ${skillDirs.length} skills ===\n`);
+    let prepared = 0;
+    let alreadyHave = 0;
+    let failed = 0;
+
+    for (const skillName of skillDirs) {
+      try {
+        const evalDir = resolveEvalDir(args.cwd, skillName);
+        const cfgPath = path.join(evalDir, "judge-config.json");
+        if (fs.existsSync(cfgPath) && !args.force) {
+          console.log(`  [SKIP] ${skillName} — judge-config.json exists (use --force to overwrite)`);
+          alreadyHave++;
+          continue;
+        }
+        const dest = initJudgeConfig(skillName, { cwd: args.cwd, force: args.force });
+        console.log(`  [OK]   ${skillName} → ${path.relative(args.cwd, dest)}`);
+        prepared++;
+      } catch (e: any) {
+        console.log(`  [FAIL] ${skillName} — ${e.message}`);
+        failed++;
+      }
+    }
+
+    console.log(`\nResult: ${prepared} prepared, ${alreadyHave} already exist, ${failed} failed`);
+    console.log(`Run: pnpm skill-eval judge <name> for each skill to generate judge briefings`);
     return;
   }
 
