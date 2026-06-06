@@ -25,6 +25,8 @@ This template is used to generate a phased development plan. dev-builder reads t
 
 ## Phase 1: [Feature Name]
 
+**Difficulty**: 🟢 低 / 🟡 中 / 🔴 高（从 Product-Spec.md Known Difficult Spots 继承）
+
 **Deliverables**:
 - [Start with a verb, describe deliverable 1 — what the user can do / what the system does]
 - [Deliverable 2]
@@ -40,6 +42,11 @@ This template is used to generate a phased development plan. dev-builder reads t
 
 **Primary metric** (one falsifiable line — unchanged for this Phase; autoresearch-style decision anchor):
 - [e.g. `pnpm test` exit 0 for modules touched; or API p95 < 200ms on fixture X]
+
+**Behavior**:
+- 🔴 **高**: dev-builder 执行时放慢，每段代码后自我评审，遇难点怵然为戒，动刀甚微。变更前确保回滚路径。
+- 🟡 **中**: 标准 dev-builder + code-review。关注边界条件。
+- 🟢 **低**: 快速通过，标准流程，不需要逐行盯。
 
 ---
 

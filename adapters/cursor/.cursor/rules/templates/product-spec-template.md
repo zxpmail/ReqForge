@@ -117,6 +117,23 @@ If none: **"No S0/S1 in v1"**.
 ## Additional Notes
 <Use a table to explain options, states, logic, etc. if needed>
 
+## Known Difficult Spots
+
+> 选填。列出已知的技术难点、风险区域、易出错环节，帮助 dev-planner 和 dev-builder 在遇到这些点时"怵然为戒，动刀甚微"。
+> 随着开发推进，新发现的隐藏难点应追加到此表（dev-builder 每完成一个 Task 后自动更新）。
+
+| 模块/功能 | 难度 | 预计缝在哪 | 应对策略 |
+|-----------|------|-----------|---------|
+| <模块名称> | 🔴 高 / 🟡 中 / 🟢 低 | <技术难点、边界条件、已知陷阱> | <绕过或精准处理的策略> |
+| Stripe Webhook | 🔴 高 | 幂等性处理、试用期 `invoice.paid` 误触发 | 加 idempotency key，判 subscription status |
+| 搜索排序 | 🟡 中 | 多字段权重组合 | 先写单元测试锚定排序行为 |
+| 用户注册 | 🟢 低 | 标准 CRUD | 快速通过，不需要逐行盯 |
+
+**难度对照**：
+- 🔴 **高** — dev-builder 执行时放慢，追加自我评审，怵然为戒。修改需考虑回滚。
+- 🟡 **中** — 标准实施 + code-review 关注。确认验收标准后再通过。
+- 🟢 **低** — 快速通过，标准流程，不需额外关注。
+
 ---
 
 ## Complete Example

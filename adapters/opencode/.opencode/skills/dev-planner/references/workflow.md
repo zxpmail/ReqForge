@@ -89,10 +89,16 @@
         Step 1: Load template
             Read templates/dev-plan-template.md
 
-        Step 2: Fill content
+        Step 2: Load Known Difficult Spots (NEW)
+            If Product-Spec.md has a `## Known Difficult Spots` section, read it now.
+            For each Phase, check if its feature maps to any listed difficulty spot.
+            If yes -> propagate the difficulty level (🔴/🟡/🟢) and the "预计缝在哪" strategy into the Phase's Difficulty field.
+            If a Phase covers features not listed in Known Difficult Spots -> default to 🟡 中.
+
+        Step 3: Fill content
             Fill according to template structure:
             - **MVP Scope** (in scope, **out of scope**, scope amendment criteria — Founder's Playbook anti-creep)
-            - Phase list (number + feature name + delivery checklist + key files + acceptance criteria)
+            - Phase list (number + feature name + difficulty level + delivery checklist + key files + acceptance criteria + behavior)
             - Tech stack table
             - Database table summary (if applicable)
             - Development rules

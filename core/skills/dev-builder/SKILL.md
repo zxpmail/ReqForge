@@ -114,6 +114,7 @@ requires: []
     **Phase scope creep**: "I'll just add this small improvement while I'm coding" → that's how Phases inflate and never finish. One Phase, one goal. Additional improvements go to the feedback channel or next Phase. Before adding scope, check DEV-PLAN **Scope amendment criteria** — no qualifying user evidence, no build.
     **Editing Spec/Plan during build**: Patching Product-Spec.md or DEV-PLAN.md to excuse implementation drift violates the prepare.py boundary. Route scope changes through change-manager or replan.
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
+    **Difficulty-blind execution**: Every Phase has a **Difficulty** level. 🔴 高 = 怵然为戒，每段代码追加自我评审，动刀甚微；🟢 低 = 快速通过，标准流程即可。不按难度调整行为，就像庖丁遇到筋骨交错还一刀砍过去。执行前先读 Phase 的 Difficulty 字段。
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->
