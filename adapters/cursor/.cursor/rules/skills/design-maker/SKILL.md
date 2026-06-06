@@ -77,7 +77,9 @@ requires: []
     design-maker/
     ├── SKILL.md
     └── references/
-        └── design-self-critique.md        # 五维自检 + anti-slop（交付前）
+        ├── design-self-critique.md        # 五维自检 + anti-slop（交付前）
+        ├── anti-rationalization.md
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->
@@ -89,6 +91,41 @@ requires: []
     **Inconsistent spacing/color system**: Using ad-hoc values instead of a design token system. Every color, spacing, and font size should come from a defined palette, not "this looks about right."
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping planning / skipping component system / skipping state variants 时读取。
+
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Page Coverage**: every Spec UI feature has a design page
+    - **State Completeness**: empty/loading/error/active for every interactive page
+    - **Component System**: reusable components before page composition
+    - **Spec Fidelity**: layout and content match Product-Spec.md item by item
+    - **Self-Critique**: references/design-self-critique.md executed, all ≥3
+
+<!-- end: dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Page coverage | 2 | YES | 2 = Every Spec UI feature has a design page; 1 = 1-2 pages missing; 0 = Significant gaps |
+    | 2 | State completeness | 2 | YES | 2 = Empty/loading/error/active states for every interactive page; 1 = States covered but not all; 0 = Default state only |
+    | 3 | Component system | 2 | — | 2 = Reusable components built before page composition; 1 = Partial extraction; 0 = Same element duplicated across pages |
+    | 4 | Design tokens | 2 | — | 2 = Colors, typography, spacing, radius all tokenized; 1 = Partial token set; 0 = Ad-hoc values throughout |
+    | 5 | Spec fidelity | 2 | YES | 2 = Layout and content match Product-Spec.md item by item; 1 = Minor deviations; 0 = Contradicts Spec |
+    | 6 | Brief alignment | 2 | — | 2 = Visual direction matches Design-Brief.md mood/notes; 1 = Partial alignment; 0 = Ignores Brief direction |
+    | 7 | Self-critique executed | 2 | — | 2 = `references/design-self-critique.md` executed, all ≥3; 1 = Executed but ≤2 scores not revised; 0 = Skipped |
+    | 8 | Visual consistency | 2 | — | 2 = Same component looks identical across pages, tokens used correctly; 1 = Minor inconsistencies; 0 = Visual drift across pages |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/design-maker` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Design Deliverables** (created via design tool MCP):

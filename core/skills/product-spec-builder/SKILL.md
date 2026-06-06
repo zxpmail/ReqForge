@@ -89,6 +89,9 @@ requires: []
     **Duplicating change-manager**: Do not create `changes/<name>/` here — scoped features use `/change-manager` only.
     **Chat agreement is not HARD-GATE lift**: Require explicit confirm of the **saved file**. See `references/hard-gate-rationalization.md`.
     **Quick Mode loading wrong refs**: Quick path → read **`workflow-quick-mode.md` only**; do not load full 0-to-1 interview chain.
+    **Cross-phase redundancy**: Questions asked in Exploration may be re-asked verbatim in Clarifying or Refinement. Track what's been covered: after each phase, note covered topics; before next phase, scan that list. Do not ask what was already asked.
+    **Single-pass validation is insufficient**: Step 6 Final Validation must run **at least 3 full scan→fix cycles**, not just "until clean". One pass misses 30-50% of issues. Use an explicit counter and re-read the full Spec each cycle — incremental diffs accumulate blind spots.
+    **No cross-phase dedup before generation**: Exploration, Clarifying, and Refinement phases each produce interview notes with overlapping content. Before Document Generation, do a structured dedup pass across all phases' notes — merge duplicate requirements, flag contradictions across phases, consolidate scattered decisions. Redundancy baked into the Spec is much harder to remove after generation.
 
 <!-- end: gotchas -->
 <!-- begin: output-artifacts -->

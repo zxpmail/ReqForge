@@ -1,8 +1,8 @@
 ---
 name: skill-template
 description: Skeleton template for new Skills. When creating a new Skill, copy this template and replace [placeholders] with actual content. Required Sections must not be deleted. Recommended Sections should be kept or removed as needed. On-Demand Sections should be added based on actual circumstances.
-version: 1.0.0
-updated: 2026-05-26
+version: 1.1.0
+updated: 2026-06-04
 ---
 
 # Skill Skeleton Template
@@ -53,8 +53,31 @@ requires: []
 [File Structure]
     ```
     [skill-name]/
-    └── SKILL.md
+    ├── SKILL.md
+    └── references/
+        ├── first-principles.md       # (recommended) extracted from [First Principles]
+        ├── dimension-checklist.md    # (recommended) must-have/recommended/optional
+        ├── anti-rationalization.md   # (recommended) Rationalization|Reality table
+        └── workflow.md               # (recommended) extracted from [Workflow]
     ```
+
+[Quality Rubric]
+    N-item, N*2-point scoring system. Ship threshold: **≥ T** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | [dimension] | 2 | YES/no | 2 = [best]; 1 = [acceptable]; 0 = [fail] |
+    | ... | ... | ... | ... | ... |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/<name>` to compute.
+
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+
+    | Rationalization | Reality |
+    |---|---|
+    | "[common excuse for skipping steps]" | "[correct response]" |
+    | "[another excuse]" | "[correct response]" |
 
 [Workflow]
     [Step 1: XXX]
@@ -74,6 +97,7 @@ requires: []
 
 ```markdown
 [Output Style]
+    → `references/output-style.md`
     **Tone**:
     - [Describe the speaking style of this Skill]
 
@@ -86,12 +110,25 @@ requires: []
     - "[example sentence 2]"
 
 [XXX Dimension Checklist]
+    → `references/dimension-checklist.md`
     [Name based on domain: Requirements Dimension Checklist / Review Dimension Checklist / Development Rule Checklist / ...]
-    [List all dimensions or rules this Skill needs to focus on]
+    [List must-have items with must-have/recommended/optional tiers]
 
 [XXX Strategy]
     [Name based on domain: Dialogue Strategy / Review Strategy / Development Strategy / ...]
     [Describe the execution methodology — how to do it]
+
+[Quality Rubric]
+    [N-item, N*2-point scoring system. Ship threshold with critical-item-zero rule.]
+    [Include domain-specific scoring dimensions with 2/1/0 criteria.]
+
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    [3-5 Rationalization|Reality pairs specific to this Skill's failure patterns.]
+
+[Anti-ai-slop Checklist]
+    → `references/anti-ai-slop-checklist.md`
+    [7-9 item pass/fail self-check for output-producing skills. Pre-delivery only.]
 
 [Gotchas]
     **Common Pitfall 1**: [What Claude gets wrong, and what to do instead]
@@ -132,8 +169,11 @@ requires: []
 | Skill name | kebab-case (e.g., skill-builder, dev-planner) |
 | Directory location | skills/[skill-name]/ (relative to framework root) |
 | Main file | SKILL.md |
+| Reference files | references/ first-principles / dimension-checklist / anti-rationalization / workflow / output-style / anti-ai-slop |
 | Template files | templates/ subdirectory (if any) |
 | Section title | [Title] format |
 | Content indentation | 4 spaces |
 | Frontmatter | name, description, version, updated, requires |
 | Language | Chinese |
+| Required sections | Task, Dependency Check, First Principles, Not For, File Structure, Workflow, Initialization |
+| Recommended sections | Output Style, Dimension Checklist, Quality Rubric, Anti-Rationalization, Anti-ai-slop, Strategy, Gotchas |

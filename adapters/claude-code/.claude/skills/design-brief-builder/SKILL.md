@@ -61,7 +61,8 @@ requires: []
         ├── sufficiency-judgment.md
         ├── design-discovery-questionnaire.md
         ├── visual-direction-presets.md
-        └── anti-ai-slop-checklist.md
+        ├── anti-ai-slop-checklist.md
+        └── anti-rationalization.md
     ../_shared/
     ```
 
@@ -74,12 +75,28 @@ requires: []
     **Copying without thinking**: Adapt reference products; don't clone blindly.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping interview / skipping WebSearch 等场景时读取。
+
+<!-- end: anti-rationalization-checklist -->
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Design-Brief.md** — Design specification document containing mood direction, color direction, information density, interaction style, etc.
 
 <!-- end: output-artifacts -->
 <!-- begin: interview-dimension-checklist -->
+[Dimension Checklist]
+    See [references/interview-dimension-checklist.md](references/interview-dimension-checklist.md) for the full interview dimension checklist.
+
+    Must-have dimensions:
+    - **Mood Direction**: 3 keywords + ≥1 reference product
+    - **Color Direction**: cool/warm/neutral + dark/light + brand color
+    - **Information Density**: feature count matched to layout density
+    - **Core Feature Visuals**: every Spec UI feature gets visual direction
+    - **Accessibility**: contrast, hierarchy, touch targets
+
 [Interview Dimension Checklist]
     **访谈阶段读取** `references/interview-dimension-checklist.md`
 
@@ -90,6 +107,23 @@ requires: []
     **生成 Brief 前读取** `references/sufficiency-judgment.md`
 
 <!-- end: interview-dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Interview thoroughness | 2 | YES | 2 = All 5+ design dimensions covered (color, typography, density, interaction, mood); 1 = 3-4 dimensions; 0 = <3 dimensions |
+    | 2 | Concreteness | 2 | — | 2 = Options over open-ended questions for every preference; 1 = Mixed open/closed; 0 = Open-ended questions throughout |
+    | 3 | Visual direction specificity | 2 | YES | 2 = Colors, typography, spacing, density, interaction all defined; 1 = Partial direction; 0 = Vague ("modern") |
+    | 4 | Reference grounding | 2 | — | 2 = WebSearch for trends + reference products named and analyzed; 1 = Search done but not applied; 0 = No external research |
+    | 5 | Accessibility consideration | 2 | — | 2 = Contrast ratios, hierarchy, touch targets discussed in Brief; 1 = Mentioned but not specified; 0 = Absent |
+    | 6 | Spec alignment | 2 | — | 2 = Visual direction supports all Product-Spec.md user flows; 1 = Minor misalignment; 0 = Contradicts Spec |
+    | 7 | Sufficiency judgment | 2 | YES | 2 = Executed `references/sufficiency-judgment.md` and passed; 1 = Executed but gaps found; 0 = Skipped |
+    | 8 | Anti-ai-slop executed | 2 | — | 2 = `references/anti-ai-slop-checklist.md` completed before output; 1 = Partial check; 0 = Skipped |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/design-brief-builder` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]

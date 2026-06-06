@@ -79,6 +79,7 @@ requires: []
         ├── development-rules-checklist.md
         ├── development-strategies.md
         ├── anti-rationalization.md
+        ├── anti-ai-slop-checklist.md
         ├── sub-agent-isolation.md
         ├── phase-completion-assessment.md
         └── zoom-out-pass.md
@@ -165,8 +166,9 @@ requires: []
        - **Initialization Mode** — greenfield scaffold + Phase 1
        - **Continuous Development Mode** — Loading → Phase Execution → Verification → Force Stop
        - **Change-Scoped Mode** — same Continuous flow; tasks from `changes/<name>/tasks.md` only
-    4. Optional read-only: `references/zoom-out-pass.md` when user asks zoom out
-    5. YOLO (`FORGE_MODE=yolo`) overrides → see `references/workflow.md` § YOLO Mode
+    4. Phase 交付前执行 `references/anti-ai-slop-checklist.md` 自检
+    5. Optional read-only: `references/zoom-out-pass.md` when user asks zoom out
+    6. YOLO (`FORGE_MODE=yolo`) overrides → see `references/workflow.md` § YOLO Mode
 
 <!-- end: workflow -->
 <!-- begin: initialization -->

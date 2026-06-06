@@ -5,7 +5,8 @@ source_skill: product-spec-builder
 target: core/skills/product-spec-builder/SKILL.md
 threshold: "avg scores P3.0 C2.5 E2.5 S2.0"
 created: 2026-06-05
-status: pending
+status: applied
+applied: 2026-06-06
 ---
 
 # Evolution Proposal: skill-optimization

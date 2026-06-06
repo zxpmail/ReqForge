@@ -53,6 +53,20 @@ color: blue
     - **failure_detail** (optional): Error message, review comment, or test output that describes what went wrong
     - **model_version** (optional): AI model version string (e.g., "claude-sonnet-4-6", "claude-opus-4-7"). If provided, include in the feedback record. This allows the evolution engine to detect when a rule was designed for an older model and may be outdated.
 
+[Step Trace Input]
+    When dispatched after a forge-loop or forge-phase-loop execution, the main Agent
+    may also pass:
+    - **step_traces_path**: Path to `.forge/trace/step-traces.jsonl` — accumulated
+      step-level execution data from forge-loop iterations
+    - **step_trace_ids**: Array of trace IDs from the last forge-loop run
+
+    When step traces are available:
+    1. Read the relevant trace records from step-traces.jsonl
+    2. Use the `attribution.failureClass` from the trace as a starting point
+    3. Compare the trace's auto-attribution with your own analysis
+    4. If they agree, write feedback with that `failure_class`
+    5. If they disagree, use `unset` and note the disagreement in the body
+
 [Auto-Scoring on Failure]
     When trigger_reason is a failure type, automatically infer Skill Capability Assessment scores. These scores feed the evolution engine — without them, feedback accumulates but never triggers proposals.
 
@@ -95,6 +109,8 @@ color: blue
     - action_taken (string) -- "created" | "updated" | "none"
     - scores (object | null) -- {precision, coverage, efficiency, satisfaction} if auto-scored
     - model_version (string | null) -- Model version from input (passed through for evolution engine)
+    - step_trace_used (boolean) -- Whether step-trace data was consulted
+    - attribution_match (boolean | null) -- Whether auto-attribution aligned with observer judgment
     - summary (string) -- One-line summary for the main Agent to display
 
     **Collaboration boundaries**:

@@ -15,7 +15,7 @@ After gathering, execute [Dependency Check] for tools actually needed.
 
 ## Step 2: Version Confirmation
 
-Read package.json version; ask if bump needed; if yes → modify → commit
+Read package.json version; ask if bump needed; if yes → run `pnpm forge-release version [patch|minor|major]` to auto-bump → commit
 
 ## Step 3: Build
 
@@ -48,7 +48,7 @@ Test core features per Product-Spec.md if available; Playwright if available; re
 ## Step 7: Release Confirmation
 
 Report Release Ready Check to user; after confirm:
-- `git tag v[version]` → `git push --tags`
+- Run `pnpm forge-release tag` to create git tag + push
 - gh CLI → GitHub Release if available
 - Web → production deploy if not yet done
 - CLI → `npm publish`

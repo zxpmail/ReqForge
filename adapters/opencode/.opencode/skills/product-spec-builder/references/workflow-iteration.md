@@ -75,25 +75,31 @@
             Automatically generate change descriptions based on conversation content
 
         Step 6: Final Validation
-            Goal: Verify the updated spec is clean and consistent
+            Goal: Verify the updated spec is clean and consistent.
+            **Must run at least 3 full scan→fix cycles** — iteration mode also suffers from single-pass blind spots.
 
-            Iterative cleanup loop:
-            1. **Scan**: Perform a focused review of the updated Product Spec
+            Iterative cleanup loop (minimum 3 cycles):
+            1. **Full Spec re-read**: Re-read the complete Product Spec from scratch each cycle.
+               Do not rely on incremental diffs — they accumulate blind spots, especially for cross-section conflicts introduced by the update.
+
+            2. **Scan**: Perform a focused review of the updated Product Spec
                - Check that new requirements don't conflict with existing requirements
                - Find redundant descriptions carried over from original
                - Verify all new changes are clearly articulated without vagueness
                - Confirm the overall structure remains coherent
 
-            2. **Auto-fix**:
+            3. **Auto-fix**:
                - Redundancy: Automatically remove duplicates
                - Simple contradictions: Auto-resolve if obvious
                - Structural issues: Auto-adjust to maintain coherence
                - Do not auto-fix vagueness or scope changes — these require user input
 
-            3. **Repeat**: If any auto-fix was applied, re-scan to catch any new issues introduced by the fix
-               Keep cleaning until no more automatic fixes are possible
+            4. **Cycle counter**: Track explicit cycle number (1/3, 2/3, 3/3).
+               - If cycle < 3 AND any auto-fix was applied → go to Step 1 (next cycle)
+               - If cycle >= 3 AND no more auto-fixes possible → proceed to Present
+               - If cycle >= 3 but still finding auto-fixable issues → continue until clean
 
-            4. **Present**: When done with auto-cleanup, present remaining issues to user
+            5. **Present**: When done with auto-cleanup (minimum 3 cycles completed), present remaining issues to user
                Only after user confirms all issues are resolved can you conclude.
                On confirm: update `Product-Spec.md` and refresh `.forge/spec-confirmed.json` (same format as [Machine Gate Markers]).
 

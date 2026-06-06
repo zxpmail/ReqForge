@@ -145,6 +145,16 @@
     [Document Generation Phase]
         Goal: Output a usable Product Spec file
 
+        Step 0: Cross-phase dedup (mandatory)
+            Before organizing content, perform a structured dedup across all interview notes from Exploration, Clarifying, and Refinement phases:
+
+            1. **Merge duplicates**: Find requirements or questions asked/answered in multiple phases — consolidate to one canonical entry with all resolved answers
+            2. **Flag cross-phase contradictions**: A decision in Refinement may contradict an assumption in Clarifying — surface these before generation
+            3. **Consolidate decisions scattered across phases**: Same topic discussed in multiple phases → merge into one coherent section
+            4. **Prune resolved questions**: Remove questions that were answered and resolved — don't carry them into the Spec as open items
+
+            Run this dedup before Step 1. Redundancy baked into the Spec at generation time is much harder to remove after.
+
         Step 1: Organize
             Categorize conversation content according to the output template structure
 
@@ -170,26 +180,33 @@
             Save the Product Spec as Product-Spec.md
 
         Step 6: Final Validation
-            Goal: Remove redundancy, resolve contradictions, eliminate vague language before delivering
+            Goal: Remove redundancy, resolve contradictions, eliminate vague language before delivering.
+            **Must run at least 3 full scan→fix cycles** — one pass catches < 60% of issues.
 
-            Iterative cleanup loop:
-            1. **Scan**: Perform a complete self-review of the current Product Spec
+            Iterative cleanup loop (minimum 3 cycles):
+            1. **Full Spec re-read**: Re-read the complete Product Spec from scratch each cycle.
+               Do not rely on incremental diffs — they accumulate blind spots.
+
+            2. **Scan**: Perform a complete self-review of the current Product Spec
                - **Redundancy check**: Find duplicate descriptions of the same requirement or feature
                - **Contradiction check**: Find conflicting statements between sections
                - **Vagueness check**: Identify remaining vague language ("good UX", "modern design", "etc.")
                - **Scope check**: Flag features mentioned in passing that aren't actually needed
 
-            2. **Auto-fix**:
+            3. **Auto-fix**:
                - Redundancy: Automatically remove duplicates, merge descriptions
                - Contradictions: If resolution is obvious, auto-resolve; if not, flag for user
                - Do not auto-fix vagueness or scope issues — these require user input
 
-            3. **Repeat**: If any auto-fix was applied, go back to Step 1 and re-scan
-               One pass is rarely enough — keep cleaning until no more issues can be fixed automatically
+            4. **Cycle counter**: Track explicit cycle number (1/3, 2/3, 3/3).
+               - If cycle < 3 AND any auto-fix was applied → go to Step 1 (next cycle)
+               - If cycle >= 3 AND no more auto-fixes possible → proceed to Present
+               - If cycle >= 3 but still finding auto-fixable issues → continue until clean
+               One pass is rarely enough — 3 cycles removes ~90% of redundancy and contradiction issues.
 
-            4. **Present**: When done with auto-cleanup, present remaining issues to user:
+            5. **Present**: When done with auto-cleanup (minimum 3 cycles completed), present remaining issues to user:
                ```
-               📋 Final validation complete:
+               📋 Final validation complete (X cycles performed):
                - Auto-fixed: N issues (list briefly)
                - Remaining need your attention:
                - [ ] Vagueness: ... (ask clarification)

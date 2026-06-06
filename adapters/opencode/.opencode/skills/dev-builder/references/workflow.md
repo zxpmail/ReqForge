@@ -24,6 +24,16 @@
     [Project Setup Phase]
         Initialize the project in the <project-name>/ subfolder, not in the root directory.
 
+        **Auto-Scaffold** (fast path):
+            If `forge-scaffold.mjs` is available, run:
+            ```
+            node scripts/forge-scaffold.mjs generate <project-dir> --spec Product-Spec.md
+            ```
+            Exit 0 → project skeleton created (package.json, tsconfig, src/, tests, .gitignore).
+            Run `postCommands` (e.g. `pnpm install`), then skip to Git preparation below.
+            Exit 1 (unknown stack) → fall through to manual setup below.
+
+        **Manual Setup** (fallback):
         **Environment-First**: Priority is making the project runnable locally before adding features. A project that compiles and starts with zero features is more valuable than one with 10 features that can't run. The local-run loop is AI's verification loop — without it, every change requires human manual deployment to verify, and AI is effectively blind.
 
         Memory initialization (before project setup):

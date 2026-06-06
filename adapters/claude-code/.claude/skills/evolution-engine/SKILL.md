@@ -69,11 +69,49 @@ requires: []
     **Circular evolution**: Rule A graduates from feedback, then generates more feedback, then graduates again as Rule A'. This is the ratchet spinning without progress. After graduating a rule, skip that pattern for N cycles.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 premature graduation / skipping cross-reference / skipping Verify-by 时读取。
+
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have dimensions:
+    - **Data Support**: ≥3 feedback entries supporting the pattern
+    - **RED Observation**: specific Agent behavior cited
+    - **GREEN Change**: exact target file + section named
+    - **Verify-By**: observable, time-bounded criterion
+    - **Failure Classification**: skill-defect / execution-lapse / unset
+
+<!-- end: dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Signal accuracy | 2 | YES | 2 = ≥3 occurrences threshold respected, no premature graduation; 1 = Threshold applied but edge case slipped; 0 = Proposal based on single entry |
+    | 2 | RED observation quality | 2 | YES | 2 = Cites specific behavior with feedback excerpt; 1 = Generic description; 0 = Missing or "obvious problem" |
+    | 3 | GREEN change specificity | 2 | — | 2 = Exact target file + section + text to add/change; 1 = Target file named but section vague; 0 = "Update the Skill" |
+    | 4 | Verify-by criterion | 2 | YES | 2 = Observable, time-bounded, falsifiable; 1 = Vague ("should improve"); 0 = Missing |
+    | 5 | False correlation check | 2 | — | 2 = Cross-referenced task-history to validate pattern; 1 = Checked but conflicting data; 0 = No cross-reference |
+    | 6 | Denominator awareness | 2 | — | 2 = Usage count checked before acting on scores; 1 = Checked but ignored; 0 = Raw scores without context |
+    | 7 | WebSearch integration | 2 | — | 2 = Searched for best practices before proposing; 1 = Relevant known patterns used; 0 = Invented from scratch |
+    | 8 | Failure-class routing | 2 | — | 2 = skill-defect vs execution-lapse distinguished, proposal matches; 1 = Tagged but routing wrong; 0 = No routing |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/evolution-engine` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: file-structure -->
 [File Structure]
     ```
     evolution-engine/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md                           # Main Skill definition (this file)
+    └── references/
+        ├── anti-rationalization.md
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->
@@ -103,6 +141,19 @@ requires: []
         - source_skill is clear -> graduate to the corresponding SKILL.md
         - Involves multiple Skills or is global -> graduate to the main control file [General Rules]
         Cross-reference [Proposal Quality Checklist] Data Support dimension before proceeding.
+
+        In addition to .claude/feedback/ files, also scan:
+        - `.forge/trace/step-traces.jsonl` — step-level execution records from
+          forge-loop runs. Look for entries where `attribution.failureClass` is set
+          and the same failure pattern repeats across iterations. Treat repeated
+          failure patterns (≥3 occurrences of same `step` + `failureClass`) as
+          implicit feedback — they indicate Skill gaps exposed during automated
+          execution.
+        - When a feedback file exists AND step traces support the same pattern,
+          cross-reference the trace's `attribution.reasoning` as additional evidence
+          in the proposal's RED observation field.
+        - If step traces reveal a failure pattern that has no corresponding feedback
+          file, note this as "auto-detected from forge-loop traces" in the proposal.
 
     Step 2: Check Skill Optimization Signals
         Scan scores fields in feedback/, grouped by source_skill

@@ -90,6 +90,20 @@ requires: []
 
 <!-- end: output-artifacts -->
 <!-- begin: analysis-dimension-checklist -->
+[Dimension Checklist]
+    See [references/analysis-dimension-checklist.md](references/analysis-dimension-checklist.md) for the full analysis dimension checklist.
+
+    Must-have dimensions:
+    - **Technology Stack**: framework + version + key deps confirmed
+    - **Phase Breakdown**: ordered sequence based on dependency relationships
+    - **Delivery Checklist**: each Phase has verifiable deliverables
+    - **Key Files**: each Phase lists specific file paths
+    - **Dependency Graph**: Phase ordering respects feature dependencies
+
+[Anti-Rationalization Checklist]
+    → `references/plan-hard-gate-rationalization.md`
+    在 DEV-PLAN.md 确认前禁止调用 /dev-builder。
+
 [Analysis Dimension Checklist]
     **Planning 前读取** `references/analysis-dimension-checklist.md`
 

@@ -74,6 +74,7 @@ requires: []
         ├── three-layer-diagnostic-model.md
         ├── debugging-rule-checklist.md
         ├── anti-rationalization.md
+        ├── anti-ai-slop-checklist.md      # 交付前自检：防敷衍式修 bug
         ├── workflow.md                    # Startup → Debug → Verify → Complete
         └── yolo-mode.md
     ../_shared/
@@ -151,7 +152,8 @@ requires: []
     2. Read `references/first-principles.md`
     3. **必须先 Read `references/workflow.md`** — Startup → Debugging（四阶段）→ Verification → Completion
     4. Debugging 阶段执行 `references/debugging-strategy.md` + `cot-diagnostic-checklist.md`
-    5. `FORGE_MODE=yolo` → `references/yolo-mode.md`
+    5. 交付前执行 `references/anti-ai-slop-checklist.md` 自检
+    6. `FORGE_MODE=yolo` → `references/yolo-mode.md`
 
 <!-- end: workflow -->
 <!-- begin: yolo-mode -->

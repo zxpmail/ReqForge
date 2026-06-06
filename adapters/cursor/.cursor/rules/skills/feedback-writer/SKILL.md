@@ -113,11 +113,49 @@ requires: []
     **Skipping scoring**: Writing qualitative feedback without Precision/Coverage/Efficiency/Satisfaction scores. Score-less feedback can't trigger evolution thresholds. Always fill all 4 score fields.
 
 <!-- end: gotchas -->
+<!-- begin: anti-rationalization-checklist -->
+[Anti-Rationalization Checklist]
+    → `references/anti-rationalization.md`
+    遇 skipping recording / skipping scoring / false positive 时读取。
+
+<!-- end: anti-rationalization-checklist -->
+<!-- begin: dimension-checklist -->
+[Dimension Checklist]
+    See [references/dimension-checklist.md](references/dimension-checklist.md) for the full dimension checklist.
+
+    Must-have criteria:
+    - **Signal Discrimination**: only actual AI behavior issues, not tool frustration
+    - **Scoring Completeness**: all 4 scores filled (Precision/Coverage/Efficiency/Satisfaction)
+    - **Dedup Check**: FEEDBACK-INDEX.md checked before writing
+    - **Context Capture**: what AI did + correct behavior + which Skill
+    - **Scoring**: see dimension-checklist.md for full scoring rubric
+
+<!-- end: dimension-checklist -->
+<!-- begin: quality-rubric -->
+[Quality Rubric]
+    8-item, 16-point scoring system. Ship threshold: **≥ 12** with no critical item scoring 0.
+
+    | # | Dimension | Pts | Critical | Scoring |
+    |---|-----------|-----|----------|---------|
+    | 1 | Signal discrimination | 2 | YES | 2 = Only actual AI behavior issues recorded, tool/environment frustration filtered; 1 = One false positive; 0 = Multiple false positives |
+    | 2 | Dedup accuracy | 2 | YES | 2 = Checked FEEDBACK-INDEX before writing, merged correctly; 1 = Checked but should have merged; 0 = Created duplicate |
+    | 3 | Scoring completeness | 2 | — | 2 = All 4 scores filled (Precision/Coverage/Efficiency/Satisfaction); 1 = 2-3 scores; 0 = <2 scores |
+    | 4 | Context completeness | 2 | — | 2 = What AI did + correct behavior + which Skill + scenario; 1 = Missing one element; 0 = Vague description |
+    | 5 | Failure classification | 2 | — | 2 = failure_class set correctly (skill-defect/execution-lapse/unset); 1 = Set but wrong; 0 = Missing |
+    | 6 | Merge correctness | 2 | — | 2 = Merged with matching topic, occurrences updated +1; 1 = Updated but didn't merge; 0 = Separate file for same issue |
+    | 7 | Actionable body | 2 | — | 2 = Body includes RED observation for evolution-engine; 1 = Body describes issue but no RED; 0 = Minimal body |
+    | 8 | Index update | 2 | YES | 2 = FEEDBACK-INDEX.md updated with correct link; 1 = Index updated but wrong format; 0 = Skipped index update |
+
+    **Scoring**: Run `pnpm validate-skill --score core/skills/feedback-writer` to compute.
+<!-- end: quality-rubric -->
 <!-- begin: file-structure -->
 [File Structure]
     ```
     feedback-writer/
-    └── SKILL.md                           # Main Skill definition (this file)
+    ├── SKILL.md                           # Main Skill definition (this file)
+    └── references/
+        ├── anti-rationalization.md
+        └── dimension-checklist.md
     ```
 
 <!-- end: file-structure -->
@@ -146,6 +184,12 @@ requires: []
 <!-- end: routing-rules -->
 <!-- begin: workflow -->
 [Workflow]
+    Step 0: Check step traces (if available)
+        If the feedback-observer passed step_traces_path, read the relevant trace
+        records from `.forge/trace/step-traces.jsonl`. The trace's `attribution.failureClass`
+        and `attribution.reasoning` can serve as starting evidence for the feedback's
+        `failure_class` field. Cross-reference before writing.
+
     Step 1: Check index
         Read ../../feedback/FEEDBACK-INDEX.md (if it does not exist, create from templates/feedback-index-template.md)
     Step 2: Dedup
