@@ -149,6 +149,45 @@ requires: []
 [Design Deliverables]
     A complete set of mockups must include the following:
 
+    **When Multi-Alternative Mode is active** (`--alternatives N` or `alternatives: N` in brief):
+    - Generate **N distinct design alternatives**, each with a different visual/interaction approach
+    - Each alternative must be internally consistent (tokens, components, pages all match that alternative's direction)
+    - After all N alternatives are complete, produce a **cross-comparison table**:
+      | Dimension | Alt A | Alt B | Alt C |
+      |-----------|-------|-------|-------|
+      | Approach | (e.g. "density-first") | (e.g. "guided wizard") | (e.g. "card-based") |
+      | Key strength | ... | ... | ... |
+      | Key weakness | ... | ... | ... |
+      | Best for | ... | ... | ... |
+    - Include a **recommendation** with rationale, then let the user decide before proceeding to dev-planner
+
+    **When Gradual Refinement Mode is active**:
+    Deliver in 3 graduated tiers so the user can validate each layer before the next is built:
+
+    **Tier 1 — Structure & Layout** (foundation)
+    - Page layout skeleton: columns, sections, content areas
+    - Component placement without full polish
+    - Navigation flow between pages
+    - No detailed styling, no state variants yet
+    - Goal: validate information architecture before investing in visual detail
+
+    **Tier 2 — Interaction & Core Logic** (behavior)
+    - Full interactive states for primary user flows
+    - Sorting, filtering, pagination, form submission, navigation
+    - Core feature interactions are functional
+    - Error states for primary operations
+    - Goal: validate interaction logic before edge cases
+
+    **Tier 3 — Edge Cases & Polish** (completion)
+    - Empty states, loading states, error states for all pages
+    - Responsive / screen-adaptation details
+    - Animation and micro-interaction notes
+    - Accessibility (contrast, focus states, touch targets)
+    - Final design token audit
+    - Goal: ship-ready polish
+
+    **Standard mode** (default) — all tiers delivered in one pass as described below.
+
     **1. Design Tokens**
     Extracted from Design-Brief.md and set in the design tool:
     - Color system: background color, text color, brand color, semantic color, label color
@@ -214,6 +253,11 @@ requires: []
             - Number of pages
             - Number of variants
             - Total design items
+
+            **If Multi-Alternative Mode**: state the number of alternatives (e.g. "2 alternatives with different interaction paradigms")
+            **If Gradual Refinement Mode**: state the 3 tiers and ask if they want to confirm Tier 1 before proceeding
+            **If both**: confirm the grid (e.g. "2 alternatives × 3 tiers = 6 delivery rounds")
+
             Begin designing after user confirmation
 
     <!-- end: planning-phase -->
@@ -224,14 +268,25 @@ requires: []
 
         Step 2: Set Design Tokens
             Based on the Design Brief's color, typography, and spacing direction, set global design tokens via the design tool API
+            **In Multi-Alternative Mode**: create a separate token set per alternative (e.g. Alt A: warm palette, Alt B: cool palette)
 
         Step 3: Create Reusable Components
-            Create components one by one according to the component list
+            **Standard Mode**: Create components one by one according to the component list
+            **Multi-Alternative Mode**: Create component sets for each alternative independently
+            **Gradual Refinement Mode**: Create only structural components in Tier 1; add interactive components in Tier 2; create specialized components in Tier 3
             Take a screenshot for verification after each component is created
 
         Step 4: Design Pages One by One
-            Design each page according to the page list
-            For each page:
+            **Standard Mode**: Design each page according to the page list
+            **Multi-Alternative Mode**: Design pages for Alternative A first, then Alternative B, etc. — do not interleave
+            **Gradual Refinement Mode**: Per tier:
+              - Tier 1: layout skeleton only — wireframe-level fidelity, content areas marked but not styled
+              - Tier 2: full visual design for primary flows — interactions functional, core pages polished
+              - Tier 3: all remaining states + edge cases + polish pass
+              After each tier: present to user for confirmation before starting the next tier
+            **Hybrid (alternatives + refinement)**: Complete Tier 1 for all alternatives first → user picks winner → refine winner through Tiers 2-3
+
+            For each page (in applicable mode):
             1. Assemble using reusable components
             2. Fill with real content — do not use Lorem ipsum
             3. Cross-reference against the Product Spec description to confirm layout and content item by item
@@ -263,6 +318,16 @@ requires: []
         Step 3b: Design self-critique (required)
             Execute `references/design-self-critique.md` and `design-brief-builder/references/anti-ai-slop-checklist.md`
             Revise mockups if any dimension ≤2; record scores in the completion report
+
+        Step 3c: Cross-comparison (Multi-Alternative Mode only)
+            Produce a cross-comparison table:
+            | Dimension | Alt A | Alt B | ... |
+            | Approach | ... | ... | ... |
+            | Key strength | ... | ... | ... |
+            | Key weakness | ... | ... | ... |
+            | Self-critique score | ... | ... | ... |
+            | Best suited for | ... | ... | ... |
+            Include a recommendation with clear rationale. Present to user for decision before proceeding.
 
         Step 4: Output Report
             Present the design completion report to the user:

@@ -15,3 +15,5 @@
 | **Recommended** | Anti-ai-slop Review | `design-brief-builder/references/anti-ai-slop-checklist.md` reviewed before delivery |
 | **Optional** | Real Content | Pages filled with real content, not Lorem ipsum |
 | **Optional** | Screenshot Verification | Screenshot taken after each component/page for visual diff |
+| **Optional** | Multi-Alternative | N alternatives generated with distinct approaches; cross-comparison table produced with recommendation (when mode active) |
+| **Optional** | Gradual Refinement | 3 tiers delivered sequentially (structure → interaction → edge cases); each tier confirmed before next starts (when mode active) |

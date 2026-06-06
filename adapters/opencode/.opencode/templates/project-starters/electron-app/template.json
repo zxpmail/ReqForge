@@ -1,0 +1,14 @@
+{
+  "name": "electron-app",
+  "version": "1.0.0",
+  "label": "Electron Desktop App",
+  "description": "Electron + TypeScript desktop app with main/renderer process separation. Uses minimal Forge loadout.",
+  "techStack": "Electron + TypeScript",
+  "productType": "Desktop Application",
+  "loadout": "minimal",
+  "preset": "node-ts",
+  "tags": ["desktop", "electron", "cross-platform"],
+  "postInit": ["pnpm install", "git init"],
+  "hasSkeleton": true,
+  "readme": "# {{projectName}}\n\nElectron desktop app scaffolded with Forge.\n\n## Development\n\n```bash\npnpm dev\n```\n"
+}

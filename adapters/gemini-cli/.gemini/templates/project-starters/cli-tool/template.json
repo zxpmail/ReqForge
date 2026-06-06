@@ -1,0 +1,14 @@
+{
+  "name": "cli-tool",
+  "version": "1.0.0",
+  "label": "CLI Tool",
+  "description": "Node.js CLI tool with TypeScript, command structure, and Forge cli-tool loadout.",
+  "techStack": "Node.js + TypeScript",
+  "productType": "CLI Tool",
+  "loadout": "cli-tool",
+  "preset": "node-ts",
+  "tags": ["cli", "tool", "node"],
+  "postInit": ["pnpm install", "git init", "pnpm build"],
+  "hasSkeleton": true,
+  "readme": "# {{projectName}}\n\nCLI tool scaffolded with Forge.\n\n## Usage\n\n```bash\nnode dist/index.js --help\n```\n"
+}

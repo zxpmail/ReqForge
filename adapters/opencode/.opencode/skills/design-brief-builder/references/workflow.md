@@ -29,6 +29,13 @@ Purpose: Explore dimensions in `references/interview-dimension-checklist.md`
 **Opening**:
 "Your product is a [product type] for [target users]. Among competitors, [A] goes XX, [B] goes YY. Closer to either, or different?"
 
+**Refinement Preference** (ask after dimensions are clear):
+"Would you like the mockups delivered:
+- **Single pass** — everything in one go (faster, but more rounds of revision)
+- **Gradual refinement** — 3 tiers: layout skeleton → core interactions → edge cases (slower start, but structural issues caught early when they're cheap to fix)
+
+Also: do you want **one design direction**, or **2-3 alternatives** with a cross-comparison?"
+
 ## Translation Phase
 
 Step 1: Feelings → Design Attributes (e.g. "Premium" → generous whitespace, low saturation, refined typography)

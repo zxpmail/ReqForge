@@ -1,0 +1,14 @@
+{
+  "name": "express-api",
+  "version": "1.0.0",
+  "label": "Express API Server",
+  "description": "Express.js REST API with TypeScript, routes, middleware, error handling. Uses minimal Forge loadout.",
+  "techStack": "Node.js + Express + TypeScript",
+  "productType": "API Server",
+  "loadout": "minimal",
+  "preset": "node-ts",
+  "tags": ["api", "server", "express", "rest"],
+  "postInit": ["pnpm install", "git init"],
+  "hasSkeleton": true,
+  "readme": "# {{projectName}}\n\nExpress API server scaffolded with Forge.\n\n## Endpoints\n\n- `GET /health` — Health check\n\n## Development\n\n```bash\npnpm dev\n```\n"
+}

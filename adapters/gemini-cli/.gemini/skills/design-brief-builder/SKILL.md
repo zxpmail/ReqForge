@@ -73,6 +73,7 @@ requires: []
     **Relying on memory for design trends**: WebSearch before recommending.
     **Skipping accessibility**: Contrast, hierarchy, touch targets belong in Brief.
     **Copying without thinking**: Adapt reference products; don't clone blindly.
+    **Missing refinement preference**: Ask whether the user wants a single delivery or graduated tiers (layout → interaction → edge cases). Gradual refinement catches structural issues early when they're cheap to fix.
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->

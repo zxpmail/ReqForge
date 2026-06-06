@@ -1,0 +1,14 @@
+{
+  "name": "next-fullstack",
+  "version": "1.0.0",
+  "label": "Next.js Fullstack",
+  "description": "Next.js App Router + TypeScript + Tailwind CSS + API routes. Includes Forge web-app loadout.",
+  "techStack": "Next.js + TypeScript + Tailwind CSS",
+  "productType": "Web Application",
+  "loadout": "web-app",
+  "preset": "next-ts",
+  "tags": ["web", "fullstack", "nextjs", "tailwind"],
+  "postInit": ["pnpm install", "git init"],
+  "hasSkeleton": true,
+  "readme": "# {{projectName}}\n\nNext.js fullstack application scaffolded with Forge.\n\n## Getting Started\n\n```bash\npnpm dev\n```\n\nOpen [http://localhost:3000](http://localhost:3000).\n"
+}
