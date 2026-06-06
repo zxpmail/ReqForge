@@ -39,3 +39,15 @@
 **Token Budget Awareness**: Low context → suggest `/clear` + checkpoint commit.
 
 **Sub-Agent Isolation (MANDATORY)**: Per Task, implementer sub-agent only for app `Write`/`Edit` — see `sub-agent-isolation.md`.
+
+**⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
+1. 读当前 Phase 的 Difficulty 等级（🔴 放慢/自审/回滚就绪，🟢 快速通过）
+2. 读 Product-Spec.md 当前 Task 的功能描述
+3. 扫一眼已有代码的关键文件（感知天理）
+4. RED（先写测试）→ GREEN（最小实现）→ REFACTOR（保持通过）
+5. 生成后自审（热上下文修复浅层问题）
+6. Micro-cycle verify（≤10 min，命令+结果在同一条消息）
+7. 投递给 code-reviewer
+8. 通过后 commit + 善刀而藏之
+
+**Transformer 注意力说明**：本文开头（放下骨架、TDD）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

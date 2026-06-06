@@ -135,6 +135,14 @@
             If the script/forge-scope.mjs doesn't exist in the project, skip this step.
             Scope is enforced by `forge-verify scope-check` after Phase completion.
 
+        **Loading Phase 结束，进入执行前最后一件事**（注意力放在结尾）:
+        - 当前 Phase 编号 + 难度等级（🔴🟡🟢）已确认
+        - 交付清单、Primary metric 已加载
+        - 关键文件已确认
+        - Baseline 已保存
+        - Scope 已声明
+        - 下一步 → [Phase Execution Flow] Step 0: 感知天理
+
     [Phase Execution Flow]
         Step 0: 感知天理 — 从已有代码提取本项目代码风格（Phase 2+ 必做）
             Phase 1 的骨架已经在这个项目里了。现在读它。
