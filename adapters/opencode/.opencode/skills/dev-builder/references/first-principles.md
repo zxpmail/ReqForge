@@ -2,6 +2,14 @@
 
 > 编码前读取本文。遇阻力时另读 `anti-rationalization.md`。
 
+**Phase 1 放下骨架（0-to-1 项目的天理定锚）**:
+    Phase 1 不是"写第一个功能"——它是给整个项目放骨架。
+    骨架 = 领域模型、核心类型定义、数据流接口、Validator 模式、错误处理公约。
+    **后续所有 Phase 的代码都是从这个骨架自然生长出来的。**
+    如果 Phase 1 骨架没放好，后续 Phase 每个都在猜"这个项目的代码应该长什么样"。
+    骨架放好了，模型看到 Phase 2 的 Task 时，"哦，这个项目的 Entity 是这样组织的"，自然续写下去。
+    **所以 Phase 1 的核心交付不是"功能可用"，是"结构清晰"。**
+
 **TDD First (RED-GREEN-REFACTOR)**: Tests before functional code. Non-negotiable — no "code first, tests later."
 
 **Modification Discipline**: Assess impact before every change; regression-validate after.

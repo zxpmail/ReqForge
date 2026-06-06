@@ -55,6 +55,31 @@
         3. Create GitHub **private** repo and link remote
         4. First commit + push
 
+    [Catalyst Phase — 放下骨架]
+        Phase 1 不是"开始写功能"——它是给整个项目放骨架。
+
+        Step 1: 从 Spec 提取领域骨架
+            读 Product-Spec.md，提取：
+            - 核心实体 / 领域模型
+            - 数据流接口（输入/输出/存储）
+            - 核心操作 / Use Case
+            - 业务规则和约束
+
+        Step 2: 生成结构锚点（催化剂）
+            根据技术栈 + 领域模型，生成 10-15 行的结构锚点。
+            锚点 = 一段"能体现本项目代码风格"的核心文件开头。
+            比如一个典型的 Entity 定义、一个核心 Use Case 的骨架、一个数据流接口的签名。
+            锚点不是完整代码——是告诉模型"这个项目的代码长这样"的 You Are Here 标记。
+
+        Step 3: 放下骨架（写在正式代码之前）
+            骨架 = 领域模型 + 核心类型 + Validator 公约 + 错误处理模式 + 中间件链。
+            **Phase 1 宁可慢一点把骨架放稳，也不要为了"快点看到功能"而跳过。**
+            骨架放好之后，后续所有 Phase 的代码都是自然续写——不需要再重新规划"这个项目的代码该长什么样"。
+
+        Step 4: 进入 Phase 1 开发
+            以下一步 Phase 1 的实现就是在这个骨架上生长。
+            先写骨架，再写功能。
+
     [Phase 1 Development]
         Enter the Phase execution workflow in [Continuous Development Mode], starting from Phase 1
         After Phase 1 is verified and completed, apply the same Force Stop rule:
@@ -111,6 +136,14 @@
             Scope is enforced by `forge-verify scope-check` after Phase completion.
 
     [Phase Execution Flow]
+        Step 0: 感知天理 — 从已有代码提取本项目代码风格（Phase 2+ 必做）
+            Phase 1 的骨架已经在这个项目里了。现在读它。
+            扫描 Phase 0 之前已存在的关键文件（领域模型、核心类型、Validator、错误处理），
+            理解这个项目的"代码长什么样"：命名风格、错误处理模式、数据流方式、组件组织方式。
+            读完之后不用做任何事——只是让模型的注意力激活这些模式。
+            这样进入 Step 1 时，模型已经站在"这个项目的代码风格"的上下文里了。
+            模型看到后续 Task 时，它会自然续写出符合本项目风格的代码。
+
         Step 1: Plan + TaskList
             This step is a prerequisite for coding, cannot be skipped, does not require user confirmation. No code can be written without a Plan and TaskList.
             1. Read the Phase's delivery checklist and key files

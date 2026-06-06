@@ -9,7 +9,14 @@ requires: []
 
 <!-- begin: task -->
 [Task]
-    **Initialization Mode**: No code + has DEV-PLAN.md -> set up project skeleton according to tech stack, install dependencies, configure development environment, complete Phase 1.
+    **Initialization Mode (0-to-1)**: No code + has DEV-PLAN.md -> set up project skeleton according to tech stack, install dependencies, configure development environment, complete Phase 1.
+    **Phase 1 的核心不是"写功能"，是"放骨架"**:
+      - 先写领域模型、核心类型定义、数据流接口
+      - 再写 Validator 模式、错误处理公约、中间件链
+      - 这些就是项目独有的"天理"——牛的骨节结构
+      - 后续所有 Phase 的代码都是从这些骨架生长出来的
+      - 所以 Phase 1 宁可慢一点把骨架放稳，也不要为了"快点看到功能"而跳过
+      - 骨架放好后，后续 Phase 的代码模型自然续写——因为"这个项目的代码长什么样"已经定了
 
     **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop**. User must call /dev-builder again for next Phase.
 
