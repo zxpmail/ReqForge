@@ -180,7 +180,25 @@
             8. Main session: receive implementer report; if `BLOCKED` or `NEEDS_CONTEXT` → resolve before review
             9. Main session MUST NOT `Write`/`Edit` application source for this Task (steps 7–9 belong to implementer only)
 
-            After implementer returns — cross-reference validation + Review loop:
+            9.5 **自审回合（Self-review）**:
+                After implementer returns, before any external verification, the main session performs a **single self-review pass** on the generated code.
+                Since the code was just written, attention is still hot — issues are easier to spot now than after switching context.
+
+                **自审指令**（追加在同一上下文，不开启新会话）:
+                ```
+                请评审你刚才生成的代码，重点关注：
+                1. 是否有硬编码值或幻觉 API（不存在的函数/参数）？
+                2. 错误处理是否完整（不是空 catch 或只 console.error）？
+                3. 测试是否覆盖了边界场景（不只有 happy path）？
+                4. 代码风格是否与项目现有代码一致？
+                ```
+
+                **处理结果**：
+                - 发现可自修问题 → 在当前回合直接修复（不需重新 dispatch implementer）
+                - 发现需要重构的问题 → 记录，交给下一步 code-review 处理
+                - 无问题 → 继续下一步
+
+                **注意**：自审不是 code-review 的替代品。它的目的是用热上下文修复那些"外面 reviewer 也能发现，但修起来更绕路"的浅层问题。深层问题留给 code-review。
             10. **Micro-cycle verify (≤10 min)**: Run the Task's targeted test/lint command; paste **command + pass/fail** in the same message. If the Phase has a **Primary metric**, note whether this Task moves it toward green. No micro-cycle evidence → Task not ready for review.
             11. Read actual code values, verify item by item against design values, correct any deviations (main session may fix only via re-dispatch implementer if code changes needed)
             12. **Spec compliance (tier 1)**: Cross-reference `changes/<name>/specs.md` acceptance + G/W/T when Change-Scoped; else DEV-PLAN Task + Product-Spec.md. Fail -> fix via implementer before tier 2.
