@@ -5,6 +5,7 @@ All notable changes to Forge are documented here.
 ## [v1.38.0] - 2026-06-06
 
 ### Added
+- **Template marketplace**: `core/templates/project-starters/` — curated project starters with metadata + skeleton files. 4 starter templates: next-fullstack, cli-tool, express-api, electron-app. `forge-scaffold init <template> [dir]` — one-command init with placeholder replacement, post-init steps, and loadout recommendations. `forge-scaffold list-templates` — browse available starters.
 - **Gemini CLI adapter**: `adapters/gemini-cli/` — 4th AI client adapter. Uses `.gemini/` directory with `GEMINI.md` as control file, `agents/` for subagent definitions, `skills/` for Forge skills. Synced from core via `pnpm sync`. All 944 files in sync across all 4 adapters.
 
 ## [v1.35.12] - 2026-06-01

@@ -1,22 +1,176 @@
 #!/usr/bin/env node
 /**
- * forge-scaffold.mjs — Project scaffolding from Product-Spec.md
+ * forge-scaffold.mjs — Project scaffolding from Product-Spec.md + template marketplace
  *
  * Reads Product-Spec.md → extracts Technical Direction → detects stack
  * → generates project skeleton (package.json, tsconfig, src/, tests, .gitignore).
+ *
+ * Template marketplace: curated project starters in core/templates/project-starters/
+ * with skeleton files + metadata. One-command init.
  *
  * CLI:
  *   node scripts/forge-scaffold.mjs detect-stack <spec-path>
  *   node scripts/forge-scaffold.mjs generate [project-dir] --spec <path> [--dry-run]
  *   node scripts/forge-scaffold.mjs list-stacks
+ *   node scripts/forge-scaffold.mjs list-templates
+ *   node scripts/forge-scaffold.mjs init <template> [project-dir] [--dry-run]
  */
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync } from "fs";
+import { existsSync, readFileSync, writeFileSync, mkdirSync, cpSync, readdirSync } from "fs";
 import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const ROOT = join(__dirname, "..");
+
+// ─── Template Marketplace ────────────────────────────────────────────
+
+export const TEMPLATES_DIR = join(ROOT, "core", "templates", "project-starters");
+
+/**
+ * Load metadata for a single template.
+ * @param {string} name
+ * @returns {object|null}
+ */
+export function loadTemplateMetadata(name) {
+  const metaPath = join(TEMPLATES_DIR, name, "template.json");
+  if (!existsSync(metaPath)) return null;
+  return JSON.parse(readFileSync(metaPath, "utf-8"));
+}
+
+/**
+ * List all available templates with metadata.
+ * @returns {Array<{name: string, label: string, description: string, tags: string[]}>}
+ */
+export function listTemplates() {
+  if (!existsSync(TEMPLATES_DIR)) return [];
+  const entries = readdirSync(TEMPLATES_DIR, { withFileTypes: true });
+  const templates = [];
+  for (const entry of entries) {
+    if (!entry.isDirectory()) continue;
+    const meta = loadTemplateMetadata(entry.name);
+    if (meta) {
+      templates.push({
+        name: meta.name,
+        label: meta.label,
+        description: meta.description,
+        tags: meta.tags || [],
+        loadout: meta.loadout || "",
+      });
+    }
+  }
+  return templates.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+/**
+ * Replace {{placeholder}} patterns in file content.
+ * @param {string} content
+ * @param {object} vars
+ * @returns {string}
+ */
+function replacePlaceholders(content, vars) {
+  let result = content;
+  for (const [key, val] of Object.entries(vars)) {
+    result = result.replaceAll(new RegExp(`\\{\\{${key}\\}\\}`, "g"), val);
+  }
+  return result;
+}
+
+/**
+ * Copy skeleton files from a template directory, replacing placeholders.
+ * @param {string} templateDir
+ * @param {string} targetDir
+ * @param {object} vars
+ */
+function copySkeleton(templateDir, targetDir, vars) {
+  const skeletonDir = join(templateDir, "skeleton");
+  if (!existsSync(skeletonDir)) return;
+
+  const entries = readdirSync(skeletonDir, { withFileTypes: true, recursive: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) continue;
+    const relPath = entry.parentPath
+      ? join(entry.parentPath.replace(skeletonDir + "/", "").replace(skeletonDir, ""), entry.name)
+      : entry.name;
+    const srcContent = readFileSync(join(entry.parentPath || skeletonDir, entry.name), "utf-8");
+    const destPath = join(targetDir, relPath);
+    mkdirSync(dirname(destPath), { recursive: true });
+    writeFileSync(destPath, replacePlaceholders(srcContent, vars), "utf-8");
+  }
+}
+
+/**
+ * Scaffold a project from a named template.
+ *
+ * @param {string} templateName - name in project-starters/
+ * @param {string} targetDir - output directory
+ * @param {object} [opts]
+ * @param {boolean} [opts.dryRun]
+ * @returns {{ filesCreated: string[], postCommands: string[], template: object }}
+ */
+export function initTemplate(templateName, targetDir, opts = {}) {
+  const meta = loadTemplateMetadata(templateName);
+  if (!meta) {
+    throw new Error(`Unknown template: "${templateName}". Run list-templates to see available templates.`);
+  }
+
+  const vars = { projectName: basename(targetDir) };
+  const filesCreated = [];
+
+  // Step 1: generate base files from preset (package.json, tsconfig, etc.)
+  if (meta.preset && FILE_GENERATORS[meta.preset]) {
+    const spec = {
+      projectName: vars.projectName,
+      techStack: meta.techStack || "",
+      productType: meta.productType || "",
+      dataStorage: "",
+      deployment: "",
+    };
+    const generator = FILE_GENERATORS[meta.preset];
+    const generatedFiles = generator(spec);
+    for (const [relPath, content] of Object.entries(generatedFiles)) {
+      if (opts.dryRun) {
+        filesCreated.push(relPath);
+        continue;
+      }
+      const fullPath = join(targetDir, relPath);
+      mkdirSync(dirname(fullPath), { recursive: true });
+      writeFileSync(fullPath, replacePlaceholders(content, vars), "utf-8");
+      filesCreated.push(relPath);
+    }
+  }
+
+  // Step 2: copy skeleton files (if any)
+  const templateDir = join(TEMPLATES_DIR, templateName);
+  const skeletonDir = join(templateDir, "skeleton");
+  if (existsSync(skeletonDir)) {
+    const skeletonEntries = readdirSync(skeletonDir, { recursive: true, withFileTypes: true });
+    for (const entry of skeletonEntries) {
+      if (entry.isDirectory()) continue;
+      const parent = entry.parentPath || "";
+      const relPath = parent
+        ? join(parent.replace(skeletonDir.replace(/\\/g, "/") + "/", "").replace(/\\/g, "/"), entry.name)
+        : entry.name;
+      if (opts.dryRun && !filesCreated.includes(relPath)) filesCreated.push(relPath);
+    }
+    if (!opts.dryRun) copySkeleton(templateDir, targetDir, vars);
+  }
+
+  // Write README
+  if (meta.readme && !opts.dryRun) {
+    const readmePath = join(targetDir, "README.md");
+    writeFileSync(readmePath, replacePlaceholders(meta.readme, vars), "utf-8");
+  }
+  if (!filesCreated.includes("README.md")) filesCreated.push("README.md");
+
+  return {
+    filesCreated,
+    projectDir: targetDir,
+    template: meta,
+    postCommands: meta.postInit || [],
+    loadout: meta.loadout || "",
+  };
+}
 
 // ─── Spec Parsing ─────────────────────────────────────────────────
 
@@ -434,6 +588,14 @@ Usage:
   list-stacks
     List available stack presets
 
+  list-templates
+    List available project starter templates (marketplace)
+
+  init <template> [project-dir] [--dry-run]
+    Scaffold a full project from a named template. If project-dir omitted,
+    uses template name as directory (e.g. init my-app creates ./my-app).
+    Templates: next-fullstack, cli-tool, express-api, electron-app
+
 Options:
   --preset <name>   Override detected stack (node-ts, next-ts, python-fastapi, go, rust)
   --dry-run         Print files that would be created without writing
@@ -532,6 +694,52 @@ function main() {
         console.log(`  ${key.padEnd(18)} ${val.label}`);
       }
       console.log();
+      break;
+    }
+    case "list-templates": {
+      const templates = listTemplates();
+      if (templates.length === 0) {
+        console.log("\nNo templates found.\n");
+        break;
+      }
+      console.log(`\nAvailable project starters (${templates.length}):\n`);
+      for (const t of templates) {
+        const tags = t.tags.length ? ` [${t.tags.join(", ")}]` : "";
+        const loadout = t.loadout ? `  loadout: ${t.loadout}` : "";
+        console.log(`  ${t.name.padEnd(18)} ${t.label}`);
+        console.log(`  ${"".padEnd(18)} ${t.description}${loadout ? " · " + loadout : ""}${tags}`);
+        console.log();
+      }
+      console.log("Use: node scripts/forge-scaffold.mjs init <name> [project-dir]\n");
+      break;
+    }
+    case "init": {
+      const templateName = positional[0];
+      if (!templateName) {
+        console.error("Missing template name. Usage: forge-scaffold init <template> [project-dir]");
+        process.exit(1);
+      }
+      const projectDir = positional[1] || join(process.cwd(), templateName);
+      const dryRun = kv["dry-run"] === "true";
+
+      try {
+        const result = initTemplate(templateName, projectDir, { dryRun });
+        if (dryRun) {
+          console.log(`\nWould create project "${templateName}" at ${projectDir}:`);
+          for (const f of result.filesCreated) console.log(`  ${f}`);
+        } else {
+          console.log(`\n✅ Project "${templateName}" scaffolded at ${projectDir}`);
+          console.log(`   Files created: ${result.filesCreated.length}`);
+          if (result.loadout) console.log(`   Recommended loadout: ${result.loadout}`);
+          if (result.postCommands.length) {
+            console.log(`\n   Post-init steps:`);
+            for (const cmd of result.postCommands) console.log(`     cd ${basename(projectDir)} && ${cmd}`);
+          }
+        }
+      } catch (e) {
+        console.error(e.message);
+        process.exit(1);
+      }
       break;
     }
     default:
