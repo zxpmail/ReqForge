@@ -2,6 +2,25 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.39.0] - 2026-06-06
+
+### Added
+- **Spec difficulty markers**: Product-Spec.md now has `## Known Difficult Spots` section with 🔴/🟡/🟢 levels. dev-planner propagates difficulty to DEV-PLAN phases. dev-builder adjusts execution speed accordingly (🔴 = 怵然为戒, slow down + self-review; 🟢 = fast pass). New difficulties discovered during a Phase are auto-appended via 善刀而藏之. (`core/templates/product-spec-template.md`, `core/templates/dev-plan-template.md`, `core/skills/dev-planner/references/workflow.md`, `core/skills/dev-builder/SKILL.md`)
+- **Anti-slop anchor reform**: Replaced 9 "don't" rules in dev-builder anti-slop checklist with 3 perfect code anchors (error handling / API endpoint / test patterns). Old checklist demoted to pre-delivery safety net. Based on the insight that LLMs are pattern matchers, not rule followers. (`core/skills/dev-builder/references/anti-ai-slop-checklist.md`)
+- **放下骨架 (Phase 1 catalyst)**: Phase 1 explicitly lays down domain models, types, interfaces, and conventions as the project's structural anchor. All subsequent Phases naturally continue this anchor. (`core/skills/dev-builder/references/first-principles.md`, `core/skills/dev-builder/SKILL.md`, `core/skills/dev-builder/references/workflow.md`)
+- **善刀而藏之 closing ritual**: Mandatory 5-step Phase completion: review → celebrate → append hidden difficulties to Spec → log decisions → clear context. Inspired by Zhuangzi's butcher who sharpens his knife by sheathing it after use. (`core/skills/dev-builder/references/phase-completion-assessment.md`)
+- **Change-manager auto-rollback**: On verify failure, `pnpm forge-change restore <name>` reverts files from pre-apply snapshot. New `snapshot` and `restore` commands. (`core/skills/change-manager/references/workflow.md`, `scripts/forge-change.mjs`)
+- **Security rules template**: `core/templates/security-rules-template.md` — 3 hard rules (no hardcoded secrets, always validate inputs, audit logs for sensitive operations) + PII-in-logs constraint. Installable as `.claude/rules/security.md`. (`core/templates/security-rules-template.md`)
+- **Benchmark suite**: `benchmark/` directory with side-by-side comparison of old anti-slop (9 rules) vs new approach (3 anchors) on todo-cli. Results: both pass all tests; new approach produces 15% shorter code. (`benchmark/RESULTS.md`)
+- **Design-maker multi-alternative + gradual refinement**: `--alternatives N` mode generates N design variants with cross-comparison table. Gradual refinement mode delivers in 3 tiers (structure → interaction → edge cases). (`core/skills/design-maker/SKILL.md`)
+
+### Changed
+- **No dashboard Web UI**: Decision made not to build it — Forge users live in CLI, not web.
+- **Skill evolution P1/P2**: Deferred until feedback data accumulates to justify the work.
+
+### Docs
+- **2.5层设计文章**: `docs/2.5-layer-manifesto.md` (Chinese) and `.en.md` (English) — full article explaining the design philosophy shift from shackles to anchors, with benchmark results, anchor selection guide, and troubleshooting.
+
 ## [v1.38.0] - 2026-06-06
 
 ### Added

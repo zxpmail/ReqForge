@@ -39,8 +39,10 @@
 |----|------|------|
 | `adapters/gemini-cli/` | 第 4 个 AI 客户端适配 | ✅ 完成
 | 模板市场 | 产品脚手架一键初始化 | ✅ 完成（`forge-scaffold init` + 4 starters） |
-| Dashboard Web UI | 可视化进度与变更 | 未排期 |
+| Dashboard Web UI | 可视化进度与变更 | ❌ 决定不做 |
 | Skill 进化 P1/P2 | feedback 归因、skill-bypass 清单 | **刻意暂缓**（P0 文档已完成） |
+| 2.5 层设计哲学 | anti-slop 改革、难点标记、放下骨架、善刀而藏之 | ✅ 已发布（`docs/2.5-layer-manifesto.md`） |
+| Anti-slop benchmark | 9 条规则 vs 3 个锚点的实际对比 | ✅ 已完成（`benchmark/RESULTS.md`） |
 | test-demo 黄金路径 | Spec/Plan → todo-cli 守门 | **✅ 已接入**（`pnpm test-demo-golden-path`、forge-smoke #12） |
 
 **框架仓库本身不需要**：根目录 `Design-Brief.md`、`memory/`、`changes/`（活跃变更）——这些属于**用户业务项目**的常见工件，空着是正常的。
