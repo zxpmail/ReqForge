@@ -1,0 +1,31 @@
+{
+  "name": "release-builder",
+  "version": "1.1.0",
+  "description": "When user wants to package, deploy, publish, or ship; or dev complete and ready for delivery",
+  "tier": "workflow",
+  "intent": "Build, audit, and publish project artifacts to target channels — the go-live gate that turns code into a shippable product",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": false,
+    "when": [
+      "User says 'release', 'deploy', 'package', 'publish', 'ship'",
+      "Development complete and ready for delivery"
+    ],
+    "manual": true,
+    "command": "/release-builder"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "release-builder",
+      "description": "Build, audit, and publish project to target channel",
+      "argument-hint": "[channel: web|desktop|cli]"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

@@ -1,0 +1,32 @@
+{
+  "name": "dev-builder",
+  "version": "1.1.0",
+  "description": "When DEV-PLAN.md is ready and user says start coding or continue to next phase",
+  "tier": "workflow",
+  "intent": "Execute DEV-PLAN phases one at a time, generating production code, tests, and project structure — the core implementation engine of Forge",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": false,
+    "when": [
+      "User requests to start coding",
+      "User says 'continue to next phase'",
+      "New project initialization"
+    ],
+    "manual": true,
+    "command": "/dev-builder"
+  },
+  "prerequisites": {
+    "files": ["Product-Spec.md", "DEV-PLAN.md"],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "dev-builder",
+      "description": "Build project code for the current DEV-PLAN phase",
+      "argument-hint": "[phase-number]"
+    }
+  ],
+  "agents": ["implementer", "test-writer"],
+  "hooks": []
+}

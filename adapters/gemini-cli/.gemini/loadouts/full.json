@@ -1,0 +1,51 @@
+{
+  "name": "full",
+  "version": "1.0.0",
+  "description": "Complete Forge toolchain — all skills, agents, and hooks",
+  "scenarios": [
+    "greenfield-any",
+    "brownfield-feature",
+    "skill-evolution",
+    "full-pipeline"
+  ],
+  "skills": [
+    "product-spec-builder",
+    "change-manager",
+    "design-brief-builder",
+    "design-maker",
+    "dev-planner",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "release-builder",
+    "skill-builder",
+    "feedback-writer",
+    "evolution-engine"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "code-reviewer-design",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "code-reviewer-types",
+    "feedback-observer",
+    "evolution-runner",
+    "test-writer",
+    "planner"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "phase-exit-guard",
+    "stop-gate",
+    "retry-gate",
+    "detect-feedback-signal",
+    "mark-review-needed",
+    "check-evolution",
+    "memory-check",
+    "memory-guard",
+    "hallucination-gate"
+  ],
+  "mcp_servers": [],
+  "settings_extends": "settings.json"
+}

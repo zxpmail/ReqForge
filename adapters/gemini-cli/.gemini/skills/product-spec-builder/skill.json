@@ -1,0 +1,34 @@
+{
+  "name": "product-spec-builder",
+  "version": "1.1.0",
+  "description": "When user says they want to build a product/app/tool, or wants to add features, change requirements, adjust UI",
+  "tier": "interactive",
+  "intent": "Guide the user through structured requirement discovery via Socratic Q&A — produce a rigorous Product-Spec.md that captures scope, workflows, data model, and constraints before any code is written",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "User says 'I want to build a product/app/tool'",
+      "User requests adding features",
+      "User wants to change existing requirements/UI",
+      "Iterating on spec",
+      "User says grill me, stress-test plan, or align on a design before writing spec"
+    ],
+    "manual": true,
+    "command": "/product-spec-builder"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "product-spec-builder",
+      "description": "Gather requirements and generate/update Product-Spec.md",
+      "argument-hint": "[product idea or feature description]"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

@@ -2,6 +2,11 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.38.0] - 2026-06-06
+
+### Added
+- **Gemini CLI adapter**: `adapters/gemini-cli/` — 4th AI client adapter. Uses `.gemini/` directory with `GEMINI.md` as control file, `agents/` for subagent definitions, `skills/` for Forge skills. Synced from core via `pnpm sync`. All 944 files in sync across all 4 adapters.
+
 ## [v1.35.12] - 2026-06-01
 
 ### Added

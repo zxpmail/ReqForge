@@ -1,0 +1,32 @@
+{
+  "name": "design-brief-builder",
+  "version": "1.1.0",
+  "description": "When user wants to define design style or visual direction",
+  "tier": "interactive",
+  "intent": "Interview the user on visual preferences, brand context, and design constraints to produce a Design-Brief.md — the bridge from spec to mockups",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": false,
+    "when": [
+      "User wants to define visual direction",
+      "Product-Spec complete but visual style unspecified",
+      "User gives vague design adjectives"
+    ],
+    "manual": true,
+    "command": "/design-brief-builder"
+  },
+  "prerequisites": {
+    "files": ["Product-Spec.md"],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "design-brief-builder",
+      "description": "Generate Design-Brief.md through design interview",
+      "argument-hint": ""
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

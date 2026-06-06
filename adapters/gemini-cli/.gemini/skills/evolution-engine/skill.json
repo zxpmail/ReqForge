@@ -1,0 +1,26 @@
+{
+  "name": "evolution-engine",
+  "version": "1.0.0",
+  "description": "Auto-triggered on session init when feedback/ has entries; manual when user asks to check for rule upgrades",
+  "tier": "workflow",
+  "intent": "Evolve Forge itself — triage accumulated feedback, propose improvements, and auto-generate new Skills through a feedback-driven continuous improvement loop",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "Session init with feedback/ entries present (hard trigger from check-evolution hook)",
+      "User asks 'check for rule upgrades'",
+      "User asks 'check evolution proposals'"
+    ],
+    "manual": true,
+    "command": "/evolution-engine"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": ["feedback-writer"]
+  },
+  "commands": [],
+  "agents": ["evolution-runner"],
+  "hooks": ["check-evolution"]
+}

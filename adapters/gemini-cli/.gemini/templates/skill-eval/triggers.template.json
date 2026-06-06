@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "my-custom-skill",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval my-custom-skill",
+  "cases": [
+    {
+      "id": "should-trigger-formal",
+      "prompt": "请用正式语气帮我整理本周产品迭代要点，输出给管理层看的摘要",
+      "should_trigger": true,
+      "note": "明确需要本 Skill 的能力，但未直呼 Skill 名"
+    },
+    {
+      "id": "should-trigger-casual",
+      "prompt": "帮我把这几条需求捋一下，别漏验收标准",
+      "should_trigger": true,
+      "note": "口语化表达"
+    },
+    {
+      "id": "should-not-adjacent",
+      "prompt": "直接改 package.json 版本号并打 tag，不用写文档",
+      "should_trigger": false,
+      "note": "差一点相关：发布相关，但应交给 release-builder 而非本 Skill"
+    },
+    {
+      "id": "should-not-unrelated",
+      "prompt": "用 Python 写个斐波那契函数",
+      "should_trigger": false,
+      "note": "无效负例（太明显）；请换成「差一点就会误触发」的场景"
+    }
+  ]
+}

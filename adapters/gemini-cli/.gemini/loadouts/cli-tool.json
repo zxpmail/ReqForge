@@ -1,0 +1,45 @@
+{
+  "name": "cli-tool",
+  "version": "1.0.0",
+  "description": "CLI tool development — lean toolchain without design skills. Omits change-manager; use full/web-app loadout or add change-manager skill manually for brownfield changes/",
+  "scenarios": [
+    "greenfield-cli",
+    "cli-library",
+    "bugfix-and-release"
+  ],
+  "skills": [
+    "product-spec-builder",
+    "dev-planner",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "release-builder",
+    "feedback-writer",
+    "evolution-engine"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "code-reviewer-types",
+    "feedback-observer",
+    "evolution-runner",
+    "test-writer",
+    "planner"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "phase-exit-guard",
+    "stop-gate",
+    "retry-gate",
+    "detect-feedback-signal",
+    "mark-review-needed",
+    "check-evolution",
+    "memory-check",
+    "memory-guard",
+    "hallucination-gate"
+  ],
+  "mcp_servers": [],
+  "settings_extends": "settings.json"
+}

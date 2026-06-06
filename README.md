@@ -434,6 +434,7 @@ Create or open your app directory, then copy **only** the adapter folder for you
 | **Claude Code** | `adapters/claude-code/.claude/` | `<your-project>/.claude/` |
 | **Cursor** | `adapters/cursor/.cursor/` | `<your-project>/.cursor/` |
 | **OpenCode** | `adapters/opencode/.opencode/` | `<your-project>/.opencode/` |
+| **Gemini CLI** | `adapters/gemini-cli/.gemini/` | `<your-project>/.gemini/` |
 
 Then copy hook scripts separately (required for hooks to work):
 
@@ -442,6 +443,7 @@ Then copy hook scripts separately (required for hooks to work):
 | **Claude Code** | `core/hooks/` | `<your-project>/.claude/hooks/` |
 | **Cursor** | `core/hooks/` | `<your-project>/.cursor/rules/hooks/` |
 | **OpenCode** | `core/hooks/` | `<your-project>/.opencode/hooks/` |
+| **Gemini CLI** | `core/hooks/` | `<your-project>/.gemini/hooks/` |
 
 **Examples** (replace paths with your actual locations):
 
@@ -454,6 +456,9 @@ cp -R /path/to/ReqForge/adapters/cursor/.cursor /path/to/my-app/.cursor
 
 # macOS / Linux — OpenCode
 cp -R /path/to/ReqForge/adapters/opencode/.opencode /path/to/my-app/.opencode
+
+# macOS / Linux — Gemini CLI
+cp -R /path/to/ReqForge/adapters/gemini-cli/.gemini /path/to/my-app/.gemini
 ```
 
 ```powershell
@@ -462,9 +467,12 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\claude-code\.claude C:\pa
 
 # Windows — Cursor
 Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to\my-app\.cursor
+
+# Windows — Gemini CLI
+Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\gemini-cli\.gemini C:\path\to\my-app\.gemini
 ```
 
-> **OpenCode** uses `.opencode/AGENTS.md` as the control file — **same Forge dispatch content as root `CLAUDE.md`** (filename follows OpenCode convention). User-project constraint templates live under `templates/agents-template.md`.
+> **Gemini CLI** uses `.gemini/GEMINI.md` as the control file — **same Forge dispatch content as root `CLAUDE.md`**. [`/memory reload`](https://geminicli.com/docs/cli/tutorials/memory-management/) after copying to activate. **OpenCode** uses `.opencode/AGENTS.md` — also same Forge content (filename follows OpenCode convention). User-project constraint templates live under `templates/agents-template.md`.
 
 ### Step 3 — Enable hooks (Claude Code & Cursor)
 
@@ -870,7 +878,8 @@ Forge/
 ├── adapters/
 │   ├── claude-code/           # Claude Code adapter (.claude/ + .claude/rules/)
 │   ├── cursor/                # Cursor adapter (.cursor/rules/)
-│   └── opencode/              # OpenCode adapter (.opencode/)
+│   ├── opencode/              # OpenCode adapter (.opencode/)
+│   └── gemini-cli/            # Gemini CLI adapter (.gemini/)
 ├── .forge/                    # Forge project config
 │   └── config.example         #     config template (copy to config to activate)
 ├── .claude/                   # Forge's own control files (self-wired hooks via settings.json)

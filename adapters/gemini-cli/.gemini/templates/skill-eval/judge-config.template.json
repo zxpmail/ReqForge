@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "skill": "my-custom-skill",
+  "description": "Judge configuration for skill workflow quality evaluation",
+  "rubric": {
+    "dimensions": [
+      {
+        "id": "structure",
+        "name": "结构完整性",
+        "weight": 10,
+        "scoring": "1-10",
+        "description": "SKILL.md 有完整 frontmatter（name/description/triggers）、工作流步骤有序号、输入输出明确；目录结构符合 Forge 约定"
+      },
+      {
+        "id": "specificity",
+        "name": "可执行具体性",
+        "weight": 20,
+        "scoring": "1-10",
+        "description": "指令可直接执行，有具体参数/格式/示例，不使用'建议/可以考虑/根据情况'等模糊措辞；包含完整的工作流而不是片段"
+      },
+      {
+        "id": "failure_mode",
+        "name": "失败模式编码",
+        "weight": 15,
+        "scoring": "1-10",
+        "description": "有显式'如果 X 失败 → 执行 Y'分支、fallback 路径、错误恢复、边界条件处理；工作流在非理想条件下仍能产生可用结果"
+      },
+      {
+        "id": "anti_patterns",
+        "name": "反例完备性",
+        "weight": 10,
+        "scoring": "1-10",
+        "description": "有明确的'不要做什么'清单、红灯动作/反模式单独章节列出；涵盖常见的误用场景"
+      },
+      {
+        "id": "workflow_quality",
+        "name": "工作流质量与可重复性",
+        "weight": 30,
+        "scoring": "1-10",
+        "description": "用测试 prompt 多次执行该工作流，评估：(1) 结果一致性 — 同一 prompt 多次执行输出是否稳定 (2) 工作流是否包含验证步骤（检查→修复→确认） (3) 最终产物在真实项目中是否可直接使用而无需大量人工修正 (4) 工作流能否处理输入变化"
+      },
+      {
+        "id": "effectiveness",
+        "name": "实测效果与基线对比",
+        "weight": 15,
+        "scoring": "1-10",
+        "description": "对比有 Skill 和无 Skill 的输出质量差异；Skill 是否显著提升了输出质量（减少遗漏、减少错误、提高一致性）；评估在真实项目上下文中使用时的端到端效果"
+      }
+    ]
+  },
+  "judge_count": 1,
+  "test_prompt_source": "cases.json"
+}

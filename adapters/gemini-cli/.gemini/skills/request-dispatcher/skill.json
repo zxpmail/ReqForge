@@ -1,0 +1,29 @@
+{
+  "name": "request-dispatcher",
+  "version": "1.0.0",
+  "description": "Routes ambiguous user requests to the correct Forge Skill",
+  "tier": "interactive",
+  "intent": "Analyze ambiguous or cross-cutting user requests against project state and available Skills, recommend the best match — the first interaction point for unclear intents",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "User request is ambiguous and no single Skill clearly matches"
+    ],
+    "manual": true,
+    "command": "/request-dispatcher"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "request-dispatcher",
+      "description": "Analyze intent and project state, recommend target Skill"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

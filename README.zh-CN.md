@@ -408,6 +408,7 @@ Windows 下会自动应用 `settings.windows.json` → `settings.json`；其他�
 | **Claude Code** | `adapters/claude-code/.claude/` | `<你的项目>/.claude/` |
 | **Cursor** | `adapters/cursor/.cursor/` | `<你的项目>/.cursor/` |
 | **OpenCode** | `adapters/opencode/.opencode/` | `<你的项目>/.opencode/` |
+| **Gemini CLI** | `adapters/gemini-cli/.gemini/` | `<你的项目>/.gemini/` |
 
 **命令示例**（请替换为实际路径）：
 
@@ -420,6 +421,9 @@ cp -R /path/to/ReqForge/adapters/cursor/.cursor /path/to/my-app/.cursor
 
 # macOS / Linux — OpenCode
 cp -R /path/to/ReqForge/adapters/opencode/.opencode /path/to/my-app/.opencode
+
+# macOS / Linux — Gemini CLI
+cp -R /path/to/ReqForge/adapters/gemini-cli/.gemini /path/to/my-app/.gemini
 ```
 
 ```powershell
@@ -430,7 +434,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\claude-code\.claude C:\pa
 Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to\my-app\.cursor
 ```
 
-> **OpenCode** 主控文件为 `.opencode/AGENTS.md` — **与根目录 `CLAUDE.md` 相同的 Forge 调度内容**（仅文件名遵循 OpenCode 约定）。用户项目约束模板见 `templates/agents-template.md`。
+> **Gemini CLI** 主控文件为 `.gemini/GEMINI.md` — **与根目录 `CLAUDE.md` 相同的 Forge 调度内容**。复制后在 Gemini CLI 中运行 [`/memory reload`](https://geminicli.com/docs/cli/tutorials/memory-management/) 激活。**OpenCode** 主控文件为 `.opencode/AGENTS.md` — 同样与 `CLAUDE.md` 内容一致（仅文件名遵循 OpenCode 约定）。用户项目约束模板见 `templates/agents-template.md`。
 
 ### 步骤 3 — 启用钩子（Claude Code / Cursor）
 
@@ -823,7 +827,8 @@ Forge/
 ├── adapters/
 │   ├── claude-code/           # Claude Code 适配（.claude/ + .claude/rules/）
 │   ├── cursor/                # Cursor 适配
-│   └── opencode/              # OpenCode 适配
+│   ├── opencode/              # OpenCode 适配
+│   └── gemini-cli/            # Gemini CLI 适配
 ├── .forge/                    # Forge 项目配置
 ├── .claude/                   # Forge 自身的控制文件
 ├── CLAUDE.md                  # 主控制文件

@@ -1,0 +1,8 @@
+{
+  "forge": {
+    "version": "1.37.0",
+    "description": "ReqForge adapter for Google Gemini CLI"
+  },
+  "model": "gemini-2.5-pro",
+  "sandbox_mode": true
+}

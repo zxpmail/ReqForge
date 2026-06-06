@@ -1,0 +1,32 @@
+{
+  "name": "minimal",
+  "version": "1.0.0",
+  "description": "Minimal loadout — quick prototyping with spec, build, and review only. Omits change-manager and dev-planner; not for brownfield changes/ workflow",
+  "scenarios": [
+    "quick-prototype",
+    "bugfix-only",
+    "spike-script"
+  ],
+  "skills": [
+    "product-spec-builder",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "feedback-writer"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "feedback-observer"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "phase-exit-guard",
+    "stop-gate",
+    "retry-gate",
+    "detect-feedback-signal",
+    "memory-check",
+    "hallucination-gate"
+  ],
+  "mcp_servers": []
+}

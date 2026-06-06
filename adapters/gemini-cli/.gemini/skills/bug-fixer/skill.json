@@ -1,0 +1,32 @@
+{
+  "name": "bug-fixer",
+  "version": "1.1.0",
+  "description": "When user says 'this feature is broken', 'error', 'something is wrong', or reports a bug/compile error/runtime exception",
+  "tier": "interactive",
+  "intent": "Diagnose root cause through systematic troubleshooting conversation, then apply targeted fixes — Forge's structured debugging loop",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "User reports a bug or error",
+      "Compile error or runtime exception",
+      "Code review stage 2 found quality issues"
+    ],
+    "manual": true,
+    "command": "/bug-fixer"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "bug-fixer",
+      "description": "Diagnose root cause and fix bugs through systematic debugging",
+      "argument-hint": "[bug description]"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

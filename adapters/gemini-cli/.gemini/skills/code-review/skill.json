@@ -1,0 +1,38 @@
+{
+  "name": "code-review",
+  "version": "2.1.0",
+  "description": "When user wants code reviewed, quality checked, feature completeness verified against spec",
+  "tier": "component",
+  "intent": "Run parallel specialized review agents against the codebase to surface bugs, security issues, and spec gaps in a single audit pass",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "After each dev cycle in dev-builder",
+      "User requests code review",
+      "Bug-fixer fix completed"
+    ],
+    "manual": true,
+    "command": "/code-review"
+  },
+  "prerequisites": {
+    "files": ["Product-Spec.md"],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "code-review",
+      "description": "Run parallel specialized review agents and produce aggregated report",
+      "argument-hint": "[scope: all|phase|task]"
+    }
+  ],
+  "agents": [
+    "code-reviewer",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "code-reviewer-types",
+    "code-reviewer-design"
+  ],
+  "hooks": []
+}

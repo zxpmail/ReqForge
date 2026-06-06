@@ -1,0 +1,33 @@
+{
+  "name": "change-manager",
+  "version": "1.1.0",
+  "description": "When user adds a feature or change to an existing project with Product-Spec.md; brownfield iteration via changes/ folder (propose, apply, verify, archive)",
+  "tier": "workflow",
+  "intent": "Orchestrate scoped brownfield changes from proposal through archive without rewriting the full Spec — the most structured multi-phase workflow in Forge",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "User says add a feature to existing product",
+      "User wants incremental change or brownfield iteration",
+      "User mentions changes/ folder or change proposal",
+      "User asks propose/apply/archive for a named change"
+    ],
+    "manual": true,
+    "command": "/change-manager"
+  },
+  "prerequisites": {
+    "files": ["Product-Spec.md"],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "change-manager",
+      "description": "Run propose|apply|verify|archive for a named change under changes/",
+      "argument-hint": "[propose|apply|verify|archive] <change-name>"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

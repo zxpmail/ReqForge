@@ -1,0 +1,63 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Forge Loadout Metadata",
+  "description": "Schema for Forge loadout JSON files — reusable bundles of skills, agents, hooks, and MCP servers",
+  "type": "object",
+  "required": ["name", "version", "description", "skills", "agents", "hooks", "scenarios"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case loadout identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version"
+    },
+    "description": {
+      "type": "string",
+      "description": "What project type this loadout is designed for"
+    },
+    "skills": {
+      "type": "array",
+      "description": "Skills included in this loadout",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "minItems": 1
+    },
+    "agents": {
+      "type": "array",
+      "description": "Agents included in this loadout",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "minItems": 1
+    },
+    "hooks": {
+      "type": "array",
+      "description": "Hooks enabled in this loadout",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" }
+    },
+    "mcp_servers": {
+      "type": "array",
+      "description": "Recommended MCP server configurations",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "required": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "settings_extends": {
+      "type": "string",
+      "description": "Base settings template this loadout extends (e.g., 'settings.windows.json')"
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "Kebab-case scenario tags for loadout-scenarios.md cross-reference",
+      "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]*$" },
+      "minItems": 1
+    }
+  }
+}

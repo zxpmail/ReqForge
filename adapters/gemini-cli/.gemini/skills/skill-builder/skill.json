@@ -1,0 +1,32 @@
+{
+  "name": "skill-builder",
+  "version": "1.0.0",
+  "description": "When user wants to create a new Skill, or EVOLUTION.md Level 4 proposal auto-generates a new Skill",
+  "tier": "interactive",
+  "intent": "Guide the user through creating a compliant Forge Skill — scaffolds files, validates structure, and ensures metadata consistency for the Skills ecosystem",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "User requests creating a new skill",
+      "Evolution engine outputs a new skill proposal",
+      "User wants to extend the framework"
+    ],
+    "manual": true,
+    "command": "/skill-builder"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "skill-builder",
+      "description": "Create a new Forge Skill with consistent structure",
+      "argument-hint": "[skill-name]"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

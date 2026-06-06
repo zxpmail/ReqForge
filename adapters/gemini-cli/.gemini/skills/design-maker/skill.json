@@ -1,0 +1,31 @@
+{
+  "name": "design-maker",
+  "version": "1.0.0",
+  "description": "When Design-Brief is complete and user needs design mockups generated",
+  "tier": "component",
+  "intent": "Generate complete design mockups from a Design-Brief using external design tools — produces concrete visual artifacts from structured input",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": false,
+    "when": [
+      "Design-Brief complete",
+      "User requests generating mockups"
+    ],
+    "manual": true,
+    "command": "/design-maker"
+  },
+  "prerequisites": {
+    "files": ["Product-Spec.md", "Design-Brief.md"],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "design-maker",
+      "description": "Generate complete design mockups via design tool",
+      "argument-hint": ""
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

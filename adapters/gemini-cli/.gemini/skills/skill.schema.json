@@ -1,0 +1,87 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Forge Skill Metadata",
+  "description": "Schema for Forge skill.json metadata files",
+  "type": "object",
+  "required": ["name", "version", "description", "tier", "intent", "author", "triggers"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Kebab-case skill identifier"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version"
+    },
+    "description": {
+      "type": "string",
+      "description": "Decidable trigger description — when to use this skill"
+    },
+    "tier": {
+      "type": "string",
+      "enum": ["workflow", "interactive", "component"],
+      "description": "Skill classification tier: multi-phase pipeline, guided conversation, or single-pass artifact"
+    },
+    "intent": {
+      "type": "string",
+      "minLength": 10,
+      "description": "Richer purpose statement — why this skill exists and what it achieves beyond the trigger description"
+    },
+    "author": {
+      "type": "string",
+      "description": "Author or organization"
+    },
+    "license": {
+      "type": "string",
+      "default": "MIT"
+    },
+    "triggers": {
+      "type": "object",
+      "required": ["auto", "manual", "command"],
+      "properties": {
+        "auto": { "type": "boolean" },
+        "when": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "manual": { "type": "boolean" },
+        "command": { "type": "string", "pattern": "^/" }
+      }
+    },
+    "prerequisites": {
+      "type": "object",
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": { "type": "string" },
+          "description": { "type": "string" },
+          "argument-hint": { "type": "string" }
+        }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "hooks": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

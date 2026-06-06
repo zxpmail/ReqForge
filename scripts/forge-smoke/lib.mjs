@@ -80,4 +80,5 @@ export const ADAPTER_SKILL_PATHS = {
   "claude-code": "adapters/claude-code/.claude/skills",
   cursor: "adapters/cursor/.cursor/rules/skills",
   opencode: "adapters/opencode/.opencode/skills",
+  "gemini-cli": "adapters/gemini-cli/.gemini/skills",
 };

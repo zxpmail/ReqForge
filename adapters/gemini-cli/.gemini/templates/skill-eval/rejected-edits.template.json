@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "skill": "my-custom-skill",
+  "description": "被拒的 Skill 编辑（SkillOpt rejected-edit buffer）。验证未通过的提案记在这里，避免重复提出同类坏改动。",
+  "entries": []
+}

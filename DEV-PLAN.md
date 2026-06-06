@@ -37,7 +37,7 @@
 
 | 项 | 说明 | 状态 |
 |----|------|------|
-| `adapters/gemini-cli/` | 第 4 个 AI 客户端适配 | 未排期 |
+| `adapters/gemini-cli/` | 第 4 个 AI 客户端适配 | ✅ 完成
 | 模板市场 | 产品脚手架一键初始化 | 未排期 |
 | Dashboard Web UI | 可视化进度与变更 | 未排期 |
 | Skill 进化 P1/P2 | feedback 归因、skill-bypass 清单 | **刻意暂缓**（P0 文档已完成） |

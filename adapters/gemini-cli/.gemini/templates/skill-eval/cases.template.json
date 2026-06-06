@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "skill": "my-custom-skill",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "happy-path",
+      "split": "train",
+      "prompt": "（在 Agent 中执行的真实用户 prompt，带文件名、路径等细节）",
+      "artifacts_subdir": "happy-path",
+      "assertions": {
+        "fileExists": ["output.md"],
+        "maxBytes": [{ "file": "output.md", "max": 50000 }],
+        "regexChecks": [
+          {
+            "id": "has-title",
+            "file": "output.md",
+            "mustMatch": "^#\\s+.+"
+          }
+        ]
+      }
+    }
+  ]
+}

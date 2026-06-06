@@ -1,0 +1,69 @@
+{
+  "name": "web-app",
+  "version": "1.0.0",
+  "description": "Web application development — full spec-to-release pipeline with design and review",
+  "scenarios": [
+    "greenfield-web",
+    "brownfield-web-feature",
+    "web-with-design"
+  ],
+  "skills": [
+    "product-spec-builder",
+    "change-manager",
+    "design-brief-builder",
+    "design-maker",
+    "dev-planner",
+    "dev-builder",
+    "bug-fixer",
+    "code-review",
+    "release-builder",
+    "feedback-writer",
+    "evolution-engine"
+  ],
+  "agents": [
+    "implementer",
+    "code-reviewer",
+    "code-reviewer-design",
+    "code-reviewer-bug",
+    "code-reviewer-security",
+    "code-reviewer-types",
+    "feedback-observer",
+    "evolution-runner",
+    "test-writer",
+    "planner"
+  ],
+  "hooks": [
+    "pre-commit-check",
+    "phase-exit-guard",
+    "stop-gate",
+    "retry-gate",
+    "detect-feedback-signal",
+    "mark-review-needed",
+    "check-evolution",
+    "memory-check",
+    "memory-guard",
+    "hallucination-gate"
+  ],
+  "mcp_servers": [
+    {
+      "name": "Pencil",
+      "description": "UI prototyping from text prompts",
+      "required": false
+    },
+    {
+      "name": "Figma",
+      "description": "Design-to-code with component extraction",
+      "required": false
+    },
+    {
+      "name": "Playwright",
+      "description": "UI interaction testing during code-review",
+      "required": false
+    },
+    {
+      "name": "Context7",
+      "description": "Version-specific library docs (resolve-library-id + query-docs). Setup: npx ctx7 setup or https://github.com/upstash/context7",
+      "required": false
+    }
+  ]
+}

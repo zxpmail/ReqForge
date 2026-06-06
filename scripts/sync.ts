@@ -40,6 +40,14 @@ const ADAPTERS: Record<string, Record<string, string>> = {
     "core/hooks": ".opencode/hooks",
     "core/loadouts": ".opencode/loadouts",
   },
+  "gemini-cli": {
+    "core/skills": ".gemini/skills",
+    "core/agents": ".gemini/agents",
+    "core/templates": ".gemini/templates",
+    "core/feedback": ".gemini/feedback",
+    "core/hooks": ".gemini/hooks",
+    "core/loadouts": ".gemini/loadouts",
+  },
 };
 
 // Files that should NOT be synced to adapters (ReqForge-self only)
@@ -89,6 +97,7 @@ const ADAPTER_CONFIGS: Record<string, { controlFile: string; evolutionFile: stri
   "claude-code": { controlFile: ".claude/CLAUDE.md", evolutionFile: ".claude/EVOLUTION.md" },
   "cursor": { controlFile: ".cursor/rules/reqforge.mdc", evolutionFile: ".cursor/rules/EVOLUTION.md" },
   "opencode": { controlFile: ".opencode/AGENTS.md", evolutionFile: ".opencode/EVOLUTION.md" },
+  "gemini-cli": { controlFile: ".gemini/GEMINI.md", evolutionFile: ".gemini/EVOLUTION.md" },
 };
 
 // ── Discover mode ──

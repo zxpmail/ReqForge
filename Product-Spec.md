@@ -171,7 +171,7 @@ Forge/
 │   ├── claude-code/           # Claude Code 适配（.claude/ 目录结构）
 │   ├── cursor/                # Cursor 适配（.cursor/rules/ 目录结构）
 │   ├── opencode/              # OpenCode 适配（.opencode/ 目录结构）
-│   └── gemini-cli/            # Gemini CLI 适配（未来）
+│   └── gemini-cli/            # Gemini CLI 适配
 ├── scripts/                   # 同步脚本、依赖图分析工具
 └── README.md                  # 使用说明
 ```

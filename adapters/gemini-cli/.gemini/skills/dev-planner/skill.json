@@ -1,0 +1,32 @@
+{
+  "name": "dev-planner",
+  "version": "1.1.0",
+  "description": "When Product-Spec.md is complete and needs to be planned into development phases",
+  "tier": "interactive",
+  "intent": "Transform a validated Spec into an actionable phased DEV-PLAN with task breakdown, dependency ordering, and effort estimates — bridges requirements into execution",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": false,
+    "when": [
+      "Product-Spec complete",
+      "Spec has changed and plan needs updating",
+      "User says 'make a plan'"
+    ],
+    "manual": true,
+    "command": "/dev-planner"
+  },
+  "prerequisites": {
+    "files": ["Product-Spec.md"],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "dev-planner",
+      "description": "Generate or update DEV-PLAN.md with phased development plan",
+      "argument-hint": "[scope: full|iteration]"
+    }
+  ],
+  "agents": ["planner"],
+  "hooks": []
+}
