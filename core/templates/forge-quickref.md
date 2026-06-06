@@ -17,6 +17,7 @@
 | `.forge/implementer-session.json` | implementer 子 Agent 正在写业务代码 |
 | `.forge/dev-map.md` | 开发导航地图（谁动代码谁改地图） |
 | `.forge/security-guidance.md` | 团队安全规则（审查/发布前对照） |
+| `.claude/rules/security.md` | 安全硬规则：无硬编码密钥 + 输入验证 + 审计日志（从 `core/templates/security-rules-template.md` 安装） |
 | `AGENTS.md` | AI Agent 行为约束与并行工作流规范（forge-install 写入） |
 | `.forge/preflight.json` | 发布门禁配置 → `pnpm preflight` |
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |

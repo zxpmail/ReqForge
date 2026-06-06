@@ -37,6 +37,10 @@ const REQUIRED = [
     rel: "core/feedback/templates/drift-map-template.md",
     markers: ["跑偏地图", "failure_class"],
   },
+  {
+    rel: "core/templates/security-rules-template.md",
+    markers: ["禁止硬编码任何密钥", "强制所有外部输入做验证", "敏感操作必须有审计日志"],
+  },
 ];
 
 for (const { rel, markers } of REQUIRED) {
