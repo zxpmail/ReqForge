@@ -61,6 +61,27 @@ flowchart LR
 
 ## 近期更新
 
+### v1.39.0 — 2026-06-06 — 2.5 层发布
+
+**设计哲学变革**：从锁到锚——顺着模型的天理设计 Harness，而不是逆着它硬砍。
+
+- **Spec 难点标记**（`## Known Difficult Spots`）：每个模块标注 🔴/🟡/🟢 难度。dev-planner 传播到 DEV-PLAN Phase。dev-builder 调整执行速度（🔴 怵然为戒，慢 + 自审；🟢 快速通过）。
+- **全部 6 个 Skill 反 AI 味改革**：从"10 条不要"改为"3 个锚点 + 轻量兜底检查"——dev-builder、bug-fixer、change-manager、code-review、design-brief-builder、release-builder。LLM 本质是模式匹配器，不是规则遵守者。
+- **Phase 1 放骨架**：Phase 1 不再是"写第一个功能"，而是放下领域模型、类型、接口、错误处理公约，作为项目后续代码的结构锚点。
+- **生成后自审回合**：implementer 返回后、外部 code-review 前，在相同上下文中自审一次。利用热上下文修复浅层问题。
+- **注意力布局优化**：关键信息放文件结尾（recency bias），背景原则放开头（primacy bias），次要信息放中间。
+- **善刀而藏之关闭仪式**：5 步强制关闭——回顾完成、庆祝、追加隐藏难点到 Spec、记入决策日志、清上下文。
+- **变更自动回滚**：`pnpm forge-change snapshot|restore <name>` — 变更验证失败时自动从快照恢复文件。
+- **安全规则模板**：`core/templates/security-rules-template.md` — 3 条硬规则：禁止硬编码密钥、强制输入验证、敏感操作审计日志。+ PII 不得进日志约束（GDPR 合规）。
+- **Design-maker 多案并行 + 梯度精修**：`--alternatives N` 生成多套设计方案并输出对比表。梯度精修分 3 层交付（布局 → 交互 → 边界场景）。
+- **Benchmark 对比**：旧方式（9 条规则）vs 新方式（3 个锚点）在 todo-cli 上的实测对比。两组测试全部通过；新方式代码减少 15%。
+- **设计哲学文章**：`docs/2.5-layer-manifesto.md`（中文）和 `.en.md`（英文）——完整阐述锚点设计哲学、选锚点实操指南、常见问题。
+- **Dashboard Web UI**：决定不做——Forge 用户活在 CLI 里。
+
+### v1.38.0 — 2026-06-06
+- **模板市场**：`forge-scaffold init <template> [dir]` — 4 个项目模板（next-fullstack、cli-tool、express-api、electron-app），附带骨架代码 + loadout 推荐。`forge-scaffold list-templates` 浏览可用模板。
+- **Gemini CLI 适配**：`adapters/gemini-cli/` — 第 4 个 AI 客户端适配器。`.gemini/GEMINI.md` 主控文件，`agents/` 子智能体，`pnpm sync` 同步 Skill。4 个适配器共 944 个文件同步一致。
+
 ### v1.36.0 — 2026-06-04
 - **全部 13 个 Skill 的 Quality Rubric**：领域特定 8-16 项评分矩阵，含 ship threshold 和 critical-item-zero 规则。`pnpm validate-skill --score core/skills/<name>` 计算评分。
 - **9 个 Skill 的维度检查清单**：正式 `references/dimension-checklist.md`，Must-Have/Recommended/Optional 三级。新增：bug-fixer、change-manager、dev-builder、release-builder、design-maker、evolution-engine、feedback-writer、request-dispatcher、skill-builder。
