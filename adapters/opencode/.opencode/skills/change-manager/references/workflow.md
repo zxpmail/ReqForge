@@ -20,10 +20,11 @@ Parse user intent for phase: **propose** | **apply** | **verify** | **archive** 
 ## Phase: apply
 
 1. **Load change context** — Read **all** artifacts under `changes/<change-name>/` (paths → [openspec-handoff.md](./openspec-handoff.md)). If folder missing → propose first.
-2. **Plan tasks** — If `tasks.md` empty or placeholder → invoke `/dev-planner` (change-scoped) to fill `tasks.md`; may add **one** `DEV-PLAN.md` Phase entry for this change only.
-3. **Implement** — Recommend new session; invoke `/dev-builder` with **Change-Scoped Mode** and explicit `change-name=<change-name>`. Scope = `tasks.md` checkboxes only — not full DEV-PLAN backlog.
-4. **Review** — After each Task: run change-assessment scope dimension; then `/code-review` as per dev-builder loop.
-5. **Track progress** — Mark `tasks.md` checkboxes as work completes.
+2. **Snapshot pre-change files** — Before any file modification, save copies of all files that will be changed into `changes/<change-name>/_snapshot/`. Run `pnpm forge-change snapshot <change-name>` to auto-generate the snapshot from `tasks.md` and `specs.md`. This enables automatic rollback if verify fails.
+3. **Plan tasks** — If `tasks.md` empty or placeholder → invoke `/dev-planner` (change-scoped) to fill `tasks.md`; may add **one** `DEV-PLAN.md` Phase entry for this change only.
+4. **Implement** — Recommend new session; invoke `/dev-builder` with **Change-Scoped Mode** and explicit `change-name=<change-name>`. Scope = `tasks.md` checkboxes only — not full DEV-PLAN backlog.
+5. **Review** — After each Task: run change-assessment scope dimension; then `/code-review` as per dev-builder loop.
+6. **Track progress** — Mark `tasks.md` checkboxes as work completes.
 
 ---
 
@@ -31,7 +32,13 @@ Parse user intent for phase: **propose** | **apply** | **verify** | **archive** 
 
 1. **Compare against spec** — Re-read `specs.md` acceptance criteria vs implementation.
 2. **Run verification** — Run project verification commands; capture output in `verify.md`.
-3. **Assess results** — List any failed criteria; if fail → apply phase again, do not archive.
+3. **Assess results** — List any failed criteria.
+4. **Auto-restore on failure** — If any criterion fails AND a snapshot exists at `changes/<change-name>/_snapshot/`, run `pnpm forge-change restore <change-name>` BEFORE declaring failure. This reverts all changed files to their pre-apply state. Record the restoration in `verify.md`:
+   ```
+   ❌ Verification failed — auto-restored from _snapshot/
+   Failed criteria: [list]
+   ```
+   After restore, the change is in its pre-apply state. Do not proceed to archive. The user may fix criteria and re-run apply, or abandon the change.
 
 ### Goal-Driven Verification Template
 

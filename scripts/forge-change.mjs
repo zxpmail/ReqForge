@@ -12,8 +12,8 @@
  *   pnpm forge-change archive <name>  # 归档指定变更
  */
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, cpSync, renameSync } from "fs";
-import { join, dirname, basename } from "path";
+import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, cpSync, renameSync, rmSync } from "fs";
+import { join, dirname, basename, resolve } from "path";
 import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -27,6 +27,8 @@ const cmd = args[0];
 function usage() {
   console.log(`Usage:
   pnpm forge-change init <name>     Scaffold a new change directory
+  pnpm forge-change snapshot <name> Snapshot pre-change files (run before apply)
+  pnpm forge-change restore <name>  Restore files from snapshot (auto-run on verify fail)
   pnpm forge-change list            List active and archived changes
   pnpm forge-change check           Check for issues (orphans, unarchived)
   pnpm forge-change archive <name>  Archive a completed change`);
@@ -92,6 +94,97 @@ function cmdInit(name) {
   }
 
   console.log(`\nChange "${changeName}" initialized. Next: fill proposal.md + specs.md, then apply.`);
+}
+
+// ─── Snapshot ─────────────────────────────────────────────────────
+
+function cmdSnapshot(name) {
+  if (!name) { console.error("Usage: pnpm forge-change snapshot <change-name>"); process.exit(1); }
+
+  const changeName = kebabCase(name);
+  const changeDir = join(CHANGES_DIR, changeName);
+  if (!existsSync(changeDir)) {
+    console.error(`Change "${changeName}" not found at ${changeDir}`);
+    process.exit(1);
+  }
+
+  // Parse tasks.md for file paths (lines that look like file references)
+  const tasksPath = join(changeDir, "tasks.md");
+  const specsPath = join(changeDir, "specs.md");
+  const snapshotDir = join(changeDir, "_snapshot");
+
+  const filesToSnapshot = new Set();
+
+  for (const filePath of [tasksPath, specsPath]) {
+    if (!existsSync(filePath)) continue;
+    const content = readFileSync(filePath, "utf-8");
+    // Match file paths: lines containing src/, app/, lib/, packages/, tests/, public/
+    const pathRe = /(?:\/|`)((?:src|app|lib|packages|test|tests|public|scripts|components|pages)\/[^\s`'")\]]+)/g;
+    let match;
+    while ((match = pathRe.exec(content)) !== null) {
+      const f = match[1].replace(/`/g, "");
+      if (existsSync(resolve(f)) || existsSync(resolve(ROOT, f))) {
+        filesToSnapshot.add(f);
+      }
+    }
+  }
+
+  if (filesToSnapshot.size === 0) {
+    console.log(`No snapshot-able files found in tasks.md or specs.md for "${changeName}".`);
+    console.log("  (You can still snapshot manually by copying files into _snapshot/.");
+    return;
+  }
+
+  // Clean and recreate snapshot dir
+  if (existsSync(snapshotDir)) rmSync(snapshotDir, { recursive: true });
+  mkdirSync(snapshotDir, { recursive: true });
+
+  let count = 0;
+  for (const relPath of filesToSnapshot) {
+    const absPath = resolve(ROOT, relPath);
+    if (existsSync(absPath)) {
+      const dest = join(snapshotDir, relPath);
+      mkdirSync(dirname(dest), { recursive: true });
+      const stat = readFileSync(absPath, "utf-8");
+      writeFileSync(dest, stat, "utf-8");
+      count++;
+    }
+  }
+
+  console.log(`\n✅ Snapshot saved: ${count} files → changes/${changeName}/_snapshot/`);
+  console.log("  Files will be auto-restored if verify fails.");
+}
+
+// ─── Restore ────────────────────────────────────────────────────
+
+function cmdRestore(name) {
+  if (!name) { console.error("Usage: pnpm forge-change restore <change-name>"); process.exit(1); }
+
+  const changeName = kebabCase(name);
+  const snapshotDir = join(CHANGES_DIR, changeName, "_snapshot");
+  if (!existsSync(snapshotDir)) {
+    console.error(`No snapshot found at changes/${changeName}/_snapshot/. Run 'forge-change snapshot ${changeName}' first.`);
+    process.exit(1);
+  }
+
+  let count = 0;
+  const entries = readdirSync(snapshotDir, { recursive: true, withFileTypes: true });
+  for (const entry of entries) {
+    if (entry.isDirectory()) continue;
+    const parent = entry.parentPath || "";
+    const relPath = parent
+      ? join(parent.replace(snapshotDir.replace(/\\/g, "/"), "").replace(/\\/g, "/").replace(/^\//, ""), entry.name)
+      : entry.name;
+    const srcPath = join(entry.parentPath || snapshotDir, entry.name);
+    const destPath = resolve(ROOT, relPath);
+    const content = readFileSync(srcPath, "utf-8");
+    mkdirSync(dirname(destPath), { recursive: true });
+    writeFileSync(destPath, content, "utf-8");
+    count++;
+  }
+
+  console.log(`\n✅ Restored ${count} files from snapshot for "${changeName}".`);
+  console.log("  The change directory remains for inspection. To remove: rm -rf changes/" + changeName + "/");
 }
 
 // ─── List ─────────────────────────────────────────────────────────
@@ -183,6 +276,8 @@ function cmdArchive(name) {
 
 try {
   if (cmd === "init") cmdInit(args[1]);
+  else if (cmd === "snapshot") cmdSnapshot(args[1]);
+  else if (cmd === "restore") cmdRestore(args[1]);
   else if (cmd === "list") cmdList();
   else if (cmd === "check") cmdCheck();
   else if (cmd === "archive") cmdArchive(args[1]);
