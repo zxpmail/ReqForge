@@ -99,3 +99,52 @@
     ```
 
     This summary serves as a quick-reference handoff point for the next session or next Phase invocation.
+
+    **善刀而藏之** (强制关闭仪式 — 每次 Phase 完成后必须执行):
+    
+    庖丁杀完牛后，提刀而立 → 为之四顾 → 为之踌躇满志 → 善刀而藏之。
+    Phase 完成后也一样——不只是"完成了"，要收刀、归神、清场。
+    
+    **Step 1: 提刀而立** — 回顾完成的交付物，确认一切妥当。
+    已完成。Phase Summary 已经生成。
+    
+    **Step 2: 为之四顾，为之踌躇满志** — 显式享受完成。
+    输出一段话（给用户看）：
+    ```
+    🎉 Phase N 完成
+
+    这把刀用了 [X] 次，刀刃如新。
+    这一段游刃有余的过程本身，就是养生的目的。
+
+    和庖丁一样，做完就收刀——不把上一头牛的气带到下一头牛。
+    ```
+    
+    **Step 3: 追加隐藏难点到 Spec** — 把 Phase 执行中新发现的困难写回 Product-Spec.md。
+    
+    一个 Phase 走完，一定有预期之外的「筋骨交错」被发现。让下一个 Phase 站在更新过的地图上。
+    
+    - 扫描当前 Phase 中遇到的非预期困难、踩过的坑、需要特殊处理的边界条件
+    - 格式为标准 Known Difficult Spots 条目：
+      ```markdown
+      | <模块> | 🟡 中 | <具体难点> | <处理策略> |
+      ```
+    - 追加到 Product-Spec.md 的 `## Known Difficult Spots` 表格
+    - 如果该模块已有条目 → 合并或更新，不重复
+    - 如果 Product-Spec.md 还没有这个章节 → 在 Technical Notes 前插入
+    
+    **Step 4: 记入决策日志** — 把 Phase 中的关键决策写入 memory/。
+    写三条就够了：
+    - `memory/decisions-log.md` — 追加：`| Phase N | <决策> | <理由> | <备选> |`
+    - `memory/task-history.md` — 追加：`| Phase N | <已完成的 Task 摘要> | <关键文件> |`
+    
+    **Step 5: 藏刀** — 关闭上下文，让下一把刀干净。
+    至此，当前 Phase 的所有产出都已经被"收好"了：
+    - 代码已提交 ✅
+    - Spec 已被新发现更新 ✅
+    - 决策已写入记忆 ✅
+    - 总结已报告 ✅
+    
+    接下来的 Phase N+1 将在一个干净的上下文上开始——不带着上一轮的噪声和临时推理。
+    
+    > **善刀而藏之，是养生主最关键的五个字。**
+    > 会杀牛不算本事，杀完知道收刀才算。

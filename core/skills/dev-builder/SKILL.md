@@ -115,6 +115,7 @@ requires: []
     **Editing Spec/Plan during build**: Patching Product-Spec.md or DEV-PLAN.md to excuse implementation drift violates the prepare.py boundary. Route scope changes through change-manager or replan.
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
     **Difficulty-blind execution**: Every Phase has a **Difficulty** level. 🔴 高 = 怵然为戒，每段代码追加自我评审，动刀甚微；🟢 低 = 快速通过，标准流程即可。不按难度调整行为，就像庖丁遇到筋骨交错还一刀砍过去。执行前先读 Phase 的 Difficulty 字段。
+    **Skipping 善刀而藏之**: 做完一个 Phase 不收刀——不在 Spec 追加新发现的难点、不记决策日志、不清理上下文。下一个 Phase 会在上一轮的噪声上启动。杀完牛不等于结束，收刀才是。
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->
