@@ -62,6 +62,27 @@ flowchart LR
 
 ## What's New
 
+### v1.39.0 — 2026-06-06 — The 2.5 Layer Release
+
+**Design philosophy**: From shackles to anchors — working *with* the model's pattern-matching instead of fighting it.
+
+- **Spec difficulty markers** (`## Known Difficult Spots`): 🔴/🟡/🟢 per module. dev-planner propagates to DEV-PLAN Phases. dev-builder adjusts execution speed (🔴 = slow + self-review, 🟢 = fast pass). New difficulties auto-appended via 善刀而藏之.
+- **Anti-slop reform for all 6 skills**: All anti-ai-slop-checklists converted from "10 don't rules" to "3 perfect anchors + light checklist" — dev-builder, bug-fixer, change-manager, code-review, design-brief-builder, release-builder. LLMs are pattern matchers, not rule followers.
+- **Phase 1 catalyst (放下骨架)**: Phase 1 explicitly builds domain models, types, and interfaces as the project's structural anchor. All subsequent Phases naturally continue from this anchor.
+- **Self-review round** (step 9.5): After implementer returns, one self-review pass in the same hot context before external code-review. Catches shallow issues while attention is still warm.
+- **Attention layout optimization**: Critical "what to do NOW" info positioned at the END of each reference file (recency bias). Background principles at the BEGINNING (primacy bias).
+- **善刀而藏之 closing ritual**: Mandatory 5-step Phase completion — review, celebrate, append hidden difficulties to Spec, log decisions, clear context.
+- **Change-manager auto-rollback**: `pnpm forge-change snapshot|restore <name>` — pre-change file snapshotting and automatic restore on verify failure.
+- **Security rules template**: `core/templates/security-rules-template.md` — 3 hard rules: no hardcoded secrets, validate all inputs, audit sensitive operations. + PII-in-logs constraint (GDPR).
+- **Design-maker multi-alternative + gradual refinement**: `--alternatives N` generates N design variants with cross-comparison table. Gradual refinement delivers in 3 tiers (structure → interaction → edge cases).
+- **Benchmark**: Side-by-side comparison of old anti-slop vs new anchor approach on todo-cli. Both pass all tests; new approach produces 15% shorter code.
+- **Design manifesto**: `docs/2.5-layer-manifesto.md` (Chinese) and `.en.md` (English) — full article explaining the philosophy, with anchor selection guide and troubleshooting.
+- **Dashboard Web UI**: Decision not to build — Forge users live in CLI.
+
+### v1.38.0 — 2026-06-06
+- **Template marketplace**: `forge-scaffold init <template> [dir]` — 4 project starters (next-fullstack, cli-tool, express-api, electron-app) with skeleton files + loadout recommendations. `forge-scaffold list-templates` to browse.
+- **Gemini CLI adapter**: `adapters/gemini-cli/` — 4th AI client adapter. `.gemini/GEMINI.md` control file, subagents in `agents/`, skills via `pnpm sync`. All 944 files in sync across 4 adapters.
+
 ### v1.37.0 — 2026-06-05
 - **forge-evolve**: `pnpm forge-evolve status|scan|propose|apply` — evolution engine loop closure. Backfilled 3 feedback entries with failure_class and scores. Level 2 (occurrences >= 3) and Level 3 (low avg scores) candidate detection. Wired into forge-loop completion paths.
 - **forge-change**: `pnpm forge-change init|list|check|archive` — change management automation. Scaffolds change directories from templates, 8 E2E tests.
