@@ -2,6 +2,14 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.42.0] - 2026-06-08
+
+### Added
+- **/domain-mapper skill**: New Interactive-tier skill for transforming unstructured domain knowledge into a structured Markdown database (domain-map.md). 5-step guided pipeline: scope definition → domain snapshot → competitor deep-dive → social analysis → synthesis. Depth levels L1 (snapshot) / L2 (standard) / L3 (deep). Platform-agnostic — maps industries, technologies, codebases, and markets equally. (`core/skills/domain-mapper/`)
+
+### Sync
+- **gc-audit-routing.md + first-principles.md updates**: `pnpm sync` propagated Build Speed principle, GC audit routing, and all first-principles changes across 4 adapters (claude-code, cursor, gemini-cli, opencode).
+
 ## [v1.41.0] - 2026-06-07
 
 ### Added

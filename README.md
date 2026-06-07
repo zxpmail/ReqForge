@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.41.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.42.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,10 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.42.0 — 2026-06-08 — /domain-mapper Skill
+
+- **/domain-mapper**: New skill for researching and mapping any domain (industry, technology, codebase, market) into structured Markdown databases. Depth levels L1/L2/L3. Independent of the spec→build pipeline — use before writing a spec when entering an unfamiliar domain.
 
 ### v1.41.0 — 2026-06-07 — Workflow Cookbook + GC Audit Routing
 

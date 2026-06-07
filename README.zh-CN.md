@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.41.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.42.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,10 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.42.0 — 2026-06-08 — /domain-mapper 技能
+
+- **/domain-mapper**：全新领域映射技能。把非结构化领域信息（行业、技术、代码库、市场）转化为结构化 Markdown 数据库。L1 快照 / L2 标准 / L3 深度三级。独立于 spec→build 管线——进入陌生领域写 spec 前可先跑。 (`core/skills/domain-mapper/`)
 
 ### v1.41.0 — 2026-06-07 — Workflow Cookbook + GC 审计路由
 
