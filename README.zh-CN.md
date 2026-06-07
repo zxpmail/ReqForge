@@ -70,6 +70,14 @@ flowchart LR
 - **Anti-ai-slop 兜底检查恢复**：5 个技能 7 项被删除的检查项恢复。
 - **2.5 层宣言 §5.6 延伸**：模型间 2.5 层原理阐述（中英文）。
 
+### v1.40.0 — 2026-06-07
+- **UI-Spec.md 模型间 2.5 层**：design-maker 验证阶段自动生成结构化 UI 规范（组件层级、状态覆盖、响应式规则、可复用组件），dev-builder 启动时读取，避免从像素猜结构。临时产物，不提交。 (`core/templates/ui-spec-template.md`)
+- **机器门恢复选项**：spec-before-code、plan-before-build、idea-validation、implementer、hallucination 拦截写操作时，附带编号恢复步骤。 (`scripts/hooks/spec-before-code-gate.mjs`)
+- **注意力摘要推广至 7 个 Skill**：bug-fixer、code-review、change-manager、release-builder、dev-planner、product-spec-builder、design-brief-builder 的 first-principles.md 新增行动摘要。 (`core/skills/*/references/first-principles.md`)
+- **自审回合**：bug-fixer（修复生成与验证之间）、release-builder（smoke test 与发布确认之间）新增热上下文自审步骤。 (`core/skills/bug-fixer/references/workflow.md`, `core/skills/release-builder/references/workflow.md`)
+- **Anti-ai-slop 兜底检查恢复**：7 项被删除的检查项恢复至 change-manager、code-review、bug-fixer、release-builder、design-brief-builder。 (`core/skills/*/references/anti-ai-slop-checklist.md`)
+- **2.5 层宣言延伸**：新增 §5.6 "模型间 2.5 层"（中英文），阐述 2.5 层原理从人→模型锚点延伸至模型→模型中间表示。 (`docs/2.5-layer-manifesto.md`)
+
 ### v1.39.0 — 2026-06-06 — 2.5 层发布
 
 **设计哲学变革**：从锁到锚——顺着模型的天理设计 Harness，而不是逆着它硬砍。
@@ -90,14 +98,6 @@ flowchart LR
 ### v1.38.0 — 2026-06-06
 - **模板市场**：`forge-scaffold init <template> [dir]` — 4 个项目模板（next-fullstack、cli-tool、express-api、electron-app），附带骨架代码 + loadout 推荐。`forge-scaffold list-templates` 浏览可用模板。
 - **Gemini CLI 适配**：`adapters/gemini-cli/` — 第 4 个 AI 客户端适配器。`.gemini/GEMINI.md` 主控文件，`agents/` 子智能体，`pnpm sync` 同步 Skill。4 个适配器共 944 个文件同步一致。
-
-### v1.40.0 — 2026-06-07
-- **UI-Spec.md 模型间 2.5 层**：design-maker 验证阶段自动生成结构化 UI 规范（组件层级、状态覆盖、响应式规则、可复用组件），dev-builder 启动时读取，避免从像素猜结构。临时产物，不提交。 (`core/templates/ui-spec-template.md`)
-- **机器门恢复选项**：spec-before-code、plan-before-build、idea-validation、implementer、hallucination 拦截写操作时，附带编号恢复步骤。 (`scripts/hooks/spec-before-code-gate.mjs`)
-- **注意力摘要推广至 7 个 Skill**：bug-fixer、code-review、change-manager、release-builder、dev-planner、product-spec-builder、design-brief-builder 的 first-principles.md 新增行动摘要。 (`core/skills/*/references/first-principles.md`)
-- **自审回合**：bug-fixer（修复生成与验证之间）、release-builder（smoke test 与发布确认之间）新增热上下文自审步骤。 (`core/skills/bug-fixer/references/workflow.md`, `core/skills/release-builder/references/workflow.md`)
-- **Anti-ai-slop 兜底检查恢复**：7 项被删除的检查项恢复至 change-manager、code-review、bug-fixer、release-builder、design-brief-builder。 (`core/skills/*/references/anti-ai-slop-checklist.md`)
-- **2.5 层宣言延伸**：新增 §5.6 "模型间 2.5 层"（中英文），阐述 2.5 层原理从人→模型锚点延伸至模型→模型中间表示。 (`docs/2.5-layer-manifesto.md`)
 
 ### v1.36.0 — 2026-06-04
 - **全部 13 个 Skill 的 Quality Rubric**：领域特定 8-16 项评分矩阵，含 ship threshold 和 critical-item-zero 规则。`pnpm validate-skill --score core/skills/<name>` 计算评分。
