@@ -45,6 +45,7 @@
 2. 感知天理——扫一眼已有代码风格
 3. RED（先写测试）→ GREEN（最小实现）→ REFACTOR
 4. 生成后自审 + Micro-cycle verify（≤10 min）
-5. 投递 code-review → 通过后 commit + 善刀而藏之
+5. **Phase 完成 → 读 gc-audit-routing.md 决策表 → 按影响范围执行审计**
+6. 投递 code-review → 通过后 commit + 善刀而藏之
 
 **Transformer 注意力说明**：本文开头（放下骨架、TDD）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。
