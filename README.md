@@ -77,7 +77,17 @@ flowchart LR
 - **Design-maker multi-alternative + gradual refinement**: `--alternatives N` generates N design variants with cross-comparison table. Gradual refinement delivers in 3 tiers (structure → interaction → edge cases).
 - **Benchmark**: Side-by-side comparison of old anti-slop vs new anchor approach on todo-cli. Both pass all tests; new approach produces 15% shorter code.
 - **Design manifesto**: `docs/2.5-layer-manifesto.md` (Chinese) and `.en.md` (English) — full article explaining the philosophy, with anchor selection guide and troubleshooting.
+- **Model-to-model 2.5 layer** (UI-Spec.md): design-maker auto-generates a structured UI spec; dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral — regenerated each design cycle, not committed.
+- **Machine gate recovery**: When a gate blocks a write, the block message includes numbered recovery steps — no more dead ends.
 - **Dashboard Web UI**: Decision not to build — Forge users live in CLI.
+
+### v1.40.0 — 2026-06-07
+- **UI-Spec.md — model-to-model 2.5 layer**: design-maker auto-generates a structured UI spec (component hierarchy, states, responsive rules, reusable components) during verification. dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral (regenerated each design cycle), not committed. (`core/templates/ui-spec-template.md`)
+- **Machine gate recovery options**: When spec-before-code, plan-before-build, idea-validation, implementer, or hallucination gates block a write, the block message now includes numbered recovery steps ("1. Run /product-spec-builder → 2. Fill criteria → 3. Confirm → 4. Retry"). Instead of a dead end, the LLM gets a clear path forward. (`scripts/hooks/spec-before-code-gate.mjs`)
+- **Attention summaries across 7 skills**: bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder now have `⚠️ 当前 Task 行动摘要` in first-principles.md (recency/primacy bias optimization).
+- **Self-review for bug-fixer and release-builder**: Hot-context self-review step added to bug-fixer (between fix and verification) and release-builder (between smoke test and release).
+- **Anti-ai-slop guardrails restored**: 7 removed check items restored across 5 skills — "伪造 specs", "重复劳动", "唯编译论", "编造证据", "缓存污染", "无变更日志", "密度与功能一致". Plus "跳过复现" added to bug-fixer.
+- **2.5-layer-manifesto §5.6**: New section on model-to-model 2.5 layer — how the anchor principle extends from person→model to model→model intermediate representations. (EN + ZH)
 
 ### v1.38.0 — 2026-06-06
 - **Template marketplace**: `forge-scaffold init <template> [dir]` — 4 project starters (next-fullstack, cli-tool, express-api, electron-app) with skeleton files + loadout recommendations. `forge-scaffold list-templates` to browse.
