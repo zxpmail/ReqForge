@@ -46,6 +46,25 @@ if exist "%CLAUDE_PROJECT_DIR%\scripts\check-karpathy-violations.bat" (
     call "%CLAUDE_PROJECT_DIR%\scripts\check-karpathy-violations.bat"
 )
 
+REM README version order check — verify first version listed matches package.json
+for /f "tokens=2 delims=: " %%v in ('findstr /r "version" "%CLAUDE_PROJECT_DIR%\package.json" 2^>nul') do set PKG_VER=%%v
+set PKG_VER=!PKG_VER:"=!
+for %%R in ("%CLAUDE_PROJECT_DIR%\README.md" "%CLAUDE_PROJECT_DIR%\README.zh-CN.md") do (
+    if exist %%R (
+        for /f "tokens=3 delims=v " %%v in ('findstr /r "^### v" %%R 2^>nul') do (
+            set FIRST_VER=%%v
+            goto :readme_check_%%~nxR
+        )
+        :readme_check_%%~nxR
+        if not "!FIRST_VER!"=="" if not "!PKG_VER!"=="" (
+            if not "!FIRST_VER!"=="!PKG_VER!" (
+                echo WARNING: %%~nxR first version !FIRST_VER! does not match package.json !PKG_VER! >&2
+            )
+        )
+        set FIRST_VER=
+    )
+)
+
 exit /b 0
 
 :check_yolo
