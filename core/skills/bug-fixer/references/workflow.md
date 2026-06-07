@@ -30,8 +30,29 @@
         - After Stage 3: "Hypothesis: XX, verification method: XX, result: XX"
         - After Stage 4: "Fixed. Modified XX. Compilation passed, function verification passed, regression verification passed"
 
+    [Self-Review Phase]
+        After the fix is generated, before external verification, perform a **single self-review pass** on the fix.
+        Since the fix was just written, attention is still hot — issues are easier to spot now than after switching context.
+
+        **自审指令**:
+        ```
+        请评审你刚才生成的修复，重点关注：
+        1. 根因追踪了还是只修了症状？
+        2. 是否有硬编码值或幻觉 API（不存在的函数/参数）？
+        3. 错误处理是否完整（不是空 catch 或只 console.error）？
+        4. 是否添加了能捕获此 bug 的回归测试？
+        5. 同类型模式在代码中已 grep 检查？
+        ```
+
+        **处理结果**：
+        - 发现可自修问题 → 在当前回合直接修复
+        - 发现需要重构的问题 → 记录，交给后续验证处理
+        - 无问题 → 继续下一步
+
+        **注意**：自审不是验证的替代品。它的目的是用热上下文修复那些浅层问题（幻觉参数、空 catch、漏了回归测试）。
+
     [Verification Phase]
-        Must execute after the fix is complete:
+        Must execute after the self-review:
         1. Compile verification: tsc --noEmit zero errors
         2. Function verification: follow reproduction steps, bug no longer appears
         3. Regression verification: related features (list specific feature names) still work normally

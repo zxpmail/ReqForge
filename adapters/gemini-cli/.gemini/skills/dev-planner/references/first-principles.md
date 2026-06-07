@@ -30,3 +30,15 @@
     - Not allowed: "add appropriate error handling" — specify what errors and how to handle them
     - Not allowed: "implement related features" — list specific feature names and behaviors
     - Each Task description must be complete enough for an engineer without project context to read and execute
+
+**⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
+1. 读 Product-Spec.md 提取所有功能描述
+2. WebSearch 确认技术栈最新版本/已知问题
+3. 按依赖顺序排列 Phase（基础设施优先）
+4. 每个 Phase 有 Primary Metric（可验证成功标准）
+5. 每个 Task ≤15 min 编码量
+6. 显式文件路径（非「实现聊天功能」）
+7. 无占位符（TBD /「待定」不允许）
+8. 善刀而藏之
+
+**Transformer 注意力说明**：本文开头（Verifiable Principle、Dependency Order）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

@@ -21,3 +21,15 @@
 - For external libraries, APIs, frameworks → WebSearch to confirm latest versions and usage
 - When recommending solutions to the user → WebSearch to confirm feasibility and current best practices
 - When uncertain → search first, don't answer from memory
+
+**⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
+1. 用户表达想法 → 问清问题/场景/目标用户
+2. WebSearch 竞品 + 行业方案
+3. AI-First：能 AI 做的先用 AI
+4. Simplicity-First：每个功能问「真的需要吗」
+5. 构思三关：问题真实/方案对准/证据足够
+6. 结构化输出：问题/方案/功能/UI/数据
+7. 自审：检查冗余和错误
+8. 善刀而藏之
+
+**Transformer 注意力说明**：本文开头（AI-First、Simplicity-First）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。
