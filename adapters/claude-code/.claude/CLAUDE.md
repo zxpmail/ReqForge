@@ -35,6 +35,7 @@
     /change-manager — Auto: existing Product-Spec + user adds feature or brownfield change (changes/ propose→apply→verify→archive). Manual: /change-manager
     /design-brief-builder — Manual only. Prereq: Product-Spec.md
     /design-maker — Manual only. Prereq: Product-Spec.md + Design-Brief.md
+    /domain-mapper — Auto: user wants to research/study a domain, industry, technology, codebase, or competitor. Phrases like "帮我研究", "分析一下这个行业", "我不太熟悉", "画一张行业地图". Manual: /domain-mapper. Prereq: none
     /dev-planner — Manual only. Prereq: Product-Spec.md
     /dev-builder — Manual only. Prereq: Product-Spec.md + DEV-PLAN.md. One Phase per invocation.
     /bug-fixer — Auto: user reports error/bug/breakage, or code-review found issues. Prereq: project code

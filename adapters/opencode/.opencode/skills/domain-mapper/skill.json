@@ -1,0 +1,33 @@
+{
+  "name": "domain-mapper",
+  "version": "1.0.0",
+  "description": "Used when the user wants to research a domain, industry, market, technology, codebase, or competitor — turning scattered/unstructured information into a structured Markdown database (domain-map.md). Triggers on phrases like '帮我研究一下', '分析一下这个', '我不太熟悉这个领域'.",
+  "tier": "interactive",
+  "intent": "Transform unstructured domain knowledge into a structured Markdown database through guided multi-step research: scope definition → snapshot (domain-map.md) → optional deep-dive (competitor-analysis.md) → optional social analysis (social-analysis.md) → synthesis",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "User wants to research a new domain, industry, or market",
+      "User asks to analyze a competitor or technology",
+      "User says they are unfamiliar with a domain and need context",
+      "User wants a structured map of a codebase or tech stack"
+    ],
+    "manual": true,
+    "command": "/domain-mapper"
+  },
+  "prerequisites": {
+    "files": [],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "domain-mapper",
+      "description": "Research and map a domain to structured Markdown database",
+      "argument-hint": "[domain/industry/technology to research]"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

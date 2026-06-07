@@ -54,6 +54,7 @@ A flat list obscures these differences. A three-tier taxonomy makes it immediate
 | product-spec-builder | interactive | Guided Socratic Q&A to elicit and refine requirements; produces Product-Spec.md as structured output |
 | dev-planner | interactive | Transforms Spec → phased DEV-PLAN through analysis conversation; bridges requirements to execution |
 | design-brief-builder | interactive | Interview on visual constraints and brand context to produce Design-Brief.md |
+| domain-mapper | interactive | Guided multi-step research pipeline: scattershot domain info → structured Markdown database (domain-map.md); pauses at each step for user direction |
 | bug-fixer | interactive | Systematic diagnostic conversation to identify root cause; then applies targeted fix |
 | request-dispatcher | interactive | Analyzes ambiguous request + project state → recommends target Skill through conversational routing |
 | skill-builder | interactive | Guided conversation to scaffold a new Skill; validates structure and fills compliance gaps |

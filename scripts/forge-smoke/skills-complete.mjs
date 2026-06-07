@@ -10,7 +10,7 @@ const r = createRunner("skills-complete");
 const skillsDir = path.join(ROOT, "core", "skills");
 const names = listSkillNames(skillsDir);
 
-r.assert(names.length === 13, `expected 13 skills, found ${names.length}: ${names.join(", ")}`);
+r.assert(names.length === 14, `expected 14 skills, found ${names.length}: ${names.join(", ")}`);
 
 const result = spawnSync(
   process.execPath,
