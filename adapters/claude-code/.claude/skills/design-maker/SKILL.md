@@ -319,7 +319,18 @@ requires: []
             Execute `references/design-self-critique.md` and `design-brief-builder/references/anti-ai-slop-checklist.md`
             Revise mockups if any dimension ≤2; record scores in the completion report
 
-        Step 3c: Cross-comparison (Multi-Alternative Mode only)
+        Step 3c: Generate UI-Spec.md (required)
+            Generate `UI-Spec.md` in the project root — a structured YAML spec covering:
+            - Page purpose, target user, primary action
+            - Sections with priority, component type, states
+            - Responsive layout rules (desktop / tablet / mobile)
+            - Reusable component list
+            - Acceptance criteria
+            Use `core/templates/ui-spec-template.md` as the format reference.
+            This file is consumed by dev-builder to avoid guessing structure from pixels.
+            Do NOT commit UI-Spec.md to the repo (it is regenerated on each design cycle).
+
+        Step 3d: Cross-comparison (Multi-Alternative Mode only)
             Produce a cross-comparison table:
             | Dimension | Alt A | Alt B | ... |
             | Approach | ... | ... | ... |
