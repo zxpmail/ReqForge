@@ -19,6 +19,6 @@
 2. specs.md 是增量 diff，非 Product-Spec.md 全文拷贝
 3. Proposal 有 IN/OUT + Verify By → apply 后每条验收对应测试证据
 4. Archive：Delta 合并到 Product-Spec + CHANGELOG，附回滚策略
-5. 验证回归测试通过
+5. 回归测试通过 + 善刀而藏之
 
 **Transformer 注意力说明**：本文开头（Agree Before Build、One Change One Folder）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

@@ -25,5 +25,6 @@
 3. 检查安全维度（XSS/路径泄露/凭据硬编码）+ 回归范围
 4. 每条 finding 有 file:line + 场景 + 影响 + 建议
 5. 编译通过 ≠ 功能正确——审查逻辑而非编译
+6. 按严重度排序 findings
 
 **Transformer 注意力说明**：本文开头（Zero Trust Claims、Evidence is King）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

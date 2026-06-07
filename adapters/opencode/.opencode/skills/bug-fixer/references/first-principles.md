@@ -17,6 +17,6 @@
 2. 追踪数据流找根因，非修症状
 3. 最小修复，不翻新
 4. 验证（编译+功能+回归）+ 贴出证据
-5. 同类扫描（grep 同模式的其他位置）
+5. 同类扫描 + 更新 memory
 
 **Transformer 注意力说明**：本文开头（Systematic Debugging、No Guessing）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

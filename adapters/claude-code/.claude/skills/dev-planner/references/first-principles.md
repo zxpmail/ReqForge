@@ -34,8 +34,7 @@
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
 1. 读 Spec 提取功能，WebSearch 确认技术栈
 2. 按依赖顺序排列 Phase，每 Phase 有 Primary Metric
-3. 每个 Task ≤15 min + 显式文件路径
-4. 无占位符（TBD 不允许）
-5. 验证：每个 Phase 可编译可运行
+3. 每个 Task ≤15 min + 显式文件路径，无占位符
+4. 验证：每个 Phase 可编译可运行
 
 **Transformer 注意力说明**：本文开头（Verifiable Principle、Dependency Order）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

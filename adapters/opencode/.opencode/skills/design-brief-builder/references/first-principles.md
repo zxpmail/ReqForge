@@ -20,7 +20,6 @@
 1. Choices First：给 2-3 个具体选项
 2. Reference Anchoring + 抽象感受→具体 token
 3. 状态覆盖（空/加载/错误）+ 密度与功能一致
-4. 列出已排除的 slop 模式
-5. 可执行性：开发能据此组件化
+4. 列出已排除的 slop 模式 + 可执行性检查
 
 **Transformer 注意力说明**：本文开头（Choices First、Reference Anchoring）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。
