@@ -1,6 +1,8 @@
 # First Principles — Domain Mapper
 
 > 不是行业研究工具。是**非结构化信息 → 结构化 Markdown 数据库**的通用管线。
+>
+> 延伸阅读：领域快照之上的跨文档模式识别 → [core/docs/bottleneck-pattern.md](../../../docs/bottleneck-pattern.md)（HBM / 公众号 / ReqForge 三个案例共享的瓶颈结构）
 
 ## 核心理念
 

@@ -2,6 +2,8 @@
 
 Karpathy 四原则的 ReqForge 落地版。每个 Skill 执行时须遵守。
 
+> **为什么这样设计？** → 三领域交叉验证的瓶颈模式分析：[bottleneck-pattern.md](bottleneck-pattern.md)
+
 ---
 
 ## 何时可简化
