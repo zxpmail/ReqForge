@@ -2,6 +2,23 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.40.0] - 2026-06-07
+
+### Added
+- **UI-Spec.md — model-to-model 2.5 layer**: design-maker auto-generates a structured UI spec (component hierarchy, states, responsive rules, reusable components) during verification. dev-builder reads it at startup, skipping the guess-from-pixels trap. Ephemeral (regenerated each design cycle), not committed. (`core/templates/ui-spec-template.md`, `core/skills/design-maker/SKILL.md`, `core/skills/dev-builder/references/first-principles.md`)
+- **Machine gate recovery options**: When spec-before-code, plan-before-build, idea-validation, implementer, or hallucination gates block a write, the block message now includes numbered recovery steps ("1. Run /product-spec-builder → 2. Fill criteria → 3. Confirm → 4. Retry"). (`scripts/hooks/spec-before-code-gate.mjs`, `core/hooks/hallucination-gate.sh`, `core/hooks/hallucination-gate.bat`)
+- **Attention summaries across skills**: 7 skills (bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder) now have `⚠️ 当前 Task 行动摘要` in their first-principles.md, leveraging recency/primacy bias. (`core/skills/*/references/first-principles.md`)
+- **Self-review step for bug-fixer and release-builder**: Hot-context self-review between fix generation and verification (bug-fixer) / between smoke test and release confirmation (release-builder). (`core/skills/bug-fixer/references/workflow.md`, `core/skills/release-builder/references/workflow.md`)
+- **design-maker first-principles.md**: New file with 出图前行动摘要 covering component hierarchy, state coverage, responsive rules, priority labeling, and UI-Spec generation. (`core/skills/design-maker/references/first-principles.md`)
+
+### Changed
+- **Anti-ai-slop-checklist guardrails restored**: 7 removed check items restored across change-manager, code-review, bug-fixer, release-builder, and design-brief-builder. (`core/skills/*/references/anti-ai-slop-checklist.md`)
+- **bug-fixer anti-ai-slop-checklist**: Added "跳过复现" check. (`core/skills/bug-fixer/references/anti-ai-slop-checklist.md`)
+- **design-maker SKILL.md**: Fixed typo "Anti-ai-slip" → "Anti-ai-slop". (`core/skills/design-maker/SKILL.md`)
+
+### Docs
+- **2.5-layer-manifesto extension**: New §5.6 "Model-to-Model 2.5 Layer" added to both Chinese and English versions, explaining how the 2.5-layer principle extends from person→model anchors to model→model intermediate representations. (`docs/2.5-layer-manifesto.md`, `docs/2.5-layer-manifesto.en.md`)
+
 ## [v1.39.0] - 2026-06-06
 
 ### Added
