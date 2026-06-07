@@ -34,6 +34,8 @@
 
 **File Slimming**: ≤300 lines/file; prefer simple over abstract.
 
+**Build Speed (Inner Loop)**: Full build + verify chain under 1 minute. If it takes longer, the Task is too coarse — split it. Fast feedback is the agent's verification loop; without it the agent works blind.
+
 **AI Only for Judgment Tasks**: Loops/conditions/arithmetic → plain code.
 
 **Token Budget Awareness**: Low context → suggest `/clear` + checkpoint commit.
