@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.40.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.41.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -61,6 +61,12 @@ flowchart LR
 
 ## 近期更新
 
+### v1.41.0 — 2026-06-07 — Workflow Cookbook + GC 审计路由
+
+- **Workflow Cookbook**：`core/docs/workflow-cookbook.md` — 7 道菜谱（熔断循环 / 分头扫 / 对抗验证 / Judge Panel / Pipeline / 完整性审查 / 重试 Guard）+ 3 个组装示例（审查→修复、需求→交付、反馈→进化）。含平台兼容性表。
+- **GC 审计路由**：新增平台无关决策表，按变更影响范围分配审计深度（Minor GC / Major GC / Full GC）。定义变更跟踪卡（Card Table）和假设注册表格式。
+- **Agent Dispatch 平台无关化提案**（Issue #6）：code-review workflow 中写死的 4 个审查 agent 名称需抽取为平台无关 reference 文档。
+
 ### v1.40.0 — 2026-06-07 — 模型间 2.5 层
 
 - **UI-Spec.md 模型间 2.5 层**：design-maker 自动生成结构化 UI 规范，dev-builder 启动时读取——避免从像素猜结构。临时产物，不提交。
@@ -77,6 +83,11 @@ flowchart LR
 - **自审回合**：bug-fixer（修复生成与验证之间）、release-builder（smoke test 与发布确认之间）新增热上下文自审步骤。 (`core/skills/bug-fixer/references/workflow.md`, `core/skills/release-builder/references/workflow.md`)
 - **Anti-ai-slop 兜底检查恢复**：7 项被删除的检查项恢复至 change-manager、code-review、bug-fixer、release-builder、design-brief-builder。 (`core/skills/*/references/anti-ai-slop-checklist.md`)
 - **2.5 层宣言延伸**：新增 §5.6 "模型间 2.5 层"（中英文），阐述 2.5 层原理从人→模型锚点延伸至模型→模型中间表示。 (`docs/2.5-layer-manifesto.md`)
+
+### v1.41.0 — 2026-06-07
+- **Workflow Cookbook**：`core/docs/workflow-cookbook.md` — 7 道菜谱（熔断循环 / Multi-Modal Sweep / Adversarial Verify / Judge Panel / Pipeline / Completeness Critic / Retry Guard）+ 3 个完整组装示例（审查→修复、需求→交付、反馈→进化）。含 Claude Code / OpenCode / Cursor / Gemini CLI 平台兼容表。
+- **GC 审计路由**：`core/skills/dev-builder/references/gc-audit-routing.md` — 平台无关决策表，按变更影响范围分配审计深度：Minor GC（≤2 Phase）/ Major GC（≤5 Phase）/ Full GC（改全局状态）。定义变更跟踪卡（Card Table）格式和假设注册表。已接入 dev-builder first-principles.md 行动摘要第 5 步。
+- **Agent Dispatch 平台无关化提案**（Issue #6）：code-review workflow.md 中写死的并行审查分发（code-reviewer-bug/security/types/design）需抽取为平台无关 reference 文档。
 
 ### v1.39.0 — 2026-06-06 — 2.5 层发布
 

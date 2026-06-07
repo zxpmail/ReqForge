@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.40.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.41.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -62,6 +62,12 @@ flowchart LR
 
 ## What's New
 
+### v1.41.0 — 2026-06-07 — Workflow Cookbook + GC Audit Routing
+
+- **Workflow cookbook**: `core/docs/workflow-cookbook.md` — 7 recipes (熔断循环 / Multi-Modal Sweep / Adversarial Verify / Judge Panel / Pipeline / Completeness Critic / Retry Guard) + 3 assembly examples (review→fix, spec→ship, feedback→evolve).
+- **GC audit routing**: New platform-agnostic decision table for audit depth allocation — Minor/Major/Full GC based on change impact scope. Includes change tracking card (Card Table) and assumption registry formats.
+- **Agent dispatch platform-agnostic proposal**: Issue #6 — moving hardcoded code-review agent names from workflow.md to platform-independent reference docs.
+
 ### v1.40.0 — 2026-06-07 — Model-to-Model 2.5 Layer
 
 - **Model-to-model 2.5 layer** (UI-Spec.md): design-maker auto-generates a structured UI spec; dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral — regenerated each design cycle, not committed.
@@ -77,6 +83,11 @@ flowchart LR
 - **Self-review for bug-fixer and release-builder**: Hot-context self-review step added to bug-fixer (between fix and verification) and release-builder (between smoke test and release).
 - **Anti-ai-slop guardrails restored**: 7 removed check items restored across 5 skills — "伪造 specs", "重复劳动", "唯编译论", "编造证据", "缓存污染", "无变更日志", "密度与功能一致". Plus "跳过复现" added to bug-fixer.
 - **2.5-layer-manifesto §5.6**: New section on model-to-model 2.5 layer — how the anchor principle extends from person→model to model→model intermediate representations. (EN + ZH)
+
+### v1.41.0 — 2026-06-07
+- **Workflow cookbook**: `core/docs/workflow-cookbook.md` — 7 recipes covering熔断循环, Multi-Modal Sweep, Adversarial Verify, Judge Panel, Pipeline, Completeness Critic, and Retry Guard. Includes 3 assembly examples showing agent + skill + workflow script integration. Platform compatibility table for Claude Code / OpenCode / Cursor / Gemini CLI.
+- **GC audit routing**: `core/skills/dev-builder/references/gc-audit-routing.md` — platform-agnostic decision table mapping change impact to audit depth: Minor GC (≤2 phases) / Major GC (≤5 phases) / Full GC (global state change). Change tracking card (Card Table) format and assumption registry defined. Wired into dev-builder first-principles.md 行动摘要 as Step 5.
+- **Agent dispatch platform-agnostic proposal** (Issue #6): code-review workflow.md's hardcoded parallel agent dispatch (code-reviewer-bug/security/types/design) to be extracted into a platform-independent reference doc.
 
 ### v1.39.0 — 2026-06-06 — The 2.5 Layer Release
 

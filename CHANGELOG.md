@@ -2,6 +2,18 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.41.0] - 2026-06-07
+
+### Added
+- **Workflow cookbook**: `core/docs/workflow-cookbook.md` — 7 recipes (熔断循环/分头扫/对抗验证/Judge Panel/Pipeline/完整性审查/重试Guard) + 3 assembly examples (review→fix, spec→ship, feedback→evolve). Platform compatibility table included.
+- **GC audit routing**: `core/skills/dev-builder/references/gc-audit-routing.md` — platform-agnostic decision table for audit depth allocation (Minor/Major/Full GC based on change impact). Change tracking card (Card Table) and assumption registry formats defined.
+- **dev-builder first-principles.md**: Step 5 added to 行动摘要 — Phase complete → read gc-audit-routing.md → execute audit per decision table.
+
+### Docs
+- **Agent dispatch platform-agnostic proposal**: Issue #6 — moving hardcoded code-review agent dispatch (code-reviewer-bug/security/types/design) from workflow.md to platform-agnostic reference docs.
+- **Published dev.to**: "Smarter Resource Allocation Beats Stronger Models" — English article on attention allocation (GC audit) + sample allocation (2.5 layer anchors).
+- **Zhihu drafts**: 3 Chinese articles prepared (2.5-layer manifesto, triple allocation, benchmark).
+
 ## [v1.40.0] - 2026-06-07
 
 ### Added
