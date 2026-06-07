@@ -76,10 +76,16 @@ flowchart LR
 - **Design-maker 多案并行 + 梯度精修**：`--alternatives N` 生成多套设计方案并输出对比表。梯度精修分 3 层交付（布局 → 交互 → 边界场景）。
 - **Benchmark 对比**：旧方式（9 条规则）vs 新方式（3 个锚点）在 todo-cli 上的实测对比。两组测试全部通过；新方式代码减少 15%。
 - **设计哲学文章**：`docs/2.5-layer-manifesto.md`（中文）和 `.en.md`（英文）——完整阐述锚点设计哲学、选锚点实操指南、常见问题。
+- **Dashboard Web UI**：决定不做——Forge 用户活在 CLI 里。
+
+### v1.40.0 — 2026-06-07 — 模型间 2.5 层
+
 - **UI-Spec.md 模型间 2.5 层**：design-maker 自动生成结构化 UI 规范，dev-builder 启动时读取——避免从像素猜结构。临时产物，不提交。
 - **机器门恢复选项**：门拦截时附带编号恢复步骤，不再是死路。
-- **2.5 层宣言 §5.6 延伸**：模型间 2.5 层——锚点原理从人→模型延伸到模型→模型中间表示。
-- **Dashboard Web UI**：决定不做——Forge 用户活在 CLI 里。
+- **注意力摘要推广至 7 个 Skill**：行动摘要 + 近因/首因偏差优化。
+- **自审回合**：bug-fixer 和 release-builder 新增热上下文自审步骤。
+- **Anti-ai-slop 兜底检查恢复**：5 个技能 7 项被删除的检查项恢复。
+- **2.5 层宣言 §5.6 延伸**：模型间 2.5 层原理阐述（中英文）。
 
 ### v1.38.0 — 2026-06-06
 - **模板市场**：`forge-scaffold init <template> [dir]` — 4 个项目模板（next-fullstack、cli-tool、express-api、electron-app），附带骨架代码 + loadout 推荐。`forge-scaffold list-templates` 浏览可用模板。
