@@ -41,14 +41,10 @@
 **Sub-Agent Isolation (MANDATORY)**: Per Task, implementer sub-agent only for app `Write`/`Edit` — see `sub-agent-isolation.md`.
 
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
-1. 读当前 Phase 的 Difficulty 等级（🔴 放慢/自审/回滚就绪，🟢 快速通过）
-2. 读 Product-Spec.md 当前 Task 的功能描述
-3. 如果存在 UI-Spec.md → 读它获取页面结构（组件层级/状态/响应式），不从设计稿猜结构
-4. 扫一眼已有代码的关键文件（感知天理）
-5. RED（先写测试）→ GREEN（最小实现）→ REFACTOR（保持通过）
-6. 生成后自审（热上下文修复浅层问题）
-7. Micro-cycle verify（≤10 min，命令+结果在同一条消息）
-8. 投递给 code-reviewer
-9. 通过后 commit + 善刀而藏之
+1. 读 Difficulty（🔴 放慢/🟢 快速）+ 读 Spec + UI-Spec.md（如有）
+2. 感知天理——扫一眼已有代码风格
+3. RED（先写测试）→ GREEN（最小实现）→ REFACTOR
+4. 生成后自审 + Micro-cycle verify（≤10 min）
+5. 投递 code-review → 通过后 commit
 
 **Transformer 注意力说明**：本文开头（放下骨架、TDD）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

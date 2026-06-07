@@ -17,13 +17,10 @@
 **Don't Ask About Pixels**: Border radius, shadow intensity, spacing values — these are for the design tool and development. You only handle direction.
 
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
-1. Choices First：给 2-3 个具体选项，非开放问题
-2. Reference Anchoring：用真实产品作锚点
-3. 抽象感受 → 具体设计 token（颜色/字体/间距/圆角）
-4. 状态覆盖：空/加载/错误/权限不足
-5. Anti-Slop Review：列出已排除的 slop 模式
-6. 密度与功能一致：信息密度高时不强行留白
-7. 可执行性：开发能据此组件化
-8. 善刀而藏之
+1. Choices First：给 2-3 个具体选项
+2. Reference Anchoring + 抽象感受→具体 token
+3. 状态覆盖（空/加载/错误）+ 密度与功能一致
+4. 列出已排除的 slop 模式
+5. 可执行性：开发能据此组件化
 
 **Transformer 注意力说明**：本文开头（Choices First、Reference Anchoring）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。

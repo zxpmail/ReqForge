@@ -15,13 +15,10 @@
 **Two Plans, Two Jobs**: `changes/<name>/tasks.md` = **business task list** for this change; `DEV-PLAN.md` = **engineering Phases** for the whole product. Do not merge them into one file. `/dev-planner` fills tasks.md; `/dev-builder` executes Tasks — it does not replace `/change-manager apply`.
 
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
-1. 读 changes/ 确认无同主题进行中的变更
-2. specs.md 是增量 diff（ADDED/MODIFIED/REMOVED），非 Product-Spec.md 全文拷贝
-3. Proposal 有 IN/OUT + Verify By
-4. Apply 后 verify：每条验收标准对应测试证据
-5. Archive：Delta 合并到 Product-Spec + CHANGELOG
-6. 定义回滚策略（怎么回滚 + 几分钟 + 数据库迁移是否可逆）
-7. 验证回归测试通过
-8. 善刀而藏之
+1. 读 changes/ 确认无同主题变更
+2. specs.md 是增量 diff，非 Product-Spec.md 全文拷贝
+3. Proposal 有 IN/OUT + Verify By → apply 后每条验收对应测试证据
+4. Archive：Delta 合并到 Product-Spec + CHANGELOG，附回滚策略
+5. 验证回归测试通过
 
 **Transformer 注意力说明**：本文开头（Agree Before Build、One Change One Folder）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。
