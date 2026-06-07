@@ -81,6 +81,8 @@
 |--------|----------|
 | 跳过 propose | proposal.md 有明确的 IN/OUT |
 | 边界蠕变 | 未超出 proposal 定义的 IN 范围 |
+| 伪造 specs | specs.md 是增量 diff（ADDED/MODIFIED/REMOVED），非 Product-Spec.md 全文拷贝 |
+| 重复劳动 | 已检查 changes/ 无同主题进行中的变更 |
 | 验收敷衍 | verify.md 有具体测试输出，非"看起来正常" |
 | 遗漏回滚 | archive 前已定义回滚步骤 |
 | 悬空 archive | Product-Spec.md / CHANGELOG 已同步更新 |

@@ -67,7 +67,7 @@ requires: []
     | **Page Coverage** | Every Spec UI feature has a design page | State variants (empty/loading/error) for interactive pages |
     | **Component System** | Reusable components extracted before page composition | Design tokens for colors, typography, spacing, radius |
     | **Spec Fidelity** | Layout and content match Product-Spec.md item by item | Visual direction matches Design-Brief.md mood and notes |
-    | **Self-Critique** | references/design-self-critique.md executed (all >=3) | Anti-ai-slip checklist from design-brief-builder reviewed |
+    | **Self-Critique** | references/design-self-critique.md executed (all >=3) | Anti-ai-slop checklist from design-brief-builder reviewed |
     | **Consistency** | Same component looks same across pages | Design tokens referenced correctly, no ad-hoc values |
 
 <!-- end: design-coverage-checklist -->

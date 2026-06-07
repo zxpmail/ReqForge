@@ -97,6 +97,8 @@ echo "✅ No secrets found"
 | 唯编译论 | build 成功 + smoke test 验证核心流程 |
 | 隐私泄漏 | grep 确认无 `/Users/`、`API_KEY`、`sk-ant-` |
 | 版本错位 | package.json + CHANGELOG + git tag 三者一致 |
+| 缓存污染 | 有疑问时 rm -rf dist && rebuild，确保无可疑缓存 |
+| 无变更日志 | CHANGELOG.md 已更新发布说明 |
 | 跳过回滚 | 已定义回滚策略：方式 + 耗时 + 数据库可逆性 |
 | 依赖漏洞 | 已执行 `npm audit` 或等效检查 |
 | 环境漂移 | 非"我机器上能跑"——环境已对齐 |
