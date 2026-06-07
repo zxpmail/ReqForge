@@ -62,6 +62,14 @@ flowchart LR
 
 ## What's New
 
+### v1.40.0 — 2026-06-07 — Model-to-Model 2.5 Layer
+
+- **Model-to-model 2.5 layer** (UI-Spec.md): design-maker auto-generates a structured UI spec; dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral — regenerated each design cycle, not committed.
+- **Machine gate recovery**: When a gate blocks a write, the block message includes numbered recovery steps — no more dead ends.
+- **Attention summaries across 7 skills**: bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder now have `⚠️ 当前 Task 行动摘要` in first-principles.md.
+- **Self-review for bug-fixer & release-builder**: Hot-context self-review step added to both skills' workflows.
+- **Anti-ai-slop guardrails restored**: 7 removed items restored across 5 skills.
+
 ### v1.39.0 — 2026-06-06 — The 2.5 Layer Release
 
 **Design philosophy**: From shackles to anchors — working *with* the model's pattern-matching instead of fighting it.
@@ -78,14 +86,6 @@ flowchart LR
 - **Benchmark**: Side-by-side comparison of old anti-slop vs new anchor approach on todo-cli. Both pass all tests; new approach produces 15% shorter code.
 - **Design manifesto**: `docs/2.5-layer-manifesto.md` (Chinese) and `.en.md` (English) — full article explaining the philosophy, with anchor selection guide and troubleshooting.
 - **Dashboard Web UI**: Decision not to build — Forge users live in CLI.
-
-### v1.40.0 — 2026-06-07 — Model-to-Model 2.5 Layer
-
-- **Model-to-model 2.5 layer** (UI-Spec.md): design-maker auto-generates a structured UI spec; dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral — regenerated each design cycle, not committed.
-- **Machine gate recovery**: When a gate blocks a write, the block message includes numbered recovery steps — no more dead ends.
-- **Attention summaries across 7 skills**: bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder now have `⚠️ 当前 Task 行动摘要` in first-principles.md.
-- **Self-review for bug-fixer & release-builder**: Hot-context self-review step added to both skills' workflows.
-- **Anti-ai-slop guardrails restored**: 7 removed items restored across 5 skills.
 
 ### v1.40.0 — 2026-06-07
 - **UI-Spec.md — model-to-model 2.5 layer**: design-maker auto-generates a structured UI spec (component hierarchy, states, responsive rules, reusable components) during verification. dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral (regenerated each design cycle), not committed. (`core/templates/ui-spec-template.md`)
