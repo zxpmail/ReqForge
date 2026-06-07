@@ -25,7 +25,7 @@ case "$TOOL_NAME" in
       case "$PARENT_DIR" in
         *"/node_modules/"*|*"/.pnpm/"*) exit 0 ;;
         *)
-          echo "{\"decision\":\"block\",\"reason\":\"Hallucination Gate: target directory '$PARENT_DIR' does not exist. Verify the correct path before writing.\"}"
+          echo "{\"decision\":\"block\",\"reason\":\"Hallucination Gate: target directory '$PARENT_DIR' does not exist. Verify the correct path before writing.\\n\\n─── Recovery Options ───\\n1. Run 'ls' to list existing directories in the parent\\n2. Correct the file_path to use an existing directory\\n3. If the directory should be created, use 'mkdir -p' first\\n4. Then retry this write.\"}"
           exit 0
           ;;
       esac

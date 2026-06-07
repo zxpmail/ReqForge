@@ -35,5 +35,5 @@ if exist "%PARENT%" exit /b 0
 echo "%PARENT%" | findstr /i "node_modules" >nul && exit /b 0
 echo "%PARENT%" | findstr /i ".pnpm" >nul && exit /b 0
 
-echo {"decision":"block","reason":"Hallucination Gate: target directory '%PARENT%' does not exist. Verify the correct path before writing."}
+echo {"decision":"block","reason":"Hallucination Gate: target directory '%PARENT%' does not exist. Verify the correct path before writing.\n\n─── Recovery Options ───\n1. Run 'dir' to list existing directories in the parent\n2. Correct the file_path to use an existing directory\n3. If the directory should be created, use 'mkdir' first\n4. Then retry this write."}
 exit /b 0

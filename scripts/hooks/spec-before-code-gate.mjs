@@ -115,6 +115,15 @@ function block(tool, rel, reason) {
   console.log(JSON.stringify({ decision: "block", reason: `${reason} Cannot ${tool} '${rel}'.` }));
 }
 
+function blockWithRecovery(tool, rel, reason, recovery) {
+  console.log(
+    JSON.stringify({
+      decision: "block",
+      reason: `${reason} Cannot ${tool} '${rel}'.\n\n─── Recovery Options ───\n${recovery}`,
+    }),
+  );
+}
+
 async function main() {
   const raw = await readStdin();
   if (!raw.trim()) return;
@@ -140,42 +149,56 @@ async function main() {
   const planFile = path.join(projectDir, "DEV-PLAN.md");
 
   if (!fs.existsSync(specFile)) {
-    block(tool, rel, "Spec-Before-Code Gate: Product-Spec.md is missing. Run /product-spec-builder first.");
+    blockWithRecovery(
+      tool,
+      rel,
+      "Spec-Before-Code Gate: Product-Spec.md is missing.",
+      "1. Run /product-spec-builder to generate Product-Spec.md\n2. Fill in § Idea Stage Exit Criteria with real answers\n3. Confirm spec with user → writes .forge/spec-confirmed.json\n4. Then retry this write.",
+    );
     return;
   }
   if (!hasIdeaStageExitCriteria(specFile)) {
-    block(
+    blockWithRecovery(
       tool,
       rel,
-      "Idea Validation Gate: Product-Spec.md must include completed § Idea Stage Exit Criteria (all three questions with real answers, not [TBD]). Run /product-spec-builder.",
+      "Idea Validation Gate: Product-Spec.md must include completed § Idea Stage Exit Criteria (all three questions with real answers, not [TBD]).",
+      "1. Update Product-Spec.md § Idea Stage Exit Criteria:\n   - 1. Problem real and specific (who, how often)\n   - 2. Solution addresses the validated problem (how it fixes)\n   - 3. Enough signal to justify building (evidence type)\n2. Confirm spec with user → writes .forge/spec-confirmed.json\n3. Then retry this write.",
     );
     return;
   }
   if (!fs.existsSync(MARKERS.specConfirmed)) {
-    block(
+    blockWithRecovery(
       tool,
       rel,
-      "Spec-Before-Code Gate: Spec not confirmed. Save Product-Spec.md and complete user confirm (writes .forge/spec-confirmed.json).",
+      "Spec-Before-Code Gate: Spec not confirmed.",
+      "1. Present Product-Spec.md to user for review\n2. User confirms → writes .forge/spec-confirmed.json\n   (content: {\"confirmed\":true,\"confirmedAt\":\"<ISO>\"})\n3. Then retry this write.",
     );
     return;
   }
   if (!fs.existsSync(planFile)) {
-    block(tool, rel, "Plan-Before-Build Gate: DEV-PLAN.md is missing. Run /dev-planner first.");
+    blockWithRecovery(
+      tool,
+      rel,
+      "Plan-Before-Build Gate: DEV-PLAN.md is missing.",
+      "1. Run /dev-planner to generate DEV-PLAN.md with MVP Scope\n2. Confirm plan with user → writes .forge/plan-confirmed.json\n3. Then retry this write.",
+    );
     return;
   }
   if (!fs.existsSync(MARKERS.planConfirmed)) {
-    block(
+    blockWithRecovery(
       tool,
       rel,
-      "Plan-Before-Build Gate: Plan not confirmed. Save DEV-PLAN.md and complete user confirm (writes .forge/plan-confirmed.json).",
+      "Plan-Before-Build Gate: Plan not confirmed.",
+      "1. Present DEV-PLAN.md to user for review\n2. User confirms → writes .forge/plan-confirmed.json\n   (content: {\"confirmed\":true,\"confirmedAt\":\"<ISO>\"})\n3. Then retry this write.",
     );
     return;
   }
   if (!fs.existsSync(MARKERS.implementerSession)) {
-    block(
+    blockWithRecovery(
       tool,
       rel,
-      "Implementer Gate: No active implementer session (.forge/implementer-session.json). Dispatch implementer sub-agent per dev-builder Task; implementer creates marker at task start.",
+      "Implementer Gate: No active implementer session (.forge/implementer-session.json).",
+      "1. Dispatch implementer sub-agent per dev-builder Task workflow\n2. Implementer creates .forge/implementer-session.json at task start\n3. Then retry this write from within the implementer session.",
     );
     return;
   }
