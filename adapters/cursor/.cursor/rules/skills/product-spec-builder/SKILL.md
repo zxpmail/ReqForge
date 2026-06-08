@@ -72,7 +72,8 @@ requires: []
     │   ├── requirements-dimensions.md
     │   ├── conversation-strategy.md
     │   ├── hard-gate-rationalization.md
-    │   └── pm-frameworks-*.md
+    │   ├── pm-frameworks-*.md
+    │   └── multi-stakeholder-review.md  # 四视角扫描 + 输出格式
     └── templates/
         ├── product-spec-template.md
         └── changelog-template.md
@@ -92,6 +93,7 @@ requires: []
     **Cross-phase redundancy**: Questions asked in Exploration may be re-asked verbatim in Clarifying or Refinement. Track what's been covered: after each phase, note covered topics; before next phase, scan that list. Do not ask what was already asked.
     **Single-pass validation is insufficient**: Step 6 Final Validation must run **at least 3 full scan→fix cycles**, not just "until clean". One pass misses 30-50% of issues. Use an explicit counter and re-read the full Spec each cycle — incremental diffs accumulate blind spots.
     **No cross-phase dedup before generation**: Exploration, Clarifying, and Refinement phases each produce interview notes with overlapping content. Before Document Generation, do a structured dedup pass across all phases' notes — merge duplicate requirements, flag contradictions across phases, consolidate scattered decisions. Redundancy baked into the Spec is much harder to remove after generation.
+    **Multi-Stakeholder Review ≠ Step 7**: Pre-Spec review checks "should we build this?" Step 7 checks "is the Spec sound?" Do not merge them — they serve different gates.
 
 <!-- end: gotchas -->
 <!-- begin: output-artifacts -->
@@ -156,7 +158,8 @@ requires: []
 <!-- end: quality-rubric -->
 <!-- begin: workflow-0-to-1-mode -->
 [Workflow (0-to-1 Mode)]
-    从零到一完整阶段（探索 → 澄清 → 细化 → 生成 Spec）。
+    从零到一完整阶段（探索 → 澄清 → 细化 → 多视角评审 → 生成 Spec）。
+    默认含 Multi-Stakeholder Review（Quick Mode 跳过，用户可手动跳过）。
     **进入 0-to-1 后按步执行** `references/workflow-0-to-1.md`
 
 <!-- end: workflow-0-to-1-mode -->

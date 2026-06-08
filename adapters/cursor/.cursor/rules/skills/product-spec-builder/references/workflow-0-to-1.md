@@ -139,8 +139,43 @@
 
         Step 5: Sufficiency check
             Cross-reference [Information Sufficiency Criteria]
-            "Must Satisfy" all met → propose generation
+            "Must Satisfy" all met → proceed to Multi-Stakeholder Review
             Not met → continue asking, don't indulge
+
+    [Multi-Stakeholder Review Phase]
+        Goal: Before writing Spec, run a structured one-pass scan across four stakeholder
+        perspectives to surface hidden assumptions and blind spots. This is not a PK debate —
+        it is a formatted checklist that either passes or produces blocking items to resolve.
+        **Not a replacement for Step 7 Council** — they serve different gates.
+
+        **When to skip**: Quick Mode, Iteration Mode, user says "skip review", or a complete
+        brief was already provided. In 0-to-1 full workflow, default on — user may opt out.
+
+        Step 1: Prepare consensus summary
+            Distill Refinement output into a compact `## Review Input` block (problem, users,
+            MVP scope, tech direction, key assumptions).
+
+        Step 2: Run four perspectives
+            Execute `references/multi-stakeholder-review.md`:
+            - Business Lens
+            - Technical Lens
+            - Experience Lens
+            - Scope / Risk Lens
+            Each returns: ok / clarify / blocked + key finding.
+
+        Step 3: Synthesize
+            Chairman (main Agent) produces the `## Stakeholder Review Summary` table:
+            perspective × verdict × finding + recommended action.
+
+        Step 4: Resolve blocking items
+            Present to user. Blocking must be resolved before proceeding.
+            If user resolution requires a re-scan, re-run affected perspective(s) only.
+            Hard cap: max 1 re-scan (initial + at most one).
+
+        Step 5: Either proceed or stop
+            - Blocked items resolved → Document Generation Phase
+            - Blocked items cannot resolve → stop; mark Spec as blocked
+            - No blocking items → Document Generation Phase (findings feed into Spec)
 
     [Document Generation Phase]
         Goal: Output a usable Product Spec file
