@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "skill": "domain-mapper",
+  "description": "Judge configuration for skill workflow quality evaluation",
+  "rubric": {
+    "dimensions": [
+      {
+        "id": "structure",
+        "name": "结构完整性",
+        "weight": 10,
+        "scoring": "1-10",
+        "description": "domain-map.md 有标题、时间戳、分节（玩家/技术栈/趋势等）；SKILL.md 工作流步骤清晰"
+      },
+      {
+        "id": "specificity",
+        "name": "可执行具体性",
+        "weight": 20,
+        "scoring": "1-10",
+        "description": "研究输出有具体实体名、数据点或来源标注；域过宽时强制收窄而非泛泛而谈"
+      },
+      {
+        "id": "failure_mode",
+        "name": "失败模式编码",
+        "weight": 15,
+        "scoring": "1-10",
+        "description": "源不可靠时标注 ⚠️；已知盲区单独列出；老化地图有提醒"
+      },
+      {
+        "id": "anti_patterns",
+        "name": "反例完备性",
+        "weight": 10,
+        "scoring": "1-10",
+        "description": "不混淆 product-spec、不输出无来源断言、不把过宽域原样输出"
+      },
+      {
+        "id": "workflow_quality",
+        "name": "工作流质量与可重复性",
+        "weight": 30,
+        "scoring": "1-10",
+        "description": "L1/L2/L3 深度选择合理；每步暂停让用户确认；同一 prompt 多次执行结构稳定"
+      },
+      {
+        "id": "effectiveness",
+        "name": "实测效果与基线对比",
+        "weight": 15,
+        "scoring": "1-10",
+        "description": "对比无 Skill 时输出是否更结构化、更可引用、更适合后续写 Spec"
+      }
+    ]
+  },
+  "judge_count": 1,
+  "test_prompt_source": "cases.json"
+}

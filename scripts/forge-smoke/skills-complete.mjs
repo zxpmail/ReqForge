@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * skills-complete — 13 个 Skill 目录齐，且 validate-skill 通过
+ * skills-complete — 14 个 Skill 目录齐，且 validate-skill 通过
  */
 import { spawnSync } from "child_process";
 import path from "path";

@@ -6,12 +6,12 @@
 
 ---
 
-## 当前进度（架构 Phase 1–16 · v1.35.12）
+## 当前进度（架构 Phase 1–16 · v1.42.0）
 
 | Phase | 状态 | 备注 |
 |-------|------|------|
 | 1 项目骨架 | ✅ 完成 | `core/`、`adapters/`、`scripts/` |
-| 2 核心技能 | ✅ 完成 | 12 个 Skill（含 change-manager）+ skill.json + commands 层 |
+| 2 核心技能 | ✅ 完成 | 14 个 Skill（含 change-manager、domain-mapper、request-dispatcher）+ skill.json + commands 层 |
 | 3 Sub-agent | ✅ 完成 | 10 个 Agent（含 4 个专项 reviewer、planner、test-writer） |
 | 4 文档模板 | ✅ 完成 | 含 memory / agents 模板 |
 | 5 Claude Code 适配 | ✅ 完成 | |

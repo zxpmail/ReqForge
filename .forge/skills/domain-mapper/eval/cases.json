@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "skill": "domain-mapper",
+  "description": "Output quality — after a manual or agent run, place artifacts under artifacts_root then run pnpm skill-eval",
+  "artifacts_root": "eval-output",
+  "cases": [
+    {
+      "id": "domain-map-l2-snapshot",
+      "split": "train",
+      "prompt": "用户说「帮我研究一下 AI 推理芯片这个赛道，我不熟悉」，无 Product-Spec，无 domain-map.md。",
+      "artifacts_subdir": "domain-mapper-ai-inference",
+      "assertions": {
+        "fileExists": [
+          "domain-map.md"
+        ],
+        "maxBytes": [
+          { "file": "domain-map.md", "max": 50000 }
+        ],
+        "regexChecks": [
+          {
+            "id": "has-timestamp-header",
+            "file": "domain-map.md",
+            "mustMatch": "生成时间|Generated|Last updated"
+          },
+          {
+            "id": "has-source-attribution",
+            "file": "domain-map.md",
+            "mustMatch": "来源|Source|⚠️"
+          }
+        ]
+      }
+    }
+  ]
+}

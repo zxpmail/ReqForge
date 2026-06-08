@@ -3,20 +3,34 @@ import { existsSync, mkdirSync, rmSync, writeFileSync, readFileSync } from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
 
-// Dynamic import of .mjs module
-const mod = await import("../forge-hashline.mjs");
-const {
-  computeHash,
-  computeFileHash,
-  computeBlockHash,
-  hashMatches,
-  safeReplaceFile,
-  safeReplaceBlock,
-  generateManifest,
-  parseBriefHashes,
-  verifyBrief,
-  applyBrief,
-} = mod;
+type HashlineMod = typeof import("../forge-hashline.mjs");
+
+let computeHash: HashlineMod["computeHash"];
+let computeFileHash: HashlineMod["computeFileHash"];
+let computeBlockHash: HashlineMod["computeBlockHash"];
+let hashMatches: HashlineMod["hashMatches"];
+let safeReplaceFile: HashlineMod["safeReplaceFile"];
+let safeReplaceBlock: HashlineMod["safeReplaceBlock"];
+let generateManifest: HashlineMod["generateManifest"];
+let parseBriefHashes: HashlineMod["parseBriefHashes"];
+let verifyBrief: HashlineMod["verifyBrief"];
+let applyBrief: HashlineMod["applyBrief"];
+
+beforeAll(async () => {
+  const mod = await import("../forge-hashline.mjs");
+  ({
+    computeHash,
+    computeFileHash,
+    computeBlockHash,
+    hashMatches,
+    safeReplaceFile,
+    safeReplaceBlock,
+    generateManifest,
+    parseBriefHashes,
+    verifyBrief,
+    applyBrief,
+  } = mod);
+});
 
 const TMP = join(tmpdir(), "forge-hashline-test");
 

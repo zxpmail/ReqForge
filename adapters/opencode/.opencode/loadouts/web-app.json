@@ -19,7 +19,8 @@
     "code-review",
     "release-builder",
     "feedback-writer",
-    "evolution-engine"
+    "evolution-engine",
+    "request-dispatcher"
   ],
   "agents": [
     "implementer",

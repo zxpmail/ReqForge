@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * adapters-sync — core/skills 与三端 adapter 技能目录名一致
+ * adapters-sync — core/skills 与四端 adapter 技能目录名一致
  */
 import path from "path";
 import { ROOT, createRunner, listSkillNames, ADAPTER_SKILL_PATHS } from "./lib.mjs";

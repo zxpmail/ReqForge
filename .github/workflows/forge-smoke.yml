@@ -8,22 +8,28 @@ on:
     paths:
       - "core/**"
       - "adapters/**"
-      - "scripts/forge-smoke/**"
-      - "scripts/validate-skill.mjs"
+      - "scripts/**"
+      - "tests/**"
+      - "vitest.config.ts"
+      - "tsconfig.json"
       - "test-demo/**"
       - ".github/workflows/**"
       - "CLAUDE.md"
       - "package.json"
+      - "pnpm-lock.yaml"
   pull_request:
     paths:
       - "core/**"
       - "adapters/**"
-      - "scripts/forge-smoke/**"
-      - "scripts/validate-skill.mjs"
+      - "scripts/**"
+      - "tests/**"
+      - "vitest.config.ts"
+      - "tsconfig.json"
       - "test-demo/**"
       - ".github/workflows/**"
       - "CLAUDE.md"
       - "package.json"
+      - "pnpm-lock.yaml"
 
 jobs:
   smoke:
@@ -38,6 +44,15 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm build
+
+      - name: Unit tests
+        run: pnpm test
 
       - name: Run forge-smoke
         run: node scripts/forge-smoke/run-all.mjs

@@ -112,7 +112,7 @@ flowchart LR
 
 ### v1.38.0 — 2026-06-06
 - **模板市场**：`forge-scaffold init <template> [dir]` — 4 个项目模板（next-fullstack、cli-tool、express-api、electron-app），附带骨架代码 + loadout 推荐。`forge-scaffold list-templates` 浏览可用模板。
-- **Gemini CLI 适配**：`adapters/gemini-cli/` — 第 4 个 AI 客户端适配器。`.gemini/GEMINI.md` 主控文件，`agents/` 子智能体，`pnpm sync` 同步 Skill。4 个适配器共 944 个文件同步一致。
+- **Gemini CLI 适配**：`adapters/gemini-cli/` — 第 4 个 AI 客户端适配器。`.gemini/GEMINI.md` 主控文件，`agents/` 子智能体，`pnpm sync` 同步 Skill。4 个适配器共 1052 个文件同步一致。
 
 ### v1.36.0 — 2026-06-04
 - **全部 13 个 Skill 的 Quality Rubric**：领域特定 8-16 项评分矩阵，含 ship threshold 和 critical-item-zero 规则。`pnpm validate-skill --score core/skills/<name>` 计算评分。

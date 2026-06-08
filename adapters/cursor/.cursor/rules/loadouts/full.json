@@ -21,7 +21,8 @@
     "release-builder",
     "skill-builder",
     "feedback-writer",
-    "evolution-engine"
+    "evolution-engine",
+    "request-dispatcher"
   ],
   "agents": [
     "implementer",

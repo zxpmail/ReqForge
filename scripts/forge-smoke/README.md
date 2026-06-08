@@ -25,8 +25,8 @@ CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 | 7 | `skill-fixtures.mjs` | `tests/skill-fixtures/` 静态探针对照 SKILL 正文 |
 | 8 | `skill-bypass.mjs` | 带 command 的 Skill 在 `CLAUDE.md` Dispatch 可发现（P2 静态） |
 | 9 | `loadouts-valid.mjs` | 4 个 loadout JSON 合法、引用存在、`scenarios[]` 合法 |
-| 10 | `adapters-sync.mjs` | `core/skills` 与三端 adapter 技能目录名一致 |
-| 11 | `skills-complete.mjs` | 12 个 Skill + `validate-skill.mjs` 通过 |
+| 10 | `adapters-sync.mjs` | `core/skills` 与四端 adapter 技能目录名一致 |
+| 11 | `skills-complete.mjs` | 14 个 Skill + `validate-skill.mjs` 通过 |
 | 12 | `test-demo-golden-path.mjs` | `test-demo/` 黄金路径：Spec/Plan + todo-cli build/test/CLI 冒烟 |
 
 跳过第 12 项（离线/无 pnpm）：`SKIP_TEST_DEMO_GOLDEN=1 pnpm forge-smoke`

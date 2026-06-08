@@ -112,7 +112,7 @@ flowchart LR
 
 ### v1.38.0 — 2026-06-06
 - **Template marketplace**: `forge-scaffold init <template> [dir]` — 4 project starters (next-fullstack, cli-tool, express-api, electron-app) with skeleton files + loadout recommendations. `forge-scaffold list-templates` to browse.
-- **Gemini CLI adapter**: `adapters/gemini-cli/` — 4th AI client adapter. `.gemini/GEMINI.md` control file, subagents in `agents/`, skills via `pnpm sync`. All 944 files in sync across 4 adapters.
+- **Gemini CLI adapter**: `adapters/gemini-cli/` — 4th AI client adapter. `.gemini/GEMINI.md` control file, subagents in `agents/`, skills via `pnpm sync`. All 1052 files in sync across 4 adapters.
 
 ### v1.37.0 — 2026-06-05
 - **forge-evolve**: `pnpm forge-evolve status|scan|propose|apply` — evolution engine loop closure. Backfilled 3 feedback entries with failure_class and scores. Level 2 (occurrences >= 3) and Level 3 (low avg scores) candidate detection. Wired into forge-loop completion paths.

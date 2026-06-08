@@ -48,6 +48,30 @@ function run(cmd, opts = {}) {
   }
 }
 
+/** Run tsc --noEmit; return combined stdout/stderr (cross-platform, no shell `|| true`). */
+function runTscNoEmit() {
+  try {
+    return execSync("npx tsc --noEmit", {
+      cwd: ROOT,
+      encoding: "utf-8",
+      timeout: 120000,
+      stdio: "pipe",
+    }).trim();
+  } catch (e) {
+    const out = [e.stdout, e.stderr].filter(Boolean).join("\n").trim();
+    return out || String(e.message ?? e);
+  }
+}
+
+/** Best-effort command; swallow failure (replaces shell `cmd || true`). */
+function runOptional(cmd, opts = {}) {
+  try {
+    return execSync(cmd, { cwd: ROOT, encoding: "utf-8", timeout: 30000, stdio: "pipe", ...opts }).trim();
+  } catch {
+    return "";
+  }
+}
+
 function findTestCommand() {
   if (existsSync(join(ROOT, "pnpm-lock.yaml"))) return "pnpm test";
   if (existsSync(join(ROOT, "package-lock.json"))) return "npm test";
@@ -94,7 +118,7 @@ function cmdDiagnose() {
 
   // 3. Check TypeScript compilation
   if (existsSync(join(ROOT, "tsconfig.json"))) {
-    const tscResult = run("npx tsc --noEmit 2>&1 || true");
+    const tscResult = runTscNoEmit();
     const hasErrors = tscResult.includes("error");
     console.log(`[TSC]   ${hasErrors ? `Errors found (${tscResult.split("error").length - 1})` : "Clean compilation"}`);
     if (hasErrors) {
@@ -176,7 +200,7 @@ function cmdBisect(goodCommit, badCommit) {
   console.log(`Test cmd:    ${testCmd}\n`);
 
   // Ensure we're on the bad commit before starting
-  run(`git checkout ${badCommit} 2>&1 || true`);
+  runOptional(`git checkout ${badCommit}`);
 
   try {
     const result = execSync(`git bisect start ${badCommit} ${goodCommit} 2>&1`, {
@@ -344,7 +368,7 @@ function cmdClassify(traceName) {
 
     // Append tsc output if available
     if (existsSync(join(ROOT, "tsconfig.json"))) {
-      const tscOut = run("npx tsc --noEmit 2>&1 || true");
+      const tscOut = runTscNoEmit();
       if (tscOut.includes("error")) {
         input += "\n" + tscOut;
       }

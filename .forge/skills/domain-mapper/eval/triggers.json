@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "skill": "domain-mapper",
+  "description": "Trigger accuracy — run prompts in your AI client with/without this Skill; static check: pnpm skill-eval domain-mapper",
+  "cases": [
+    {
+      "id": "should-trigger-research-domain",
+      "prompt": "帮我研究一下 AI 推理芯片这个赛道，我不太熟悉。",
+      "should_trigger": true,
+      "note": "明确的研究/域映射请求，应路由到 domain-mapper"
+    },
+    {
+      "id": "should-trigger-competitor-map",
+      "prompt": "拆一下国内 SaaS CRM 的竞争格局，有哪些玩家？",
+      "should_trigger": true,
+      "note": "竞品/行业地图请求"
+    },
+    {
+      "id": "should-not-product-spec",
+      "prompt": "我想做一个 todo 应用，帮我写需求文档。",
+      "should_trigger": false,
+      "note": "产品需求应走 product-spec-builder，不是域研究"
+    },
+    {
+      "id": "should-not-bug-fix",
+      "prompt": "登录接口 500 了，帮我修一下。",
+      "should_trigger": false,
+      "note": "明确 bug 报告应走 bug-fixer"
+    }
+  ]
+}

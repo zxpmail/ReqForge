@@ -23,6 +23,9 @@ changes/*
 !changes/archive/
 !changes/archive/**
 
+# Skill-eval build artifacts (keep markdown assertions only)
+eval-output/**/.next/
+
 # Forge local config
 .forge/config
 .forge/spec-confirmed.json
