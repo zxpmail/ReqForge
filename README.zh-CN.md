@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.42.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.43.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -60,6 +60,12 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.43.0 — 2026-06-08 — Multi-Stakeholder Review + forge-bug-fix bisect/classify
+
+- **Spec Multi-Stakeholder Review**：写 Spec 前的结构化四视角扫描（业务/技术/体验/范围与风险），每个视角产出 ok/clarify/blocked 判定。0-to-1 工作流默认开启。
+- **forge-bug-fix bisect**：自动 git bisect 定位首次引入 bug 的提交。
+- **forge-bug-fix classify**：基于模式匹配的错误分类（编译/运行时/逻辑/数据），含严重度检测和修复建议。
 
 ### v1.42.0 — 2026-06-08 — /domain-mapper 技能
 

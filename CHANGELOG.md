@@ -2,6 +2,21 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.43.0] - 2026-06-08
+
+### Added
+- **Multi-Stakeholder Review phase**: New pre-Spec structured review in product-spec-builder 0-to-1 workflow. Four perspectives (Business, Technical, Experience, Scope/Risk) each return verdict (ok/clarify/blocked). Hard cap at 1 re-scan. Default on for 0-to-1, skipped in Quick/Iteration, user may opt out. (`core/skills/product-spec-builder/references/multi-stakeholder-review.md`)
+- **forge-bug-fix bisect + classify**: Auto git bisect to locate first bad commit; error classification by pattern matching (compile/runtime/logic/data categories) with severity detection and fix recommendations. (`scripts/forge-bug-fix.mjs`)
+- **forge-bug-fix wired into bug-fixer workflow**: Dependency Check + Workflow now reference forge-bug-fix diagnose/trace/bisect/classify/verify.
+
+### Fixed
+- **package.json version alignment**: Bumped to v1.42.0 to match CHANGELOG/README (was stuck at 1.41.0).
+- **forge-change.test.ts**: Added execSync timeout, DRY cleanup logic.
+- **forge-bug-fix.test.ts**: Fixed vitest timeout shorter than execSync timeout (Windows ETIMEDOUT).
+
+### Sync
+- **Adapter sync**: Propagated bug-fixer workflow changes, forge-bug-fix references, and multi-stakeholder-review to all 4 adapters (claude-code, cursor, gemini-cli, opencode).
+
 ## [v1.42.0] - 2026-06-08
 
 ### Added

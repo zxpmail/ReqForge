@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.42.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.43.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -61,6 +61,12 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.43.0 — 2026-06-08 — Multi-Stakeholder Review + forge-bug-fix bisect/classify
+
+- **Spec Multi-Stakeholder Review**: Pre-writing structured scan across Business, Technical, Experience, and Scope/Risk perspectives — each returning ok/clarify/blocked verdicts. 0-to-1 workflow default on.
+- **forge-bug-fix bisect**: Auto git bisect to find the commit that introduced a bug.
+- **forge-bug-fix classify**: Pattern-based error classification (compile/runtime/logic/data) with severity and fix recommendations.
 
 ### v1.42.0 — 2026-06-08 — /domain-mapper Skill
 
