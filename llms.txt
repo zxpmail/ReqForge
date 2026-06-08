@@ -1,6 +1,6 @@
 # ReqForge
 
-> From requirements to shippable products (primary). Open-source Agent Harness for Claude Code, Cursor, OpenCode (mechanism).
+> From requirements to shippable products (primary). Open-source Agent Harness for Claude Code, Cursor, OpenCode, and Gemini CLI.
 
 ## One-Line Definition
 
@@ -14,60 +14,41 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 
 ## How It Works
 
-### 5-Stage Workflow
+### Workflow (0-to-1)
 
-1. **Requirements** → `/product-spec-builder` → Product-Spec.md (optional [pm-skills](https://github.com/phuryn/pm-skills)-inspired references: OST, JTBD, assumptions, competitors; CoT templates for reasoning before Spec lock)
-2. **Design Brief** → `/design-brief-builder` → Design-Brief.md (optional)
-3. **Development Plan** → `/dev-planner` → DEV-PLAN.md
-4. **Implementation** → `/dev-builder` → project code (one Phase per invocation)
-5. **Review & Release** → `/code-review`, `/bug-fixer`, `/release-builder`
+0. **Domain research (optional)** → `/domain-mapper` → domain-map.md (orthogonal to spec→build)
+1. **Requirements** → `/product-spec-builder` → Product-Spec.md (Multi-Stakeholder Review default; optional PM frameworks + CoT)
+2. **Design Brief (optional)** → `/design-brief-builder` → Design-Brief.md
+3. **Design mockups (optional)** → `/design-maker` → mockups + ephemeral UI-Spec.md
+4. **Development Plan** → `/dev-planner` → DEV-PLAN.md
+5. **Implementation** → `/dev-builder` → project code (one Phase per invocation)
+6. **Review & Release** → `/code-review`, `/bug-fixer` (+ `pnpm forge-bug-fix`), `/release-builder`
 
-### Brownfield (existing Product-Spec)
+### Routing & brownfield
 
-`/change-manager` — one feature per `changes/<name>/`: propose → apply → verify → archive. See `core/docs/openspec-comparison.md` vs OpenSpec CLI.
+- `/request-dispatcher` — when static Skill dispatch cannot pick one target
+- `/change-manager` — one feature per `changes/<name>/`: propose → apply → verify → archive
 
 ### Core Architecture
 
-- **12 Skills** — Independent methodology modules (product-spec-builder, change-manager, dev-builder, bug-fixer, code-review, etc.). Each includes `[First Principles]`, `[Gotchas]`, and command layers where applicable.
-- **10 Sub-Agents** — Context-isolated workers (implementer, planner, code-reviewer + 4 specialists, feedback-observer, evolution-runner, test-writer). Fresh instance per task.
-- **10 default hooks** — hallucination-gate, pre-commit-check, phase-exit-guard, stop-gate, retry-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, memory-guard (auto-push optional; Windows: settings.windows.json).
-- **3-Tier Memory** — project-memory.md (permanent architecture facts), decisions-log.md (ADR records), task-history.md (30-entry rolling log).
-- **Evolution Loop** — feedback-observer records failures → evolution-engine detects patterns (3+ occurrences) → generates rule upgrade proposals → skill-builder implements.
-- **Dependency Graph** — `scripts/dependency-graph.ts` for file-level blast-radius analysis before code changes.
-- **Loadouts** — `full`, `web-app`, `cli-tool`, `minimal` bundles of skills/agents/hooks. Scenario picker: `core/docs/loadout-scenarios.md`.
-
-### Maintainer gates
-
-- `pnpm forge-smoke` — 12 static smokes (~15–30s; skill-fixtures, skill-bypass, test-demo golden path). CI: `.github/workflows/forge-smoke.yml` (push/PR only, no cron).
-- Platform policy: `core/docs/platform-compliance.md`.
-
-### Key Principles
-
-- **Glue Code First**: Use SDK built-in → open-source library → AI prompt → custom code only for business logic.
-- **Substitute, Don't Mock**: Real substitutes (H2, local FS) over mock data — local failures must predict production failures.
-- **Tool AI-fication**: CLI > MCP Server > Skill > GUI — scripts are AI's hands.
-- **Verification Is Evidence**: "It's done" without on-the-spot verification command output is an invalid declaration.
-- **Minimum Runnable Subset**: Each Phase delivers a core path that works end-to-end, even if features are incomplete.
-- **Agent execution discipline (8 rules)**: Plan → approve → act; read before edit; minimal diff; diff approval before commit; tests before done — `core/docs/session-execution-discipline.md` (session summary in forge-bootstrap; full text in agents-template).
+- **14 Skills** — product-spec-builder, change-manager, design-brief-builder, design-maker, dev-planner, dev-builder, bug-fixer, code-review, release-builder, domain-mapper, request-dispatcher, feedback-writer, evolution-engine, skill-builder
+- **10 Sub-Agents** — implementer, planner, code-reviewer + 4 specialists, feedback-observer, evolution-runner, test-writer
+- **10 default hooks** — hallucination-gate, pre-commit-check, phase-exit-guard, stop-gate, retry-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, memory-guard
+- **3-Tier Memory** — project-memory.md, decisions-log.md, task-history.md
+- **Evolution Loop** — feedback → pattern detection (3+) → proposals → skill-builder
+- **Loadouts** — `full`, `web-app`, `cli-tool`, `minimal` — see `core/docs/loadout-scenarios.md`
 
 ### Supported Clients
 
-3 adapter formats — copy into your project and open your AI client:
+| Client | Adapter | Control file |
+|--------|---------|--------------|
+| Claude Code | `adapters/claude-code/` | `.claude/CLAUDE.md` |
+| Cursor | `adapters/cursor/` | `.cursor/rules/` |
+| OpenCode | `adapters/opencode/` | `.opencode/AGENTS.md` |
+| Gemini CLI | `adapters/gemini-cli/` | `.gemini/GEMINI.md` |
 
-| Client | Adapter Location | Format |
-|--------|-----------------|--------|
-| Claude Code | `adapters/claude-code/` | `.claude/` directory |
-| Cursor | `adapters/cursor/` | `.cursor/rules/` directory |
-| OpenCode | `adapters/opencode/` | `.opencode/` directory |
+Install: `pnpm forge-install <client> --target <dir>` · Sync core: `pnpm sync`
 
-One-command install: `pnpm forge-install <client> --target <dir>` (also writes `.forge/quickref.md`)
+Docs: README.md · README.zh-CN.md · core/docs/ · Product-Spec.md
 
-Sync after editing core: `pnpm sync`
-
-Comparisons: `core/docs/openspec-comparison.md`, `core/docs/superpowers-comparison.md`, `core/docs/shuge-openspec-superpowers-comparison.md`, `core/docs/security-guidance-comparison.md`, `core/docs/open-design-comparison.md`, `core/docs/openhuman-comparison.md`, `core/docs/context7-comparison.md`, `core/docs/rtk-comparison.md`, `core/docs/nanochat-comparison.md`, `core/docs/autoresearch-comparison.md`, `core/docs/llm-council-comparison.md`, `core/docs/jobs-comparison.md`, `core/docs/llm-wiki-comparison.md`, `core/docs/founders-playbook-comparison.md`, `core/docs/loadout-scenarios.md`, `core/docs/platform-compliance.md`, `core/docs/session-execution-discipline.md`
-
-Install also writes: `.forge/quickref.md`, `.forge/dev-map.md`, `.forge/security-guidance.md`
-
-Gates: Product-Spec.md + § Idea Stage Exit Criteria + spec-confirmed → DEV-PLAN.md (MVP Scope) + plan-confirmed → implementer-session (app code)
-
-Version: v1.29.0
+Version: v1.43.0

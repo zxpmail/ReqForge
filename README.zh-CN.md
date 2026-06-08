@@ -4,7 +4,7 @@
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
-**开源 Agent Harness** — 适配 Claude Code、Cursor、OpenCode：用 Skill、钩子、记忆与进化约束模型，产出可验证、可回滚，而不只靠对话。
+**开源 Agent Harness** — 适配 Claude Code、Cursor、OpenCode、Gemini CLI：用 Skill、钩子、记忆与进化约束模型，产出可验证、可回滚，而不只靠对话。
 
 **一句话理解 Harness**：大模型像 CPU，Harness 像操作系统——负责编排、记忆、护栏和验收，让结果**能交付**，而不止于聊完。ReqForge 专注 **需求→可发布产品**（规格、代码、发布），不做「关窗后替你发周报」一类消费级生活自动化。[成熟度自检清单 →](core/docs/harness-maturity-checklist.md) · [七层对照 →](core/docs/agent-harness-seven-layer-map.md) · [Loadout 场景选型 →](core/docs/loadout-scenarios.md) · [平台合规 →](core/docs/platform-compliance.md)
 
@@ -18,10 +18,16 @@
 flowchart LR
   subgraph inputs [你]
     Idea[想法 / 变更需求]
+    DomainIn[陌生领域]
+    Ambig[模糊请求]
   end
 
   subgraph forge [ReqForge Harness]
+    Route[request-dispatcher]
+    Domain[domain-mapper]
     Spec[product-spec-builder]
+    DBr[design-brief-builder]
+    DMk[design-maker]
     Chg[change-manager]
     Plan[dev-planner]
     Build[dev-builder]
@@ -35,9 +41,16 @@ flowchart LR
     CC[Claude Code]
     CU[Cursor]
     OC[OpenCode]
+    GC[Gemini CLI]
   end
 
+  Ambig --> Route
+  DomainIn --> Domain
+  Domain -.-> Spec
   Idea --> Spec
+  Spec --> DBr
+  DBr --> DMk
+  DMk -.-> Plan
   Spec --> Plan
   Idea --> Chg
   Chg --> Plan
@@ -79,25 +92,12 @@ flowchart LR
 
 ### v1.40.0 — 2026-06-07 — 模型间 2.5 层
 
-- **UI-Spec.md 模型间 2.5 层**：design-maker 自动生成结构化 UI 规范，dev-builder 启动时读取——避免从像素猜结构。临时产物，不提交。
-- **机器门恢复选项**：门拦截时附带编号恢复步骤，不再是死路。
-- **注意力摘要推广至 7 个 Skill**：行动摘要 + 近因/首因偏差优化。
-- **自审回合**：bug-fixer 和 release-builder 新增热上下文自审步骤。
-- **Anti-ai-slop 兜底检查恢复**：5 个技能 7 项被删除的检查项恢复。
-- **2.5 层宣言 §5.6 延伸**：模型间 2.5 层原理阐述（中英文）。
-
-### v1.40.0 — 2026-06-07
 - **UI-Spec.md 模型间 2.5 层**：design-maker 验证阶段自动生成结构化 UI 规范（组件层级、状态覆盖、响应式规则、可复用组件），dev-builder 启动时读取，避免从像素猜结构。临时产物，不提交。 (`core/templates/ui-spec-template.md`)
 - **机器门恢复选项**：spec-before-code、plan-before-build、idea-validation、implementer、hallucination 拦截写操作时，附带编号恢复步骤。 (`scripts/hooks/spec-before-code-gate.mjs`)
-- **注意力摘要推广至 7 个 Skill**：bug-fixer、code-review、change-manager、release-builder、dev-planner、product-spec-builder、design-brief-builder 的 first-principles.md 新增行动摘要。 (`core/skills/*/references/first-principles.md`)
-- **自审回合**：bug-fixer（修复生成与验证之间）、release-builder（smoke test 与发布确认之间）新增热上下文自审步骤。 (`core/skills/bug-fixer/references/workflow.md`, `core/skills/release-builder/references/workflow.md`)
-- **Anti-ai-slop 兜底检查恢复**：7 项被删除的检查项恢复至 change-manager、code-review、bug-fixer、release-builder、design-brief-builder。 (`core/skills/*/references/anti-ai-slop-checklist.md`)
-- **2.5 层宣言延伸**：新增 §5.6 "模型间 2.5 层"（中英文），阐述 2.5 层原理从人→模型锚点延伸至模型→模型中间表示。 (`docs/2.5-layer-manifesto.md`)
-
-### v1.41.0 — 2026-06-07
-- **Workflow Cookbook**：`core/docs/workflow-cookbook.md` — 7 道菜谱（熔断循环 / Multi-Modal Sweep / Adversarial Verify / Judge Panel / Pipeline / Completeness Critic / Retry Guard）+ 3 个完整组装示例（审查→修复、需求→交付、反馈→进化）。含 Claude Code / OpenCode / Cursor / Gemini CLI 平台兼容表。
-- **GC 审计路由**：`core/skills/dev-builder/references/gc-audit-routing.md` — 平台无关决策表，按变更影响范围分配审计深度：Minor GC（≤2 Phase）/ Major GC（≤5 Phase）/ Full GC（改全局状态）。定义变更跟踪卡（Card Table）格式和假设注册表。已接入 dev-builder first-principles.md 行动摘要第 5 步。
-- **Agent Dispatch 平台无关化提案**（Issue #6）：code-review workflow.md 中写死的并行审查分发（code-reviewer-bug/security/types/design）需抽取为平台无关 reference 文档。
+- **注意力摘要推广至 7 个 Skill**：bug-fixer、code-review、change-manager、release-builder、dev-planner、product-spec-builder、design-brief-builder 的 first-principles.md 新增行动摘要。
+- **自审回合**：bug-fixer（修复与验证之间）、release-builder（smoke test 与发布确认之间）新增热上下文自审步骤。
+- **Anti-ai-slop 兜底检查恢复**：7 项被删除的检查项恢复至 5 个 Skill。
+- **2.5 层宣言 §5.6**：模型间 2.5 层原理阐述（中英文）。 (`docs/2.5-layer-manifesto.md`)
 
 ### v1.39.0 — 2026-06-06 — 2.5 层发布
 
@@ -400,7 +400,7 @@ Forge 采用**复制即用**：不向 npm 发布包，你的业务项目里也**
 
 | 必需 | 说明 |
 |------|------|
-| **AI 客户端**（任选其一） | [Claude Code](https://docs.anthropic.com/en/docs/claude-code)、[Cursor](https://cursor.com)、[OpenCode](https://opencode.ai) |
+| **AI 客户端**（任选其一） | [Claude Code](https://docs.anthropic.com/en/docs/claude-code)、[Cursor](https://cursor.com)、[OpenCode](https://opencode.ai)、[Gemini CLI](https://geminicli.com/) |
 | **Git** | 用于克隆本仓库；你自己的项目可选用 Git |
 | **项目目录** | 空目录或已有代码均可；Forge 文件放在项目根目录 |
 
@@ -525,18 +525,21 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 ### 步骤 4 — 在 AI 客户端中首次使用
 
-1. 用 AI 客户端打开**你的项目目录**（已包含 `.claude/`、`.cursor/` 或 `.opencode/`）。
+1. 用 AI 客户端打开**你的项目目录**（已包含 `.claude/`、`.cursor/`、`.opencode/` 或 `.gemini/`）。
 2. 新建对话。Forge 会根据现有文件自动判断进度（`Product-Spec.md`、`DEV-PLAN.md`、代码、`memory/` 等）。
 3. 用自然语言描述产品想法，或调用 Skill：
 
-| 目标 | Skill 命令（Claude Code / OpenCode） | 产出 |
-|------|--------------------------------------|------|
-| 需求收集 | `/product-spec-builder` | `Product-Spec.md` |
+| 目标 | Skill 命令（Claude Code / OpenCode / Gemini CLI） | 产出 |
+|------|---------------------------------------------------|------|
+| 模糊请求路由 | `/request-dispatcher` | 推荐目标 Skill |
+| 领域研究（可选，陌生领域） | `/domain-mapper` | `domain-map.md`（及可选竞品/社媒分析） |
+| 需求收集 | `/product-spec-builder` | `Product-Spec.md`（含 Multi-Stakeholder Review） |
 | 设计规范（可选） | `/design-brief-builder` | `Design-Brief.md` |
+| 设计稿（可选） | `/design-maker` | 设计稿 + `UI-Spec.md`（临时，不提交） |
 | 开发计划 | `/dev-planner` | `DEV-PLAN.md` |
 | 存量功能增量（已有 Spec） | `/change-manager propose <名称>` → apply → verify → archive | `changes/<名称>/` → `changes/archive/` |
 | 编码实现 | `/dev-builder` | 代码 + 自动创建 `memory/` |
-| Bug 修复 | 描述问题（可自动触发 `/bug-fixer`） | 修复 + 审查闭环 |
+| Bug 修复 | 描述问题（可自动触发 `/bug-fixer`；`pnpm forge-bug-fix` bisect/classify） | 修复 + 审查闭环 |
 | 构建发布 | `/release-builder` | 打包 / 部署检查清单 |
 
 **Cursor**：`.cursor/rules/` 规则会自动加载；在对话中说明要执行的 Skill（如「执行 product-spec-builder」），或使用客户端自带的 Skill 入口。
@@ -552,7 +555,7 @@ my-app/
 ├── .claude/                    # 或 .cursor/ 或 .opencode/  ← 适配层
 │   ├── CLAUDE.md               # 控制文件（OpenCode 为 AGENTS.md）
 │   ├── settings.json           # 10 个钩子（Unix 用 .sh）；Windows 请复制 settings.windows.json
-│   ├── skills/                 # 12 个 Skill + commands/
+│   ├── skills/                 # 14 个 Skill + commands/
 │   ├── agents/                 # 10 个 Sub-Agent
 │   ├── hooks/                  # .sh + .bat 钩子脚本
 │   ├── loadouts/               # full | web-app | cli-tool | minimal
@@ -663,7 +666,7 @@ pnpm preflight --strict             # 警告也视为失败
 │  ├─ test-writer        为工具/脚本生成测试                   │
 │  └─ planner            分析 Spec，拆分 Phase，制定计划        │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 12 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
+│  Skills × 14 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
 │  在 Agent 行动前注入方法论和标准                              │
 ├─────────────────────────────────────────────────────────────┤
 │  钩子 + 审查循环（传感器/反馈控制）                          │ ← 检查层
@@ -742,21 +745,23 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 分工（主 Session vs implementer）、反模式与测试分层：[session-execution-discipline.md](core/docs/session-execution-discipline.md)。人类一页速查：`.forge/quickref.md`（`pnpm forge-install` 写入）。自检清单：[harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md)。
 
-### 引导层 — 12 个 Skill
+### 引导层 — 14 个 Skill
 
 每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔。每个 Skill 包含 `[Gotchas]` 章节记录常见陷阱与实战教训：
 
 | Skill | 职责 |
 | ------------------------ | -------------------------------------------------------------------------------------- |
-| **product-spec-builder** | 需求收集。多轮访谈产出 Product-Spec.md；可选 PM 框架（OST、JTBD、假设、竞品）与 CoT 模板（选型/边界/自质疑）。支持迭代与 Quick Mode。 |
+| **product-spec-builder** | 需求收集。Multi-Stakeholder Review 四视角扫描 + 多轮访谈产出 Product-Spec.md；可选 PM 框架（OST、JTBD、假设、竞品）与 CoT 模板。支持迭代与 Quick Mode。 |
 | **change-manager** | 存量项目增量变更。每个功能一个 `changes/<name>/` 目录：提议 → 实现 → 验收 → 归档（对齐 OpenSpec 思路，见 [openspec-comparison](core/docs/openspec-comparison.md)）。 |
 | **design-brief-builder** | 设计语言。将模糊描述（"暗色主题，简约"）量化为具体方向：调色板、交互风格、信息密度。 |
-| **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿。 |
+| **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿；验证阶段产出临时 `UI-Spec.md` 供 dev-builder 读取。 |
 | **dev-planner** | 开发计划。分析依赖关系，拆分为多个阶段，输出分阶段开发计划。 |
 | **dev-builder** | 编码实现。将工作拆分为 Task——每个 Task 走"编码 → 审查 → 修复 → 提交"闭环。 |
-| **bug-fixer** | 四阶段系统调试。不要猜测，不要盲目尝试：收集证据 → 分析模式 → 提出假设 → 修复。 |
+| **bug-fixer** | 四阶段系统调试 + `pnpm forge-bug-fix`（bisect / classify / trace / verify）。不要猜测：收集证据 → 分析模式 → 提出假设 → 修复。 |
 | **code-review** | 并行 Agent 审查——4 个专业 Agent（design、bug、security、types）并发执行，置信度聚合（≥0.6 确认，0.3-0.6 疑似）。 |
 | **release-builder** | 构建与部署。内置隐私审计和冒烟测试。 |
+| **domain-mapper** | 领域映射（**独立于** spec→build 管线）。行业/技术/代码库/市场 → 结构化 `domain-map.md`；L1/L2/L3 深度。进入陌生领域写 Spec 前可选。 |
+| **request-dispatcher** | 模糊请求路由。静态 dispatch 无法唯一匹配时，分析意图 + 项目状态 → 推荐目标 Skill（非每轮必调）。 |
 | **feedback-writer** | 记录用户纠正和反馈为结构化文件。为进化引擎提供数据。 |
 | **evolution-engine** | 扫描积累的反馈，识别模式（3 次以上出现），生成升级规则或优化技能的提案。 |
 | **skill-builder** | 使用项目模板从头创建新的 Skill 定义。由进化提案或手动调用触发。 |
@@ -855,10 +860,11 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 
 ## 工作流程
 
-1. **描述你的想法** — `/product-spec-builder` 多轮访谈（或快速模式一句话）。想法模糊时，可选 **PM 发现**（OST、假设）与 **CoT** 模板，先理清再写 Spec，不写业务代码。
+0. **领域研究（可选）** — 进入陌生行业/技术栈 → `/domain-mapper` → `domain-map.md`，再写 Spec（独立于主链路，可与步骤 1 并行）
+1. **描述你的想法** — `/product-spec-builder` 多轮访谈（或快速模式一句话）。0-to-1 默认 **Multi-Stakeholder Review** 四视角扫描；想法模糊时，可选 **PM 发现**（OST、假设）与 **CoT** 模板，先理清再写 Spec，不写业务代码。
 2. **生成 Spec** — 输出 `Product-Spec.md`（可含 JTBD、指标、竞品、假设等可选章节）→ 用户确认 → `.forge/spec-confirmed.json`
 3. **设计简报（可选）** — 调用 /design-brief-builder
-4. **设计稿（可选）** — 调用 /design-maker
+4. **设计稿（可选）** — 调用 /design-maker（产出临时 `UI-Spec.md` 供 dev-builder 读取）
 5. **开发计划** — 调用 /dev-planner，输出 DEV-PLAN.md
 6. **构建** — 调用 /dev-builder，逐个完成每个 Phase 的 Task
 7. **记忆自动更新** — 每个 Task 后自动更新项目记忆
@@ -875,7 +881,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 ```
 Forge/
 ├── core/                      # 核心共享内容
-│   ├── skills/                # 12 个 Skill 定义，每个独立目录
+│   ├── skills/                # 14 个 Skill 定义，每个独立目录
 │   ├── agents/                # 10 个 Sub-Agent 定义
 │   ├── loadouts/              # 可复用的技能/Agent/钩子捆绑包
 │   ├── templates/             # 文档模板

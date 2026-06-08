@@ -4,7 +4,7 @@
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
-**Open-source Agent Harness** for Claude Code, Cursor, and OpenCode — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
+**Open-source Agent Harness** for Claude Code, Cursor, OpenCode, and Gemini CLI — skills, hooks, memory, and evolution constrain the model so work stays verifiable, not just conversational.
 
 **Harness in one line:** the model is the CPU; the harness is the OS — orchestration, memory, guardrails, and validation so work **ships**, not just chats. ReqForge targets **requirements → shippable product** (spec, code, release), not consumer “run after you close the chat” life automation. [Maturity checklist →](core/docs/harness-maturity-checklist.md) · [Seven-layer map →](core/docs/agent-harness-seven-layer-map.md) · [Loadout scenarios →](core/docs/loadout-scenarios.md) · [Platform compliance →](core/docs/platform-compliance.md)
 
@@ -17,11 +17,17 @@
 ```mermaid
 flowchart LR
   subgraph inputs [You]
-    Idea[Idea / change request]
+    Idea[Idea / change]
+    DomainIn[Unfamiliar domain]
+    Ambig[Ambiguous request]
   end
 
   subgraph forge [ReqForge Harness]
+    Route[request-dispatcher]
+    Domain[domain-mapper]
     Spec[product-spec-builder]
+    DBr[design-brief-builder]
+    DMk[design-maker]
     Chg[change-manager]
     Plan[dev-planner]
     Build[dev-builder]
@@ -35,9 +41,16 @@ flowchart LR
     CC[Claude Code]
     CU[Cursor]
     OC[OpenCode]
+    GC[Gemini CLI]
   end
 
+  Ambig --> Route
+  DomainIn --> Domain
+  Domain -.-> Spec
   Idea --> Spec
+  Spec --> DBr
+  DBr --> DMk
+  DMk -.-> Plan
   Spec --> Plan
   Idea --> Chg
   Chg --> Plan
@@ -80,24 +93,12 @@ flowchart LR
 
 ### v1.40.0 — 2026-06-07 — Model-to-Model 2.5 Layer
 
-- **Model-to-model 2.5 layer** (UI-Spec.md): design-maker auto-generates a structured UI spec; dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral — regenerated each design cycle, not committed.
-- **Machine gate recovery**: When a gate blocks a write, the block message includes numbered recovery steps — no more dead ends.
-- **Attention summaries across 7 skills**: bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder now have `⚠️ 当前 Task 行动摘要` in first-principles.md.
-- **Self-review for bug-fixer & release-builder**: Hot-context self-review step added to both skills' workflows.
-- **Anti-ai-slop guardrails restored**: 7 removed items restored across 5 skills.
-
-### v1.40.0 — 2026-06-07
-- **UI-Spec.md — model-to-model 2.5 layer**: design-maker auto-generates a structured UI spec (component hierarchy, states, responsive rules, reusable components) during verification. dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral (regenerated each design cycle), not committed. (`core/templates/ui-spec-template.md`)
-- **Machine gate recovery options**: When spec-before-code, plan-before-build, idea-validation, implementer, or hallucination gates block a write, the block message now includes numbered recovery steps ("1. Run /product-spec-builder → 2. Fill criteria → 3. Confirm → 4. Retry"). Instead of a dead end, the LLM gets a clear path forward. (`scripts/hooks/spec-before-code-gate.mjs`)
-- **Attention summaries across 7 skills**: bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder now have `⚠️ 当前 Task 行动摘要` in first-principles.md (recency/primacy bias optimization).
-- **Self-review for bug-fixer and release-builder**: Hot-context self-review step added to bug-fixer (between fix and verification) and release-builder (between smoke test and release).
-- **Anti-ai-slop guardrails restored**: 7 removed check items restored across 5 skills — "伪造 specs", "重复劳动", "唯编译论", "编造证据", "缓存污染", "无变更日志", "密度与功能一致". Plus "跳过复现" added to bug-fixer.
-- **2.5-layer-manifesto §5.6**: New section on model-to-model 2.5 layer — how the anchor principle extends from person→model to model→model intermediate representations. (EN + ZH)
-
-### v1.41.0 — 2026-06-07
-- **Workflow cookbook**: `core/docs/workflow-cookbook.md` — 7 recipes covering熔断循环, Multi-Modal Sweep, Adversarial Verify, Judge Panel, Pipeline, Completeness Critic, and Retry Guard. Includes 3 assembly examples showing agent + skill + workflow script integration. Platform compatibility table for Claude Code / OpenCode / Cursor / Gemini CLI.
-- **GC audit routing**: `core/skills/dev-builder/references/gc-audit-routing.md` — platform-agnostic decision table mapping change impact to audit depth: Minor GC (≤2 phases) / Major GC (≤5 phases) / Full GC (global state change). Change tracking card (Card Table) format and assumption registry defined. Wired into dev-builder first-principles.md 行动摘要 as Step 5.
-- **Agent dispatch platform-agnostic proposal** (Issue #6): code-review workflow.md's hardcoded parallel agent dispatch (code-reviewer-bug/security/types/design) to be extracted into a platform-independent reference doc.
+- **UI-Spec.md — model-to-model 2.5 layer**: design-maker auto-generates a structured UI spec during verification; dev-builder reads it at startup instead of guessing structure from pixels. Ephemeral (not committed). (`core/templates/ui-spec-template.md`)
+- **Machine gate recovery options**: Block messages include numbered recovery steps for spec-before-code, plan-before-build, idea-validation, implementer, and hallucination gates. (`scripts/hooks/spec-before-code-gate.mjs`)
+- **Attention summaries across 7 skills**: Action summaries in first-principles.md for bug-fixer, code-review, change-manager, release-builder, dev-planner, product-spec-builder, design-brief-builder.
+- **Self-review for bug-fixer & release-builder**: Hot-context self-review step in both workflows.
+- **Anti-ai-slop guardrails restored**: 7 removed check items restored across 5 skills.
+- **2.5-layer-manifesto §5.6**: Model-to-model 2.5 layer principle (EN + ZH). (`docs/2.5-layer-manifesto.md`)
 
 ### v1.39.0 — 2026-06-06 — The 2.5 Layer Release
 
@@ -418,7 +419,7 @@ Forge is **copy-to-use**: no package publish, no `npm install` in your app proje
 
 | Required | Notes |
 |----------|-------|
-| **AI client** (one of) | [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Cursor](https://cursor.com), or [OpenCode](https://opencode.ai) |
+| **AI client** (one of) | [Claude Code](https://docs.anthropic.com/en/docs/claude-code), [Cursor](https://cursor.com), [OpenCode](https://opencode.ai), or [Gemini CLI](https://geminicli.com/) |
 | **Git** | Clone this repo; optional for your own project |
 | **Empty or existing project folder** | Forge files live at the project root alongside your code |
 
@@ -562,18 +563,21 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 
 ### Step 4 — First run in your AI client
 
-1. Open **your project folder** (the one that now contains `.claude/`, `.cursor/`, or `.opencode/`) in the AI client.
+1. Open **your project folder** (the one that now contains `.claude/`, `.cursor/`, `.opencode/`, or `.gemini/`) in the AI client.
 2. Start a new chat. Forge detects progress from files present (`Product-Spec.md`, `DEV-PLAN.md`, code, `memory/`).
 3. Describe your product idea in natural language, or invoke a Skill:
 
-| Goal | Skill command (Claude Code / OpenCode style) | Output |
-|------|-----------------------------------------------|--------|
-| Requirements | `/product-spec-builder` | `Product-Spec.md` |
+| Goal | Skill command (Claude Code / OpenCode / Gemini CLI style) | Output |
+|------|-----------------------------------------------------------|--------|
+| Ambiguous request routing | `/request-dispatcher` | Recommended target Skill |
+| Domain research (optional, unfamiliar domain) | `/domain-mapper` | `domain-map.md` (+ optional competitor/social analysis) |
+| Requirements | `/product-spec-builder` | `Product-Spec.md` (includes Multi-Stakeholder Review) |
 | Design brief (optional) | `/design-brief-builder` | `Design-Brief.md` |
+| Design mockups (optional) | `/design-maker` | Mockups + ephemeral `UI-Spec.md` (not committed) |
 | Dev plan | `/dev-planner` | `DEV-PLAN.md` |
 | Brownfield feature (existing Spec) | `/change-manager propose <name>` → apply → verify → archive | `changes/<name>/` → `changes/archive/` |
 | Implementation | `/dev-builder` | Code + `memory/` (auto-created) |
-| Bug fix | Describe the bug (auto-triggers `/bug-fixer`) | Fix + review loop |
+| Bug fix | Describe the bug (auto-triggers `/bug-fixer`; `pnpm forge-bug-fix` bisect/classify) | Fix + review loop |
 | Release | `/release-builder` | Build / deploy checklist |
 
 **Cursor**: rules load from `.cursor/rules/` automatically; refer to skills in chat (e.g. “run product-spec-builder”) or use your client’s skill UI if configured.
@@ -589,7 +593,7 @@ my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
 │   ├── settings.json           # 10 hooks (Unix .sh); run `pnpm use-platform` on Windows
-│   ├── skills/                 # 12 Skill definitions + commands/
+│   ├── skills/                 # 14 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
 │   ├── loadouts/               # full | web-app | cli-tool | minimal
@@ -700,7 +704,7 @@ More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 │  ├─ test-writer        Generate tests for tools/scripts     │
 │  └─ planner            Analyze Spec, split phases, plan     │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 12 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
+│  Skills × 14 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
 ├─────────────────────────────────────────────────────────────┤
 │  Hooks + Review Loop (Sensors / Feedback Control)           │ ← Inspection Layer
@@ -792,21 +796,23 @@ ReqForge 的行为层直接继承 [Andrej Karpathy 指出的 LLM 编码通病](h
 
 完整说明 + ❌→✅ 示例 → [behavior-rules.md](core/docs/behavior-rules.md)。与上游 [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) 的同源映射 → [karpathy-skills-comparison.md](core/docs/karpathy-skills-comparison.md)。
 
-### Guidance Layer — 12 Skills
+### Guidance Layer — 14 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
 
 | Skill                    | Responsibility                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **product-spec-builder** | Requirements gathering. Multi-round interviews → Product-Spec.md; optional PM frameworks (OST, JTBD, assumptions, competitors) and CoT templates for trade-offs and edge cases. Iterative + Quick Mode. |
+| **product-spec-builder** | Requirements gathering. Multi-Stakeholder Review (4 perspectives) + multi-round interviews → Product-Spec.md; optional PM frameworks (OST, JTBD, assumptions, competitors) and CoT templates. Iterative + Quick Mode. |
 | **change-manager**       | Brownfield changes. One feature per `changes/<name>/` folder: propose → apply → verify → archive (OpenSpec-aligned; see [openspec-comparison](core/docs/openspec-comparison.md)). |
 | **design-brief-builder** | Design language. Quantifies vague descriptions ("dark theme, minimal") into concrete direction: color palette, interaction style, information density. |
-| **design-maker**         | Design prototyping. Generates full page mockups through Pencil or Figma MCP.                                                                           |
+| **design-maker**         | Design prototyping. Full page mockups via Pencil or Figma MCP; verification phase emits ephemeral `UI-Spec.md` for dev-builder.                        |
 | **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
 | **dev-builder**          | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop.                                                   |
-| **bug-fixer**            | Four-stage systematic debugging. Don't guess, don't try blindly: gather evidence → analyze patterns → hypothesize → fix.                               |
+| **bug-fixer**            | Four-stage systematic debugging + `pnpm forge-bug-fix` (bisect / classify / trace / verify). Gather evidence → analyze patterns → hypothesize → fix.   |
 | **code-review**          | Parallel agent review — 4 specialists (design, bug, security, types) with confidence-scored aggregation (≥0.6 confirmed, 0.3-0.6 suspected).               |
 | **release-builder**      | Build & deploy. Built-in privacy audit and smoke testing.                                                                                              |
+| **domain-mapper**        | Domain mapping (**independent** of spec→build pipeline). Industry/tech/codebase/market → structured `domain-map.md`; L1/L2/L3 depth. Optional before Spec in unfamiliar domains. |
+| **request-dispatcher**   | Ambiguous request routing. When static dispatch cannot pick one Skill, analyzes intent + project state → recommends target Skill (not for every turn). |
 | **feedback-writer**      | Records user corrections and feedback as structured files. Feeds the evolution engine with data.                                                       |
 | **evolution-engine**     | Scans accumulated feedback, identifies patterns (3+ occurrences), generates proposals to upgrade rules or optimize skills.                             |
 | **skill-builder**        | Creates new Skill definitions from scratch using project templates. Triggered by evolution proposals or manual invocation.                             |
@@ -905,10 +911,11 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 
 ## Workflow
 
-1. **Describe your idea** — `/product-spec-builder` interviews you (or Quick Mode for one sentence). For fuzzy ideas, optional **PM discovery** (OST, assumptions) and **CoT** templates improve Spec quality before any code.
+0. **Domain research (optional)** — Unfamiliar industry/stack → `/domain-mapper` → `domain-map.md`, then write Spec (orthogonal to main pipeline; can run before step 1)
+1. **Describe your idea** — `/product-spec-builder` interviews you (or Quick Mode for one sentence). 0-to-1 default **Multi-Stakeholder Review** (4 perspectives). For fuzzy ideas, optional **PM discovery** (OST, assumptions) and **CoT** templates improve Spec quality before any code.
 2. **Generate spec** — Outputs `Product-Spec.md` (may include optional JTBD, metrics, competitors, assumptions sections) → user confirms → `.forge/spec-confirmed.json`
 3. **Design brief (optional)** — Invoke /design-brief-builder
-4. **Design mockups (optional)** — Invoke /design-maker
+4. **Design mockups (optional)** — Invoke /design-maker (ephemeral `UI-Spec.md` for dev-builder)
 5. **Development plan** — Invoke /dev-planner, outputs DEV-PLAN.md
 6. **Build** — Invoke /dev-builder, works through each Task in each Phase
 7. **Memory auto-update** — After each Task, project memory is updated automatically
@@ -925,7 +932,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 ```
 Forge/
 ├── core/                      # Shared core content
-│   ├── skills/                # 12 skill definitions, each in its own directory
+│   ├── skills/                # 14 skill definitions, each in its own directory
 │   ├── agents/                # 10 Sub-agent definitions
 │   ├── loadouts/              # Reusable skill/agent/hook bundles
 │   ├── templates/             # Document templates

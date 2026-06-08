@@ -4,7 +4,7 @@
 
 这是一个开源的产品开发流程框架，整合了**废才**方法论的完整产品开发全流程，借鉴了 **oh-my-openagent** 的开放多客户端架构，吸收了 **superpowers** 的技能化设计和 TDD 纪律，融合了 **OpenSpec** 的轻量级迭代和 CLI 便捷体验，参考了 **ai-coding-ok** 的三层记忆体系和 PDCA 强制闭环，为独立开发者提供开箱即用的 AI 辅助产品开发体验。
 
-**目标用户**：独立开发者、产品经理、创业者，他们使用 Claude Code/Cursor/OpenCode 等 AI 编程工具开发产品，需要一套经过验证的完整开发流程，但不想被绑定在单一平台。
+**目标用户**：独立开发者、产品经理、创业者，他们使用 Claude Code / Cursor / OpenCode / Gemini CLI 等 AI 编程工具开发产品，需要一套经过验证的完整开发流程，但不想被绑定在单一平台。
 
 **核心价值**：
 - 一站式产品开发流程：从模糊想法 → 需求文档 → 开发计划 → 可运行产品，全程有框架引导
@@ -22,7 +22,7 @@
 
 | Field | Answer |
 |-------|--------|
-| Who exactly (role + context) | 独立开发者、小团队 PM/创业者，使用 Claude Code/Cursor/OpenCode 做 AI 辅助开发 |
+| Who exactly (role + context) | 独立开发者、小团队 PM/创业者，使用 Claude Code / Cursor / OpenCode / Gemini CLI 做 AI 辅助开发 |
 | How often | 每个新项目启动时都会遇到流程与规范缺失 |
 | How severe | 高——无 Spec/Plan 门禁时易直接写代码，返工成本高 |
 | Current workaround | 自建 prompt、抄零散 skill、或完全即兴对话 |
@@ -63,7 +63,7 @@
   - `feedback-observer` → 反馈记录（追踪模型版本，检测规则过时）
   - `evolution-runner` → 进化扫描
   - `test-writer` → 自动生成测试
-  对应 Skill：`product-spec-builder`（需求）、`change-manager`（存量增量变更）、`dev-planner`（计划）、`dev-builder`（实现）等，Skill 与 Sub-Agent 分工明确。
+  对应 Skill：`product-spec-builder`（需求）、`domain-mapper`（领域研究）、`change-manager`（存量增量变更）、`design-brief-builder` / `design-maker`（设计）、`dev-planner`（计划）、`dev-builder`（实现）、`request-dispatcher`（模糊路由）等，Skill 与 Sub-Agent 分工明确。
 - **开放架构**：核心内容一份存放，各 AI 客户端分别做适配层，维护一份核心，多端同步更新。每个技能独立目录，自带 SKILL.md，可组合、可插拔、可扩展。
 - **项目进度自动检测**：框架自动检测当前项目进度（哪个阶段完成了，哪个阶段没做），引导用户进入下一步，不用用户自己记。
 - **evolution 进化引擎**：记录用户反馈，重复出现的经验自动升级为框架规则，框架用得越多越聪明。
@@ -89,7 +89,7 @@
 
 ## UI 布局
 
-本产品是框架类工具，本身不提供用户交互界面，所有交互都通过宿主 AI 客户端（Claude Code/Cursor/OpenCode）完成。框架只提供规则文件、模板、Skill 定义。
+本产品是框架类工具，本身不提供用户交互界面，所有交互都通过宿主 AI 客户端（Claude Code / Cursor / OpenCode / Gemini CLI）完成。框架只提供规则文件、模板、Skill 定义。
 
 ## 用户使用流程
 
@@ -98,20 +98,24 @@
 **方式一：手动复制（推荐，零依赖）**
 1. 用户创建空项目目录
 2. 克隆 Forge 仓库
-3. 选择要使用的 AI 客户端（Claude Code / Cursor / OpenCode）
-4. 复制对应适配目录下的所有文件到自己项目
+3. 选择要使用的 AI 客户端（Claude Code / Cursor / OpenCode / Gemini CLI）
+4. 复制对应适配目录下的所有文件到自己项目（或使用 `pnpm forge-install <client> --target <dir>`）
 5. 打开 AI 客户端 → 框架自动检测项目进度，引导用户描述产品想法
-6. 进入需求收集阶段 → 调用 `/product-spec-builder` 生成 Product-Spec.md
+6. 进入陌生领域时（可选）→ 调用 `/domain-mapper` 生成 `domain-map.md`
+7. 进入需求收集阶段 → 调用 `/product-spec-builder` 生成 Product-Spec.md（0-to-1 默认 Multi-Stakeholder Review 四视角扫描）
 
 ### 标准开发流程
 
-1. **需求收集阶段**：用户描述产品想法 → 框架追问细节 → 生成完整 Product-Spec.md
+0. **领域研究阶段（可选）**：用户进入陌生行业/技术栈 → 调用 `/domain-mapper` → 输出 `domain-map.md`（独立于 spec→build 管线）
+1. **需求收集阶段**：用户描述产品想法 → Multi-Stakeholder Review 四视角扫描 + 框架追问细节 → 生成完整 Product-Spec.md
 2. **设计规范阶段（可选）**：用户调用 `/design-brief-builder` → 生成 Design-Brief.md
-3. **开发计划阶段**：用户调用 `/dev-planner` → 生成分阶段 DEV-PLAN.md
-4. **项目开发阶段**：用户调用 `/dev-builder` → 按 Phase 逐步开发，每个 Task 都走「开发 → code-review → fix → commit」闭环
-5. **Bug 修复**：用户报告问题 → 框架自动调用 `/bug-fixer` 定位修复
-6. **代码审查**：用户调用 `/code-review` → 两阶段审查输出报告
-7. **构建发布**：用户调用 `/release-builder` → 打包或部署上线
+3. **设计稿阶段（可选）**：用户调用 `/design-maker` → 生成设计稿 + 临时 `UI-Spec.md`（供 dev-builder 读取，不提交）
+4. **开发计划阶段**：用户调用 `/dev-planner` → 生成分阶段 DEV-PLAN.md
+5. **项目开发阶段**：用户调用 `/dev-builder` → 按 Phase 逐步开发，每个 Task 都走「开发 → code-review → fix → commit」闭环
+6. **Bug 修复**：用户报告问题 → 框架自动调用 `/bug-fixer` 定位修复（可配合 `pnpm forge-bug-fix` bisect/classify）
+7. **代码审查**：用户调用 `/code-review` → 两阶段审查输出报告
+8. **构建发布**：用户调用 `/release-builder` → 打包或部署上线
+9. **模糊请求（按需）**：静态 dispatch 无法匹配时 → `/request-dispatcher` 推荐目标 Skill
 
 ## AI 能力需求
 
@@ -122,13 +126,13 @@
 | 代码生成 | 根据需求和计划生成可运行代码 | 项目开发阶段 |
 | 代码审查 | 对照 Spec 检查功能完整性和代码质量 | code-review 阶段 |
 
-*所有 AI 能力由宿主客户端（Claude Code/Cursor/OpenCode）提供，Forge 不直接调用大模型。*
+*所有 AI 能力由宿主客户端（Claude Code / Cursor / OpenCode / Gemini CLI）提供，Forge 不直接调用大模型。*
 
 ## 技术方向
 
 | 维度 | 选择 | 理由 |
 |------|------|------|
-| 产品类型 | AI 开发流程规则框架 | 为 Claude Code/Cursor/OpenCode 提供完整产品开发流程，本身是规则文件和模板集合，框架文件复制到项目就能用 |
+| 产品类型 | AI 开发流程规则框架 | 为 Claude Code / Cursor / OpenCode / Gemini CLI 提供完整产品开发流程，本身是规则文件和模板集合，框架文件复制到项目就能用 |
 | 推荐技术栈 | 纯 Markdown | 规则文件都是文本，不需要编译，零依赖 |
 | 项目架构 | 核心共享 + 多端适配目录 | 核心技能和模板一份存放，每个客户端有独立适配目录，直接复制到用户项目 |
 | 数据存储 | 本地文件系统 | 所有规则、模板、feedback、变更 proposal 都存在本地项目目录，不需要云端服务 |
@@ -140,19 +144,21 @@
 - **技能化设计**：每个技能独立目录，自带 SKILL.md，清晰边界，可独立演进。
 - **依赖**：核心不需要任何依赖，用户有对应 AI 客户端就能用。
 - **跨平台**：支持 Windows/macOS/Linux，钩子脚本同时提供 .sh（Unix）和 .bat（Windows）版本，确保跨平台兼容性。
-- **适配格式**：Claude Code 使用 CLAUDE.md（dispatch map），Cursor 使用 .mdc 规则文件，OpenCode 使用 AGENTS.md（约束文件格式，含技术栈精确版本、行为边界、硬约束列表）。
-- **使用方式**：用户克隆 Forge → 复制对应客户端目录（如 `adapters/claude-code/`）到自己项目 → 粘贴进去就能用
+- **适配格式**：Claude Code 使用 CLAUDE.md（dispatch map），Cursor 使用 .mdc 规则文件，OpenCode 使用 AGENTS.md，Gemini CLI 使用 GEMINI.md（约束文件格式，含技术栈精确版本、行为边界、硬约束列表）。
+- **使用方式**：用户克隆 Forge → 复制对应客户端目录（如 `adapters/claude-code/`）或使用 `pnpm forge-install` → 粘贴/安装到用户项目即可
 
 ## 补充说明
 
 | 开发阶段 | 输出文件 | 必需/可选 |
 |---------|---------|----------|
+| 领域研究 | domain-map.md（及可选 competitor-analysis.md） | 可选；`/domain-mapper` |
 | 需求收集 | Product-Spec.md | 必需 |
 | 需求收集 | Product-Spec-CHANGELOG.md | 自动生成（变更时） |
 | 设计规范 | Design-Brief.md | 可选 |
+| 设计稿 | UI-Spec.md（临时，不提交） | 可选；`/design-maker` 验证阶段 |
 | 开发计划 | DEV-PLAN.md | 必需 |
 | 项目记忆 | memory/project-memory.md, decisions-log.md, task-history.md | 自动生成（首次 /dev-builder 时） |
-| 框架配置 | .claude/CLAUDE.md / .opencode/AGENTS.md, .claude/EVOLUTION.md | 自动生成 |
+| 框架配置 | .claude/CLAUDE.md / .opencode/AGENTS.md / .gemini/GEMINI.md, .claude/EVOLUTION.md | 自动生成 |
 | 增量变更 | changes/<change-name>/（verify.md） | 可选；`/change-manager` |
 
 ### Forge 仓库目录结构（开源仓库本身））

@@ -46,6 +46,8 @@ project/
         ├── bug-fixer/                 # Bug fixing
         ├── code-review/               # Code review
         ├── release-builder/           # Build & release
+        ├── domain-mapper/             # Domain research → domain-map.md (orthogonal pipeline)
+        ├── request-dispatcher/        # Ambiguous request routing
         ├── skill-builder/             # Create new Skill
         ├── feedback-writer/           # Record user feedback
         └── evolution-engine/          # Evolution engine scanning

@@ -9,7 +9,7 @@
 
 | 模块 | 关键文件 | 说明 | 改动影响链 |
 |------|---------|------|-----------|
-| Skills | `core/skills/*/SKILL.md` | 13 个 Skill 定义 | 改 Skill → 同步 adapters/ → 跑 `pnpm validate-skill` |
+| Skills | `core/skills/*/SKILL.md` | 14 个 Skill 定义 | 改 Skill → 同步 adapters/ → 跑 `pnpm validate-skill` |
 | Hooks | `core/hooks/*.sh` | 事前门禁脚本 | 改 hook → 同步 `.claude/settings.json` → 跑 `pnpm forge-smoke` |
 | Templates | `core/templates/*.md` | 项目模板 | 改模板 → 跑 `pnpm forge-install` 验证写入 |
 | Install | `scripts/install.ts` | forge-install 逻辑 | 改 → 跑 `pnpm test` |
@@ -18,7 +18,7 @@
 | Smoke | `scripts/forge-smoke/` | 12 项结构测试 | 改 → 跑 `pnpm forge-smoke` |
 | Verify | `scripts/forge-verify.mjs` | 事后统一验证 | 改 → 跑 `pnpm forge-verify` |
 | Dep Graph | `scripts/dependency-graph.ts` | 依赖图分析 | 改 → 跑 `pnpm dep-graph` |
-| Adapters | `adapters/{claude-code,cursor,opencode}/` | 三客户端适配 | 由 `pnpm sync` 从 core/ 生成，勿手动改 |
+| Adapters | `adapters/{claude-code,cursor,opencode,gemini-cli}/` | 四客户端适配 | 由 `pnpm sync` 从 core/ 生成，勿手动改 |
 
 ## 已有模式
 

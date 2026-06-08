@@ -6,7 +6,7 @@
 
 - 来源：[pm-skills](https://github.com/phuryn/pm-skills)（PM Skills Marketplace）
 - 许可：MIT — 摘编为访谈提纲与 Spec 章节，保留框架名称与出处
-- **不要**在用户项目中安装全部 65 个 pm-skills，避免与 Forge 12 Skill 调度冲突
+- **不要**在用户项目中安装全部 65 个 pm-skills，避免与 Forge 14 Skill 调度冲突
 
 ## 何时使用（0-to-1 可选）
 
