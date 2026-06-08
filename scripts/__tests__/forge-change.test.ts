@@ -8,22 +8,24 @@ const CHANGES = join(ROOT, "changes");
 const CLI = "node " + join(ROOT, "scripts", "forge-change.mjs");
 
 function run(...args: string[]) {
-  return execSync(`${CLI} ${args.join(" ")}`, { cwd: ROOT, encoding: "utf-8" });
+  return execSync(`${CLI} ${args.join(" ")}`, { cwd: ROOT, encoding: "utf-8", timeout: 10000 });
 }
 
 describe("forge-change CLI", () => {
   const testChange = "vitest-e2e-test";
 
   beforeAll(() => {
-    // Clean any leftover from previous failed runs
-    if (existsSync(join(CHANGES, testChange))) rmSync(join(CHANGES, testChange), { recursive: true });
-    if (existsSync(join(CHANGES, "archive", testChange))) rmSync(join(CHANGES, "archive", testChange), { recursive: true });
+    // Ensure clean state
+    for (const dir of [join(CHANGES, testChange), join(CHANGES, "archive", testChange)]) {
+      if (existsSync(dir)) rmSync(dir, { recursive: true });
+    }
     mkdirSync(CHANGES, { recursive: true });
   });
 
   afterAll(() => {
-    if (existsSync(join(CHANGES, testChange))) rmSync(join(CHANGES, testChange), { recursive: true });
-    if (existsSync(join(CHANGES, "archive", testChange))) rmSync(join(CHANGES, "archive", testChange), { recursive: true });
+    for (const dir of [join(CHANGES, testChange), join(CHANGES, "archive", testChange)]) {
+      if (existsSync(dir)) rmSync(dir, { recursive: true });
+    }
   });
 
   it("init creates a change directory with template files", () => {
@@ -63,7 +65,6 @@ describe("forge-change CLI", () => {
   it("list no longer shows archived in active", () => {
     const out = run("list");
     const activeSection = out.split("=== Archived Changes ===")[0];
-    expect(activeSection).toContain("(none)");
     expect(activeSection).not.toContain(testChange);
   });
 

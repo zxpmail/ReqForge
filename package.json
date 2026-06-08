@@ -28,6 +28,7 @@
     "forge-evidence": "node scripts/forge-evidence.mjs",
     "forge-evolve": "node scripts/forge-evolve.mjs",
     "forge-change": "node scripts/forge-change.mjs",
+    "forge-bug-fix": "node scripts/forge-bug-fix.mjs",
     "forge-skill-eval": "node scripts/forge-skill-eval.mjs",
     "forge-release": "node scripts/forge-release.mjs",
     "forge-ops": "node scripts/forge-ops.mjs",
