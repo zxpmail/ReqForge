@@ -21,7 +21,7 @@ describe("forge-bug-fix CLI", () => {
     mkdirSync(TRACE_DIR, { recursive: true });
     if (existsSync(TRACE_DIR)) {
       for (const f of readdirSync(TRACE_DIR)) {
-        if (f.startsWith("bug-test-")) rmSync(join(TRACE_DIR, f));
+        if (f.startsWith("bug-test-") || f.startsWith("bisect-test-")) rmSync(join(TRACE_DIR, f));
       }
     }
   });
@@ -29,7 +29,7 @@ describe("forge-bug-fix CLI", () => {
   afterAll(() => {
     if (existsSync(TRACE_DIR)) {
       for (const f of readdirSync(TRACE_DIR)) {
-        if (f.startsWith("bug-test-")) rmSync(join(TRACE_DIR, f));
+        if (f.startsWith("bug-test-") || f.startsWith("bisect-test-")) rmSync(join(TRACE_DIR, f));
       }
     }
   });
@@ -54,5 +54,25 @@ describe("forge-bug-fix CLI", () => {
 
   it("unknown command exits with error", { timeout: 10000 }, () => {
     expect(() => run("invalid-command")).toThrow();
+  });
+
+  it("bisect without args exits with error", { timeout: 10000 }, () => {
+    expect(() => run("bisect")).toThrow();
+  });
+
+  it("classify runs without error with FORGE_QUICK", { timeout: 15000 }, () => {
+    const out = run("classify");
+    expect(out).toContain("=== Error Classification ===");
+  });
+
+  it("classify with non-existent trace exits with error", { timeout: 10000 }, () => {
+    expect(() => run("classify", "nonexistent-trace")).toThrow();
+  });
+
+  it("classify with valid trace classifies errors", { timeout: 15000 }, () => {
+    // Create a trace first
+    run("trace", "test-classify");
+    const out = run("classify", "test-classify");
+    expect(out).toContain("=== Error Classification ===");
   });
 });

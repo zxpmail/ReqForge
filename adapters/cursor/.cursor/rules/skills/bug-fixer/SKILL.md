@@ -156,6 +156,8 @@ requires: []
     5. **forge-bug-fix 辅助**：
        - Stage 1 启动后 → `pnpm forge-bug-fix diagnose` 跑 preflight + 环境检查
        - 调试中捕获关键现场 → `pnpm forge-bug-fix trace <bug-name>` 存快照
+       - 定位回归引入者 → `pnpm forge-bug-fix bisect <good-commit> [bad-commit]` 自动 git bisect
+       - 错误分类诊断 → `pnpm forge-bug-fix classify [trace-name]` 识别错误类别 + 建议修复方向
        - 修复后验证 → `pnpm forge-bug-fix verify` 确认编译 + 测试通过
     6. 交付前执行 `references/anti-ai-slop-checklist.md` 自检
     7. `FORGE_MODE=yolo` → `references/yolo-mode.md`
