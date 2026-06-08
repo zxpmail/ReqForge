@@ -42,6 +42,7 @@ requires: []
     - Playwright plugin -> if available, automate reproduction and verification
     - git -> if available, use git log/diff/blame to trace changes
     - **Dependency Graph** (`dep-graph`) -> if available, run `pnpm dep-graph affected <file>` to scope the blast radius before debugging
+    - **forge-bug-fix** (`pnpm forge-bug-fix`) -> if available, use diagnose/trace/verify to automate preflight checks, capture debug snapshots, and run post-fix verification
 
 <!-- end: dependency-check -->
 <!-- begin: shared-discipline -->
@@ -152,8 +153,12 @@ requires: []
     2. Read `references/first-principles.md`
     3. **必须先 Read `references/workflow.md`** — Startup → Debugging（四阶段）→ Verification → Completion
     4. Debugging 阶段执行 `references/debugging-strategy.md` + `cot-diagnostic-checklist.md`
-    5. 交付前执行 `references/anti-ai-slop-checklist.md` 自检
-    6. `FORGE_MODE=yolo` → `references/yolo-mode.md`
+    5. **forge-bug-fix 辅助**：
+       - Stage 1 启动后 → `pnpm forge-bug-fix diagnose` 跑 preflight + 环境检查
+       - 调试中捕获关键现场 → `pnpm forge-bug-fix trace <bug-name>` 存快照
+       - 修复后验证 → `pnpm forge-bug-fix verify` 确认编译 + 测试通过
+    6. 交付前执行 `references/anti-ai-slop-checklist.md` 自检
+    7. `FORGE_MODE=yolo` → `references/yolo-mode.md`
 
 <!-- end: workflow -->
 <!-- begin: yolo-mode -->
