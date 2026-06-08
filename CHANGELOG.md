@@ -10,9 +10,13 @@ All notable changes to Forge are documented here.
 - **forge-bug-fix wired into bug-fixer workflow**: Dependency Check + Workflow now reference forge-bug-fix diagnose/trace/bisect/classify/verify.
 
 ### Fixed
-- **package.json version alignment**: Bumped to v1.42.0 to match CHANGELOG/README (was stuck at 1.41.0).
+- **package.json version alignment**: Bumped to v1.43.0 to match README/CHANGELOG (was `1.42.0`).
 - **forge-change.test.ts**: Added execSync timeout, DRY cleanup logic.
 - **forge-bug-fix.test.ts**: Fixed vitest timeout shorter than execSync timeout (Windows ETIMEDOUT).
+
+### Docs
+- **Architecture & usage sync**: Mermaid diagram, 14-Skill tables, four-client install guide, domain-mapper / Multi-Stakeholder Review workflow across README (EN/ZH), Product-Spec, llms.txt, file-structure, dev-map.
+- **GitHub Wiki source**: `docs/github-wiki/Home.md` updated to v1.43 (14 Skills, Gemini CLI, forge-install quick start).
 
 ### Sync
 - **Adapter sync**: Propagated bug-fixer workflow changes, forge-bug-fix references, and multi-stakeholder-review to all 4 adapters (claude-code, cursor, gemini-cli, opencode).

@@ -1,6 +1,6 @@
 # ReqForge（Forge）
 
-**当前版本：v1.29.0**（2026-05-28）  
+**当前版本：v1.43.0**（2026-06-08）  
 **主文档**：[README 中文](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md) · [README English](https://github.com/zxpmail/ReqForge/blob/main/README.md) · [CHANGELOG](https://github.com/zxpmail/ReqForge/blob/main/CHANGELOG.md)
 
 ---
@@ -8,8 +8,8 @@
 ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开源 Harness（不是零散 prompt）：
 
 - **需求 → Spec → Plan → 实现 → 审查 → 发布**
-- 适配 **Claude Code**、**Cursor**、**OpenCode**
-- **Skill + 钩子 + 记忆 + 进化**，让输出可验证、可回滚
+- 适配 **Claude Code**、**Cursor**、**OpenCode**、**Gemini CLI**
+- **14 个 Skill + 钩子 + 记忆 + 进化**，让输出可验证、可回滚
 
 **一句话**：模型是 CPU，Harness 是 OS——编排、记忆、护栏、验收，目标是把产品做出来，而不是聊完就散。
 
@@ -18,27 +18,27 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 ## 快速开始
 
 1. 克隆 [zxpmail/ReqForge](https://github.com/zxpmail/ReqForge)
-2. 将 `adapters/claude-code/.claude`（或 Cursor / OpenCode 对应目录）复制到你的**用户项目**根目录
-3. 在 AI 客户端中从 **`/product-spec-builder`** 开始，产出 `Product-Spec.md` 并**书面确认**后再 `/dev-planner`、`/dev-builder`
+2. **推荐**：`pnpm forge-install <client> --target /path/to/my-app`（`claude-code` | `cursor` | `opencode` | `gemini-cli`）  
+   或手动复制 `adapters/<client>/` 下对应目录到用户项目根
+3. 陌生领域可选先跑 **`/domain-mapper`** → `domain-map.md`
+4. **`/product-spec-builder`** → `Product-Spec.md`（0-to-1 默认 Multi-Stakeholder Review）→ 确认后再 **`/dev-planner`**、**`/dev-builder`**
 
-详细安装见 README 的 [安装与使用](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md#安装与使用)。
+详细安装见 README [安装与使用](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md#安装与使用)。
 
 ---
 
-## v1.26 要点（摘要）
+## v1.43 要点（摘要）
 
 | 主题 | 说明 |
 |------|------|
-| **Harness 硬化** | 会话注入 `forge-bootstrap`；PreToolUse 六段链（Spec → **Idea Stage** → 确认 → Plan → 确认 → implementer）；HARD-GATE |
-| **构思验证门** | `Product-Spec.md` § Idea Stage Exit Criteria；见 [founders-playbook-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/founders-playbook-comparison.md) |
-| **PM 框架** | `product-spec-builder` 可选参考 [pm-skills](https://github.com/phuryn/pm-skills)（OST、JTBD、假设、竞品） |
-| **思维链 CoT** | 先推理再结论；见 Skill 内模板，**不必**每条消息写「先想想看」 |
-| **Agent 执行纪律（8 条）** | 先计划再动手、改前先读、最小改动、提交前 diff 确认、**验证循环**（失败重跑直至通过）— [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
-| **Forge 速查** | 安装后项目根 `.forge/quickref.md`（`pnpm forge-install` 生成） |
-| **OpenSpec + Superpowers 衔接** | `/change-manager` ↔ `/dev-builder` Change-Scoped；见 [shuge-openspec-superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/shuge-openspec-superpowers-comparison.md) |
-| **安全规则** | `.forge/security-guidance.md`（`forge-install`）；见 [security-guidance-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/security-guidance-comparison.md) |
-| **LLM Wiki 纪律** | 重要结论写入 `memory/` ADR，不单留对话（v1.24 起，见下方对照文档） |
-| **发版守门** | 维护者：`pnpm forge-smoke`（12 项） |
+| **Multi-Stakeholder Review** | 写 Spec 前四视角扫描（业务/技术/体验/范围与风险） |
+| **/domain-mapper** | 领域研究 → `domain-map.md`（独立于 spec→build 管线） |
+| **forge-bug-fix** | bisect / classify / trace / verify，已接入 bug-fixer |
+| **Gemini CLI** | 第 4 个适配器；`.gemini/GEMINI.md` |
+| **2.5 层 + UI-Spec** | design-maker → dev-builder 模型间中间表示 |
+| **Workflow Cookbook** | [workflow-cookbook.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/workflow-cookbook.md) |
+| **forge-install 写入** | `.forge/quickref.md`、dev-map、security-guidance、preflight |
+| **发版守门** | 维护者：`pnpm forge-smoke` |
 
 ---
 
@@ -46,11 +46,14 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 
 | 阶段 | 命令 | 产出 |
 |------|------|------|
+| 模糊路由 | `/request-dispatcher` | 推荐目标 Skill |
+| 领域研究（可选） | `/domain-mapper` | `domain-map.md` |
 | 需求 | `/product-spec-builder` | `Product-Spec.md` |
+| 设计（可选） | `/design-brief-builder` · `/design-maker` | `Design-Brief.md` · 设计稿 + 临时 `UI-Spec.md` |
 | 存量变更 | `/change-manager` | `changes/<name>/` |
 | 计划 | `/dev-planner` | `DEV-PLAN.md` |
-| 开发 | `/dev-builder` | 代码（每 Task：implementer + worktree） |
-| 调试 | `/bug-fixer` | 修复 + 测试 |
+| 开发 | `/dev-builder` | 代码 + `memory/` |
+| 调试 | `/bug-fixer` | 修复（可配合 `pnpm forge-bug-fix`） |
 | 审查 | `/code-review` | 审查报告 |
 | 发布 | `/release-builder` | 发布清单 |
 
@@ -61,14 +64,11 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | 文档 | 链接 |
 |------|------|
 | Harness 成熟度自检 | [harness-maturity-checklist.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/harness-maturity-checklist.md) |
-| Agent 执行纪律（8 条） | [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
+| 七层对照 | [agent-harness-seven-layer-map.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/agent-harness-seven-layer-map.md) |
 | Loadout 场景选型 | [loadout-scenarios.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/loadout-scenarios.md) |
-| 记忆体系 + LLM Wiki | [memory-system.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/memory-system.md) · [llm-wiki-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/llm-wiki-comparison.md) |
-| Superpowers 对照 | [superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/superpowers-comparison.md) |
-| Founder's Playbook 对照 | [founders-playbook-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/founders-playbook-comparison.md) |
+| Workflow Cookbook | [workflow-cookbook.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/workflow-cookbook.md) |
+| Agent 执行纪律（8 条） | [session-execution-discipline.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/session-execution-discipline.md) |
 | OpenSpec 对照 | [openspec-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/openspec-comparison.md) |
-| 术哥无界 OpenSpec+Superpowers | [shuge-openspec-superpowers-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/shuge-openspec-superpowers-comparison.md) |
-| security-guidance 对照 | [security-guidance-comparison.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/security-guidance-comparison.md) |
 | 平台合规（CI/fork） | [platform-compliance.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/platform-compliance.md) |
 
 完整对照索引见 [README → 参考与对照](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md#参考与对照)。
