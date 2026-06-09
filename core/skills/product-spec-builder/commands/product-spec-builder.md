@@ -24,5 +24,6 @@ Startup routing → `references/startup-check.md`.
 |-------|-----------|------------|
 | Discovery | workflow-0-to-1 | One-paragraph concept agreed |
 | Detail / Interview | conversation-strategy | Spec sections fillable without guessing |
+| Critique Gate | critique-gate | Three structural signals scanned; findings resolved or marked [TBD] |
 | Spec write | product-spec-template | Product-Spec.md confirmed (HARD-GATE lifts only after explicit user confirm) |
 | Iteration | workflow-iteration | Major/minor → edit Spec; moderate scoped feature → **`/change-manager propose`** |

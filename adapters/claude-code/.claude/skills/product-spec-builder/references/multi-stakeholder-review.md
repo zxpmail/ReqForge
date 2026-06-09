@@ -106,7 +106,7 @@ After all four perspectives complete, synthesize into:
 
 - **1 round scan only** — no multi-round PK
 - If any perspective returns **blocked**: must present to user. User resolves, then either:
-  - Proceed (Spec generation continues with resolution noted)
+  - Proceed (Critique Gate follows, then Spec generation)
   - Or authorise **1 re-scan** of the affected perspective(s) only (not full 4)
 - If only **needs-clarification**: summary goes into Spec as `§ Stakeholder Review Summary` or feeds into § Key Assumptions & Validation. No re-scan needed.
 - Hard cap: **max 2 scans total** (initial + at most 1 re-scan).

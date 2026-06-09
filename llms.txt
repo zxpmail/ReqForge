@@ -17,7 +17,7 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 ### Workflow (0-to-1)
 
 0. **Domain research (optional)** → `/domain-mapper` → domain-map.md (orthogonal to spec→build)
-1. **Requirements** → `/product-spec-builder` → Product-Spec.md (Multi-Stakeholder Review default; optional PM frameworks + CoT)
+1. **Requirements** → `/product-spec-builder` → Product-Spec.md (Multi-Stakeholder Review + Critique Gate default; optional PM frameworks + CoT)
 2. **Design Brief (optional)** → `/design-brief-builder` → Design-Brief.md
 3. **Design mockups (optional)** → `/design-maker` → mockups + ephemeral UI-Spec.md
 4. **Development Plan** → `/dev-planner` → DEV-PLAN.md
@@ -51,4 +51,4 @@ Install: `pnpm forge-install <client> --target <dir>` · Sync core: `pnpm sync`
 
 Docs: README.md · README.zh-CN.md · core/docs/ · Product-Spec.md
 
-Version: v1.43.0
+Version: v1.44.0

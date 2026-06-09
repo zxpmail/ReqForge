@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.43.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.44.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -74,6 +74,12 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.44.0 — 2026-06-09 — Critique Gate + Spec Experiment Tools
+
+- **Spec Critique Gate**: Pre-writing adversarial scan after Multi-Stakeholder Review — three structural signals (Hidden Assumptions, Unchallenged Decisions, Scope That Should Be Cut) counteract LLM sycophancy bias. Validated by three-round experiment: 5:0 blind eval, +5.2 risk visibility, +4.2 rework resistance. 0-to-1 workflow default on.
+- **forge-spec-critique**: Automated spec critique scoring tool.
+- **forge-spec-blind-eval**: Automated A/B blind evaluation experiment for spec quality validation.
 
 ### v1.43.0 — 2026-06-08 — Multi-Stakeholder Review + forge-bug-fix bisect/classify
 
@@ -571,7 +577,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 |------|-----------------------------------------------------------|--------|
 | Ambiguous request routing | `/request-dispatcher` | Recommended target Skill |
 | Domain research (optional, unfamiliar domain) | `/domain-mapper` | `domain-map.md` (+ optional competitor/social analysis) |
-| Requirements | `/product-spec-builder` | `Product-Spec.md` (includes Multi-Stakeholder Review) |
+| Requirements | `/product-spec-builder` | `Product-Spec.md` (includes Multi-Stakeholder Review + Critique Gate) |
 | Design brief (optional) | `/design-brief-builder` | `Design-Brief.md` |
 | Design mockups (optional) | `/design-maker` | Mockups + ephemeral `UI-Spec.md` (not committed) |
 | Dev plan | `/dev-planner` | `DEV-PLAN.md` |
@@ -802,7 +808,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 
 | Skill                    | Responsibility                                                                                                                                         |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **product-spec-builder** | Requirements gathering. Multi-Stakeholder Review (4 perspectives) + multi-round interviews → Product-Spec.md; optional PM frameworks (OST, JTBD, assumptions, competitors) and CoT templates. Iterative + Quick Mode. |
+| **product-spec-builder** | Requirements gathering. Multi-Stakeholder Review (4 perspectives) + **Critique Gate** (3 structural signals against sycophancy bias) + multi-round interviews → Product-Spec.md; optional PM frameworks (OST, JTBD, assumptions, competitors) and CoT templates. Iterative + Quick Mode. |
 | **change-manager**       | Brownfield changes. One feature per `changes/<name>/` folder: propose → apply → verify → archive (OpenSpec-aligned; see [openspec-comparison](core/docs/openspec-comparison.md)). |
 | **design-brief-builder** | Design language. Quantifies vague descriptions ("dark theme, minimal") into concrete direction: color palette, interaction style, information density. |
 | **design-maker**         | Design prototyping. Full page mockups via Pencil or Figma MCP; verification phase emits ephemeral `UI-Spec.md` for dev-builder.                        |
@@ -912,7 +918,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 ## Workflow
 
 0. **Domain research (optional)** — Unfamiliar industry/stack → `/domain-mapper` → `domain-map.md`, then write Spec (orthogonal to main pipeline; can run before step 1)
-1. **Describe your idea** — `/product-spec-builder` interviews you (or Quick Mode for one sentence). 0-to-1 default **Multi-Stakeholder Review** (4 perspectives). For fuzzy ideas, optional **PM discovery** (OST, assumptions) and **CoT** templates improve Spec quality before any code.
+1. **Describe your idea** — `/product-spec-builder` interviews you (or Quick Mode for one sentence). 0-to-1 default **Multi-Stakeholder Review** (4 perspectives) + **Critique Gate** (3 structural signals against sycophancy bias). For fuzzy ideas, optional **PM discovery** (OST, assumptions) and **CoT** templates improve Spec quality before any code.
 2. **Generate spec** — Outputs `Product-Spec.md` (may include optional JTBD, metrics, competitors, assumptions sections) → user confirms → `.forge/spec-confirmed.json`
 3. **Design brief (optional)** — Invoke /design-brief-builder
 4. **Design mockups (optional)** — Invoke /design-maker (ephemeral `UI-Spec.md` for dev-builder)

@@ -1,6 +1,6 @@
 # ReqForge（Forge）
 
-**当前版本：v1.43.0**（2026-06-08）  
+**当前版本：v1.44.0**（2026-06-09）  
 **主文档**：[README 中文](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md) · [README English](https://github.com/zxpmail/ReqForge/blob/main/README.md) · [CHANGELOG](https://github.com/zxpmail/ReqForge/blob/main/CHANGELOG.md)
 
 ---
@@ -21,7 +21,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 2. **推荐**：`pnpm forge-install <client> --target /path/to/my-app`（`claude-code` | `cursor` | `opencode` | `gemini-cli`）  
    或手动复制 `adapters/<client>/` 下对应目录到用户项目根
 3. 陌生领域可选先跑 **`/domain-mapper`** → `domain-map.md`
-4. **`/product-spec-builder`** → `Product-Spec.md`（0-to-1 默认 Multi-Stakeholder Review）→ 确认后再 **`/dev-planner`**、**`/dev-builder`**
+4. **`/product-spec-builder`** → `Product-Spec.md`（0-to-1 默认 Multi-Stakeholder Review + 批判 Gate）→ 确认后再 **`/dev-planner`**、**`/dev-builder`**
 
 详细安装见 README [安装与使用](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md#安装与使用)。
 

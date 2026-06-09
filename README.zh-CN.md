@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.43.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.44.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,12 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.44.0 — 2026-06-09 — 批判 Gate + Spec 实验工具
+
+- **Spec 批判 Gate**：Multi-Stakeholder Review 之后的对抗性扫描 — 三个结构信号（隐藏假设、未质疑的决策、应裁剪的范围）对抗 LLM 讨好偏见。经三轮实验验证：5:0 盲评偏好、风险可见性 +5.2、抗返工 +4.2。0-to-1 工作流默认开启。
+- **forge-spec-critique**：自动化 spec 批判评分工具。
+- **forge-spec-blind-eval**：自动化 A/B 盲评实验工具，验证 spec 质量差异。
 
 ### v1.43.0 — 2026-06-08 — Multi-Stakeholder Review + forge-bug-fix bisect/classify
 
@@ -533,7 +539,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 |------|---------------------------------------------------|------|
 | 模糊请求路由 | `/request-dispatcher` | 推荐目标 Skill |
 | 领域研究（可选，陌生领域） | `/domain-mapper` | `domain-map.md`（及可选竞品/社媒分析） |
-| 需求收集 | `/product-spec-builder` | `Product-Spec.md`（含 Multi-Stakeholder Review） |
+| 需求收集 | `/product-spec-builder` | `Product-Spec.md`（含 Multi-Stakeholder Review + 批判 Gate） |
 | 设计规范（可选） | `/design-brief-builder` | `Design-Brief.md` |
 | 设计稿（可选） | `/design-maker` | 设计稿 + `UI-Spec.md`（临时，不提交） |
 | 开发计划 | `/dev-planner` | `DEV-PLAN.md` |
@@ -751,7 +757,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 | Skill | 职责 |
 | ------------------------ | -------------------------------------------------------------------------------------- |
-| **product-spec-builder** | 需求收集。Multi-Stakeholder Review 四视角扫描 + 多轮访谈产出 Product-Spec.md；可选 PM 框架（OST、JTBD、假设、竞品）与 CoT 模板。支持迭代与 Quick Mode。 |
+| **product-spec-builder** | 需求收集。Multi-Stakeholder Review 四视角扫描 + **批判 Gate**（3 个结构信号对抗讨好偏见）+ 多轮访谈产出 Product-Spec.md；可选 PM 框架（OST、JTBD、假设、竞品）与 CoT 模板。支持迭代与 Quick Mode。 |
 | **change-manager** | 存量项目增量变更。每个功能一个 `changes/<name>/` 目录：提议 → 实现 → 验收 → 归档（对齐 OpenSpec 思路，见 [openspec-comparison](core/docs/openspec-comparison.md)）。 |
 | **design-brief-builder** | 设计语言。将模糊描述（"暗色主题，简约"）量化为具体方向：调色板、交互风格、信息密度。 |
 | **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿；验证阶段产出临时 `UI-Spec.md` 供 dev-builder 读取。 |
@@ -861,7 +867,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 ## 工作流程
 
 0. **领域研究（可选）** — 进入陌生行业/技术栈 → `/domain-mapper` → `domain-map.md`，再写 Spec（独立于主链路，可与步骤 1 并行）
-1. **描述你的想法** — `/product-spec-builder` 多轮访谈（或快速模式一句话）。0-to-1 默认 **Multi-Stakeholder Review** 四视角扫描；想法模糊时，可选 **PM 发现**（OST、假设）与 **CoT** 模板，先理清再写 Spec，不写业务代码。
+1. **描述你的想法** — `/product-spec-builder` 多轮访谈（或快速模式一句话）。0-to-1 默认 **Multi-Stakeholder Review** 四视角扫描 + **批判 Gate**（3 个结构信号对抗讨好偏见）；想法模糊时，可选 **PM 发现**（OST、假设）与 **CoT** 模板，先理清再写 Spec，不写业务代码。
 2. **生成 Spec** — 输出 `Product-Spec.md`（可含 JTBD、指标、竞品、假设等可选章节）→ 用户确认 → `.forge/spec-confirmed.json`
 3. **设计简报（可选）** — 调用 /design-brief-builder
 4. **设计稿（可选）** — 调用 /design-maker（产出临时 `UI-Spec.md` 供 dev-builder 读取）

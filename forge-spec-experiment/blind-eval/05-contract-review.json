@@ -1,0 +1,33 @@
+{
+  "name": "05-contract-review",
+  "timestamp": "2026-06-09T07:35:51.015Z",
+  "provider": "deepseek",
+  "assignment": {
+    "A": "control",
+    "B": "critique"
+  },
+  "specLength": {
+    "control": 3742,
+    "critique": 5091
+  },
+  "evaluation": {
+    "spec_a": {
+      "完整性": 8,
+      "风险可见性": 4,
+      "可执行性": 7,
+      "范围清晰度": 6,
+      "抗返工能力": 5
+    },
+    "spec_b": {
+      "完整性": 9,
+      "风险可见性": 9,
+      "可执行性": 8,
+      "范围清晰度": 9,
+      "抗返工能力": 9
+    },
+    "preference": "B",
+    "reason": "Spec B明确标注了每个功能的风险、替代方案和范围裁剪，大幅降低了开发返工和法律风险，可执行性远超Spec A。"
+  },
+  "preference": "B (= critique)",
+  "reason": "Spec B明确标注了每个功能的风险、替代方案和范围裁剪，大幅降低了开发返工和法律风险，可执行性远超Spec A。"
+}

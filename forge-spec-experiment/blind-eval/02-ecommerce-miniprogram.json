@@ -1,0 +1,33 @@
+{
+  "name": "02-ecommerce-miniprogram",
+  "timestamp": "2026-06-09T07:32:45.743Z",
+  "provider": "deepseek",
+  "assignment": {
+    "A": "critique",
+    "B": "control"
+  },
+  "specLength": {
+    "control": 4208,
+    "critique": 4536
+  },
+  "evaluation": {
+    "spec_a": {
+      "完整性": 9,
+      "风险可见性": 9,
+      "可执行性": 8,
+      "范围清晰度": 9,
+      "抗返工能力": 9
+    },
+    "spec_b": {
+      "完整性": 7,
+      "风险可见性": 5,
+      "可执行性": 7,
+      "范围清晰度": 7,
+      "抗返工能力": 6
+    },
+    "preference": "A",
+    "reason": "Spec A 以批判性思维全面暴露了风险、假设和替代方案，范围裁剪明确，抗返工能力更强；Spec B 虽结构清晰，但缺乏风险分析和深度思考，易导致开发后返工。"
+  },
+  "preference": "A (= critique)",
+  "reason": "Spec A 以批判性思维全面暴露了风险、假设和替代方案，范围裁剪明确，抗返工能力更强；Spec B 虽结构清晰，但缺乏风险分析和深度思考，易导致开发后返工。"
+}

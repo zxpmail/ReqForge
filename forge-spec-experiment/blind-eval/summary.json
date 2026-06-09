@@ -1,0 +1,194 @@
+{
+  "results": [
+    {
+      "name": "01-knowledge-base",
+      "timestamp": "2026-06-09T07:31:48.515Z",
+      "provider": "deepseek",
+      "assignment": {
+        "A": "control",
+        "B": "critique"
+      },
+      "specLength": {
+        "control": 3241,
+        "critique": 4818
+      },
+      "evaluation": {
+        "spec_a": {
+          "完整性": 8,
+          "风险可见性": 3,
+          "可执行性": 7,
+          "范围清晰度": 4,
+          "抗返工能力": 4
+        },
+        "spec_b": {
+          "完整性": 9,
+          "风险可见性": 9,
+          "可执行性": 8,
+          "范围清晰度": 9,
+          "抗返工能力": 9
+        },
+        "preference": "B",
+        "reason": "Spec B明确暴露了风险、假设和范围裁剪，开发团队能直接按V1启动，返工风险极低，而Spec A过于理想化，未处理关键依赖和成本问题。"
+      },
+      "preference": "B (= critique)",
+      "reason": "Spec B明确暴露了风险、假设和范围裁剪，开发团队能直接按V1启动，返工风险极低，而Spec A过于理想化，未处理关键依赖和成本问题。"
+    },
+    {
+      "name": "02-ecommerce-miniprogram",
+      "timestamp": "2026-06-09T07:32:45.743Z",
+      "provider": "deepseek",
+      "assignment": {
+        "A": "critique",
+        "B": "control"
+      },
+      "specLength": {
+        "control": 4208,
+        "critique": 4536
+      },
+      "evaluation": {
+        "spec_a": {
+          "完整性": 9,
+          "风险可见性": 9,
+          "可执行性": 8,
+          "范围清晰度": 9,
+          "抗返工能力": 9
+        },
+        "spec_b": {
+          "完整性": 7,
+          "风险可见性": 5,
+          "可执行性": 7,
+          "范围清晰度": 7,
+          "抗返工能力": 6
+        },
+        "preference": "A",
+        "reason": "Spec A 以批判性思维全面暴露了风险、假设和替代方案，范围裁剪明确，抗返工能力更强；Spec B 虽结构清晰，但缺乏风险分析和深度思考，易导致开发后返工。"
+      },
+      "preference": "A (= critique)",
+      "reason": "Spec A 以批判性思维全面暴露了风险、假设和替代方案，范围裁剪明确，抗返工能力更强；Spec B 虽结构清晰，但缺乏风险分析和深度思考，易导致开发后返工。"
+    },
+    {
+      "name": "03-ai-interview-assistant",
+      "timestamp": "2026-06-09T07:33:47.539Z",
+      "provider": "deepseek",
+      "assignment": {
+        "A": "control",
+        "B": "critique"
+      },
+      "specLength": {
+        "control": 3761,
+        "critique": 5484
+      },
+      "evaluation": {
+        "spec_a": {
+          "完整性": 8,
+          "风险可见性": 4,
+          "可执行性": 6,
+          "范围清晰度": 5,
+          "抗返工能力": 3
+        },
+        "spec_b": {
+          "完整性": 9,
+          "风险可见性": 9,
+          "可执行性": 8,
+          "范围清晰度": 9,
+          "抗返工能力": 8
+        },
+        "preference": "B",
+        "reason": "Spec B 通过风险矩阵、范围裁剪和替代方案，暴露了核心风险（如AI幻觉）并提供了可执行的降级策略，大幅降低了返工概率，而 Spec A 过于理想化，缺乏对高风险点的预判和应对。"
+      },
+      "preference": "B (= critique)",
+      "reason": "Spec B 通过风险矩阵、范围裁剪和替代方案，暴露了核心风险（如AI幻觉）并提供了可执行的降级策略，大幅降低了返工概率，而 Spec A 过于理想化，缺乏对高风险点的预判和应对。"
+    },
+    {
+      "name": "04-fitness-tracker",
+      "timestamp": "2026-06-09T07:34:53.418Z",
+      "provider": "deepseek",
+      "assignment": {
+        "A": "control",
+        "B": "critique"
+      },
+      "specLength": {
+        "control": 4004,
+        "critique": 5666
+      },
+      "evaluation": {
+        "spec_a": {
+          "完整性": 8,
+          "风险可见性": 3,
+          "可执行性": 7,
+          "范围清晰度": 6,
+          "抗返工能力": 5
+        },
+        "spec_b": {
+          "完整性": 9,
+          "风险可见性": 9,
+          "可执行性": 8,
+          "范围清晰度": 9,
+          "抗返工能力": 9
+        },
+        "preference": "B",
+        "reason": "Spec B明确暴露了穿戴设备不可行、社交功能高隐私风险等关键问题，并给出范围裁剪建议和风险矩阵，开发团队能据此做出更少返工的决策。"
+      },
+      "preference": "B (= critique)",
+      "reason": "Spec B明确暴露了穿戴设备不可行、社交功能高隐私风险等关键问题，并给出范围裁剪建议和风险矩阵，开发团队能据此做出更少返工的决策。"
+    },
+    {
+      "name": "05-contract-review",
+      "timestamp": "2026-06-09T07:35:51.015Z",
+      "provider": "deepseek",
+      "assignment": {
+        "A": "control",
+        "B": "critique"
+      },
+      "specLength": {
+        "control": 3742,
+        "critique": 5091
+      },
+      "evaluation": {
+        "spec_a": {
+          "完整性": 8,
+          "风险可见性": 4,
+          "可执行性": 7,
+          "范围清晰度": 6,
+          "抗返工能力": 5
+        },
+        "spec_b": {
+          "完整性": 9,
+          "风险可见性": 9,
+          "可执行性": 8,
+          "范围清晰度": 9,
+          "抗返工能力": 9
+        },
+        "preference": "B",
+        "reason": "Spec B明确标注了每个功能的风险、替代方案和范围裁剪，大幅降低了开发返工和法律风险，可执行性远超Spec A。"
+      },
+      "preference": "B (= critique)",
+      "reason": "Spec B明确标注了每个功能的风险、替代方案和范围裁剪，大幅降低了开发返工和法律风险，可执行性远超Spec A。"
+    }
+  ],
+  "controlWins": 0,
+  "critiqueWins": 5,
+  "total": 5,
+  "dimensionAverages": {
+    "完整性": {
+      "control": 7.8,
+      "critique": 9
+    },
+    "风险可见性": {
+      "control": 3.8,
+      "critique": 9
+    },
+    "可执行性": {
+      "control": 6.8,
+      "critique": 8
+    },
+    "范围清晰度": {
+      "control": 5.6,
+      "critique": 9
+    },
+    "抗返工能力": {
+      "control": 4.6,
+      "critique": 8.8
+    }
+  }
+}

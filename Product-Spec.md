@@ -102,12 +102,12 @@
 4. 复制对应适配目录下的所有文件到自己项目（或使用 `pnpm forge-install <client> --target <dir>`）
 5. 打开 AI 客户端 → 框架自动检测项目进度，引导用户描述产品想法
 6. 进入陌生领域时（可选）→ 调用 `/domain-mapper` 生成 `domain-map.md`
-7. 进入需求收集阶段 → 调用 `/product-spec-builder` 生成 Product-Spec.md（0-to-1 默认 Multi-Stakeholder Review 四视角扫描）
+7. 进入需求收集阶段 → 调用 `/product-spec-builder` 生成 Product-Spec.md（0-to-1 默认 Multi-Stakeholder Review 四视角扫描 + 批判 Gate 三个结构信号）
 
 ### 标准开发流程
 
 0. **领域研究阶段（可选）**：用户进入陌生行业/技术栈 → 调用 `/domain-mapper` → 输出 `domain-map.md`（独立于 spec→build 管线）
-1. **需求收集阶段**：用户描述产品想法 → Multi-Stakeholder Review 四视角扫描 + 框架追问细节 → 生成完整 Product-Spec.md
+1. **需求收集阶段**：用户描述产品想法 → Multi-Stakeholder Review 四视角扫描 + 批判 Gate 对抗讨好偏见 → 生成完整 Product-Spec.md
 2. **设计规范阶段（可选）**：用户调用 `/design-brief-builder` → 生成 Design-Brief.md
 3. **设计稿阶段（可选）**：用户调用 `/design-maker` → 生成设计稿 + 临时 `UI-Spec.md`（供 dev-builder 读取，不提交）
 4. **开发计划阶段**：用户调用 `/dev-planner` → 生成分阶段 DEV-PLAN.md

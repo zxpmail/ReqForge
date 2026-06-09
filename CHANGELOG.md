@@ -2,6 +2,24 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.44.0] - 2026-06-09
+
+### Added
+- **Critique Gate phase**: New pre-Spec adversarial review in product-spec-builder 0-to-1 workflow, after Multi-Stakeholder Review and before Document Generation. Three structural signals (Hidden Assumptions, Unchallenged Decisions, Scope That Should Be Cut) counteract LLM sycophancy bias. Validated by three-round experiment: 5:0 blind eval preference, +5.2 risk visibility, +4.2 rework resistance. Default on for 0-to-1, skipped in Quick/Iteration, user may opt out. (`core/skills/product-spec-builder/references/critique-gate.md`)
+- **forge-spec-critique**: `pnpm forge-spec-critique` — automated spec critique scoring tool measuring assumption count, challenge count, and scope decisions. (`scripts/forge-spec-critique.mjs`)
+- **forge-spec-blind-eval**: `pnpm forge-spec-blind-eval` — automated A/B blind evaluation experiment for validating spec quality differences. Randomized order, independent LLM session evaluation on 5 dimensions. Supports DeepSeek, OpenAI, and Anthropic providers. (`scripts/forge-spec-blind-eval.mjs`)
+
+### Changed
+- **Multi-Stakeholder Review stop rule**: "Proceed" now transitions to Critique Gate (was directly to Document Generation). (`core/skills/product-spec-builder/references/multi-stakeholder-review.md`)
+- **product-spec-builder workflow**: 0-to-1 now runs Discovery → Exploration → Clarifying → Refinement → MS Review → **Critique Gate** → Document Generation. (`references/workflow-0-to-1.md`)
+
+### Docs
+- **Spec Critique Gate experiment report**: `forge-spec-experiment/result.md` — three-round experiment with manual A/B, dogfood (novel-writing app), and automated blind evaluation.
+- **Architecture & usage sync**: README, README.zh-CN, CHANGELOG, Skill table updated for Critique Gate + three-gate relationship (MS Review / Critique Gate / Step 7 Council).
+
+### Sync
+- **Adapter sync**: Propagated critique-gate.md, workflow changes, MS Review stop rule update, SKILL.md gotchas, commands phase index, and product-spec-template Critique Gate Summary section to all 4 adapters.
+
 ## [v1.43.0] - 2026-06-08
 
 ### Added

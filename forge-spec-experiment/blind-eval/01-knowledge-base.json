@@ -1,0 +1,33 @@
+{
+  "name": "01-knowledge-base",
+  "timestamp": "2026-06-09T07:31:48.515Z",
+  "provider": "deepseek",
+  "assignment": {
+    "A": "control",
+    "B": "critique"
+  },
+  "specLength": {
+    "control": 3241,
+    "critique": 4818
+  },
+  "evaluation": {
+    "spec_a": {
+      "完整性": 8,
+      "风险可见性": 3,
+      "可执行性": 7,
+      "范围清晰度": 4,
+      "抗返工能力": 4
+    },
+    "spec_b": {
+      "完整性": 9,
+      "风险可见性": 9,
+      "可执行性": 8,
+      "范围清晰度": 9,
+      "抗返工能力": 9
+    },
+    "preference": "B",
+    "reason": "Spec B明确暴露了风险、假设和范围裁剪，开发团队能直接按V1启动，返工风险极低，而Spec A过于理想化，未处理关键依赖和成本问题。"
+  },
+  "preference": "B (= critique)",
+  "reason": "Spec B明确暴露了风险、假设和范围裁剪，开发团队能直接按V1启动，返工风险极低，而Spec A过于理想化，未处理关键依赖和成本问题。"
+}

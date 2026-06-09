@@ -173,9 +173,47 @@
             Hard cap: max 1 re-scan (initial + at most one).
 
         Step 5: Either proceed or stop
-            - Blocked items resolved → Document Generation Phase
+            - Blocked items resolved → Critique Gate Phase
             - Blocked items cannot resolve → stop; mark Spec as blocked
-            - No blocking items → Document Generation Phase (findings feed into Spec)
+            - No blocking items → Critique Gate Phase (findings feed into Critique Gate input)
+
+    [Critique Gate Phase]
+        Goal: Counteract LLM sycophancy bias by forcing a critical re-examination of the
+        consensus spec before writing it. Multi-Stakeholder Review asks "should we build this?";
+        Critique Gate asks "what are we getting wrong?" — adversarial, not stakeholder.
+
+        **When to skip**: Quick Mode, Iteration Mode, user says "skip critique", or a complete
+        brief was already provided. In 0-to-1 full workflow, default on — user may opt out.
+        If Multi-Stakeholder Review was skipped, Critique Gate **still runs** (independent gate).
+
+        Step 1: Prepare critique input
+            Distill Refinement output + MS Review findings (if any) into a compact
+            `## Critique Gate Input` block (problem, users, MVP scope, tech direction,
+            key assumptions, stakeholder review findings).
+
+        Step 2: Run three structural signals
+            Execute `references/critique-gate.md`:
+            - Signal 1: Hidden Assumptions (user/tech/market/scope assumptions treated as facts)
+            - Signal 2: Unchallenged Decisions (decisions accepted without alternatives)
+            - Signal 3: Scope That Should Be Cut (features that don't survive honest scrutiny)
+            Each signal produces: ID + finding + impact assessment.
+
+        Step 3: Synthesize verdict
+            Produce the `## Critique Gate Summary`:
+            - Hidden Assumptions table
+            - Unchallenged Decisions table
+            - Scope Cut Suggestions table
+            - Verdict: proceed / clarify / blocked
+
+        Step 4: Resolve blocking items
+            Present to user. Blocking must be resolved before proceeding.
+            No re-scan — the critique gate is a one-pass checkpoint.
+
+        Step 5: Feed findings into Spec
+            - Hidden assumptions → `§ Key Assumptions & Validation` in Spec
+            - Scope cuts → explicit v1/v2 boundary in Spec
+            - Unchallenged decisions → documented rationale in Spec
+            Then proceed to Document Generation Phase.
 
     [Document Generation Phase]
         Goal: Output a usable Product Spec file
