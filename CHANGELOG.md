@@ -20,6 +20,16 @@ All notable changes to Forge are documented here.
 ### Sync
 - **Adapter sync**: Propagated critique-gate.md, workflow changes, MS Review stop rule update, SKILL.md gotchas, commands phase index, and product-spec-template Critique Gate Summary section to all 4 adapters.
 
+### Added (measurement infrastructure)
+- **Grovel Index baseline**: First-ever run of Position-Swap test across 5 scenarios. Avg GI=0.21 (moderate catering). Key finding: catering is asymmetrical — model pushes back on "don't want" more than it follows "want". (`.forge/skills/product-spec-builder/eval/grovel/baseline-2026-06-09.json`)
+- **Conversational Catering Test (CCT v2)**: Free-form dialogue sycophancy measurement across 3 interventions. Baseline sycophancy 0.8/5 → 0 with anti-cater. Blind spot detection 33% → 67%. (`cct-v2-baseline-2026-06-09.json`)
+- **Structured review ceiling test**: Structured review format achieves 93% blind spot detection unaided — Critique Gate value is in conversational phase. (`catering-baseline-2026-06-09.json`)
+- **Cross-provider validation**: Claude Sonnet/Opus match DeepSeek pattern: sycophancy is scenario-specific, not model-specific. "Don't cater" works universally. (`cross-provider-2026-06-09.json`)
+- **forge-smoke #13 grovel-baseline**: Structural integrity check for measurement framework (no LLM calls). (`scripts/forge-smoke/grovel-baseline.mjs`)
+
+### Docs (supplementary evidence)
+- **Spec Critique Gate technical report**: Added §6.4 with Grovel Index, conversational catering, structural ceiling data; §6.4.7 cross-provider validation. (`docs/spec-critique-gate-technical-report.md`)
+
 ## [v1.43.0] - 2026-06-08
 
 ### Added
