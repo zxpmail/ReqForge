@@ -48,6 +48,7 @@ requires: []
 <!-- begin: hard-gate -->
 [HARD-GATE]
     Until `DEV-PLAN.md` saved **and** user explicitly confirms → **MUST NOT** invoke `/dev-builder`. Chat "looks good" ≠ confirm.
+    After explicit confirmation, write `.forge/plan-confirmed.json` before build handoff.
     Prerequisites: `Product-Spec.md` must exist. Rationalizations → `references/plan-hard-gate-rationalization.md`
 
 <!-- end: hard-gate -->

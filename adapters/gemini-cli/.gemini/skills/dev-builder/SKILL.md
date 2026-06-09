@@ -66,6 +66,7 @@ requires: []
 <!-- begin: hard-gate -->
 [HARD-GATE]
     机器门与 Session 生命周期 → `../_shared/hard-gate-summary.md`（Hook 拦截为准）
+    MUST NOT edit app code from the main session: each Task uses implementer + `.forge/implementer-session.json` + worktree isolation.
 
 <!-- end: hard-gate -->
 <!-- begin: output-style -->
