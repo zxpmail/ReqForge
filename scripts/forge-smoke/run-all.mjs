@@ -31,6 +31,7 @@ const SMOKES = [
   "adapters-sync",
   "skills-complete",
   "test-demo-golden-path",
+  "grovel-baseline",
 ];
 
 let failed = 0;

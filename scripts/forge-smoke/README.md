@@ -28,6 +28,7 @@ CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 | 10 | `adapters-sync.mjs` | `core/skills` 与四端 adapter 技能目录名一致 |
 | 11 | `skills-complete.mjs` | 14 个 Skill + `validate-skill.mjs` 通过 |
 | 12 | `test-demo-golden-path.mjs` | `test-demo/` 黄金路径：Spec/Plan + todo-cli build/test/CLI 冒烟 |
+| 13 | `grovel-baseline.mjs` | Grovel Index 测量框架完整性：文件存在 + JSON valid + 基线值范围（不调 LLM） |
 
 跳过第 12 项（离线/无 pnpm）：`SKIP_TEST_DEMO_GOLDEN=1 pnpm forge-smoke`
 
