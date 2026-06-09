@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * skills-complete — 14 个 Skill 目录齐，且 validate-skill 通过
+ * skills-complete — core Skill 目录齐，且 validate-skill 通过
  */
 import { spawnSync } from "child_process";
 import path from "path";
@@ -10,7 +10,7 @@ const r = createRunner("skills-complete");
 const skillsDir = path.join(ROOT, "core", "skills");
 const names = listSkillNames(skillsDir);
 
-r.assert(names.length === 14, `expected 14 skills, found ${names.length}: ${names.join(", ")}`);
+r.assert(names.length === 15, `expected 15 skills, found ${names.length}: ${names.join(", ")}`);
 
 const result = spawnSync(
   process.execPath,
