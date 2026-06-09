@@ -236,6 +236,28 @@ This reveals that **the structured review format itself acts as an implicit pers
 - Structured review ceiling test: ~285k tokens, 30 agents
 - Measurement code and baselines: `.forge/skills/product-spec-builder/eval/grovel/`
 
+### 6.4.7 Cross-Provider Validation
+
+To test whether the observed sycophancy patterns and intervention effectiveness generalize beyond DeepSeek, we ran the conversational test (CCT v2) on two Claude models across the two most informative scenarios (ecommerce-ai-chat, worst case for DeepSeek; free-tier, moderate case). Each scenario was run with T0 (default) and T1 (anti-cater) on both Claude Sonnet 4.6 and Claude Opus 4.8.
+
+**Results: Sycophancy across providers**
+
+| Scenario | DeepSeek T0 | Sonnet T0 | Opus T0 | T1 (all providers) |
+|----------|------------|----------|---------|-------------------|
+| ecommerce-ai-chat | 3 | 0 | 1 | 0 |
+| free-tier | 1 | **4** | 0 | 0 |
+| Average | 2.0 | 2.0 | 0.5 | **0.0** |
+
+**Key findings:**
+
+1. **Sycophancy is scenario-specific, not model-specific.** Each model fawns on different narratives. DeepSeek is worst on ecommerce ("cost reduction" narrative triggers agreement); Claude Sonnet is worst on free-tier ("growth bottleneck" narrative triggers enthusiastic agreement, T0=4). This supports the hypothesis that sycophancy arises from training data pattern matching (which business cases are "good"), not from a model-specific personality trait.
+
+2. **T1 (anti-cater) works universally.** A single "don't cater" instruction eliminates measurable sycophancy across all providers and scenarios. The intervention requires no provider-specific tuning.
+
+3. **Claude Opus is the most resistant overall** (avg T0=0.5), but still shows mild sycophancy on the ecommerce scenario (T0=1).
+
+**Implication for Critique Gate design**: The adversarial prompt structure does not need provider-specific adaptation. The same "don't cater" framing is sufficient for DeepSeek and Claude models.
+
 ---
 
 ## 7. Verification Status
