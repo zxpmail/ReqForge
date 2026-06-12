@@ -1,19 +1,17 @@
-import { describe, it, expect, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import * as fs from 'fs';
 import * as path from 'path';
 import { addTodo, getAllTodos, completeTodo, deleteTodo } from '../storage';
 
-const TEST_FILE = path.resolve(process.cwd(), 'todo.json');
+function storageFilePath(): string {
+  const override = process.env.TODO_STORAGE_FILE;
+  if (!override) {
+    throw new Error('TODO_STORAGE_FILE not set — load vitest setup.ts');
+  }
+  return path.isAbsolute(override) ? override : path.resolve(process.cwd(), override);
+}
 
 describe('storage', () => {
-  beforeEach(() => {
-    if (fs.existsSync(TEST_FILE)) fs.unlinkSync(TEST_FILE);
-  });
-
-  afterEach(() => {
-    if (fs.existsSync(TEST_FILE)) fs.unlinkSync(TEST_FILE);
-  });
-
   it('starts with empty list when no file exists', () => {
     expect(getAllTodos()).toEqual([]);
   });
@@ -69,12 +67,12 @@ describe('storage', () => {
   });
 
   it('handles corrupted JSON gracefully', () => {
-    fs.writeFileSync(TEST_FILE, '{invalid}', 'utf-8');
+    fs.writeFileSync(storageFilePath(), '{invalid}', 'utf-8');
     expect(getAllTodos()).toEqual([]);
   });
 
   it('handles missing todos array gracefully', () => {
-    fs.writeFileSync(TEST_FILE, '{"not":"todos"}', 'utf-8');
+    fs.writeFileSync(storageFilePath(), '{"not":"todos"}', 'utf-8');
     expect(getAllTodos()).toEqual([]);
   });
 });

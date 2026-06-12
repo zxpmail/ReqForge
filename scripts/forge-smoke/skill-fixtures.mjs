@@ -14,7 +14,8 @@ function loadYamlLike(filePath) {
   const text = fs.readFileSync(filePath, "utf-8");
   const out = { expect_skill_contains: [], expect_reference_contains: [] };
   let key = null;
-  for (const line of text.split("\n")) {
+  for (const rawLine of text.split("\n")) {
+    const line = rawLine.replace(/\r$/, "");
     const km = line.match(/^([a-z_]+):\s*$/);
     if (km) {
       key = km[1];
@@ -22,7 +23,14 @@ function loadYamlLike(filePath) {
     }
     const item = line.match(/^\s+-\s+(.+)$/);
     if (item && key && Array.isArray(out[key])) {
-      out[key].push(item[1].trim());
+      let value = item[1].trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      out[key].push(value);
       continue;
     }
     const scalar = line.match(/^([a-z_]+):\s+(.+)$/);

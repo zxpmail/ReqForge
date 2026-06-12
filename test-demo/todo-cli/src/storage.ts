@@ -2,11 +2,21 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { Todo, TodoStore } from './types';
 
-const STORAGE_FILE = path.resolve(process.cwd(), 'todo.json');
+function resolveStorageFile(): string {
+  const override = process.env.TODO_STORAGE_FILE;
+  if (override) {
+    return path.isAbsolute(override) ? override : path.resolve(process.cwd(), override);
+  }
+  return path.resolve(process.cwd(), 'todo.json');
+}
+
+function getStorageFile(): string {
+  return resolveStorageFile();
+}
 
 function readStore(): TodoStore {
   try {
-    const data = fs.readFileSync(STORAGE_FILE, 'utf-8');
+    const data = fs.readFileSync(getStorageFile(), 'utf-8');
     const parsed = JSON.parse(data) as TodoStore;
     if (!Array.isArray(parsed.todos)) {
       console.warn('todo.json is corrupted. Starting with an empty list.');
@@ -23,7 +33,7 @@ function readStore(): TodoStore {
 }
 
 function writeStore(store: TodoStore): void {
-  fs.writeFileSync(STORAGE_FILE, JSON.stringify(store, null, 2), 'utf-8');
+  fs.writeFileSync(getStorageFile(), JSON.stringify(store, null, 2), 'utf-8');
 }
 
 function calculateNextId(todos: Todo[]): number {
