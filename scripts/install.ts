@@ -298,7 +298,12 @@ export function installAgentsTemplate(
     log(`  ⏭️  ${filename} exists (use --force to overwrite)`);
     return;
   }
-  fs.copyFileSync(src, dest);
+  let content = fs.readFileSync(src, "utf-8");
+  if (client === "claude-code") {
+    // Replace AGENTS.md references with CLAUDE.md for claude-code client
+    content = content.replace(/AGENTS\.md/g, "CLAUDE.md");
+  }
+  fs.writeFileSync(dest, content, "utf-8");
   log(`  ✅ ${dest}`);
 }
 
