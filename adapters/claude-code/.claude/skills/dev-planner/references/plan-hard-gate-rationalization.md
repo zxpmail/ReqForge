@@ -1,6 +1,6 @@
 # HARD-GATE 借口反制表（dev-planner）
 
-<!-- 从 SKILL.md 渐进披露；主流程见 ../SKILL.md [HARD-GATE] -->
+<!-- 从 SKILL.md 渐进披露；主流程见 ../SKILL.md [HARD-GATE] — plan-hard-gate-rationalization -->
 
 [HARD-GATE Rationalizations]
 

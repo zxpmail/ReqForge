@@ -47,7 +47,7 @@ requires: []
 <!-- end: shared-discipline -->
 <!-- begin: hard-gate -->
 [HARD-GATE]
-    Until `DEV-PLAN.md` saved **and** user explicitly confirms → **MUST NOT** invoke `/dev-builder`. Chat "looks good" ≠ confirm.
+    Until `DEV-PLAN.md` saved **and** user explicitly confirms → write `.forge/plan-confirmed.json` → **MUST NOT** invoke `/dev-builder`. Chat "looks good" ≠ confirm.
     Prerequisites: `Product-Spec.md` must exist. Rationalizations → `references/plan-hard-gate-rationalization.md`
 
 <!-- end: hard-gate -->

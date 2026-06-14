@@ -65,6 +65,7 @@ requires: []
 <!-- end: shared-discipline -->
 <!-- begin: hard-gate -->
 [HARD-GATE]
+    主 Session **MUST NOT** 直接 Write/Edit 业务代码；每 Task dispatch implementer 并创建 `.forge/implementer-session.json`；首次改代码前 **MUST** git worktree。
     机器门与 Session 生命周期 → `../_shared/hard-gate-summary.md`（Hook 拦截为准）
 
 <!-- end: hard-gate -->

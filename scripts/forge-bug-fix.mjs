@@ -5,16 +5,19 @@
  * bug-fixer Skill 的机械辅助脚本：诊断、trace、bisect、分类、验证。
  *
  * 用法：
- *   pnpm forge-bug-fix diagnose            运行 preflight + 环境检查
- *   pnpm forge-bug-fix trace <name>        捕获调试 trace 到 .forge/trace/
- *   pnpm forge-bug-fix bisect <good> [bad] 自动 git bisect 定位首个故障提交
- *   pnpm forge-bug-fix classify [trace]    分类错误类型并给出建议
- *   pnpm forge-bug-fix verify              编译 + 测试验证
- *   pnpm forge-bug-fix status              当前调试上下文概览
+ *   pnpm forge-bug-fix diagnose                       运行通用 preflight + 环境检查
+ *   pnpm forge-bug-fix diagnose --scenario compile    编译错误专项诊断
+ *   pnpm forge-bug-fix diagnose --scenario config     环境配置专项诊断
+ *   pnpm forge-bug-fix diagnose --scenario data       数据不一致专项诊断
+ *   pnpm forge-bug-fix trace <name>                   捕获调试 trace 到 .forge/trace/
+ *   pnpm forge-bug-fix bisect <good> [bad]            自动 git bisect 定位首个故障提交
+ *   pnpm forge-bug-fix classify [trace]               分类错误类型并给出建议
+ *   pnpm forge-bug-fix verify                         编译 + 测试验证
+ *   pnpm forge-bug-fix status                         当前调试上下文概览
  */
 
-import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync } from "fs";
-import { join, dirname } from "path";
+import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, statSync } from "fs";
+import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
 
@@ -27,12 +30,15 @@ const cmd = args[0];
 
 function usage() {
   console.log(`Usage:
-  pnpm forge-bug-fix diagnose             Run preflight + environment check
-  pnpm forge-bug-fix trace <name>         Capture debug trace
-  pnpm forge-bug-fix bisect <good> [bad]  Auto git bisect to find first bad commit
-  pnpm forge-bug-fix classify [trace]     Classify error type from trace or current state
-  pnpm forge-bug-fix verify               Run compile + test verification
-  pnpm forge-bug-fix status               Show active bug contexts`);
+  pnpm forge-bug-fix diagnose                       Run generic preflight + env check
+  pnpm forge-bug-fix diagnose --scenario compile    Compile-specific diagnostics
+  pnpm forge-bug-fix diagnose --scenario config     Config-specific diagnostics
+  pnpm forge-bug-fix diagnose --scenario data       Data-specific diagnostics
+  pnpm forge-bug-fix trace <name>                   Capture debug trace
+  pnpm forge-bug-fix bisect <good> [bad]            Auto git bisect to find first bad commit
+  pnpm forge-bug-fix classify [trace]               Classify error type from trace or current state
+  pnpm forge-bug-fix verify                         Run compile + test verification
+  pnpm forge-bug-fix status                         Show active bug contexts`);
   process.exit(1);
 }
 
@@ -70,6 +76,32 @@ function runOptional(cmd, opts = {}) {
   } catch {
     return "";
   }
+}
+
+/** Portable recursive file finder — walks dirs matching extensions. Works on all platforms. */
+function findFiles(dir, extensions, maxFiles = 100) {
+  const results = [];
+  const fullDir = join(ROOT, dir);
+  if (!existsSync(fullDir)) return results;
+  const queue = [fullDir];
+  while (queue.length > 0 && results.length < maxFiles) {
+    const current = queue.shift();
+    try {
+      const entries = readdirSync(current, { withFileTypes: true });
+      for (const entry of entries) {
+        if (results.length >= maxFiles) break;
+        const fullPath = join(current, entry.name);
+        if (entry.isDirectory() && !entry.name.startsWith(".") && entry.name !== "node_modules") {
+          queue.push(fullPath);
+        } else if (entry.isFile()) {
+          if (extensions.length === 0 || extensions.includes(extname(entry.name))) {
+            results.push(fullPath);
+          }
+        }
+      }
+    } catch { /* skip inaccessible dirs */ }
+  }
+  return results;
 }
 
 function findTestCommand() {
@@ -143,6 +175,243 @@ function cmdDiagnose() {
   }
 
   console.log("\nDiagnose complete.");
+}
+
+// ─── Scenario-specific diagnostics ────────────────────────────────
+
+function cmdDiagnoseScenario(scenario) {
+  const scenarios = { compile, config, data };
+  if (!scenarios[scenario]) {
+    console.error(`Unknown scenario: "${scenario}". Valid: compile, config, data`);
+    process.exit(1);
+  }
+  scenarios[scenario]();
+}
+
+function compile() {
+  console.log("=== Compile Diagnostic ===\n");
+
+  // 1. tsconfig.json check
+  const tsconfigPath = join(ROOT, "tsconfig.json");
+  if (!existsSync(tsconfigPath)) {
+    console.log("  [tsconfig] Not found — skipping TypeScript checks\n");
+    console.log("Diagnose complete.");
+    return;
+  }
+  console.log("[1/4] tsconfig.json...");
+  try {
+    const tsconfig = JSON.parse(readFileSync(tsconfigPath, "utf-8"));
+    const target = tsconfig.compilerOptions?.target || "unknown";
+    const strict = tsconfig.compilerOptions?.strict ?? "not set";
+    console.log(`  Target: ${target}`);
+    console.log(`  Strict: ${strict}`);
+    if (strict !== true) {
+      console.log("  ⚠️  strict mode not enabled — type errors may slip through");
+    }
+  } catch {
+    console.log("  ❌ Invalid JSON in tsconfig.json");
+  }
+
+  // 2. TypeScript compilation
+  console.log("\n[2/4] TypeScript compilation (tsc --noEmit)...");
+  if (existsSync(join(ROOT, "node_modules", ".bin", "tsc"))) {
+    const tscOut = runTscNoEmit();
+    if (tscOut.includes("error")) {
+      const errCount = tscOut.split("error").length - 1;
+      console.log(`  ❌ ${errCount} error(s) found`);
+      const lines = tscOut.split("\n").filter(l => l.includes("error")).slice(0, 8);
+      for (const l of lines) console.log(`     ${l.trim()}`);
+    } else {
+      console.log("  ✅ Clean compilation");
+    }
+  } else {
+    console.log("  ⚠️  tsc not found in node_modules — install deps first");
+  }
+
+  // 3. Import resolution scan
+  console.log("\n[3/4] Import resolution scan...");
+  const tsFiles = findFiles("core", [".ts", ".tsx"], 50).concat(findFiles("scripts", [".ts", ".tsx"], 50));
+  let suspicious = 0;
+  for (const f of tsFiles.slice(0, 30)) {
+    const content = readFileSync(f, "utf-8");
+    // Check for bare relative imports that might break after refactoring
+    const bare = content.match(/from ['"]\.\.\/\.\.\/[^']+['"]/g);
+    if (bare && bare.length > 5) suspicious++;
+  }
+  if (suspicious > 0) {
+    console.log(`  ⚠️  ${suspicious} file(s) have many deep relative imports (../..) — fragile`);
+  } else {
+    console.log("  ✅ No suspicious import patterns");
+  }
+
+  // 4. Node version compatibility
+  console.log("\n[4/4] Node.js version...");
+  const nodeVersion = process.version;
+  const nodeMajor = parseInt(nodeVersion.slice(1), 10);
+  if (nodeMajor < 18) {
+    console.log(`  ❌ Node ${nodeVersion} is too old — upgrade to 18+`);
+  } else if (nodeMajor >= 22) {
+    console.log(`  ✅ Node ${nodeVersion} (latest)`);
+  } else {
+    console.log(`  ⚠️  Node ${nodeVersion} — OK but consider upgrading to 22`);
+  }
+
+  console.log("\nCompile diagnostic complete.");
+}
+
+function config() {
+  console.log("=== Environment Config Diagnostic ===\n");
+
+  // 1. Git config
+  console.log("[1/5] Git configuration...");
+  const gitUser = runOptional("git config user.name");
+  const gitEmail = runOptional("git config user.email");
+  if (gitUser && gitEmail) {
+    console.log(`  User: ${gitUser} <${gitEmail}>`);
+  } else {
+    console.log("  ⚠️  Git user not configured");
+  }
+
+  // 2. Environment variables
+  console.log("\n[2/5] Environment variables...");
+  const dotenvPath = join(ROOT, ".env");
+  if (existsSync(dotenvPath)) {
+    console.log("  .env file exists");
+    const content = readFileSync(dotenvPath, "utf-8");
+    const keys = content.split("\n")
+      .map(l => l.trim())
+      .filter(l => l && !l.startsWith("#"))
+      .map(l => l.split("=")[0]);
+    for (const k of keys) {
+      const val = process.env[k];
+      if (!val) {
+        console.log(`  ⚠️  ${k} defined in .env but not loaded into process.env`);
+      }
+    }
+  } else {
+    console.log("  ⚠️  No .env file found");
+  }
+
+  // 3. System dependencies
+  console.log("\n[3/5] System dependencies...");
+  const depChecks = [
+    { name: "git", cmd: "git --version" },
+    { name: "node", cmd: "node --version" },
+    { name: "npm", cmd: "npm --version" },
+  ];
+  // detect package manager
+  if (existsSync(join(ROOT, "pnpm-lock.yaml"))) depChecks.push({ name: "pnpm", cmd: "pnpm --version" });
+  if (existsSync(join(ROOT, "yarn.lock"))) depChecks.push({ name: "yarn", cmd: "yarn --version" });
+
+  for (const dep of depChecks) {
+    const out = runOptional(dep.cmd);
+    if (out) {
+      console.log(`  ✅ ${dep.name}: ${out.split("\n")[0]}`);
+    } else {
+      console.log(`  ❌ ${dep.name}: not found in PATH`);
+    }
+  }
+
+  // 4. Node modules
+  console.log("\n[4/5] Node modules...");
+  const nmPath = join(ROOT, "node_modules");
+  if (existsSync(nmPath)) {
+    const pkgCount = runOptional("ls node_modules/.package-lock.json 2>/dev/null && echo ready || ls node_modules/ | wc -l");
+    console.log(`  ✅ node_modules exists`);
+    // Check for stale node_modules (package.json newer than node_modules)
+    const pkgMod = existsSync(join(ROOT, "package.json"))
+      ? statSync(join(ROOT, "package.json")).mtimeMs : 0;
+    const nmMod = statSync(nmPath).mtimeMs;
+    if (pkgMod > nmMod) {
+      console.log("  ⚠️  package.json newer than node_modules — possibly stale, re-run install");
+    }
+  } else {
+    console.log("  ❌ node_modules missing — run pnpm install");
+  }
+
+  // 5. Port conflicts (common in dev)
+  console.log("\n[5/5] Port conflict check...");
+  const commonPorts = [3000, 5173, 8080, 3001, 4173];
+  for (const port of commonPorts) {
+    try {
+      execSync(`node -e "require('net').createServer().listen(${port},'127.0.0.1').close()"`, {
+        cwd: ROOT, encoding: "utf-8", timeout: 3000, stdio: "pipe",
+      });
+    } catch {
+      console.log(`  ⚠️  Port ${port} is already in use`);
+    }
+  }
+  console.log("  ✅ No conflicts on checked ports");
+
+  console.log("\nConfig diagnostic complete.");
+}
+
+function data() {
+  console.log("=== Data Diagnostic ===\n");
+
+  // 1. File encoding check
+  console.log("[1/4] File encoding scan...");
+  let encodingIssues = 0;
+  const scanFiles = findFiles(".", [".ts", ".tsx", ".json", ".md"], 100)
+    .filter(f => !f.includes("node_modules") && !f.includes(".git"));
+  for (const f of scanFiles.slice(0, 50)) {
+    const buf = readFileSync(f);
+    // Check BOM
+    if (buf[0] === 0xEF && buf[1] === 0xBB && buf[2] === 0xBF) {
+      console.log(`  ⚠️  BOM marker found: ${f.replace(ROOT, ".")}`);
+      encodingIssues++;
+    }
+  }
+  if (encodingIssues === 0) console.log("  ✅ No BOM issues found");
+
+  // 2. JSON file validation
+  console.log("\n[2/4] JSON file validation...");
+  let jsonErrors = 0;
+  const jsonFiles = findFiles(".", [".json"], 50)
+    .filter(f => !f.includes("node_modules") && !f.includes(".git"));
+  for (const f of jsonFiles) {
+    try {
+      JSON.parse(readFileSync(f, "utf-8"));
+    } catch {
+      console.log(`  ❌ Invalid JSON: ${f.replace(ROOT, ".")}`);
+      jsonErrors++;
+    }
+  }
+  if (jsonErrors === 0) console.log("  ✅ All JSON files valid");
+
+  // 3. Line ending consistency
+  console.log("\n[3/4] Line ending consistency...");
+  let mixedEndings = 0;
+  const textFiles = findFiles(".", [".ts", ".tsx", ".css", ".html", ".md", ".json"], 50)
+    .filter(f => !f.includes("node_modules") && !f.includes(".git"));
+  for (const f of textFiles) {
+    const content = readFileSync(f, "utf-8");
+    if (content.includes("\r\n")) mixedEndings++;
+  }
+  if (mixedEndings > 0) {
+    console.log(`  ⚠️  ${mixedEndings} file(s) have Windows line endings (CRLF)`);
+  } else {
+    console.log("  ✅ Unix line endings (LF) consistent");
+  }
+
+  // 4. Large file detection
+  console.log("\n[4/4] Large file detection...");
+  const allFiles = findFiles(".", [], 200)
+    .filter(f => !f.includes("node_modules") && !f.includes(".git"));
+  let largeFiles = 0;
+  for (const f of allFiles) {
+    try {
+      const size = statSync(f).size;
+      if (size > 500 * 1024) {
+        const sizeKB = (size / 1024).toFixed(0);
+        console.log(`  ⚠️  Large file (${sizeKB}KB): ${f.replace(ROOT, ".")}`);
+        largeFiles++;
+      }
+    } catch { /* skip */ }
+  }
+  if (largeFiles === 0) console.log("  ✅ No files over 500KB");
+
+  console.log("\nData diagnostic complete.");
 }
 
 // ─── Trace ────────────────────────────────────────────────────────
@@ -536,8 +805,13 @@ function cmdStatus() {
 // ─── Dispatch ─────────────────────────────────────────────────────
 
 try {
-  if (cmd === "diagnose") cmdDiagnose();
-  else if (cmd === "trace") cmdTrace(args[1]);
+  if (cmd === "diagnose") {
+    if (args[1] === "--scenario") {
+      cmdDiagnoseScenario(args[2]);
+    } else {
+      cmdDiagnose();
+    }
+  } else if (cmd === "trace") cmdTrace(args[1]);
   else if (cmd === "bisect") cmdBisect(args[1], args[2]);
   else if (cmd === "classify") cmdClassify(args[1]);
   else if (cmd === "verify") cmdVerify();
