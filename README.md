@@ -79,6 +79,7 @@ flowchart LR
 
 - **forge-bug-fix diagnose --scenario**: Three new scenario-specific diagnostic modes — `compile` (tsc+imports+tsconfig), `config` (git+env+deps+ports), `data` (encoding+JSON+CRLF+large files). Target the right checks without generic overhead.
 - **ReqForge-specific debugging strategies**: debugging-strategy.md enriched beyond generic 4-stage methodology — Stage 1 leverages dep-graph blast radius, trace history, project-memory known pitfalls, and scenario-specific diagnose; Stage 2 uses classify/bisect; Stage 3 adds trace capture and three-strikes stall; Stage 4 adds forge-bug-fix verify.
+- **Multi-language support**: dev-map template now includes a required Tech Stack section (Language/Build/Test/Lint/Source). dev-planner and dev-builder auto-fill it during 0-to-1. dev-builder, code-review, and bug-fixer adapt commands and review dimensions per declared language. forge-install outputs CLAUDE.md (not AGENTS.md) for claude-code client.
 
 ### v1.44.0 — 2026-06-09 — Critique Gate + Spec Experiment Tools
 
@@ -419,6 +420,7 @@ Forge is an **Agent Harness** — not about optimizing how you talk to AI, but b
 - **Guides** — Each Skill defines methodology, workflow, and acceptance criteria. Before the agent acts, it knows exactly "how to do it" and "what counts as done."
 - **Sensors** — Hook scripts + Code Review check every critical node after the agent acts. No reliance on the model's self-awareness.
 - **Steering Loop** — Every correction you give is recorded. When the same issue surfaces 3+ times, it's automatically promoted to a formal rule in the Skill.
+- **Multi-language** — Declare your tech stack (Java, Python, Go, Rust, TS) in `.forge/dev-map.md`. dev-builder, code-review, and bug-fixer adapt their commands and review dimensions accordingly. Framework-agnostic.
 
 ---
 

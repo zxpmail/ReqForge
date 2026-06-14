@@ -78,6 +78,7 @@ flowchart LR
 
 - **forge-bug-fix diagnose --scenario**：新增三种场景诊断模式 — `compile`（编译/tsc/导入）、`config`（环境变量/依赖/端口）、`data`（编码/JSON/CRLF/大文件）。按问题类型定向诊断，不跑无关检查。
 - **ReqForge 专用调试策略**：debugging-strategy.md 已从通用四阶段方法论扩展，Stage 1 集成 dep-graph 影响范围、trace 历史匹配、project-memory 已知陷阱和场景诊断；Stage 2 使用 classify/bisect；Stage 3 增加 trace 快照和三振停检；Stage 4 增加 forge-bug-fix verify 自动化验证。
+- **多语言支持**：dev-map 模板新增「技术栈」节（Language/Build/Test/Lint/Source）。0-to-1 流程中 dev-planner 自动写入、dev-builder Phase 1 同步确认。dev-builder、code-review 和 bug-fixer 根据声明语言适配命令和审查维度。forge-install claude-code 改为输出 CLAUDE.md 而非 AGENTS.md。
 
 ### v1.44.0 — 2026-06-09 — Critique Gate + Spec 实验工具
 
@@ -400,6 +401,7 @@ Forge 是一个 **Agent Harness（智能体框架）**——不是优化你与 A
 - **引导（Guides）** — 每个 Skill 定义了方法论、工作流和验收标准。Agent 行动前就知道"怎么做"和"怎样才算完成"。
 - **传感器（Sensors）** — 钩子脚本 + Code Review 在关键节点检查执行结果，不依赖模型的自我意识。
 - **转向循环（Steering Loop）** — 每次纠正都被记录下来，相同问题出现 3 次以上自动升级为 Skill 的正式规则。
+- **多语言支持** — 在 `.forge/dev-map.md` 声明技术栈（Java/Python/Go/Rust/TypeScript），dev-builder、code-review 和 bug-fixer 自动适配对应语言的构建、测试、lint 命令和审查维度。不绑定语言栈。
 
 ---
 
