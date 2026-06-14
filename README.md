@@ -583,7 +583,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 | Dev plan | `/dev-planner` | `DEV-PLAN.md` |
 | Brownfield feature (existing Spec) | `/change-manager propose <name>` → apply → verify → archive | `changes/<name>/` → `changes/archive/` |
 | Implementation | `/dev-builder` | Code + `memory/` (auto-created) |
-| Bug fix | Describe the bug (auto-triggers `/bug-fixer`; `pnpm forge-bug-fix` bisect/classify) | Fix + review loop |
+| Bug fix | Describe the bug (auto-triggers `/bug-fixer`; `pnpm forge-bug-fix` diagnose --scenario compile|config|data, bisect, classify) | Fix + review loop |
 | Release | `/release-builder` | Build / deploy checklist |
 
 **Cursor**: rules load from `.cursor/rules/` automatically; refer to skills in chat (e.g. “run product-spec-builder”) or use your client’s skill UI if configured.
@@ -814,7 +814,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 | **design-maker**         | Design prototyping. Full page mockups via Pencil or Figma MCP; verification phase emits ephemeral `UI-Spec.md` for dev-builder.                        |
 | **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
 | **dev-builder**          | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop.                                                   |
-| **bug-fixer**            | Four-stage systematic debugging + `pnpm forge-bug-fix` (bisect / classify / trace / verify). Gather evidence → analyze patterns → hypothesize → fix.   |
+| **bug-fixer**            | Four-stage systematic debugging + `pnpm forge-bug-fix` (diagnose --scenario / bisect / classify / trace / verify). Gather evidence → analyze patterns → hypothesize → fix.   |
 | **code-review**          | Parallel agent review — 4 specialists (design, bug, security, types) with confidence-scored aggregation (≥0.6 confirmed, 0.3-0.6 suspected).               |
 | **release-builder**      | Build & deploy. Built-in privacy audit and smoke testing.                                                                                              |
 | **domain-mapper**        | Domain mapping (**independent** of spec→build pipeline). Industry/tech/codebase/market → structured `domain-map.md`; L1/L2/L3 depth. Optional before Spec in unfamiliar domains. |

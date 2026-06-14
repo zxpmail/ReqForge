@@ -545,7 +545,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 | 开发计划 | `/dev-planner` | `DEV-PLAN.md` |
 | 存量功能增量（已有 Spec） | `/change-manager propose <名称>` → apply → verify → archive | `changes/<名称>/` → `changes/archive/` |
 | 编码实现 | `/dev-builder` | 代码 + 自动创建 `memory/` |
-| Bug 修复 | 描述问题（可自动触发 `/bug-fixer`；`pnpm forge-bug-fix` bisect/classify） | 修复 + 审查闭环 |
+| Bug 修复 | 描述问题（可自动触发 `/bug-fixer`；`pnpm forge-bug-fix` diagnose --scenario compile|config|data 专项诊断、bisect/classify） | 修复 + 审查闭环 |
 | 构建发布 | `/release-builder` | 打包 / 部署检查清单 |
 
 **Cursor**：`.cursor/rules/` 规则会自动加载；在对话中说明要执行的 Skill（如「执行 product-spec-builder」），或使用客户端自带的 Skill 入口。
@@ -763,7 +763,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿；验证阶段产出临时 `UI-Spec.md` 供 dev-builder 读取。 |
 | **dev-planner** | 开发计划。分析依赖关系，拆分为多个阶段，输出分阶段开发计划。 |
 | **dev-builder** | 编码实现。将工作拆分为 Task——每个 Task 走"编码 → 审查 → 修复 → 提交"闭环。 |
-| **bug-fixer** | 四阶段系统调试 + `pnpm forge-bug-fix`（bisect / classify / trace / verify）。不要猜测：收集证据 → 分析模式 → 提出假设 → 修复。 |
+| **bug-fixer** | 四阶段系统调试 + `pnpm forge-bug-fix`（diagnose --scenario / bisect / classify / trace / verify）。不要猜测：收集证据 → 分析模式 → 提出假设 → 修复。 |
 | **code-review** | 并行 Agent 审查——4 个专业 Agent（design、bug、security、types）并发执行，置信度聚合（≥0.6 确认，0.3-0.6 疑似）。 |
 | **release-builder** | 构建与部署。内置隐私审计和冒烟测试。 |
 | **domain-mapper** | 领域映射（**独立于** spec→build 管线）。行业/技术/代码库/市场 → 结构化 `domain-map.md`；L1/L2/L3 深度。进入陌生领域写 Spec 前可选。 |

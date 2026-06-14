@@ -1,6 +1,6 @@
 {
   "name": "reqforge",
-  "version": "1.44.0",
+  "version": "1.45.0",
   "description": "ReqForge — From requirements to shippable products. Agent Harness for Claude Code, Cursor, OpenCode, and Gemini CLI.",
   "repository": {
     "type": "git",

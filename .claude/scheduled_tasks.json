@@ -1,0 +1,14 @@
+{
+  "tasks": [
+    {
+      "id": "5df02642",
+      "cron": "42 10 * * *",
+      "prompt": "用户改了 dev.to 文章的 slug，计划用 GitHub repo 链接重发 HN。检查一下是否已经发了，如果还没发就提醒他们用 github.com/zxpmail/ReqForge 链接重新提交到 news.ycombinator.com。",
+      "createdAt": 1781046630933,
+      "lastFiredAt": 1781406720377,
+      "recurring": true,
+      "createdBySessionId": "ffb44caa-e4bc-4e34-8c26-54f032d3644a",
+      "createdByPid": 7912
+    }
+  ]
+}

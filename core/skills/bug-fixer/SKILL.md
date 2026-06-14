@@ -154,7 +154,7 @@ requires: []
     3. **必须先 Read `references/workflow.md`** — Startup → Debugging（四阶段）→ Verification → Completion
     4. Debugging 阶段执行 `references/debugging-strategy.md` + `cot-diagnostic-checklist.md`
     5. **forge-bug-fix 辅助**：
-       - Stage 1 启动后 → `pnpm forge-bug-fix diagnose` 跑 preflight + 环境检查
+       - Stage 1 启动后 → `pnpm forge-bug-fix diagnose` 跑 preflight + 环境检查；按问题类型加 `--scenario compile|config|data` 专项诊断
        - 调试中捕获关键现场 → `pnpm forge-bug-fix trace <bug-name>` 存快照
        - 定位回归引入者 → `pnpm forge-bug-fix bisect <good-commit> [bad-commit]` 自动 git bisect
        - 错误分类诊断 → `pnpm forge-bug-fix classify [trace-name]` 识别错误类别 + 建议修复方向

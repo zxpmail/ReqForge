@@ -2,6 +2,20 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.45.0] - 2026-06-14
+
+### Added
+- **forge-bug-fix diagnose --scenario**: Three new scenario-specific diagnostic modes — `compile` (tsc+imports+tsconfig), `config` (git+env+deps+ports), `data` (encoding+JSON+CRLF+large files). (`scripts/forge-bug-fix.mjs`)
+- **ReqForge-specific debugging strategies**: debugging-strategy.md enriched beyond generic 4-stage methodology — Stage 1 now leverages dep-graph blast radius, trace history matching, project-memory known pitfalls, and scenario-specific diagnose; Stage 2 uses forge-bug-fix classify/bisect; Stage 3 adds trace capture and three-strikes stall; Stage 4 adds verify automation and three-layer diagnosis reporting. (`core/skills/bug-fixer/references/debugging-strategy.md`)
+
+### Changed
+- **bug-fixer workflow.md**: During Stage 1, Agent now guided to run scenario-specific diagnose by problem type. (`core/skills/bug-fixer/references/workflow.md`)
+- **bug-fixer SKILL.md**: forge-bug-fix diagnose reference updated with --scenario flag. (`core/skills/bug-fixer/SKILL.md`)
+- **README / README.zh-CN**: forge-bug-fix entries updated to include diagnose --scenario.
+
+### Technical
+- **Cross-platform findFiles()**: New portable recursive file finder replaces `execSync("find ...")` calls — resolves `find` command unavailability in execSync on Windows (cmd.exe default shell). (`scripts/forge-bug-fix.mjs`)
+
 ## [v1.44.0] - 2026-06-09
 
 ### Added
