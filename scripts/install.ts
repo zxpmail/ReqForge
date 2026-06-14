@@ -279,21 +279,23 @@ export function installProjectTaste(
   log(`  ✅ ${dest}`);
 }
 
-/** Copy agents-template.md → project root `AGENTS.md` */
+/** Copy agents-template.md → project root (CLAUDE.md for claude-code, AGENTS.md for others) */
 export function installAgentsTemplate(
   targetRoot: string,
   forgeRoot: string,
   log: (msg: string) => void,
   force?: boolean,
+  client?: InstallClient,
 ): void {
   const src = path.join(forgeRoot, AGENTS_TEMPLATE_SRC);
-  const dest = path.join(path.resolve(targetRoot), "AGENTS.md");
+  const filename = client === "claude-code" ? "CLAUDE.md" : "AGENTS.md";
+  const dest = path.join(path.resolve(targetRoot), filename);
   if (!fs.existsSync(src)) {
     log(`  ⚠️  agents template not found: ${src}`);
     return;
   }
   if (fs.existsSync(dest) && !force) {
-    log(`  ⏭️  AGENTS.md exists (use --force to overwrite)`);
+    log(`  ⏭️  ${filename} exists (use --force to overwrite)`);
     return;
   }
   fs.copyFileSync(src, dest);
@@ -473,7 +475,7 @@ export function installForge(
   installProjectTaste(path.resolve(targetRoot), forgeRoot, log, options.force);
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSkillEvalTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
-  installAgentsTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installAgentsTemplate(path.resolve(targetRoot), forgeRoot, log, options.force, client);
   installPlaywrightTemplates(path.resolve(targetRoot), forgeRoot, log, options.force);
 
   let windowsSettingsApplied = false;
