@@ -24,6 +24,10 @@
     [Debugging Phase]
         Execute four-stage process from `references/debugging-strategy.md`:
         Stage 1 -> Stage 2 -> Stage 3 -> Stage 4
+        During Stage 1, diagnose by problem type:
+        - Compile/type errors -> `forge-bug-fix diagnose --scenario compile`
+        - Env/config issues -> `forge-bug-fix diagnose --scenario config`
+        - Data/IO inconsistency -> `forge-bug-fix diagnose --scenario data`
 
         Report progress to the user after each stage:
         - After Stage 1: "Evidence collected: ... Initial assessment: the problem is in XX"
