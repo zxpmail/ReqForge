@@ -5,6 +5,17 @@
 
 ---
 
+## 技术栈
+
+> **必填**。流水线所有 Skill 依赖此节判断构建、测试、lint 命令和代码规范。
+
+- Language: （JavaScript / TypeScript / Java / Python / Go / Rust …）
+- Build:    （`pnpm build` / `mvn compile` / `cargo build` …）
+- Test:     （`pnpm test` / `mvn test` / `cargo test` …）
+- Lint:     （`eslint` / `checkstyle` / `ruff` …）
+- Source:   （`src/` / `src/main/java/` / `lib/` …）
+
+
 ## 模块索引
 
 | 模块 | 关键文件 | 说明 | 改动影响链 |

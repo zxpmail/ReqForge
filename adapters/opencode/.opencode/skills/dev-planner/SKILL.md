@@ -38,6 +38,7 @@ requires: []
 <!-- begin: first-principles -->
 [First Principles]
     **Plan 前必读** `references/first-principles.md`
+    **Tech Stack**: 规划前读 `.forge/dev-map.md` 的技术栈节，确保 DEV-PLAN.md 的技术栈与 dev-map 一致。
 
 <!-- end: first-principles -->
 <!-- begin: shared-discipline -->
