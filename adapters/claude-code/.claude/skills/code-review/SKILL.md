@@ -46,6 +46,7 @@ requires: []
 [First Principles]
     **Review 前必读** `references/first-principles.md`
     **Tech Stack**: 审查前读 `.forge/dev-map.md` 的技术栈节，按语言选择审查维度（Java 侧重 import/异常/DI；Python 侧重 import/类型标注；JS/TS 侧重类型/async/import 路径）。
+    **Code Standards**: 审查时同时加载 `core/references/code-standards/<language>.md`，对照规范逐项检查（命名、异常处理、依赖注入模式等）。
 
 <!-- end: first-principles -->
 <!-- begin: output-style -->

@@ -31,6 +31,7 @@
 **Spec/Plan Read-Only**: Do not edit Product-Spec.md / DEV-PLAN.md to excuse drift → `/change-manager` or replan.
 
 **Tech Stack Awareness**: 编码前先读 `.forge/dev-map.md` 的"技术栈"节。根据声明的语言选择编译、测试、lint 命令和代码规范惯例。
+**Code Standards**: 如果 dev-map 技术栈声明了语言，从 `core/references/code-standards/<language>.md` 加载对应规范文件。文件存在则按规范编码，不存在则按语言通用惯例。
 
 **Task Micro-Cycle (≤10 min)**: After each Task RED/GREEN/REFACTOR → targeted test/lint + record pass/fail before code-reviewer.
 
