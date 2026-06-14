@@ -74,7 +74,12 @@ flowchart LR
 
 ## 近期更新
 
-### v1.44.0 — 2026-06-09 — 批判 Gate + Spec 实验工具
+### v1.45.0 — 2026-06-14 — forge-bug-fix diagnose --scenario + ReqForge 专用调试策略
+
+- **forge-bug-fix diagnose --scenario**：新增三种场景诊断模式 — `compile`（编译/tsc/导入）、`config`（环境变量/依赖/端口）、`data`（编码/JSON/CRLF/大文件）。按问题类型定向诊断，不跑无关检查。
+- **ReqForge 专用调试策略**：debugging-strategy.md 已从通用四阶段方法论扩展，Stage 1 集成 dep-graph 影响范围、trace 历史匹配、project-memory 已知陷阱和场景诊断；Stage 2 使用 classify/bisect；Stage 3 增加 trace 快照和三振停检；Stage 4 增加 forge-bug-fix verify 自动化验证。
+
+### v1.44.0 — 2026-06-09 — Critique Gate + Spec 实验工具
 
 - **Spec 批判 Gate**：Multi-Stakeholder Review 之后的对抗性扫描 — 三个结构信号（隐藏假设、未质疑的决策、应裁剪的范围）对抗 LLM 讨好偏见。经三轮实验验证：5:0 盲评偏好、风险可见性 +5.2、抗返工 +4.2。0-to-1 工作流默认开启。
 - **forge-spec-critique**：自动化 spec 批判评分工具。

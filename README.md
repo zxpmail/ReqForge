@@ -75,6 +75,11 @@ flowchart LR
 
 ## What's New
 
+### v1.45.0 — 2026-06-14 — forge-bug-fix diagnose --scenario + ReqForge-specific debugging strategies
+
+- **forge-bug-fix diagnose --scenario**: Three new scenario-specific diagnostic modes — `compile` (tsc+imports+tsconfig), `config` (git+env+deps+ports), `data` (encoding+JSON+CRLF+large files). Target the right checks without generic overhead.
+- **ReqForge-specific debugging strategies**: debugging-strategy.md enriched beyond generic 4-stage methodology — Stage 1 leverages dep-graph blast radius, trace history, project-memory known pitfalls, and scenario-specific diagnose; Stage 2 uses classify/bisect; Stage 3 adds trace capture and three-strikes stall; Stage 4 adds forge-bug-fix verify.
+
 ### v1.44.0 — 2026-06-09 — Critique Gate + Spec Experiment Tools
 
 - **Spec Critique Gate**: Pre-writing adversarial scan after Multi-Stakeholder Review — three structural signals (Hidden Assumptions, Unchallenged Decisions, Scope That Should Be Cut) counteract LLM sycophancy bias. Validated by three-round experiment: 5:0 blind eval, +5.2 risk visibility, +4.2 rework resistance. 0-to-1 workflow default on.
