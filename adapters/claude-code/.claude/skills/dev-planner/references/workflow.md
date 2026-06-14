@@ -60,6 +60,11 @@
             If the Spec's technical direction is clear and validated -> confirm directly, no need to ask the user
             Output the confirmed tech stack table
 
+        Step 4: Write tech stack to dev-map
+            Write the confirmed Language / Build / Test / Lint / Source values into `.forge/dev-map.md` 技术栈节
+            If dev-map.md 不存在 -> 创建并写入
+            If 已存在 -> 更新技术栈节，保留其他节不变
+
     [Analysis Phase]
         Goal: Analyze feature dependency relationships, break down into Phases
 

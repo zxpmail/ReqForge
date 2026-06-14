@@ -42,6 +42,9 @@
         3. Create `memory/decisions-log.md` from template, record ADR-000 for tech stack choice
         4. Create `memory/task-history.md` from template (empty table)
         Naming: lowercase letters + numbers + hyphens.
+        **Dev-map sync**: After memory init, read `.forge/dev-map.md`. If its 技术栈节 is empty, fill
+        Language / Build / Test / Lint / Source from the confirmed DEV-PLAN.md tech stack table.
+        If dev-map.md doesn't exist, create it from template first.
         Execute initialization based on tech stack:
         - TypeScript project -> configure strict mode, install dependencies, configure Tailwind, configure environment variables
         - Java project -> use Spring Initializr or Gradle/Maven to initialize skeleton
