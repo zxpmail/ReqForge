@@ -35,7 +35,7 @@
 
 **Task Micro-Cycle (≤10 min)**: After each Task RED/GREEN/REFACTOR → targeted test/lint + record pass/fail before code-reviewer.
 
-**File Slimming**: 单文件 ≤200 行。编码前先在计划里按功能拆成小文件，不写大了再返工拆分。只生成当前 Task 需要的代码，不预写"未来可能需要"的。
+**File Slimming**: 单文件 ≤300 行。编码前先在计划里按功能拆成小文件，不写大了再返工拆分。只生成当前 Task 需要的代码，不预写"未来可能需要"的。
 
 **Build Speed (Inner Loop)**: Full build + verify chain under 1 minute. If it takes longer, the Task is too coarse — split it. Fast feedback is the agent's verification loop; without it the agent works blind.
 
