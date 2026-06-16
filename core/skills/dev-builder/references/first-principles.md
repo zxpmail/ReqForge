@@ -37,6 +37,8 @@
 
 **File Slimming**: 单文件 ≤300 行。编码前先在计划里按功能拆成小文件，不写大了再返工拆分。只生成当前 Task 需要的代码，不预写"未来可能需要"的。
 
+**Simplification Marker**: 当显式选择了一个比"稳妥方案"更简化的实现时（例如用 stdlib 替代引入依赖、一行替代完整类、YAGNI 跳过某个功能），在代码旁加 `// forge: <简化了什么>，<什么时候需要升级>` 注释。示例：`// forge: 用 Map 替代 Cache 类，当需要 TTL 或过期策略时换 class`。好处是让简化决策可追溯、可复盘、可决定何时承担升级成本。
+
 **Build Speed (Inner Loop)**: Full build + verify chain under 1 minute. If it takes longer, the Task is too coarse — split it. Fast feedback is the agent's verification loop; without it the agent works blind.
 
 **AI Only for Judgment Tasks**: Loops/conditions/arithmetic → plain code.
@@ -47,10 +49,11 @@
 
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
 1. 读 Difficulty（🔴 放慢/🟢 快速）+ 读 Spec + UI-Spec.md（如有）
-2. 感知天理——扫一眼已有代码风格
-3. RED（先写测试）→ GREEN（最小实现）→ REFACTOR
-4. 生成后自审 + Micro-cycle verify（≤10 min）
-5. **Phase 完成 → 读 gc-audit-routing.md 决策表 → 按影响范围执行审计**
-6. 投递 code-review → 通过后 commit + 善刀而藏之
+2. **YAGNI 检查**（🔴 高难度 Phase 必做，🟢 低难度 Phase 可选）：读当前 Task 描述，自问"这段代码真的需要存在吗？标准库/平台/已有依赖能解决吗？"如需跳过简化，在实现注释中写 `// forge: <跳过理由>`。
+3. 感知天理——扫一眼已有代码风格
+4. RED（先写测试）→ GREEN（最小实现）→ REFACTOR
+5. 生成后自审 + Micro-cycle verify（≤10 min）
+6. **Phase 完成 → 读 gc-audit-routing.md 决策表 → 按影响范围执行审计**
+7. 投递 code-review → 通过后 commit + 善刀而藏之
 
 **Transformer 注意力说明**：本文开头（放下骨架、TDD）利用 primacy bias，结尾（本摘要）利用 recency bias。中间的内容重复出现时会自动引起注意——模型是模式匹配系统，读到 Step 编号或具体命令时自然加权。
