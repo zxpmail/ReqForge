@@ -165,7 +165,7 @@ requires: []
     | 8 | Security basics | 2 | YES | 2 = Input validation, auth checks, XSS/CSRF prevention in place; 1 = Validation present but incomplete; 0 = No security measures, injection vectors open |
     | 9 | Git discipline | 2 | — | 2 = Frequent atomic commits, meaningful messages, logical grouping; 1 = Commits bundled or vague messages; 0 = Single mega-commit or no versioned intermediate state |
     | 10 | Phase completion completeness | 2 | YES | 2 = All checklist items addressed, no TODO/FIXME left; 1 = Minor items skipped but documented; 0 = Key deliverables missing or incomplete |
-    | 11 | Code minimality | 2 | — | 2 = No dead code, no speculative abstraction, no unused imports/deps, stdlib used over new dep; 1 = Minor over-engineering (< 10% reducible); 0 = Unnecessary abstraction layers, bloated deps, dead code left behind |
+    | 11 | Code minimality | 2 | — | 2 = No dead code, no speculative abstraction, no unused imports/deps, prefers well-maintained small packages over reinventing wheels, avoids pulling heavy deps for trivial use; 1 = Minor over-engineering (< 10% reducible); 0 = Unnecessary abstraction layers, bloated deps, dead code left behind |
 
     **Scoring**: Run `pnpm validate-skill --score core/skills/dev-builder` to compute.
 <!-- end: quality-rubric -->
