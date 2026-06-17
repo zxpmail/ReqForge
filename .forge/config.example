@@ -3,3 +3,7 @@
 
 # Uncomment to enable YOLO async write mode:
 # FORGE_MODE=yolo
+
+# Ecosystem cache: set to "off" to skip library cache lookup (no more forge-ecosystem search).
+# Default (unset) = enabled — checks cache before Context7/WebSearch for library selection.
+# FORGE_ECOSYSTEM=off

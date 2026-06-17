@@ -18,13 +18,13 @@
 
 **Glue Code First**: (1) framework/SDK (2) maintained OSS (3) AI boilerplate — custom code only for business logic/glue. WebSearch before reinventing.
 
-**Ecosystem Cache First**: 选库前先跑 `pnpm forge-ecosystem search <lang> "<need>"`，命中直接用，未命中才回退到 Context7/WebSearch。选定的库 pin 到 `.forge/ecoresult.json` 以便跨项目复现。
+**Ecosystem Cache First**（`.forge/config` 中 `FORGE_ECOSYSTEM=off` 时可跳过）: 选库前先跑 `pnpm forge-ecosystem search <lang> "<need>"`，命中直接用，未命中才回退到 Context7/WebSearch。选定的库 pin 到 `.forge/ecoresult.json` 以便跨项目复现。
 
 **Tool AI-fication Priority**: CLI > MCP > Skill wrapper > GUI. GUI-only ops → CLI wrapper first.
 
 **Substitute, Don't Mock**: Real substitutes (H2, in-memory queue, local FS) over hardcoded mocks.
 
-**Online-First**: Context7 when installed, else WebSearch — see `development-strategies.md` Library Docs Strategy. **Cache-First**: `pnpm forge-ecosystem search` before any online lookup for library selection.
+**Online-First**: Context7 when installed, else WebSearch — see `development-strategies.md` Library Docs Strategy. **Cache-First**（`FORGE_ECOSYSTEM=off` 时跳过）: `pnpm forge-ecosystem search` before any online lookup for library selection.
 
 **Verification Is Evidence**: DONE requires verification command + output in the **same message**. No "tested earlier."
 

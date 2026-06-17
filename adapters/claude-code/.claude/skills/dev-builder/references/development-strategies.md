@@ -40,7 +40,7 @@
     - If no Design-Brief -> use Product-Spec.md text description as reference
 
     **Ecosystem Cache Strategy (Cache-First for Library Discovery)**
-    Before any online search for library discovery, check the global ecosystem cache:
+    Skip if `.forge/config` has `FORGE_ECOSYSTEM=off`. Otherwise, before any online search for library discovery, check the global ecosystem cache:
     1. Run `pnpm forge-ecosystem search <lang> "<category>"` (e.g. `forge-ecosystem search typescript "testing"`)
     2. If results found, read the cached entries to select a library
     3. On cache miss (no results or language not cached), run `pnpm forge-ecosystem refresh <lang>` to populate from curated defaults, then search again
