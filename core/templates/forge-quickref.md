@@ -163,6 +163,7 @@
 | 调试 | `/bug-fixer` |
 | 审查 | `/code-review` |
 | 发布 | `/release-builder`（前先 `pnpm preflight --build-dir <产物>`） |
+| 生态库 | `pnpm forge-ecosystem search <lang> <query>` |
 
 ---
 

@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "description": "Project-specific ecosystem library pins and bans. Installed from core/templates/ecoresult-template.json by forge-install.",
+  "pins": [],
+  "bans": []
+}

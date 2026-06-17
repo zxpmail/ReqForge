@@ -39,6 +39,18 @@
     - Use Design-Brief.md as the primary reference
     - If no Design-Brief -> use Product-Spec.md text description as reference
 
+    **Ecosystem Cache Strategy (Cache-First for Library Discovery)**
+    Before any online search for library discovery, check the global ecosystem cache:
+    1. Run `pnpm forge-ecosystem search <lang> "<category>"` (e.g. `forge-ecosystem search typescript "testing"`)
+    2. If results found, read the cached entries to select a library
+    3. On cache miss (no results or language not cached), run `pnpm forge-ecosystem refresh <lang>` to populate from curated defaults, then search again
+    4. If still no match, fall through to Context7 or WebSearch for discovery
+    5. Once selected, pin the library in `.forge/ecoresult.json`:
+       ```json
+       { "pins": [{ "language": "typescript", "name": "vitest" }] }
+       ```
+    Cache location: `~/.forge/ecosystem/<lang>.json` — auto-refreshes every 30 days.
+
     **Library Docs Strategy (Context7 — preferred for dependencies)**
     When Context7 MCP or `ctx7` CLI is available, use it **before** generic WebSearch for third-party library/API work:
     1. Read DEV-PLAN.md **Tech Stack** — if **Context7 Library ID** is set (e.g. `/vercel/next.js`), call `query-docs` with that ID and a task-specific `query`

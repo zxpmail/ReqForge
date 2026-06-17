@@ -2,6 +2,20 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.46.0] - 2026-06-18
+
+### Added
+- **forge-ecosystem — Ecosystem library cache**: New `pnpm forge-ecosystem` CLI managing a global, per-language cache of curated library recommendations at `~/.forge/ecosystem/<lang>.json`. Subcommands: `search` (search cache by query), `add` (manually add entries), `refresh` (populate from cold-start defaults), `get` (dump language data), `status` (cache summary). Search-on-miss pattern — check cache before Context7/WebSearch. (`scripts/forge-ecosystem.mjs`, `scripts/forge-ecosystem/`)
+- **Cold-start defaults for 5 languages**: TypeScript (12 entries across 7 categories), Python (10/7), Go (9/6), Rust (8/6), Java (7/5) — curated library recommendations for testing, HTTP, CLI, DB, validation, logging, and config categories. (`scripts/forge-ecosystem/cold-start.mjs`)
+- **Ecosystem Cache First principle**: dev-builder first-principles.md now guides agents to run `pnpm forge-ecosystem search` before any online library lookup. Pinned selections go to `.forge/ecoresult.json`. (`core/skills/dev-builder/references/first-principles.md`, `core/skills/dev-builder/references/development-strategies.md`)
+- **Project-level overrides**: `.forge/ecoresult.json` supports `pins` (force-include a library) and `bans` (block a library). Template installed by forge-install. (`core/templates/ecoresult-template.json`, `scripts/install.ts`)
+
+### Docs
+- **forge-quickref.md**: Added ecosystem command to Skill reference table. (`core/templates/forge-quickref.md`)
+
+### Technical
+- **Forge scripts**: New `pnpm forge-ecosystem` registered in package.json. All new scripts follow existing .mjs convention with exported functions and test isolation via `setCacheDirForTest()`. (`package.json`, `scripts/forge-ecosystem/`)
+
 ## [v1.45.0] - 2026-06-14
 
 ### Added

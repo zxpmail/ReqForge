@@ -186,6 +186,7 @@ const PLAYWRIGHT_AUTH_SETUP_SRC = "core/templates/tests/auth-setup.template.ts";
 const PLAYWRIGHT_VERIFY_SPEC_SRC = "core/templates/tests/verify-phase.template.spec.ts";
 const PREFLIGHT_CONFIG_SRC = "core/templates/preflight-config.template.json";
 const PREFLIGHT_WECHAT_EXAMPLE_SRC = "core/templates/preflight-wechat.example.json";
+const ECORESULT_SRC = "core/templates/ecoresult-template.json";
 
 /** Copy forge-quickref into user project `.forge/quickref.md` */
 export function installForgeQuickref(
@@ -371,6 +372,28 @@ export function installPreflightConfig(
   }
 }
 
+/** Copy ecoresult template → `.forge/ecoresult.json` */
+export function installEcoreSult(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const forgeDir = path.join(targetRoot, ".forge");
+  fs.mkdirSync(forgeDir, { recursive: true });
+
+  const src = path.join(forgeRoot, ECORESULT_SRC);
+  const dest = path.join(forgeDir, "ecoresult.json");
+  if (!fs.existsSync(src)) {
+    log(`  ⚠️  ecoresult template not found: ${src}`);
+  } else if (fs.existsSync(dest) && !force) {
+    log(`  ⏭️  .forge/ecoresult.json exists (use --force to overwrite)`);
+  } else {
+    fs.copyFileSync(src, dest);
+    log(`  ✅ ${dest}`);
+  }
+}
+
 export function applyWindowsSettings(settingsDir: string, log: (msg: string) => void): boolean {
   const winSrc = path.join(settingsDir, "settings.windows.json");
   const dest = path.join(settingsDir, "settings.json");
@@ -479,6 +502,7 @@ export function installForge(
   installSecurityGuidance(path.resolve(targetRoot), forgeRoot, log, options.force);
   installProjectTaste(path.resolve(targetRoot), forgeRoot, log, options.force);
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installEcoreSult(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSkillEvalTemplate(path.resolve(targetRoot), forgeRoot, log, options.force);
   installAgentsTemplate(path.resolve(targetRoot), forgeRoot, log, options.force, client);
   installPlaywrightTemplates(path.resolve(targetRoot), forgeRoot, log, options.force);
