@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.44.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.47.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -74,6 +74,17 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.47.0 — 2026-06-18 — Simplification intensity dial + over-engineering check + debt harvesting + safety boundaries
+
+- **Simplification intensity**: `FORGE_SIMPLIFY=off|lite|full|ultra` in `.forge/config` — controls how aggressively the agent applies YAGNI and code simplification. Safety boundaries (input validation, data loss, security, accessibility) never simplified regardless of level.
+- **forge-simplify-check**: `pnpm forge-simplify-check` — light over-engineering review scanning for single-use interfaces, single-method classes, speculative generics, bloated files, and commented-out code. Lighter than `/code-review`.
+- **forge-debt**: `pnpm forge-debt` — harvests `// NOTE:` simplification markers into a structured tech debt ledger at `.forge/debt-ledger.md`.
+
+### v1.46.0 — 2026-06-18 — forge-ecosystem: global library cache
+
+- **forge-ecosystem**: `pnpm forge-ecosystem search|add|refresh|get|status` — global per-language library recommendation cache at `~/.forge/ecosystem/<lang>.json`. Search-on-miss: check cache before Context7/WebSearch. Cold-start defaults for TypeScript, Python, Go, Rust, Java. Pick from `.forge/ecoresult.json`.
+- **Ecosystem Cache First principle**: dev-builder agents now check ecosystem cache before online library lookup. Opt-out via `FORGE_ECOSYSTEM=off` in `.forge/config`.
 
 ### v1.45.0 — 2026-06-14 — forge-bug-fix diagnose --scenario + ReqForge-specific debugging strategies
 

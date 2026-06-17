@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.44.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.47.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,17 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.47.0 — 2026-06-18 — 简化强度旋钮 + 过度工程审查 + 技术债台账 + 安全边界
+
+- **简化强度旋钮**：`.forge/config` 中 `FORGE_SIMPLIFY=off|lite|full|ultra` — 控制 AI 应用 YAGNI 和代码简化的力度。安全边界（输入校验、数据丢失防护、安全、可访问性）无论什么级别都不简化。
+- **forge-simplify-check**：`pnpm forge-simplify-check` — 轻量过度工程审查，扫描单次使用接口、单方法类、投机泛型、臃肿文件和注释代码。比 `/code-review` 轻量。
+- **forge-debt**：`pnpm forge-debt` — 收集代码中的 `// NOTE:` 简化标记，生成结构化技术债台账 `.forge/debt-ledger.md`。
+
+### v1.46.0 — 2026-06-18 — forge-ecosystem：全局生态库缓存
+
+- **forge-ecosystem**：`pnpm forge-ecosystem search|add|refresh|get|status` — 全局按语言缓存的库推荐系统，`~/.forge/ecosystem/<lang>.json`。Search-on-miss：先查缓存再走 Context7/WebSearch。冷启动覆盖 TypeScript/Python/Go/Rust/Java 五种语言。项目覆写 `.forge/ecoresult.json`。
+- **Ecosystem Cache First 原则**：dev-builder 选库前先查缓存，`.forge/config` 设 `FORGE_ECOSYSTEM=off` 可关闭。
 
 ### v1.45.0 — 2026-06-14 — forge-bug-fix diagnose --scenario + ReqForge 专用调试策略
 
