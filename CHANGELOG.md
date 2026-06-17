@@ -2,6 +2,16 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.47.0] - 2026-06-18
+
+### Added
+- **Simplification intensity dial**: `FORGE_SIMPLIFY=off|lite|full|ultra` in `.forge/config` controls how aggressively the agent applies YAGNI and simplification. Safety boundaries documented — input validation, data-loss prevention, security, accessibility never simplified. (`core/skills/dev-builder/references/first-principles.md`, `.forge/config.example`)
+- **forge-simplify-check**: `pnpm forge-simplify-check` — light over-engineering review (git diff or `--full` scan). Detects single-use interfaces, single-method classes, speculative generics, bloated files, commented-out code. Lighter than `/code-review`. (`scripts/forge-simplify-check.mjs`)
+- **forge-debt**: `pnpm forge-debt` — harvests `// NOTE:` simplification markers into a structured debt ledger at `.forge/debt-ledger.md`. Supports custom pattern via `--pattern`. (`scripts/forge-debt.mjs`)
+
+### Changed
+- **first-principles.md**: YAGNI check in action summary now conditioned on `FORGE_SIMPLIFY` level. New Safety Boundaries section. (`core/skills/dev-builder/references/first-principles.md`)
+
 ## [v1.46.0] - 2026-06-18
 
 ### Added

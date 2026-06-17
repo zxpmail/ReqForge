@@ -39,7 +39,20 @@
 
 **File Slimming**: 单文件 ≤300 行。编码前先在计划里按功能拆成小文件，不写大了再返工拆分。只生成当前 Task 需要的代码，不预写"未来可能需要"的。
 
+**Simplification Intensity**（`.forge/config` 中 `FORGE_SIMPLIFY=off|lite|full|ultra` 控制）:
+- `off` / 未设置: 不主动简化，按难度标记执行
+- `lite`: 仅明显可简化的地方（语言已有特性、现成依赖）
+- `full`（默认）: 标准 YAGNI + 简化标记，决策阶梯完整走
+- `ultra`: 激进精简——优先质疑"这个功能真的需要吗"，代码量优先于抽象完整度
+
 **Simplification Marker**: 当显式选择了一个比"稳妥方案"更简化的实现时（例如用 Map 替代 Cache 类、一行替代完整类、YAGNI 跳过某个功能），在代码旁加 `// NOTE: <简化了什么>，<什么时候需要升级>` 注释。示例：`// NOTE: 用 Map 替代 Cache 类，当需要 TTL 或过期策略时换 class`。好处是让简化决策可追溯、可复盘、可决定何时承担升级成本。改动理由应同时写入 commit message 的主体而非仅依赖行内注释。
+
+**Safety Boundaries — 永远不简化**（无论 intensity 级别）:
+- 输入校验：用户输入、API 参数、文件内容必须验证
+- 数据丢失防护：写操作（DB/mutable file）必须确认，删除前必须有确认路径
+- 安全：认证、鉴权、XSS/CSRF/SQL 注入防护——不做 YAGNI
+- 可访问性：表单 label、键盘导航、aria 属性——不做简化
+- 错误边界：异步操作的 try-catch 或 Promise 兜底——不做静默失败
 
 **Build Speed (Inner Loop)**: Full build + verify chain under 1 minute. If it takes longer, the Task is too coarse — split it. Fast feedback is the agent's verification loop; without it the agent works blind.
 
@@ -51,7 +64,7 @@
 
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
 1. 读 Difficulty（🔴 放慢/🟢 快速）+ 读 Spec + UI-Spec.md（如有）
-2. **YAGNI 检查**（🔴 高难度 Phase 必做，🟢 低难度 Phase 可选）：读当前 Task 描述，自问"这段代码真的需要存在吗？项目已有依赖或自研库能解决吗？"如需跳过简化，在代码旁加 `// NOTE: <跳过理由>`。
+2. **YAGNI 检查**（按 `FORGE_SIMPLIFY` 级别执行：ultra=必做，full=🔴高难度必做/🟢低难度可选，lite/off=跳过）：读当前 Task 描述，自问"这段代码真的需要存在吗？项目已有依赖或自研库能解决吗？"如需跳过简化，在代码旁加 `// NOTE: <跳过理由>`。
 3. 感知天理——扫一眼已有代码风格
 4. RED（先写测试）→ GREEN（最小实现）→ REFACTOR
 5. 生成后自审 + Micro-cycle verify（≤10 min）

@@ -7,3 +7,8 @@
 # Ecosystem cache: set to "off" to skip library cache lookup (no more forge-ecosystem search).
 # Default (unset) = enabled — checks cache before Context7/WebSearch for library selection.
 # FORGE_ECOSYSTEM=off
+
+# Simplification intensity: off | lite | full | ultra.
+# Default (unset) = full — standard YAGNI + simplification marker.
+# Set to "ultra" for aggressive code minimization, "lite" for light touch, "off" to skip.
+# FORGE_SIMPLIFY=ultra
