@@ -1,0 +1,5 @@
+com\example\ValidatorExtendedTest$Person.class
+com\example\ValidatorExtendedTest$NoAnnotations.class
+com\example\ValidatorTest.class
+com\example\ValidatorExtendedTest.class
+com\example\ValidatorExtendedTest$PartialPerson.class
