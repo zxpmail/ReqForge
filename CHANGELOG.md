@@ -2,6 +2,26 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.0] - 2026-06-18
+
+### Added
+- **Critique Gate hardening**: Density quota (3 evidence-backed findings required, below → re-scan), Evidence schema (all three signal tables now require spec citation column), critique-of-critique mode (`forge-spec-critique.mjs --critique` detects fake-critique patterns). (`core/skills/product-spec-builder/references/critique-gate.md`, `scripts/forge-spec-critique.mjs`)
+- **Plan Critique Check**: Anti-sycophancy gate for dev-planner — challenges Phase Order, MVP Scope, and Tech Stack decisions before writing DEV-PLAN.md. Generation Mode only. (`core/skills/dev-planner/references/plan-critique-check.md`)
+- **Product size detection**: `pnpm forge-size-detect` reads Product-Spec.md and auto-recommends gate level — small products (CLI, ≤4 features, no auth/DB) get `light`, medium/large get `full`. Writes to `.forge/gate-config.json` with `--write-gate-config`. Runs after Spec confirmation in both 0-to-1 and Quick Mode. (`scripts/forge-size-detect.mjs`)
+- **TBD overflow gate**: Hook blocks app code writes when Product-Spec.md has >5 `[TBD]`/`[待确认]` markers outside Idea Stage Exit Criteria. Excessive TBD markers indicate key decisions being deferred — a sycophancy pattern. (`scripts/hooks/spec-before-code-gate.mjs`)
+- **Quick Mode density check**: Quick Mode now requires at least 1 substantive concern before presenting the Spec. Zero concerns triggers re-examination. (`core/skills/product-spec-builder/references/workflow-quick-mode.md`)
+- **SKILL.md inline evidence rules**: Critique Gate evidence format (`§section` or `"spec quote"`) and verdict thresholds now inlined in product-spec-builder SKILL.md, ensuring anti-sycophancy mechanism works even if references/ aren't read. Based on progressive disclosure experiment.
+- **Pre-commit sync hook**: `.git/hooks/pre-commit` runs `pnpm sync:discover` to detect core↔adapter drift. Blocks commit if drift found. (`scripts/sync.ts`)
+
+### Changed
+- **Gate downgrade risk warning**: The recovery message for missing Spec now presents `light`/`none` as a risk-bearing option with ⚠️ warning, not a neutral skip instruction. (`scripts/hooks/spec-before-code-gate.mjs`)
+- **dev-planner workflow.md**: Analysis Phase Step 4 now routes through Plan Critique Check before Output Phase.
+- **dev-planner SKILL.md**: Added Plan Critique Check section with skip conditions.
+
+### Fixed
+- **Skill eval**: 14/14 skills now pass eval (0 errors, 0 warnings). Previously: change-manager (missing archive dir), domain-mapper (missing artifacts), bug-fixer (ref-lint "四阶段" warning).
+- **Adapter drift**: plan-hard-gate-rationalization.md was out of sync across adapters. Fixed by `pnpm sync`.
+
 ## [v1.47.0] - 2026-06-18
 
 ### Added

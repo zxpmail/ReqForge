@@ -74,6 +74,17 @@ flowchart LR
 
 ## 近期更新
 
+### v1.48.0 — 2026-06-18 — 反讨好硬化 + 产品规模检测
+
+- **Critique Gate 密度配额**：要求至少 3 条有证据支撑的 finding。不足则重新扫描。0 finding + proceed → 必须重扫。防止 LLM 用批判语气敷衍。
+- **Evidence schema**：三张信号表全部要求 spec 引用（`§section` 或 `"spec quote"`）。无引用的 finding 不计配额——防不可证伪的批判。
+- **批判之批判**：`pnpm forge-spec-critique --critique` 分析 critique 产出中的假批判词 vs 实质性证据，输出 sycophantic/low-critique/shallow/adequate/rigorous 评级。
+- **Plan Critique Check**：dev-planner 的反讨好 gate——在写 DEV-PLAN.md 前挑战 Phase 顺序、MVP 范围和技术栈选择。
+- **产品规模检测**：`pnpm forge-size-detect <Product-Spec.md>` 自动检测产品规模并推荐 gate level。小产品（CLI、≤4 功能、无认证/数据库）→ `light`；中大产品 → `full`。`--write-gate-config` 写入 `.forge/gate-config.json`。
+- **TBD overflow gate**：Hook 在 Spec 有 >5 个 `[TBD]`/`[待确认]` 标记时阻止写入——防止用 TBD 回避关键决策的讨好模式。
+- **Quick Mode 密度检查**：Quick Mode 现在要求至少 1 个实质性 concern。
+- **Gate 降级风险警告**：`light`/`none` 现在以风险提示呈现，不再是中性跳过选项。
+
 ### v1.47.0 — 2026-06-18 — 简化强度旋钮 + 过度工程审查 + 技术债台账 + 安全边界
 
 - **简化强度旋钮**：`.forge/config` 中 `FORGE_SIMPLIFY=off|lite|full|ultra` — 控制 AI 应用 YAGNI 和代码简化的力度。安全边界（输入校验、数据丢失防护、安全、可访问性）无论什么级别都不简化。
@@ -94,7 +105,8 @@ flowchart LR
 ### v1.44.0 — 2026-06-09 — Critique Gate + Spec 实验工具
 
 - **Spec 批判 Gate**：Multi-Stakeholder Review 之后的对抗性扫描 — 三个结构信号（隐藏假设、未质疑的决策、应裁剪的范围）对抗 LLM 讨好偏见。经三轮实验验证：5:0 盲评偏好、风险可见性 +5.2、抗返工 +4.2。0-to-1 工作流默认开启。
-- **forge-spec-critique**：自动化 spec 批判评分工具。
+- **forge-spec-critique**：自动化 spec 批判评分工具。`--critique` 模式做批判之批判分析。
+- **forge-size-detect**：从 Product-Spec.md 检测产品规模，自动推荐 gate level（小产品 → light，大产品 → full）。
 - **forge-spec-blind-eval**：自动化 A/B 盲评实验工具，验证 spec 质量差异。
 
 ### v1.43.0 — 2026-06-08 — Multi-Stakeholder Review + forge-bug-fix bisect/classify

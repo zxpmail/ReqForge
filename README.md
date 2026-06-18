@@ -75,6 +75,17 @@ flowchart LR
 
 ## What's New
 
+### v1.48.0 — 2026-06-18 — Anti-sycophancy hardening + product size detection
+
+- **Critique Gate density quota**: 3 evidence-backed findings required. Below quota → re-scan. 0 findings + proceed → mandatory re-scan. Prevents LLMs from faking critique with adversarial tone but no substance.
+- **Evidence schema**: All three Critique Gate signal tables now require spec citations (`§section` or `"spec quote"`). Findings without evidence don't count toward quota — prevents unfalsifiable criticisms.
+- **critique-of-critique**: `pnpm forge-spec-critique --critique` analyzes critique output for fake-critique phrases vs substantive evidence. Outputs sycophantic/low-critique/shallow/adequate/rigorous verdict.
+- **Plan Critique Check**: Anti-sycophancy gate for dev-planner — challenges Phase Order, MVP Scope, and Tech Stack before writing DEV-PLAN.md.
+- **Product size detection**: `pnpm forge-size-detect <Product-Spec.md>` auto-detects product scope and recommends gate level. Small products (CLI, ≤4 features, no auth/DB) → `light`; medium/large → `full`. Writes to `.forge/gate-config.json` with `--write-gate-config`.
+- **TBD overflow gate**: Hook blocks writes when Spec has >5 `[TBD]` markers — prevents deferring hard decisions as a sycophancy pattern.
+- **Quick Mode density check**: Quick Mode now requires ≥1 substantive concern before presenting Spec.
+- **Gate downgrade risk warning**: `light`/`none` gate levels now presented as risk-bearing, not neutral shortcuts.
+
 ### v1.47.0 — 2026-06-18 — Simplification intensity dial + over-engineering check + debt harvesting + safety boundaries
 
 - **Simplification intensity**: `FORGE_SIMPLIFY=off|lite|full|ultra` in `.forge/config` — controls how aggressively the agent applies YAGNI and code simplification. Safety boundaries (input validation, data loss, security, accessibility) never simplified regardless of level.
@@ -95,7 +106,8 @@ flowchart LR
 ### v1.44.0 — 2026-06-09 — Critique Gate + Spec Experiment Tools
 
 - **Spec Critique Gate**: Pre-writing adversarial scan after Multi-Stakeholder Review — three structural signals (Hidden Assumptions, Unchallenged Decisions, Scope That Should Be Cut) counteract LLM sycophancy bias. Validated by three-round experiment: 5:0 blind eval, +5.2 risk visibility, +4.2 rework resistance. 0-to-1 workflow default on.
-- **forge-spec-critique**: Automated spec critique scoring tool.
+- **forge-spec-critique**: Automated spec critique scoring tool. `--critique` mode for critique-of-critique analysis.
+- **forge-size-detect**: Product size detection from Product-Spec.md. Auto-recommends gate level (`light` for small products, `full` for larger).
 - **forge-spec-blind-eval**: Automated A/B blind evaluation experiment for spec quality validation.
 
 ### v1.43.0 — 2026-06-08 — Multi-Stakeholder Review + forge-bug-fix bisect/classify
