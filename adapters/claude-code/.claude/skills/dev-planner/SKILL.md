@@ -105,6 +105,11 @@ requires: []
     → `references/plan-hard-gate-rationalization.md`
     在 DEV-PLAN.md 确认前禁止调用 /dev-builder。
 
+[Plan Critique Check]
+    → `references/plan-critique-check.md`
+    Generation Mode: Analysis Phase 后、Output Phase 前执行。挑战 Phase 顺序、MVP 范围、技术栈选择。
+    Iteration Mode / 用户说 "skip plan critique" → 跳过。
+
 [Analysis Dimension Checklist]
     **Planning 前读取** `references/analysis-dimension-checklist.md`
 

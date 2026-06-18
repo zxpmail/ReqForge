@@ -85,8 +85,28 @@
 
         Step 4: Sufficiency check
             Cross-reference [Information Sufficiency Criteria]
-            "Must Satisfy" all met -> proceed to output phase
+            "Must Satisfy" all met -> proceed to Plan Critique Check
             If questions remain -> confirm with the user before continuing
+
+    [Plan Critique Check] (Generation Mode only — skip in Iteration Mode)
+        Goal: Counteract LLM sycophancy in planning. After building a Phase structure,
+        the model naturally rationalizes its own ordering and scope. This check forces
+        adversarial scrutiny before writing DEV-PLAN.md.
+
+        When to skip: Iteration Mode, user says "skip plan critique"
+
+        Step 1: Run plan critique
+            Execute `references/plan-critique-check.md`
+            Challenge three planning signals: Phase Order, MVP Scope, Tech Stack
+
+        Step 2: Apply density check
+            At least 2 evidence-backed findings required. Below quota -> re-scan once.
+            Still below -> mark `low-critique`, proceed with warning.
+
+        Step 3: Resolve verdict
+            - **proceed**: note findings, move to Output Phase
+            - **adjust**: apply listed adjustments, then move to Output Phase (no second critique)
+            - **blocked**: present to user, resolve, then proceed
 
     [Output Phase]
         Goal: Generate the DEV-PLAN.md file
