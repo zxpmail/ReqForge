@@ -151,7 +151,7 @@ requires: []
 [Workflow]
     1. Run [Dependency Check]
     2. Read `references/first-principles.md`
-    3. **必须先 Read `references/workflow.md`** — Startup → Debugging（四阶段）→ Verification → Completion
+    3. **必须先 Read `references/workflow.md`** — Startup → Debugging → Self-Review → Verification → Completion（Debugging 含子阶段：观察 → 假设 → 验证 → 修复，见 `references/debugging-strategy.md`）
     4. Debugging 阶段执行 `references/debugging-strategy.md` + `cot-diagnostic-checklist.md`
     5. **forge-bug-fix 辅助**：
        - Stage 1 启动后 → `pnpm forge-bug-fix diagnose` 跑 preflight + 环境检查；按问题类型加 `--scenario compile|config|data` 专项诊断
