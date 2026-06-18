@@ -4,7 +4,15 @@
 
 ## 应用代码写入链（PreToolUse）
 
-按序满足后才可 `Write`/`Edit` `src/`、`app/`、`lib/`、`packages/`：
+按序满足后才可 `Write`/`Edit` `src/`、`app/`、`lib/`、`packages/`。严格度由 `.forge/gate-config.json` 控制：
+
+| Level | 检查项 | 适用场景 |
+|-------|--------|----------|
+| `full` (默认) | 全部 5 道门 | 成熟产品 / 正式项目 |
+| `light` | 仅 `Product-Spec.md` 存在 | 小产品 / 原型 / 实验 |
+| `none` | 跳过所有门 | 临时调试 / 非产品开发 |
+
+### full（默认，完整链）
 
 1. `Product-Spec.md` + § Idea Stage Exit Criteria
 2. `.forge/spec-confirmed.json`

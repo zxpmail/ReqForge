@@ -94,19 +94,19 @@ For each scope cut suggestion, record: ID, feature, reason to cut, v1 impact if 
 ## Critique Gate Summary
 
 ### Hidden Assumptions
-| ID | Assumption | Category | Confidence | Impact if wrong |
-|----|------------|----------|------------|-----------------|
-| CA1 | … | user/tech/market/scope | low/medium/high | … |
+| ID | Assumption | Category | Confidence | Impact if wrong | Evidence |
+|----|------------|----------|------------|-----------------|----------|
+| CA1 | … | user/tech/market/scope | low/medium/high | … | §section or "spec quote" |
 
 ### Unchallenged Decisions
-| ID | Decision | Alternative | Risk if wrong |
-|----|----------|-------------|---------------|
-| CD1 | … | … | … |
+| ID | Decision | Alternative | Risk if wrong | Evidence |
+|----|----------|-------------|---------------|----------|
+| CD1 | … | … | … | §section or "spec quote" |
 
 ### Scope Cut Suggestions
-| ID | Feature | Reason to cut | v1 impact | v2 path |
-|----|---------|---------------|-----------|---------|
-| CS1 | … | … | … | … |
+| ID | Feature | Reason to cut | v1 impact | v2 path | Evidence |
+|----|---------|---------------|-----------|---------|----------|
+| CS1 | … | … | … | … | §section or "spec quote" |
 
 ### Verdict
 <proceed / clarify / blocked>
@@ -118,16 +118,37 @@ For each scope cut suggestion, record: ID, feature, reason to cut, v1 impact if 
 
 ---
 
+## Density Check (anti-sycophancy quota)
+
+LLMs can "fake critique" — adopt adversarial tone without producing substantive findings. Before
+accepting the verdict, verify density:
+
+- **Quota**: at least 3 substantive findings total across all three signal tables (Hidden
+  Assumptions + Unchallenged Decisions + Scope Cuts). A finding without an `Evidence` citation
+  does not count toward the quota — unfalsifiable criticisms are the easiest to fake.
+- **Below quota → re-scan once** with stricter prompt:
+  > "Your previous critique was insufficient. Find at least 3 substantive issues. Vague
+  > criticisms ('could be more detailed', 'needs more clarity') do not count — each finding
+  > must cite a specific section or quote from the spec."
+- **If still below quota after re-scan**: accept the verdict but mark output as `low-critique`.
+  User is warned the gate may have been sycophantic and should personally verify.
+
+`Verdict: proceed` with **0 findings** = highest sycophancy risk. Always triggers re-scan,
+regardless of overall quota.
+
+---
+
 ## Stop Rule
 
-- **1 round only** — no multi-round debate
+- **Density check first** (see above). If quota fails, re-scan once before applying the rest.
+- **1 round of debate** — no multi-round iteration beyond the density re-scan.
 - If verdict is **blocked**: present to user. User resolves, then proceed with resolution noted.
   No re-scan — the critique gate is a one-pass checkpoint, not an iterative review.
 - If verdict is **clarify**: items go into Spec as `[TBD]` or `§ Key Assumptions`. No re-scan needed.
 - If verdict is **proceed**: findings feed into Document Generation (assumptions → Key Assumptions,
   scope cuts → explicit v1/v2 boundary in Spec).
-- **Hard cap: exactly 1 pass.** This is intentional — the critique gate's value is in the forced
-  perspective shift, not in iterative refinement.
+- **Hard cap: 1 pass + 1 density re-scan max.** This is intentional — the critique gate's value
+  is in the forced perspective shift, not in iterative refinement.
 
 ---
 

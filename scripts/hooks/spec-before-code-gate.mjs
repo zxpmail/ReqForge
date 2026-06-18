@@ -13,6 +13,15 @@ import path from "path";
 
 const projectDir = process.env.CLAUDE_PROJECT_DIR || process.cwd();
 
+/** Load gate degradation level: "full" (default) | "light" | "none" */
+function loadGateLevel(root) {
+  try {
+    const data = JSON.parse(fs.readFileSync(path.join(root, ".forge", "gate-config.json"), "utf8"));
+    if (data && (data.level === "light" || data.level === "none")) return data.level;
+  } catch {}
+  return "full";
+}
+
 const MARKERS = {
   specConfirmed: path.join(projectDir, ".forge", "spec-confirmed.json"),
   planConfirmed: path.join(projectDir, ".forge", "plan-confirmed.json"),
@@ -145,6 +154,9 @@ async function main() {
   if (isFrameworkPath(rel) || isArtifactPath(rel)) return;
   if (!isApplicationPath(rel)) return;
 
+  const gateLevel = loadGateLevel(projectDir);
+  if (gateLevel === "none") return;
+
   const specFile = path.join(projectDir, "Product-Spec.md");
   const planFile = path.join(projectDir, "DEV-PLAN.md");
 
@@ -153,10 +165,12 @@ async function main() {
       tool,
       rel,
       "Spec-Before-Code Gate: Product-Spec.md is missing.",
-      "1. Run /product-spec-builder to generate Product-Spec.md\n2. Fill in § Idea Stage Exit Criteria with real answers\n3. Confirm spec with user → writes .forge/spec-confirmed.json\n4. Then retry this write.",
+      "1. Run /product-spec-builder to generate Product-Spec.md\n2. Confirm spec with user → writes .forge/spec-confirmed.json\n3. Then retry this write.\n\nTo skip all gates, set .forge/gate-config.json: {\"level\":\"light\"} or {\"level\":\"none\"}",
     );
     return;
   }
+  if (gateLevel === "light") return;
+
   if (!hasIdeaStageExitCriteria(specFile)) {
     blockWithRecovery(
       tool,

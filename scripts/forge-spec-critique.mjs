@@ -243,16 +243,126 @@ function jsonReport(filePath, data) {
 }
 
 // ============================================================
+// Critique-of-Critique: analyze a Critique Gate Summary
+// ============================================================
+
+// Fake-critique markers — adversarial tone without substance
+const FAKE_CRITIQUE_PHRASES = [
+  "could be more detailed", "needs more clarity", "should be clearer",
+  "可以考虑更详细", "可以更清晰", "需要更明确",
+  "might want to consider", "could benefit from",
+  "建议进一步完善", "建议优化",
+];
+
+// Substantive markers — findings tied to specific spec content
+const SUBSTANTIVE_PATTERNS = [
+  /§\d+(\.\d+)*/g,           // §section references
+  /[""][^""]{10,}[""]/g,     // quoted spec text (10+ chars)
+  /\bCA\d+\b/g,              // Critique Assumption IDs
+  /\bCD\d+\b/g,              // Critique Decision IDs
+  /\bCS\d+\b/g,              // Critique Scope IDs
+];
+
+function analyzeCritique(text) {
+  const totalChars = text.length;
+  const scale = totalChars > 0 ? 1000 / totalChars : 0;
+
+  // Count fake-critique phrases
+  const fakeCount = countWords(text, FAKE_CRITIQUE_PHRASES);
+  const fakeDensity = +(fakeCount * scale).toFixed(2);
+
+  // Count substantive evidence (section refs, quotes, structured IDs)
+  let evidenceCount = 0;
+  for (const pat of SUBSTANTIVE_PATTERNS) {
+    const matches = text.match(new RegExp(pat.source, pat.flags));
+    if (matches) evidenceCount += matches.length;
+  }
+
+  // Count findings in tables (rows with CA/CD/CS IDs)
+  const findingRows = text.match(/^\|\s*(CA|CD|CS)\d+\s*\|/gm) || [];
+
+  // Verdict extraction
+  const verdictMatch = text.match(/verdict[:\s]*(proceed|clarify|blocked)/i);
+  const verdict = verdictMatch ? verdictMatch[1].toLowerCase() : "unknown";
+
+  // Density check logic (mirrors critique-gate.md)
+  const totalFindings = findingRows.length;
+  const findingsWithEvidence = text.match(/^\|\s*(CA|CD|CS)\d+\s*\|.*§/gm) || [];
+  const quotaMet = findingsWithEvidence.length >= 3;
+  const zeroFindingProceed = totalFindings === 0 && verdict === "proceed";
+
+  // Critique density score
+  const critiqueDensity = evidenceCount > 0
+    ? +(evidenceCount / Math.max(1, fakeCount + evidenceCount)).toFixed(2)
+    : 0;
+
+  const level =
+    zeroFindingProceed ? "sycophantic" :
+    !quotaMet ? "low-critique" :
+    critiqueDensity >= 0.6 ? "rigorous" :
+    critiqueDensity >= 0.3 ? "adequate" :
+                            "shallow";
+
+  return {
+    stats: { totalChars, totalFindings, findingsWithEvidence: findingsWithEvidence.length, evidenceCount, fakeCount, verdict },
+    density: { critiqueDensity, fakeDensity },
+    quota: { quotaMet, zeroFindingProceed },
+    level,
+    recommendation: level === "sycophantic"
+      ? "0 findings + proceed verdict — re-scan mandatory"
+      : level === "low-critique"
+      ? `Only ${findingsWithEvidence.length} evidence-backed findings — below quota of 3`
+      : level === "shallow"
+      ? "High fake-critique ratio — findings use vague language without spec citations"
+      : "Critique density adequate",
+  };
+}
+
+function printCritiqueReport(filePath, data) {
+  const { stats, density, quota, level, recommendation } = data;
+  console.log("=".repeat(52));
+  console.log("  Critique-of-Critique  ".padEnd(50, "═"));
+  console.log("=".repeat(52));
+  console.log(`  文件: ${filePath}`);
+  console.log("=".repeat(52));
+
+  console.log(`\n📋 Findings`);
+  console.log(`  Total findings:       ${stats.totalFindings}`);
+  console.log(`  With evidence:        ${stats.findingsWithEvidence}`);
+  console.log(`  Evidence markers:     ${stats.evidenceCount}`);
+  console.log(`  Verdict:              ${stats.verdict}`);
+
+  console.log(`\n🔬 Density`);
+  console.log(`  Critique density:     ${density.critiqueDensity} (evidence / evidence+fake)`);
+  console.log(`  Fake-critique:        ${stats.fakeCount} phrases (${density.fakeDensity}/1k)`);
+
+  console.log(`\n✅ Quota Check`);
+  console.log(`  Quota met (3+):       ${quota.quotaMet ? "YES" : "NO"}`);
+  console.log(`  Zero-finding proceed: ${quota.zeroFindingProceed ? "YES ⚠️" : "no"}`);
+
+  const levelBadge = {
+    rigorous: "✅ 严实", adequate: "👌 及格",
+    shallow: "⚠️  偏浅", "low-critique": "⚠️  不足",
+    sycophantic: "❌ 敷衍",
+  };
+  console.log(`\n📊 Verdict: ${levelBadge[level] || level}`);
+  console.log(`  ${recommendation}`);
+  console.log("-".repeat(52));
+}
+
+// ============================================================
 // Main
 // ============================================================
 
 const args = process.argv.slice(2);
 const filePath = args[0];
 const jsonMode = args.includes("--json");
+const critiqueMode = args.includes("--critique");
 
 if (!filePath) {
-  console.error("用法: node scripts/forge-spec-critique.mjs <Product-Spec.md> [--json]");
-  console.error("  --json  输出 JSON 格式供管道使用");
+  console.error("用法: node scripts/forge-spec-critique.mjs <file> [--json] [--critique]");
+  console.error("  --json      输出 JSON 格式供管道使用");
+  console.error("  --critique  对 Critique Gate Summary 做 critique-of-critique");
   process.exit(1);
 }
 
@@ -263,10 +373,19 @@ if (!existsSync(resolved)) {
 }
 
 const text = readFileSync(resolved, "utf-8");
-const result = analyzeSpec(text);
 
-if (jsonMode) {
-  jsonReport(resolved, result);
+if (critiqueMode) {
+  const result = analyzeCritique(text);
+  if (jsonMode) {
+    console.log(JSON.stringify({ file: resolved, ...result }, null, 2));
+  } else {
+    printCritiqueReport(resolved, result);
+  }
 } else {
-  printReport(resolved, result);
+  const result = analyzeSpec(text);
+  if (jsonMode) {
+    jsonReport(resolved, result);
+  } else {
+    printReport(resolved, result);
+  }
 }
