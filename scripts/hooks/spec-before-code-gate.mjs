@@ -120,6 +120,24 @@ function hasIdeaStageExitCriteria(specPath) {
   return filled.length >= 3;
 }
 
+/** Anti-sycophancy: check for excessive TBD markers outside Idea Stage Exit Criteria */
+const TBD_THRESHOLD = 5;
+function hasExcessiveTBD(specPath) {
+  let content;
+  try {
+    content = fs.readFileSync(specPath, "utf8");
+  } catch {
+    return { excessive: false, count: 0 };
+  }
+  // Exclude Idea Stage Exit Criteria section (already checked separately)
+  const withoutIdeaStage = content.replace(
+    /##\s+Idea Stage Exit Criteria[\s\S]*?(?=##\s|$)/i,
+    "",
+  );
+  const tbdMatches = withoutIdeaStage.match(/\[TBD\]|\[待确认\]/gi) || [];
+  return { excessive: tbdMatches.length > TBD_THRESHOLD, count: tbdMatches.length };
+}
+
 function block(tool, rel, reason) {
   console.log(JSON.stringify({ decision: "block", reason: `${reason} Cannot ${tool} '${rel}'.` }));
 }
@@ -165,7 +183,7 @@ async function main() {
       tool,
       rel,
       "Spec-Before-Code Gate: Product-Spec.md is missing.",
-      "1. Run /product-spec-builder to generate Product-Spec.md\n2. Confirm spec with user → writes .forge/spec-confirmed.json\n3. Then retry this write.\n\nTo skip all gates, set .forge/gate-config.json: {\"level\":\"light\"} or {\"level\":\"none\"}",
+      "1. Run /product-spec-builder to generate Product-Spec.md\n2. Confirm spec with user → writes .forge/spec-confirmed.json\n3. Then retry this write.\n\n⚠️ Gate downgrade option: .forge/gate-config.json {\"level\":\"light\"} or {\"level\":\"none\"} disables spec/plan verification. Intended for non-product debugging only. For product development, complete the gates instead.",
     );
     return;
   }
@@ -177,6 +195,16 @@ async function main() {
       rel,
       "Idea Validation Gate: Product-Spec.md must include completed § Idea Stage Exit Criteria (all three questions with real answers, not [TBD]).",
       "1. Update Product-Spec.md § Idea Stage Exit Criteria:\n   - 1. Problem real and specific (who, how often)\n   - 2. Solution addresses the validated problem (how it fixes)\n   - 3. Enough signal to justify building (evidence type)\n2. Confirm spec with user → writes .forge/spec-confirmed.json\n3. Then retry this write.",
+    );
+    return;
+  }
+  const tbdCheck = hasExcessiveTBD(specFile);
+  if (tbdCheck.excessive) {
+    blockWithRecovery(
+      tool,
+      rel,
+      `TBD Overflow Gate: Product-Spec.md has ${tbdCheck.count} [TBD]/[待确认] markers outside Idea Stage Exit Criteria (threshold: ${TBD_THRESHOLD}). Too many deferred decisions means key choices are being avoided.`,
+      "1. Review each [TBD] marker in Product-Spec.md and resolve it:\n   - Replace with a concrete decision (even if it's 'not in v1')\n   - Or convert to an explicit assumption in § Key Assumptions\n2. Re-save Product-Spec.md with fewer TBD markers\n3. Then retry this write.",
     );
     return;
   }
