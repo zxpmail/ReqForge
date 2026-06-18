@@ -43,6 +43,8 @@ Uncertain items default to the simpler option:
 
 **Idea Stage Exit Criteria**: Fill all three questions — Quick Mode may use brief bullets + `[待确认]` on evidence; user must confirm before HARD-GATE lifts.
 
+**Quick Mode Density Check** (lightweight): Before presenting the Spec, verify at least 1 substantive concern was identified during inference — something the model questioned or flagged as risky. If zero concerns found, force one re-examination: "What could go wrong with the inferred defaults?" This prevents the model from rubber-stamping its own assumptions without any critical scrutiny. Mark the concern in the Spec under `## Key Assumptions & Validation`.
+
 ## Step 4: Present and confirm
 
 Present the Spec to the user with:
