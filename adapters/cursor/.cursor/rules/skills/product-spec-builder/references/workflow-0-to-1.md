@@ -313,4 +313,11 @@
             If **阻塞** or unresolved **待确认** → return to user; do not mark Spec complete.
             If **可交付** → verify **§ Idea Stage Exit Criteria** is complete (three subsections, no `[TBD]` in required fields); then write `.forge/spec-confirmed.json` if not already written; [HARD-GATE] is lifted for `/dev-planner` — PreToolUse **Idea Validation Gate** blocks app code until this section is filled.
 
+            **Product size detection** (after Spec is confirmed):
+            Run `node scripts/forge-size-detect.mjs Product-Spec.md --write-gate-config`
+            This detects product scope from the Spec and writes a recommended gate level to `.forge/gate-config.json`:
+            - Small product (CLI, ≤4 features, no auth, no DB) → `light` (skip Idea Stage depth check, DEV-PLAN confirmation)
+            - Medium/Large product → `full` (all gates enforced)
+            User may override by editing `.forge/gate-config.json` manually.
+
             See [llm-council-comparison.md](../../docs/llm-council-comparison.md).

@@ -60,6 +60,11 @@ User confirms → save as `Product-Spec.md`.
 
 **Machine gate marker (MANDATORY)**: Create `.forge/` if needed. Write `.forge/spec-confirmed.json` (`confirmed_at` ISO-8601, `spec_path`: `Product-Spec.md`). PreToolUse blocks app code until this file exists.
 
+**Product size detection** (after Spec is confirmed):
+Run `node scripts/forge-size-detect.mjs Product-Spec.md --write-gate-config`
+This detects product scope and writes a recommended gate level to `.forge/gate-config.json`.
+User may override by editing the file manually.
+
 **HARD-GATE**: Only after this explicit confirm may `/dev-planner` or `/dev-builder` be invoked and app code under `src/`/`app/`/`lib/`/`packages/` be edited.
 
 User wants changes → switch to 0-to-1 Mode questioning for the specific areas, not the whole thing.
