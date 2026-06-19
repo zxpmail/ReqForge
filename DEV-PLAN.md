@@ -1,6 +1,6 @@
 # Development Plan — Forge
 
-> 本文件记录 Forge **Harness 架构**的开发阶段（Phase 1–13）、当前进度和**未排期路线图**。
+> 本文件记录 Forge **Harness 架构**的开发阶段（Phase 1–16）、当前进度和**未排期路线图**。
 > **维护者文档与合规**（loadout 选型、平台政策）见附录 B；**框架仓库测试**（forge-smoke、test-demo）见附录 A，对应 Phase 10 的延伸，仍非 Harness 架构。
 > 新 session 启动时应首先阅读此文件，了解项目状态后再继续开发。
 

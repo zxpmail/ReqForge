@@ -1,6 +1,6 @@
 # ReqForge（Forge）
 
-**当前版本：v1.44.0**（2026-06-09）  
+**当前版本：v1.48.1**（2026-06-19）  
 **主文档**：[README 中文](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md) · [README English](https://github.com/zxpmail/ReqForge/blob/main/README.md) · [CHANGELOG](https://github.com/zxpmail/ReqForge/blob/main/CHANGELOG.md)
 
 ---

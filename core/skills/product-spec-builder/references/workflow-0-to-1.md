@@ -320,4 +320,4 @@
             - Medium/Large product → `full` (all gates enforced)
             User may override by editing `.forge/gate-config.json` manually.
 
-            See [llm-council-comparison.md](../../docs/llm-council-comparison.md).
+            See [llm-council-comparison.md](../../../docs/llm-council-comparison.md).
