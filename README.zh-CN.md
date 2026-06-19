@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,13 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.48.2 — 2026-06-19 — 发布后审计：修复 + 测试覆盖
+
+- **文档已记载的 `forge-*` 命令修复**：`forge-scaffold`、`forge-coverage`、`forge-skill-retrieve` 在 README/CHANGELOG 已记载但 package.json 缺失（报 "Missing script"）；现已注册。
+- **修复 Skill references 断链**：`product-spec-builder` 与 `dev-planner` 的 references 中两处相对链接少一层目录、指向不存在的路径。
+- **补齐 `sync.ts` agent-transform 测试**：新增 8 个单测覆盖 `adaptAgentContent`（model 别名规范化）与 `AGENT_DIR_SKIP`（套件 154 → 162）。
+- **收尾**：DEV-PLAN Phase 计数修正（1–13 → 1–16）；Wiki Home 版本/日期刷新；一次性脚本 `split-skill-references.mjs` 归档到 `scripts/archive/`；CONTEXT.md 重写为当前状态。
 
 ### v1.48.1 — 2026-06-19 — 跨平台 Agent 派发（Mode A）全面落地
 

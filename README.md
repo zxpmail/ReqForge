@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -74,6 +74,13 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.48.2 — 2026-06-19 — Post-release audit: fixes + test coverage
+
+- **Documented `forge-*` commands fixed**: `forge-scaffold`, `forge-coverage`, and `forge-skill-retrieve` were advertised in README/CHANGELOG but missing from `package.json` (failed with "Missing script"); now registered.
+- **Broken skill-reference links repaired**: two relative links in `product-spec-builder` and `dev-planner` references were one directory level too shallow and pointed at nonexistent paths.
+- **Test coverage for `sync.ts` agent-transform logic**: 8 new unit tests for `adaptAgentContent` (model-alias normalization) and `AGENT_DIR_SKIP` (suite 154 → 162).
+- **Hygiene**: DEV-PLAN phase count corrected (1–13 → 1–16); wiki Home version/date refreshed; one-off `split-skill-references.mjs` archived to `scripts/archive/`; CONTEXT.md rewritten to current state.
 
 ### v1.48.1 — 2026-06-19 — Cross-platform agent dispatch (Mode A) fully delivered
 

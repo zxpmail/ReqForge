@@ -2,6 +2,21 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.2] - 2026-06-19
+
+### Fixed
+- **Documented `forge-*` commands now resolve.** `forge-scaffold`, `forge-coverage`, and `forge-skill-retrieve` were advertised in README/CHANGELOG as `pnpm forge-*` but were absent from `package.json` scripts, so they failed with "Missing script". All three are now registered. (`package.json`)
+- **Two shallow relative links in skill references** resolved one directory level too shallow (`../../` where `../../../` was needed) and pointed at nonexistent paths: `core/skills/product-spec-builder/references/workflow-0-to-1.md` → `core/docs/llm-council-comparison.md`; `core/skills/dev-planner/references/workflow.md` → `core/templates/github-issues-slices-template.md`.
+- **DEV-PLAN.md intro phase count** corrected from "Phase 1–13" to "Phase 1–16" to match the table body.
+- **docs/github-wiki/Home.md** current-version bumped v1.44.0 → v1.48.1 and date refreshed to 2026-06-19.
+
+### Added
+- **Unit tests for `sync.ts` agent-transform logic** (`scripts/__tests__/sync.test.ts`): `adaptAgentContent` (opus/sonnet/haiku → `inherit` for non-Claude adapters; claude-code preserves pinning; whitespace preserved; non-model/comment lines untouched) and `AGENT_DIR_SKIP` (excludes `AGENTS.md`, inherits `SKIP_FILES`), plus a `syncDir` integration test verifying both the skip and the transform wire-up. Suite 154 → 162.
+
+### Changed
+- **`scripts/split-skill-references.mjs` → `scripts/archive/`**: one-off v1.20.4 tool (referenced only in CHANGELOG) archived rather than deleted, preserving the changelog cross-reference. Historical CHANGELOG entry left intact as a point-in-time record.
+- **CONTEXT.md** rewritten from v1.35.7-era stale status to current verified state (v1.48.1 / `495cbed`, audit reconciliation summary, test commands).
+
 ## [v1.48.1] - 2026-06-19
 
 ### Fixed
