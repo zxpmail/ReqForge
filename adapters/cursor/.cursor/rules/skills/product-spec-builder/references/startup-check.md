@@ -25,6 +25,7 @@ Matching rules:
 
 | Trigger | Mode | Next read |
 |---------|------|-----------|
+| **distill** / **蒸馏** / **infer what I need** / **我不确定我想要什么** | **Distillation** | `references/distillation-mode.md` only |
 | **grill me** / **stress-test** / **烤问** / **对齐计划** | **Light Grill** | `references/light-grill-mode.md` only |
 | Product requirements document found | **Iteration** | `references/workflow-iteration.md` |
 | Not found → ask: "Full deep-dive or quick start?" | | |
@@ -33,6 +34,7 @@ Matching rules:
 
 ## Step 4: Execute corresponding workflow
 
+- Distillation → [Workflow (Distillation Mode)]
 - Light Grill → [Workflow (Light Grill Mode)]
 - Quick → [Workflow (Quick Mode)]
 - 0-to-1 → [Workflow (0-to-1 Mode)]

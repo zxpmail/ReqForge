@@ -69,6 +69,7 @@ requires: []
     │   ├── workflow-0-to-1.md
     │   ├── workflow-iteration.md
     │   ├── light-grill-mode.md
+    │   ├── distillation-mode.md            # 需求蒸馏（反讨好·需求阶段）
     │   ├── requirements-dimensions.md
     │   ├── conversation-strategy.md
     │   ├── hard-gate-rationalization.md
@@ -185,6 +186,13 @@ requires: []
     **按步执行** `references/light-grill-mode.md`
 
 <!-- end: workflow-light-grill-mode -->
+<!-- begin: workflow-distillation-mode -->
+[Workflow (Distillation Mode)]
+    **Trigger**: User says distill / 蒸馏 / infer what I need（模糊一句话，要 AI 推断而非问答）。
+    **反讨好「需求阶段」**：多路推断（不依赖用户回答）→ 交叉验证 → ✅/⚠️/❓ 蒸馏输出。
+    **按步执行** `references/distillation-mode.md`
+
+<!-- end: workflow-distillation-mode -->
 <!-- begin: workflow-quick-mode -->
 [Workflow (Quick Mode)]
     **Quick 路径必读** `references/workflow-quick-mode.md` — 勿加载 `workflow-0-to-1` / `conversation-strategy` / pm-frameworks 全文

@@ -38,6 +38,6 @@
 
 ## 状态
 
-**评估结论（2026-06-19）：建议实施（SHIP，作为 pilot）。** 与 v1.48.x 反讨好主线高度一致——critique gate / plan critique 是审查/计划阶段的反讨好，spec-distillation 是**需求阶段**的反讨好：不只记录用户「说的」，而是推断用户「真正需要的」并 surface 缺口。实现路径：作为 `product-spec-builder` 的可选模式（类比 `light-grill-mode` / `quick-mode`），新增 `references/distillation-mode.md`，多路推断 + 交叉验证 + ✅/⚠️/❓ 蒸馏输出。不增加用户负担、不削弱确认环节（符合「不做」约束）。列为下一个高价值特性。
+**已实施 pilot（v1.48.3，2026-06-19）。** 作为 `product-spec-builder` 的可选模式落地（类比 `light-grill-mode`）：新增 `references/distillation-mode.md`——4 路推断（Real Need / Competitor / Domain Patterns / Tech Feasibility，不依赖用户回答）+ 交叉验证 + ✅/⚠️/❓ 蒸馏输出，密度配额 + 1-rescan 上限（同 critique-gate 的反假批判逻辑）。关键词触发（`distill`/`蒸馏`），默认 Spec 路径不变。配套校验器 `pnpm forge-spec-distill`（复用 `forge-spec-critique.mjs` 原语）。复用 domain-mapper 产出（greenfield 安全）。详见 `core/skills/product-spec-builder/references/distillation-mode.md`。
 
 GitHub Issue: https://github.com/zxpmail/ReqForge/issues/7

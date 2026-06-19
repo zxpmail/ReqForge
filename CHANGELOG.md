@@ -2,6 +2,12 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.3] - 2026-06-19
+
+### Added
+- **Spec-Distillation Mode** (issue #7): new optional mode in `product-spec-builder` — the spec-stage anti-sycophancy analog of critique-gate (post-spec) and plan-critique-check (planning). On a fuzzy one-liner, runs 4-path **inference** (Real Need / Competitor Approaches / Domain Patterns / Tech Feasibility) — *not* user questioning — cross-validates against what the user said, and outputs a `✅/⚠️/❓` Distillation Map that hands off to 0-to-1/Quick (`❓` → first clarifying questions; `✅`/`⚠️` → pre-filled Spec). Keyword-gated (`distill` / `蒸馏` / `infer what I need`), so the default spec path is unchanged. Consumes `domain-mapper` outputs when present; greenfield-safe. (`core/skills/product-spec-builder/references/distillation-mode.md`, +5 wiring touchpoints)
+- **forge-spec-distill**: `pnpm forge-spec-distill <Distillation-Map>` verifier — checks 4 inference paths present, `⚠️` findings carry `§P`/URL basis, `❓` section non-empty, density quota (≥3 sourced), 0-`⚠️` = sycophantic. Non-zero exit on sycophantic/malformed. Reuses `forge-spec-critique.mjs` primitives. (`scripts/forge-spec-distill.mjs`)
+
 ## [v1.48.2] - 2026-06-19
 
 ### Fixed

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -74,6 +74,11 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.48.3 — 2026-06-19 — Spec-Distillation Mode (issue #7)
+
+- **New optional spec mode — Distillation**: the spec-stage anti-sycophancy step. On a fuzzy one-liner it runs 4-path *inference* (real need / competitors / domain patterns / tech feasibility) instead of Q&A, cross-validates against what the user said, and outputs a `✅/⚠️/❓` Distillation Map → hands off to 0-to-1/Quick. Keyword-gated (`distill` / `蒸馏`); the default path is unchanged. Mirrors critique-gate (post-spec) and plan-critique-check (planning).
+- **forge-spec-distill**: verifier for Distillation Maps (4 paths, evidence-backed `⚠️`, density quota, sycophancy gate).
 
 ### v1.48.2 — 2026-06-19 — Post-release audit: fixes + test coverage
 

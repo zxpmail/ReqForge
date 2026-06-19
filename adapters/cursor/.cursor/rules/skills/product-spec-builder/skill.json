@@ -13,7 +13,8 @@
       "User requests adding features",
       "User wants to change existing requirements/UI",
       "Iterating on spec",
-      "User says grill me, stress-test plan, or align on a design before writing spec"
+      "User says grill me, stress-test plan, or align on a design before writing spec",
+      "User says distill / 蒸馏 / 'infer what I need' — fuzzy one-liner, wants needs inferred not asked"
     ],
     "manual": true,
     "command": "/product-spec-builder"

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.2-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,11 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.48.3 — 2026-06-19 — 需求蒸馏模式（Issue #7）
+
+- **新增可选 Spec 模式——Distillation**：需求阶段的反讨好。模糊一句话触发，跑四路**推断**（真实需求 / 竞品 / 领域模式 / 技术可行性）而非问答，交叉验证后产出 `✅/⚠️/❓` Distillation Map → 移交 0-to-1/Quick。关键词触发（`distill`/`蒸馏`）；默认路径不变。与 critique-gate（spec 后）、plan-critique-check（计划）呼应。
+- **forge-spec-distill**：Distillation Map 校验器（四路径、带依据的 `⚠️`、密度配额、敷衍门禁）。
 
 ### v1.48.2 — 2026-06-19 — 发布后审计：修复 + 测试覆盖
 

@@ -153,7 +153,7 @@
 
         Step 6 (optional): GitHub issue slices
             If user uses GitHub Issues and asks to split the plan after confirm:
-            Read [github-issues-slices-template.md](../../templates/github-issues-slices-template.md)
+            Read [github-issues-slices-template.md](../../../templates/github-issues-slices-template.md)
             Propose vertical-slice issues linked to Phases — **DEV-PLAN.md remains source of truth**
 
     [Architecture Health Pass] (optional — periodic; not a replacement for /code-review)
