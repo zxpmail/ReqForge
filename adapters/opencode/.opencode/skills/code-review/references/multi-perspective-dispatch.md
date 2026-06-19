@@ -61,16 +61,17 @@ dispatch 4 specialized agents concurrently:
 - Mode B 仍必须：匿名审查包、同一 finding schema、照 Step 4 聚合
 - `agents/code-reviewer-*.md` 此时作为**各维度的检查清单**读入上下文（而非派发为独立 agent）
 
-### 平台 → 模式映射（2026-06 核实）
+### 平台 → 模式映射（2026-06 核实 + 打包修正）
 
 | 平台 | 模式 | 说明 |
 |---|---|---|
 | Claude Code | **A** | `Task`/`Agent` + `agents/*.md`，原生并发隔离子 agent |
 | OpenCode | **A** | `mode: subagent` + `@agent`，每个 subagent 独立 session/上下文隔离。并发派发原语存在（高并发有已知可靠性 bug，见 opencode #29638 / #18378） |
-| Gemini CLI | **A**（v0.38.1+，2026-04 发布） | Subagents（`.gemini/agents/*.md` + `@agent`）：独立上下文 + 并行 + 自定义命名 agent。adapter 已含 4 个 reviewer 定义 |
-| Cursor | **A**（2.4+） | 2.4 Subagents：parallel + own context + 可配置 custom prompts/tools/models。注：自定义子 agent 定义位置以 Cursor 2.4 Agent Skills 为准，`.cursor/rules/agents/` 为 rules 旧位置——adapter 打包路径需核实（后续项） |
+| Gemini CLI | **A**（v0.38.1+，2026-04） | Subagents（`.gemini/agents/*.md` + `@agent`）：独立上下文 + 并行 + 自定义命名 agent。4 个 reviewer 已加 frontmatter（`name`/`description`/`model:inherit`）→ 有效 subagent |
+| Cursor | **A**（2.4+，已交付） | 2.4 Subagents：parallel + own context + 可配置。adapter 已修正打到 `.cursor/agents/`（原 `.cursor/rules/agents/` 为 rules 旧位置）；4 个 reviewer 已加 frontmatter → Mode A 已交付 |
 
-> ✅ **截至 2026-06，四个目标平台均默认 Mode A。** 原判断 Cursor/Gemini CLI=B 已过时（基于各自发布 subagents 之前的版本）。
+> ✅ **截至 2026-06，四个目标平台均默认 Mode A（能力），code-review 4 维审查已跨平台交付**：4 个 reviewer 加了跨平台有效的 frontmatter（`model:inherit` 在四平台均合法；Claude Code 上 omit==inherit，无行为变化），Cursor adapter 路径已修正为 `.cursor/agents/`。
+> ⚠️ **残余缺口（dev-builder 派发路径）**：6 个 primary agent（implementer / code-reviewer / planner / test-writer / evolution-runner / feedback-observer）frontmatter 用 `model: opus`——Claude 专属值。Cursor 上不识别→回退会话模型（仍可用）；Gemini CLI 上可能校验失败。彻底跨平台需 per-platform model 处理或改 `model:inherit`（代价：取消 Claude Code 上 opus 强制）——列为后续，见 `docs/proposals/agent-dispatch-platform-agnostic.md`。
 > Mode B 保留为**回退**：旧版本、subagents 被禁用（如 Gemini CLI `experimental.enableAgents:false`）、或主动选单上下文顺序遍历以规避并发可靠性问题。
 > 关键不变：无论 A 还是 B，审查合约不变，Step 4 聚合照常工作。adapter 维护者按各平台当前版本核实并更新此表。
 

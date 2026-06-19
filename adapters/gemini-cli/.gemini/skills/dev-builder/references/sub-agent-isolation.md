@@ -31,7 +31,8 @@ Step 2 第 6 步：
 
 「Dispatch `implementer` / `code-reviewer` sub-agent」假设平台支持**隔离子 agent**（Mode A）。各平台能力不同，按 `code-review/references/multi-perspective-dispatch.md` §执行方式 的两模式理解：
 
-- **Mode A（原生隔离子 agent）** — Claude Code（`Task`/`Agent` + `agents/*.md`）、OpenCode（`mode: subagent` + `@agent`）、Gemini CLI（Subagents，v0.38.1+，`.gemini/agents/*.md`）、Cursor（Subagents，2.4+）。**截至 2026-06，四个目标平台均默认 Mode A。** 本文件上述隔离保证**完整成立**：主 session 不碰业务代码，implementer 在独立上下文跑。
+- **Mode A（原生隔离子 agent）** — Claude Code（`Task`/`Agent` + `agents/*.md`）、OpenCode（`mode: subagent` + `@agent`）、Gemini CLI（Subagents，v0.38.1+，`.gemini/agents/*.md`）、Cursor（Subagents，2.4+，adapter 打到 `.cursor/agents/`）。**截至 2026-06，四个目标平台均默认 Mode A（能力）。** 隔离保证成立：主 session 不碰业务代码，implementer 在独立上下文跑。
+  - ⚠️ **打包残余**：`implementer` 等 primary agent 的 frontmatter 用 `model: opus`（Claude 专属）。Claude Code/OpenCode 无碍；Cursor 上 `opus` 不识别→回退会话模型（隔离仍成立，只是非 opus）；Gemini CLI 上该值可能校验失败，需本地核实。code-review 的 4 个 reviewer 已统一用 `model: inherit`（跨平台有效）——见 `multi-perspective-dispatch.md` 残余缺口。
 - **Mode B（单上下文，无隔离子 agent）** — **回退场景**：旧版本（subagents 发布前）、subagents 被禁用（如 Gemini CLI `experimental.enableAgents:false`）、或主动选单上下文以规避并发可靠性问题。此时没有独立子 agent 上下文，"主 session 不得 Write/Edit 业务代码"这条**无法强制**。退化为：implementer/code-reviewer 阶段作为主上下文里一段**自包含、有明确起止的 pass**，保留「隔离包」契约（只传规定字段、不传闲聊/失败叙述），但放弃进程级隔离。
 
 > ⚠️ Mode B 是已知让步的回退路径，不是等效。隔离强度低于 Mode A——长 Task 上下文污染风险更高。adapter 维护者按平台当前版本核实能力映射（详见 `code-review/references/multi-perspective-dispatch.md`）。

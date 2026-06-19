@@ -26,7 +26,7 @@ const ADAPTERS: Record<string, Record<string, string>> = {
   },
   "cursor": {
     "core/skills": ".cursor/rules/skills",
-    "core/agents": ".cursor/rules/agents",
+    "core/agents": ".cursor/agents",
     "core/templates": ".cursor/rules/templates",
     "core/feedback": ".cursor/rules/feedback",
     "core/hooks": ".cursor/rules/hooks",

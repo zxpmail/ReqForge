@@ -56,4 +56,11 @@ parallel-review-strategy.md（平台无关）
 
 **已核实（2026-06-19）：** 平台→模式映射已按各平台当前版本核实，结论变更——四个目标平台**全部为 Mode A**：Claude Code=A（`Task`/`Agent`）、OpenCode=A（`mode:subagent` + `@agent`，独立 session 上下文）、Gemini CLI=**A**（v0.38.1+，2026-04 发布 [Subagents](https://developers.googleblog.com/subagents-have-arrived-in-gemini-cli/)：独立上下文 + 并行 + 自定义命名 agent，adapter 已含 `.gemini/agents/code-reviewer-*.md`）、Cursor=**A**（[2.4+ Subagents](https://forum.cursor.com/t/cursor-2-4-subagents/149403)：parallel + own context + 可配置 custom prompts/tools/models）。原判断 Cursor/Gemini CLI=B 已过时（基于各自发布 subagents 之前的版本）。映射表已更新见 `code-review/references/multi-perspective-dispatch.md` 与 `dev-builder/references/sub-agent-isolation.md`。Mode B 保留为回退（旧版本 / subagents 禁用 / 并发可靠性偏好）。
 
-后续未决：Cursor 自定义子 agent 定义位置以 2.4 Agent Skills 为准，`.cursor/rules/agents/` 为 rules 旧位置——adapter 打包是否被 Cursor 2.4 加载为 subagent 需实测。`code-review/SKILL.md` 第 99 行 "4 parallel specialized agents" 是一行摘要、本就 defer 到 workflow.md Step 2，未改（可选后续）。
+**后续更新（2026-06-19 打包修正）：** Cursor 打包问题已修复——
+1. `scripts/sync.ts`：`core/agents` 在 Cursor adapter 由 `.cursor/rules/agents` 改打到 `.cursor/agents/`（Cursor 2.4 subagent 位置；旧位置是 rules 上下文目录）。
+2. 4 个 reviewer（`code-reviewer-{bug,design,security,types}.md`）加了跨平台 frontmatter：`name` / `description` / `skills: code-review` / **`model: inherit`**。`inherit` 在四平台均合法；Claude Code 上 `omit == inherit`，故无行为变化。code-review 4 维 Mode A 现跨平台交付。Gates：`sync:discover` 0 drift · `validate-skill` 297/0 · `forge-smoke` 13/13。
+
+残余未决（dev-builder 派发路径 + 索引文件）：
+1. **primary agent 的 `model: opus`**（implementer / code-reviewer / planner / test-writer / evolution-runner / feedback-observer）：Claude 专属值。Cursor 回退到会话模型（隔离仍成立）；Gemini CLI 上可能校验失败。彻底跨平台需 sync 层 per-platform model 处理，或改 `model: inherit`（代价：取消 Claude Code 上 opus 强制）。
+2. **`AGENTS.md` 索引**随 `core/agents/` 打到各 adapter 的 subagent 目录（如 `.cursor/agents/AGENTS.md`），可能在 Cursor UI 显示一个多余的 "AGENTS" 条目——可考虑从 subagent 目录排除索引文件。
+3. `code-review/SKILL.md:99` 摘要行 "4 parallel specialized agents" 未改（可选，本就 defer 到 workflow.md Step 2）。
