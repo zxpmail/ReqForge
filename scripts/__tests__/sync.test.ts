@@ -2,12 +2,72 @@ import * as fs from "fs";
 import * as os from "os";
 import * as path from "path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { copyFile, SKIP_FILES, syncDir } from "../sync";
+import { adaptAgentContent, AGENT_DIR_SKIP, copyFile, SKIP_FILES, syncDir } from "../sync";
 
 describe("SKIP_FILES", () => {
   it("includes ReqForge-only check-sync hooks", () => {
     expect(SKIP_FILES.has("check-sync.sh")).toBe(true);
     expect(SKIP_FILES.has("check-sync.bat")).toBe(true);
+  });
+});
+
+describe("AGENT_DIR_SKIP", () => {
+  it("includes AGENTS.md so it is not emitted as a bogus agent entry", () => {
+    expect(AGENT_DIR_SKIP.has("AGENTS.md")).toBe(true);
+  });
+
+  it("inherits the ReqForge-only check-sync hooks from SKIP_FILES", () => {
+    expect(AGENT_DIR_SKIP.has("check-sync.sh")).toBe(true);
+    expect(AGENT_DIR_SKIP.has("check-sync.bat")).toBe(true);
+  });
+});
+
+describe("adaptAgentContent", () => {
+  it("normalizes opus/sonnet/haiku to `inherit` for every non-Claude adapter", () => {
+    for (const adapter of ["cursor", "opencode", "gemini-cli"]) {
+      for (const alias of ["opus", "sonnet", "haiku"]) {
+        expect(adaptAgentContent(adapter, `model: ${alias}`)).toBe("model: inherit");
+      }
+    }
+  });
+
+  it("preserves leading/trailing whitespace around the model value", () => {
+    expect(adaptAgentContent("cursor", "  model:  sonnet  ")).toBe("  model:  inherit  ");
+  });
+
+  it("leaves the claude-code adapter's model pinning untouched", () => {
+    expect(adaptAgentContent("claude-code", "model: opus")).toBe("model: opus");
+    expect(adaptAgentContent("claude-code", "model: sonnet")).toBe("model: sonnet");
+    expect(adaptAgentContent("claude-code", "model: haiku")).toBe("model: haiku");
+  });
+
+  it("does not touch non-model lines (other frontmatter, prose, comments)", () => {
+    const content = [
+      "---",
+      "name: implementer",
+      "description: builds features",
+      "# model: opus",
+      "modelAlias: opus is configured elsewhere",
+      "---",
+      "Some prose mentioning model: opus is not at line start.",
+    ].join("\n");
+    expect(adaptAgentContent("cursor", content)).toBe(content);
+  });
+
+  it("transforms only the model line within a full frontmatter block", () => {
+    const content = [
+      "---",
+      "name: implementer",
+      "model: opus",
+      "description: builds features",
+      "---",
+      "body",
+    ].join("\n");
+    const out = adaptAgentContent("cursor", content);
+    expect(out).toContain("model: inherit");
+    expect(out).not.toContain("model: opus");
+    expect(out).toContain("name: implementer");
+    expect(out).toContain("body");
   });
 });
 
@@ -68,6 +128,27 @@ describe("syncDir", () => {
     const dest = path.join(tmp, "dest");
     syncDir(path.join(tmp, "missing"), dest);
     expect(fs.existsSync(dest)).toBe(false);
+  });
+
+  it("excludes AGENTS.md and applies the agent model transform", () => {
+    const src = path.join(tmp, "agents");
+    const dest = path.join(tmp, "dest");
+    fs.mkdirSync(src);
+    fs.writeFileSync(path.join(src, "AGENTS.md"), "# agent index doc");
+    fs.writeFileSync(path.join(src, "implementer.md"), "model: opus\nbody");
+
+    syncDir(src, dest, {
+      skip: AGENT_DIR_SKIP,
+      transform: (c) => adaptAgentContent("cursor", c),
+    });
+
+    // AGENTS.md skipped -> no bogus "AGENTS" agent emitted into the destination
+    expect(fs.existsSync(path.join(dest, "AGENTS.md"))).toBe(false);
+    // real agent kept, and its Claude model alias normalized to `inherit`
+    expect(fs.existsSync(path.join(dest, "implementer.md"))).toBe(true);
+    expect(fs.readFileSync(path.join(dest, "implementer.md"), "utf-8")).toBe(
+      "model: inherit\nbody"
+    );
   });
 });
 
