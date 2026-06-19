@@ -2,6 +2,16 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.1] - 2026-06-19
+
+### Fixed
+- **Cross-platform agent dispatch (Mode A) fully delivered.** The platform→Mode A/B mapping had overstated delivered state: Cursor/Gemini CLI were classed Mode B against pre-subagent versions, and the Cursor adapter shipped agents to the wrong path. Re-verified against current versions — all four target platforms (Claude Code, OpenCode, Cursor 2.4+, Gemini CLI v0.38.1+) support native isolated subagents. Cursor adapter now ships to `.cursor/agents/`; the 4 code-review reviewers gained cross-platform frontmatter (`model: inherit`). (`core/skills/code-review/references/multi-perspective-dispatch.md`, `core/skills/dev-builder/references/sub-agent-isolation.md`, `core/agents/code-reviewer-*.md`)
+- **Per-platform sub-agent model normalization.** Claude-specific model aliases (`opus`/`sonnet`/`haiku`) are invalid on Cursor/Gemini/OpenCode and could fail validation or fall back silently. `scripts/sync.ts` (`adaptAgentContent`) normalizes them to `inherit` for non-Claude adapters while preserving the opus pinning on Claude Code. `syncDir` and `fileHash` are both transform-aware, so `sync:discover` stays 0-drift.
+- **AGENTS.md index no longer shipped into sub-agent scan dirs** (`.cursor/agents/`, `.gemini/agents/`, ...) where it would surface as a bogus agent entry. New `AGENT_DIR_SKIP`. (`scripts/sync.ts`)
+
+### Changed
+- `code-review/SKILL.md` review-checklist summary reworded to platform-neutral "4-dimension parallel review (Mode A dispatch)".
+
 ## [v1.48.0] - 2026-06-18
 
 ### Added

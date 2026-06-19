@@ -60,7 +60,9 @@ parallel-review-strategy.md（平台无关）
 1. `scripts/sync.ts`：`core/agents` 在 Cursor adapter 由 `.cursor/rules/agents` 改打到 `.cursor/agents/`（Cursor 2.4 subagent 位置；旧位置是 rules 上下文目录）。
 2. 4 个 reviewer（`code-reviewer-{bug,design,security,types}.md`）加了跨平台 frontmatter：`name` / `description` / `skills: code-review` / **`model: inherit`**。`inherit` 在四平台均合法；Claude Code 上 `omit == inherit`，故无行为变化。code-review 4 维 Mode A 现跨平台交付。Gates：`sync:discover` 0 drift · `validate-skill` 297/0 · `forge-smoke` 13/13。
 
-残余未决（dev-builder 派发路径 + 索引文件）：
-1. **primary agent 的 `model: opus`**（implementer / code-reviewer / planner / test-writer / evolution-runner / feedback-observer）：Claude 专属值。Cursor 回退到会话模型（隔离仍成立）；Gemini CLI 上可能校验失败。彻底跨平台需 sync 层 per-platform model 处理，或改 `model: inherit`（代价：取消 Claude Code 上 opus 强制）。
-2. **`AGENTS.md` 索引**随 `core/agents/` 打到各 adapter 的 subagent 目录（如 `.cursor/agents/AGENTS.md`），可能在 Cursor UI 显示一个多余的 "AGENTS" 条目——可考虑从 subagent 目录排除索引文件。
-3. `code-review/SKILL.md:99` 摘要行 "4 parallel specialized agents" 未改（可选，本就 defer 到 workflow.md Step 2）。
+**残余项已全部解决（2026-06-19）：**
+1. ✅ **primary agent `model: opus`**：`sync.ts` 新增 `adaptAgentContent()`——对非 Claude adapter，agent 文件的 `opus`/`sonnet`/`haiku` 自动规范为 `inherit`（四平台合法）；Claude Code adapter 保留原值（质量强制不变）。`syncDir` 与 `fileHash` 均感知此变换，故 `sync:discover` 仍 0 drift。
+2. ✅ **`AGENTS.md` 索引**：新增 `AGENT_DIR_SKIP`，agents 目录同步时排除 `AGENTS.md`（非 sub-agent 定义），不再打入各平台 subagent 扫描目录。
+3. ✅ `code-review/SKILL.md:99` 摘要行改为平台中立的 "4-dimension parallel review (Mode A dispatch)"。
+
+Gates（全绿）：`sync:discover` 0 drift（1068 in sync）· `validate-skill` 297/0 · `forge-smoke` 13/13 · `pnpm test` 154/154。

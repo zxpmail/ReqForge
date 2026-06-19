@@ -3,7 +3,7 @@
 name: planner
 description: Dispatched by the main Agent when development planning is needed. Uses the dev-planner skill to analyze Spec, split phases, and output DEV-PLAN.md.
 skills: dev-planner
-model: opus
+model: inherit
 color: yellow
 ---
 

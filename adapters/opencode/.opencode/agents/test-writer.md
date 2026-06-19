@@ -3,7 +3,7 @@
 name: test-writer
 description: Dispatched by the main Agent when automated tests are needed. Generates TypeScript test files for sync scripts and core utilities.
 skills: none
-model: sonnet
+model: inherit
 color: yellow
 ---
 

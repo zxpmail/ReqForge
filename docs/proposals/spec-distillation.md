@@ -38,6 +38,6 @@
 
 ## 状态
 
-提议待评估。
+**评估结论（2026-06-19）：建议实施（SHIP，作为 pilot）。** 与 v1.48.x 反讨好主线高度一致——critique gate / plan critique 是审查/计划阶段的反讨好，spec-distillation 是**需求阶段**的反讨好：不只记录用户「说的」，而是推断用户「真正需要的」并 surface 缺口。实现路径：作为 `product-spec-builder` 的可选模式（类比 `light-grill-mode` / `quick-mode`），新增 `references/distillation-mode.md`，多路推断 + 交叉验证 + ✅/⚠️/❓ 蒸馏输出。不增加用户负担、不削弱确认环节（符合「不做」约束）。列为下一个高价值特性。
 
 GitHub Issue: https://github.com/zxpmail/ReqForge/issues/7

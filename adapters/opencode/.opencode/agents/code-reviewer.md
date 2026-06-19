@@ -3,7 +3,7 @@
 name: code-reviewer
 description: Dispatched by the main Agent when code review is needed. Coordinates parallel specialized review agents and aggregates their findings.
 skills: code-review
-model: opus
+model: inherit
 color: red
 ---
 

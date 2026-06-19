@@ -53,11 +53,34 @@ const ADAPTERS: Record<string, Record<string, string>> = {
 // Files that should NOT be synced to adapters (ReqForge-self only)
 export const SKIP_FILES = new Set(["check-sync.sh", "check-sync.bat"]);
 
-export function syncDir(srcDir: string, destDir: string): void {
+// Index/convention files inside core/agents/ that are NOT sub-agent definitions.
+// Keep them out of platform sub-agent scan dirs (.cursor/agents, .gemini/agents, ...)
+// where they would otherwise surface as a bogus agent entry.
+export const AGENT_DIR_SKIP = new Set([...SKIP_FILES, "AGENTS.md"]);
+
+// Claude Code sub-agent model aliases (opus/sonnet/haiku) are invalid on other
+// platforms. Normalize them to `inherit` (valid on Cursor 2.4, Gemini CLI
+// v0.38.1+, OpenCode; and equivalent to Claude Code's behavior when the model
+// field is omitted). The claude-code adapter keeps the original pinning.
+const CLAUDE_MODEL_LINE = /^([ \t]*model:[ \t]*)(opus|sonnet|haiku)([ \t]*)$/m;
+
+export function adaptAgentContent(adapter: string, content: string): string {
+  if (adapter === "claude-code") return content;
+  return content.replace(CLAUDE_MODEL_LINE, "$1inherit$3");
+}
+
+export function syncDir(
+  srcDir: string,
+  destDir: string,
+  opts?: { skip?: Set<string>; transform?: (content: string) => string }
+): void {
   if (!fs.existsSync(srcDir)) {
     console.warn(`  ⚠️  Source directory not found: ${srcDir}`);
     return;
   }
+
+  const skip = opts?.skip ?? SKIP_FILES;
+  const transform = opts?.transform;
 
   // Clear destination directory
   if (fs.existsSync(destDir)) {
@@ -65,16 +88,18 @@ export function syncDir(srcDir: string, destDir: string): void {
   }
   fs.mkdirSync(destDir, { recursive: true });
 
-  // Copy all files, skipping ReqForge-self-only files
+  // Copy all files, skipping excluded files; apply optional per-platform transform
   const entries = fs.readdirSync(srcDir, { withFileTypes: true });
   for (const entry of entries) {
-    if (SKIP_FILES.has(entry.name)) continue;
+    if (skip.has(entry.name)) continue;
 
     const srcPath = path.join(srcDir, entry.name);
     const destPath = path.join(destDir, entry.name);
 
     if (entry.isDirectory()) {
       fs.cpSync(srcPath, destPath, { recursive: true });
+    } else if (transform) {
+      fs.writeFileSync(destPath, transform(fs.readFileSync(srcPath, "utf-8")), "utf-8");
     } else {
       fs.copyFileSync(srcPath, destPath);
     }
@@ -125,8 +150,9 @@ function collectFiles(dir: string, prefix: string, skip?: Set<string>): Map<stri
   return map;
 }
 
-function fileHash(filePath: string): string {
-  const content = fs.readFileSync(filePath);
+function fileHash(filePath: string, transform?: (content: string) => string): string {
+  let content: string | Buffer = fs.readFileSync(filePath);
+  if (transform) content = transform(content.toString("utf-8"));
   const crypto = require("crypto");
   return crypto.createHash("sha256").update(content).digest("hex").slice(0, 12);
 }
@@ -149,13 +175,20 @@ function discover(): void {
     for (const [coreSrc, adapterDest] of Object.entries(syncMap)) {
       const coreDir = path.join(ROOT, coreSrc);
       const adapDir = path.join(adapterDir, adapterDest);
-      const coreFiles = collectFiles(coreDir, "", SKIP_FILES);
+      const isAgents = coreSrc === "core/agents";
+      const coreSkip = isAgents ? AGENT_DIR_SKIP : SKIP_FILES;
+      const agentTransform = isAgents
+        ? (c: string) => adaptAgentContent(adapter, c)
+        : undefined;
+      const coreFiles = collectFiles(coreDir, "", coreSkip);
       const adapFiles = collectFiles(adapDir, "");
       const allKeys = new Set([...coreFiles.keys(), ...adapFiles.keys()]);
 
       for (const rel of allKeys) {
         if (coreFiles.has(rel) && adapFiles.has(rel)) {
-          const hCore = fileHash(coreFiles.get(rel)!);
+          // Hash core side through the same per-platform transform that sync
+          // applies, so transformed adapters compare as in-sync (not drift).
+          const hCore = fileHash(coreFiles.get(rel)!, agentTransform);
           const hAdap = fileHash(adapFiles.get(rel)!);
           if (hCore === hAdap) { synced++; }
           else { drifted.push({ rel, dest: adapterDest }); }
@@ -207,11 +240,19 @@ function main(): void {
     const adapterDir = path.join(ROOT, "adapters", adapter);
     const cfg = ADAPTER_CONFIGS[adapter];
 
-    // Sync directory mappings
+    // Sync directory mappings (agents dir: skip index docs + normalize Claude
+    // model aliases to `inherit` for non-Claude adapters)
     for (const [src, dest] of Object.entries(syncMap)) {
       const srcPath = path.join(ROOT, src);
       const destPath = path.join(adapterDir, dest);
-      syncDir(srcPath, destPath);
+      if (src === "core/agents") {
+        syncDir(srcPath, destPath, {
+          skip: AGENT_DIR_SKIP,
+          transform: (c) => adaptAgentContent(adapter, c),
+        });
+      } else {
+        syncDir(srcPath, destPath);
+      }
     }
 
     // Sync control file to adapter (Forge dispatch map; OpenCode reads AGENTS.md, same content as CLAUDE.md)

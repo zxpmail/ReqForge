@@ -35,7 +35,4 @@ AST 解析命令
 
 ## 状态
 
-提议待评估。实现路径：
-1. 在 `core/hooks/` 下新增 `smart-approval.sh` / `.bat`，作为可选 hook
-2. 先在 5-10 个常用 CLI（git、npm、npx、pnpm、curl）上实现 AST 模式匹配
-3. 观察 permission prompt 减少效果，再决定是否扩展
+**评估结论（2026-06-19）：暂不实施（DEFER）。** 维护 34+ CLI 的 AST 规则成本高（Dippy 10k+ 测试即证明），且误放行后果 > permission fatigue。Forge 面向框架/skill 开发，人均 permission prompt 频率不高；Claude Code 自身权限体系（allowlist 等）已部分覆盖此需求。如用户反馈 prompt 疲劳，再以最小 CLI 集（git/npm/pnpm）小范围试点。

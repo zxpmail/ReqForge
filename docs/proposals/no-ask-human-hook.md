@@ -20,6 +20,6 @@ PreToolUse hook 检测 tool 调用意图：
 
 ## 状态
 
-提议待评估。实现路径：在 core/hooks/ 下新增 no-ask-human.sh / .bat，作为可选 hook，默认不启用。
+**评估结论（2026-06-19）：暂不实施（DEFER / 与主线冲突）。** 与 Forge 的人机协同门控哲学直接冲突——Spec-Before-Code、critique gate 等 Machine Gate 本就是**需要人类判断的拦截点**；自动跳过人类决策会瓦解这套体系。误自动决策的风险 > 卡住的风险。仅适合「过夜自主运行」窄场景，非 Forge 目标。保留提案备查；若未来定位转向长时间自主运行再评估。
 
 GitHub Issue: https://github.com/zxpmail/ReqForge/issues/4

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,12 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.48.1 — 2026-06-19 — 跨平台 Agent 派发（Mode A）全面落地
+
+- **平台→Mode A/B 映射修正**：核实四个目标平台（Claude Code、OpenCode、Cursor 2.4+、Gemini CLI v0.38.1+）截至 2026-06 均支持原生隔离子 agent。Cursor/Gemini 此前按发布 subagents 前的版本误判为 Mode B。
+- **Cursor adapter 路径修正**：agents 改打到 `.cursor/agents/`（Cursor 2.4 subagent 位置）；4 个 code-review reviewer 加了跨平台 frontmatter。
+- **per-platform model 规范化**：`sync.ts` 对非 Claude adapter 把 `opus`/`sonnet`/`haiku` 规范为 `inherit`（Claude Code 保留 opus 强制）。Agent 派发真正跨平台。
 
 ### v1.48.0 — 2026-06-18 — 反讨好硬化 + 产品规模检测
 

@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.1-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -74,6 +74,12 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.48.1 — 2026-06-19 — Cross-platform agent dispatch (Mode A) fully delivered
+
+- **Platform→Mode A/B mapping corrected**: verified all four target platforms (Claude Code, OpenCode, Cursor 2.4+, Gemini CLI v0.38.1+) support native isolated subagents as of 2026-06. Cursor/Gemini were previously classed Mode B against pre-subagent versions.
+- **Cursor adapter path fix**: agents now ship to `.cursor/agents/` (Cursor 2.4 subagent location); the 4 code-review reviewers gained cross-platform frontmatter.
+- **Per-platform model normalization**: `sync.ts` normalizes Claude-specific `opus`/`sonnet`/`haiku` → `inherit` for non-Claude adapters (preserves opus pinning on Claude Code). Agent dispatch is now genuinely cross-platform.
 
 ### v1.48.0 — 2026-06-18 — Anti-sycophancy hardening + product size detection
 

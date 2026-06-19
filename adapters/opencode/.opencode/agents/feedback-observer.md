@@ -3,7 +3,7 @@
 name: feedback-observer
 description: Dispatched after failures (compile error, review fail, verification fail) OR user corrections/feedback. Auto-scores Skill dimensions on failure. Uses feedback-writer skill to record feedback.
 skills: feedback-writer
-model: opus
+model: inherit
 color: blue
 ---
 

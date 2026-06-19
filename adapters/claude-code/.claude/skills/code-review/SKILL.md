@@ -97,7 +97,7 @@ requires: []
     - **Type Safety**: no `any`, `@ts-ignore`, unsafe casts
 
 [Review Dimension Checklist]
-    Moderate/complex → 4 parallel specialized agents (see `workflow.md` Step 2). Simple → aggregator quick pass only.
+    Moderate/complex → 4-dimension parallel review (Mode A dispatch; see `workflow.md` Step 2 + `references/multi-perspective-dispatch.md`). Simple → aggregator quick pass only.
     **按需读取** `references/review-dimension-checklist.md`
 
 <!-- end: review-dimension-checklist -->

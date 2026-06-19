@@ -3,7 +3,7 @@
 name: implementer
 description: Dispatched when the project is large and the main Agent needs to split a Phase into independent Tasks for separate execution. Uses the dev-builder skill for coding, one fresh instance per Task.
 skills: dev-builder
-model: opus
+model: inherit
 color: green
 ---
 
