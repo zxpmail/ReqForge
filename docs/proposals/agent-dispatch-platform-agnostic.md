@@ -44,4 +44,14 @@ parallel-review-strategy.md（平台无关）
 
 ## 状态
 
-提议待评估。
+**已实施（2026-06-19）。**
+
+落地内容：
+- 新增 `core/skills/code-review/references/multi-perspective-dispatch.md` — 平台无关的 4 维审查分发：决策表 + 不变合约 + Mode A/B 执行方式 + 平台映射
+- `code-review/references/workflow.md` Step 2 — 不再写死 `dispatch 4 named agents concurrently`，改为引用 `multi-perspective-dispatch.md`
+- `dev-builder/references/sub-agent-isolation.md` — 新增 `[Platform Execution Modes]`：implementer / code-reviewer 派发的 Mode A/B 差异（workflow.md Step 7/14 本就指向此文件）
+- 4 个 adapter 经 `pnpm sync` 同步（1072 files, 0 drift）；`pnpm validate-skill` 通过；`pnpm sync:discover` 0 drift
+
+设计要点：审查合约（`severity`/`impact`/`confidence 1–5`/`risk_rank`/`evidence` + 匿名包）是跨平台**不变量**；变的只是执行方式——「4 个隔离上下文并行」(Mode A: Claude Code / OpenCode) vs「单上下文顺序 4 遍」(Mode B: Cursor / Gemini CLI)。Mode B 是**已知让步、非等效**：审查维度仍被系统性覆盖，但失去上下文隔离，长 Task 污染风险更高。
+
+待验证（用户）：平台→模式映射表按各平台当前版本核实（撰写时判断：Claude Code=A, OpenCode=A, Cursor=B, Gemini CLI=B）。`code-review/SKILL.md` 第 99 行 "4 parallel specialized agents" 是一行摘要、本就 defer 到 workflow.md Step 2，未改（可选后续）。

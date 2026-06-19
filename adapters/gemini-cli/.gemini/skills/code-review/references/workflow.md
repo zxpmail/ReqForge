@@ -18,12 +18,12 @@
         Escalate to moderate/complex only when caller sets it, or change touches multiple modules / new APIs / security-sensitive code.
         For simple changes (typo fix, single-file rename, comment-only, default), skip to [Step 3].
         **Anonymous review packet** (moderate/complex): Remove implementer task description, session handoff, and "I just implemented…" narrative from inputs to specialized agents. Pass: Spec excerpts, DEV-PLAN checklist, affected files list, git diff or file contents, Design-Brief/MCP values. Do **not** pass author identity or prior assistant messages about the change.
-        For moderate/complex changes, dispatch 4 specialized agents concurrently:
-        - **code-reviewer-design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
-        - **code-reviewer-bug**: Bug patterns, null pointers, race conditions, resource leaks
-        - **code-reviewer-security**: OWASP Top 10, credential leaks, injection, XSS
-        - **code-reviewer-types**: Type safety, nullability, any/ts-ignore, edge cases
-        Each agent returns structured findings with **severity, impact, confidence (1–5), risk_rank**, and evidence.
+        For moderate/complex changes, execute the **4-dimension multi-perspective review**. The decision (which dimensions, what each checks) is platform-agnostic; only the **dispatch mechanism** is platform-specific:
+        - **design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
+        - **bug**: Bug patterns, null pointers, race conditions, resource leaks
+        - **security**: OWASP Top 10, credential leaks, injection, XSS
+        - **types**: Type safety, nullability, any/ts-ignore, edge cases
+        **How to execute** (concurrent isolated sub-agents on Claude Code vs. single-context sequential passes on Cursor/Gemini CLI) and the **finding contract** (`severity` / `impact` / `confidence 1–5` / `risk_rank` / `evidence`) — see [`references/multi-perspective-dispatch.md`](multi-perspective-dispatch.md). Each dimension returns that contract regardless of execution mode; aggregation in [Step 4] is mode-independent.
 
     [Step 3: Scan Code Implementation]
         Traverse the project code directory

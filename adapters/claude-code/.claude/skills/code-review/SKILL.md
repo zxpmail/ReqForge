@@ -68,6 +68,7 @@ requires: []
         ├── anti-ai-slop-checklist.md
         ├── review-dimension-checklist.md
         ├── review-strategy.md
+        ├── multi-perspective-dispatch.md   # 4 维审查的平台无关分发（Mode A/B）
         ├── workflow.md                 # Step 1–5（必读）
         └── yolo-mode.md
     ../_shared/
