@@ -61,21 +61,23 @@ dispatch 4 specialized agents concurrently:
 - Mode B 仍必须：匿名审查包、同一 finding schema、照 Step 4 聚合
 - `agents/code-reviewer-*.md` 此时作为**各维度的检查清单**读入上下文（而非派发为独立 agent）
 
-### 平台 → 模式映射（撰写时判断，按各平台当前版本核实）
+### 平台 → 模式映射（2026-06 核实）
 
 | 平台 | 模式 | 说明 |
 |---|---|---|
 | Claude Code | **A** | `Task`/`Agent` + `agents/*.md`，原生并发隔离子 agent |
-| OpenCode | **A**（可） | 支持 subagent；按版本核实是否并发 |
-| Cursor | **B** | Composer 单上下文，rules 读入；无命名并发子 agent 原语 |
-| Gemini CLI | **B** | 单 agent + extensions/tools；顺序遍历 |
+| OpenCode | **A** | `mode: subagent` + `@agent`，每个 subagent 独立 session/上下文隔离。并发派发原语存在（高并发有已知可靠性 bug，见 opencode #29638 / #18378） |
+| Gemini CLI | **A**（v0.38.1+，2026-04 发布） | Subagents（`.gemini/agents/*.md` + `@agent`）：独立上下文 + 并行 + 自定义命名 agent。adapter 已含 4 个 reviewer 定义 |
+| Cursor | **A**（2.4+） | 2.4 Subagents：parallel + own context + 可配置 custom prompts/tools/models。注：自定义子 agent 定义位置以 Cursor 2.4 Agent Skills 为准，`.cursor/rules/agents/` 为 rules 旧位置——adapter 打包路径需核实（后续项） |
 
-> ⚠️ 上表是撰写时的判断。平台能力随版本变化——adapter 维护者请按当前版本核实并更新此表。**关键是：无论 A 还是 B，审查合约不变，Step 4 聚合照常工作。**
+> ✅ **截至 2026-06，四个目标平台均默认 Mode A。** 原判断 Cursor/Gemini CLI=B 已过时（基于各自发布 subagents 之前的版本）。
+> Mode B 保留为**回退**：旧版本、subagents 被禁用（如 Gemini CLI `experimental.enableAgents:false`）、或主动选单上下文顺序遍历以规避并发可靠性问题。
+> 关键不变：无论 A 还是 B，审查合约不变，Step 4 聚合照常工作。adapter 维护者按各平台当前版本核实并更新此表。
 
 ## 为什么这样切
 
 - **合约是不变量**，执行方式是变量。把不变量钉死、把变量参数化 = 跨平台可移植，且不牺牲审查质量。
-- Mode B 不是「降级放弃」——它把「执行不了的指令」变成「能跑的顺序审查」，4 个维度仍被系统性覆盖，只是失去上下文隔离。比当前的「Cursor 上 Step 2 形同虚设」强。
+- Mode B 是**已知让步的回退路径**，不是降级放弃——它把「执行不了的指令」（旧版本无子 agent 原语、或 subagents 被禁用）变成「能跑的顺序审查」，4 个维度仍被系统性覆盖，只是失去上下文隔离。当前四个目标平台均已有 Mode A，此路径仅在回退场景触发。
 - 与 `gc-audit-routing.md` 同构：决策表写在 reference（平台无关），workflow.md 只引用、不实现执行细节。
 
 ## 谁读这个
