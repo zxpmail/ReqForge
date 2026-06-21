@@ -14,6 +14,7 @@
 | `.forge/spec-confirmed.json` | Spec 已书面确认 |
 | `DEV-PLAN.md` | 开发计划（含 **MVP Scope**） |
 | `.forge/plan-confirmed.json` | Plan 已书面确认 |
+| `.forge/design-next-step.json` | Brief 后用户选择：mockup / skip / planner-first |
 | `.forge/implementer-session.json` | implementer 子 Agent 正在写业务代码 |
 | `.forge/dev-map.md` | 开发导航地图（谁动代码谁改地图） |
 | `.forge/security-guidance.md` | 团队安全规则（审查/发布前对照） |
@@ -36,7 +37,12 @@
 | 状态 | 下一步 |
 |------|--------|
 | 无 `Product-Spec.md` | `/product-spec-builder` |
-| 有 Spec，无 `DEV-PLAN.md`，无代码 | Spec 完成 → `/dev-planner`（或可选 design） |
+| 有 Spec，无 `Design-Brief.md`，**Spec 无 UI**（API/库/CLI 工具） | **跳过** design 链 → `/dev-planner`；写 `design-next-step.json`（`no-ui-product`） |
+| 有 Spec，无 `Design-Brief.md`，**有 UI** | `/design-brief-builder` |
+| 有 Spec + Brief，无 `.forge/design-next-step.json` | **Brief 下一步门禁**：三选一 → 默认推荐 `/design-maker` |
+| 有 Brief + `design-next-step.json` → `design-maker` | `/design-maker` |
+| 有 Brief + `skip-mockup` | `/dev-planner` 或 `/dev-builder`（UI 仅依 Brief） |
+| 有 Spec，无 `DEV-PLAN.md`，无代码 | Spec 完成 → `/dev-planner`（若已 skip mockup）或先 design 链 |
 | 有 Spec + Plan，无代码 | `/dev-builder` Phase 1 |
 | 有 Spec + 代码，无 Plan | `/dev-planner` |
 | 有 Spec + Plan + 代码 | 继续 `/dev-builder` 或 `/bug-fixer` |

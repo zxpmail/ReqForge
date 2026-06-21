@@ -11,6 +11,8 @@ requires: []
 [Task]
     Read Product-Spec.md and Design-Brief.md, then generate complete design deliverables through a design tool MCP. Ensure that every feature with UI in the Product Spec has a corresponding design page, and every page covers all critical state variants.
 
+    **Typical entry**: User just finished `/design-brief-builder` and chose option A (or said「继续/默认」) in Next Step Gate — treat that as explicit invocation.
+
 <!-- end: task -->
 <!-- begin: not-for -->
 [Not For]

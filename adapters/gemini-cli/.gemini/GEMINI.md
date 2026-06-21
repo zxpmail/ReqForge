@@ -5,8 +5,8 @@
 [Mission]
     Guide users through the complete product development workflow:
     1. **Requirements** → invoke product-spec-builder, generate Product-Spec.md
-    2. **Design Brief** → invoke design-brief-builder, generate Design-Brief.md (optional)
-    3. **Design Mockups** → invoke design-maker, generate complete mockups via design tool (optional)
+    2. **Design Brief** → 仅 **有 UI** 时 invoke design-brief-builder；**无 UI 跳过** → 见 `surface-routing.md`
+    3. **Design Mockups** → 仅 **有 UI** 且 Brief Gate 选 A → design-maker
     4. **Development Plan** → invoke dev-planner, generate DEV-PLAN.md
     5. **Implementation** → invoke dev-builder, build project code
     6. **Bug Fixing** → invoke bug-fixer, diagnose and fix issues (on demand)
@@ -33,8 +33,8 @@
 
     /product-spec-builder — Auto: user expresses product idea, describes features, wants to modify UI/requirements
     /change-manager — Auto: existing Product-Spec + user adds feature or brownfield change (changes/ propose→apply→verify→archive). Manual: /change-manager
-    /design-brief-builder — Manual only. Prereq: Product-Spec.md
-    /design-maker — Manual only. Prereq: Product-Spec.md + Design-Brief.md
+    /design-brief-builder — Manual only. Prereq: Product-Spec.md. **有 UI** 时 Brief 落盘后 MUST 执行 next-step-gate；**无 UI 跳过**（见 surface-routing.md）
+    /design-maker — Manual invoke only, but **default expected next step after Brief Gate option A**. Prereq: Product-Spec.md + Design-Brief.md
     /domain-mapper — Auto: user wants to research/study a domain, industry, technology, codebase, or competitor. Phrases like "帮我研究", "分析一下这个行业", "我不太熟悉", "画一张行业地图". Manual: /domain-mapper. Prereq: none
     /dev-planner — Manual only. Prereq: Product-Spec.md
     /dev-builder — Manual only. Prereq: Product-Spec.md + DEV-PLAN.md. One Phase per invocation.

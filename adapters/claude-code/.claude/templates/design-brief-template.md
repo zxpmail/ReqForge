@@ -110,6 +110,16 @@ This template is used to generate a design specification document. Design tools 
 - [e.g. No purple gradient hero-only layout]
 - [e.g. No decorative glassmorphism cards]
 
+## Next Step Decision
+<!-- HARD-GATE: filled by next-step-gate.md after user chooses — do not leave blank when Brief is confirmed -->
+| Field | Value |
+|-------|--------|
+| **User choice** | `[PENDING]` / `design-maker` / `skip-mockup` / `dev-planner-first` |
+| **Decided at** | ISO8601 or `[PENDING]` |
+| **Recommended default** | `/design-maker` — Brief is text-only until mockups exist |
+| **If skip mockup** | Dev-builder implements from Brief only; UI drift risk noted |
+| **Machine record** | `.forge/design-next-step.json` |
+
 ---
 
 ## Complete Example

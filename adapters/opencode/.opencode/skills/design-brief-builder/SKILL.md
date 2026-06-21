@@ -1,9 +1,9 @@
-<!-- forge: design-brief-builder v1.1 -->
+<!-- forge: design-brief-builder v1.2 -->
 ---
 name: design-brief-builder
-description: Used when the user wants to define a design style or visual direction, or says something vague like 'I want a premium/sleek/modern look'. Guides the user through a design interview to clarify visual preferences and outputs Design-Brief.md.
-version: 1.1.0
-updated: 2026-05-30
+description: Used when the user wants to define a design style or visual direction, or says something vague like 'I want a premium/sleek/modern look'. Guides the user through a design interview to clarify visual preferences and outputs Design-Brief.md. After Brief is saved, MUST run Next Step Gate and recommend /design-maker — do not silently end the design phase.
+version: 1.2.1
+updated: 2026-06-21
 requires: []
 ---
 
@@ -74,6 +74,7 @@ requires: []
     **Skipping accessibility**: Contrast, hierarchy, touch targets belong in Brief.
     **Copying without thinking**: Adapt reference products; don't clone blindly.
     **Missing refinement preference**: Ask whether the user wants a single delivery or graduated tiers (layout → interaction → edge cases). Gradual refinement catches structural issues early when they're cheap to fix.
+    **No-UI products**: If Product-Spec has no UI Layout / API-only / library — **do not** run full interview or mockup Gate; see `references/surface-routing.md`.
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->
@@ -85,8 +86,17 @@ requires: []
 <!-- begin: output-artifacts -->
 [Output Artifacts]
     - **Design-Brief.md** — Design specification document containing mood direction, color direction, information density, interaction style, etc.
+    - **`.forge/design-next-step.json`** — User's post-Brief choice (mockup / skip / planner-first); required before closing session when not invoking design-maker immediately
 
 <!-- end: output-artifacts -->
+<!-- begin: next-step-gate -->
+[Next Step Gate — HARD-GATE]
+    Brief 落盘后 **MUST** 先读 `references/surface-routing.md`：
+    - **无 UI（C 类）** → 不跑 Gate；`design-next-step.json` + 推荐 `/dev-planner`
+    - **有 UI（A 类）** → 执行 `references/next-step-gate.md`（三选一，推荐 mockup）
+    - **轻 CLI（B 类）** → 简化 Gate，**不**推荐 design-maker
+
+<!-- end: next-step-gate -->
 <!-- begin: interview-dimension-checklist -->
 [Dimension Checklist]
     See [references/interview-dimension-checklist.md](references/interview-dimension-checklist.md) for the full interview dimension checklist.
@@ -128,10 +138,12 @@ requires: []
 <!-- begin: workflow -->
 [Workflow]
     1. Run [Dependency Check]
-    2. Read `references/first-principles.md`
+    2. Read `references/surface-routing.md` — **无 UI 则退出 Skill，改 `/dev-planner`**
+    3. Read `references/first-principles.md`
     3. **必须先 Read `references/workflow.md`**，按 Startup → Interview → Translation → Output 执行
     4. 访谈中按需读 dimension-checklist / strategies / sufficiency-judgment
     5. 定稿前执行 `references/anti-ai-slop-checklist.md`
+    6. Brief 保存后 **MUST** 执行 `references/next-step-gate.md`（不可跳过）
 
 <!-- end: workflow -->
 <!-- begin: initialization -->

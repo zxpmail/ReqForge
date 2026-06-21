@@ -1,9 +1,9 @@
 {
   "name": "design-brief-builder",
-  "version": "1.1.0",
-  "description": "When user wants to define design style or visual direction",
+  "version": "1.2.1",
+  "description": "When user wants to define design style or visual direction; after Brief, gates user to design-maker or explicit skip",
   "tier": "interactive",
-  "intent": "Interview the user on visual preferences, brand context, and design constraints to produce a Design-Brief.md — the bridge from spec to mockups",
+  "intent": "Interview the user on visual preferences, brand context, and design constraints to produce Design-Brief.md, then run Next Step Gate so new users are guided to /design-maker (or explicit skip)",
   "author": "ReqForge",
   "license": "MIT",
   "triggers": {

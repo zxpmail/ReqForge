@@ -13,3 +13,4 @@ Entry: `/design-brief-builder`. Prereq: `Product-Spec.md`. **Full workflow → `
 | Interview | interview-dimension-checklist + strategies | Sufficiency Must Meet |
 | Translation | workflow.md § Translation | User confirms direction |
 | Output | anti-ai-slop + template | `Design-Brief.md` confirmed |
+| **Next Step Gate** | **next-step-gate.md** | User chose A/B/C; `.forge/design-next-step.json` or `/design-maker` invoked |

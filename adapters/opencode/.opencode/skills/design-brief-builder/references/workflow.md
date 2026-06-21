@@ -6,6 +6,11 @@
 
 Step 1: Dependency Check — execute [Dependency Check] in SKILL.md
 
+Step 1b: **Surface routing（必读）** — `references/surface-routing.md`
+- **C 类无 UI** → 不进入本 Skill 完整流程；写 `design-next-step.json`（`no-ui-product`）→ 推荐 `/dev-planner`；**结束**
+- **B 类轻 CLI** → 标记 `surface_class: B`，迷你 Brief 可选
+- **A 类有 UI** → 继续 Startup
+
 Step 2: Load Product Spec — read `Product-Spec.md`; extract product type, target users, core features, UI layout, tech direction (do not re-ask)
 
 Step 3: Search design trends — WebSearch competing products in this category
@@ -54,4 +59,12 @@ Step 2: Fill content; each direction needs a reference product; mark Should Meet
 
 Step 3: Save as `Design-Brief.md`
 
-Step 4: Guide next steps — design-maker mockups, or `/dev-planner`, or `/dev-builder` after mockups
+Step 4: **Next Step Gate（HARD-GATE，不可跳过）** — 必读 `references/next-step-gate.md`
+
+- 向用户说明 **Brief ≠ mockup**
+- **三选一**：A `/design-maker`（推荐）· B 跳过 mockup · C 先 `/dev-planner`
+- 用户未选 → **BLOCKED**，不得宣称设计阶段结束
+- 写入 `Design-Brief.md` § Next Step Decision + `.forge/design-next-step.json`（B/C 或 mockup 进行中）
+- 用户选 A 或说「继续/默认」→ **立即 invoke `/design-maker`**（非仅文字提示）
+
+Step 5: Session 结束语含 `Status:` 与明确 `Next Step:`（见 next-step-gate.md）
