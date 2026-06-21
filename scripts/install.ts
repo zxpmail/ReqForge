@@ -607,7 +607,6 @@ Forge install — copy adapter files into your project
 
 Usage:
   pnpm forge-install <client> [target-dir] [options]
-  ./scripts/install.sh <client> [target-dir] [options]
 
 Clients:
   claude-code    Copy to <target>/.claude/

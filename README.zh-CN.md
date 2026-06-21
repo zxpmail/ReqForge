@@ -396,7 +396,7 @@ flowchart LR
 - **Prompt Remediation 补救提示词**：feedback 模板新增 `prompt_remediation` 字段，每次失败可附带可复用的 prompt 片段防止再犯。
 
 ### v1.14.2 — 2026-05-20
-- **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层，并写入 `.forge/quickref.md` 速查；提供 `install.sh` / `install.ps1` 封装
+- **forge-install**：`pnpm forge-install <client> --target <目录>` 一键复制适配层，并写入 `.forge/quickref.md` 速查
 - **安全升级**：`--force` 合并安装，不覆盖已有 `feedback/` 与 `settings.local.json`
 
 ### v1.14.1 — 2026-05-20
@@ -486,19 +486,13 @@ pnpm forge-install cursor .
 
 # 升级合并（保留你的 feedback/ 与 settings.local.json）
 pnpm forge-install claude-code --target ../my-app --force
+
+# 仅安装指定 loadout （skills + agents + hooks）
+pnpm forge-install cursor . --loadout lite
+pnpm forge-install claude-code --target ../my-app --loadout minimal --force
 ```
 
-```powershell
-# Windows — 或在仓库根目录使用 PowerShell 封装
-.\scripts\install.ps1 claude-code C:\path\to\my-app
-```
-
-```bash
-# macOS / Linux 封装
-./scripts/install.sh opencode /path/to/my-app
-```
-
-Windows 下会自动应用 `settings.windows.json` → `settings.json`；其他平台可加 `--windows`。
+Hook 脚本与平台设置（Windows 用 `.bat` 与 `settings.windows.json`）会自动应用。完整参数见 `pnpm forge-install --help`。
 
 `forge-install` 还会在项目根目录写入（若不存在）：
 
@@ -549,13 +543,15 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 
 > **Gemini CLI** 主控文件为 `.gemini/GEMINI.md` — **与根目录 `CLAUDE.md` 相同的 Forge 调度内容**。复制后在 Gemini CLI 中运行 [`/memory reload`](https://geminicli.com/docs/cli/tutorials/memory-management/) 激活。**OpenCode** 主控文件为 `.opencode/AGENTS.md` — 同样与 `CLAUDE.md` 内容一致（仅文件名遵循 OpenCode 约定）。用户项目约束模板见 `templates/agents-template.md`。
 
-### 步骤 3 — 启用钩子（Claude Code / Cursor）
+### 步骤 3 — 启用钩子（仅方式 B 手动复制）
 
-钩子在工具调用前、提交、编辑、会话启动等时机自动运行。默认 `settings.json` 注册 **10 个钩子**（含 `hallucination-gate`、`phase-exit-guard`、`retry-gate`；`auto-push` 可选）。复制 `.claude/` 或 `.cursor/` 后：
+**方式 A（`forge-install`）** 会自动应用钩子与平台设置 — 可跳过本步。
+
+**手动复制**（Claude Code / Cursor）：默认 `settings.json` 注册 **10 个钩子**（含 `hallucination-gate`、`phase-exit-guard`、`retry-gate`；`auto-push` 可选）。复制 `.claude/` 或 `.cursor/` 后：
 
 | 平台 | 操作 |
 |------|------|
-| **Windows** | 在 `.claude/`（或 `.cursor/rules` 下相应目录）执行：`copy settings.windows.json settings.json` |
+| **Windows** | 在 `.claude/` 或 `.cursor/` 下：`copy settings.windows.json settings.json` |
 | **Linux / Mac** | 默认 `settings.json` 使用 `.sh` 脚本，无需改动 |
 | **OpenCode** | 无 `settings.json`；各平台原生支持 `.sh` / `.bat` 钩子 |
 
@@ -572,10 +568,8 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 | CLI / 库 / 后端工具 | `cli-tool` |
 | 快速原型 / 小脚本 | `minimal` |
 
-- **默认安装** ≈ `full` loadout（`settings.json` 含全部钩子）。
 - **精简钩子**（贡献者，在 Forge 克隆目录）：`pnpm apply-loadout minimal claude-code` 将更轻的钩子集写入 adapter 的 `settings.json`；加 `--dry-run` 可预览。
-- Loadout 是**参考清单**——skills/agents 已随适配层复制，loadout 用于了解各场景包含什么。
-- **存量变更**（`/change-manager`）：仅 `full`、`web-app` 包含；`cli-tool`、`minimal` 不含——CLI 项目需改用 loadout 或手动复制 `change-manager` Skill。
+- **存量变更**（`/change-manager`）：仅 `full`、`web-app`、`lite` 包含；`cli-tool`、`minimal` 不含——需 `--loadout web-app` / `full`，或手动复制 `change-manager` Skill。
 
 ### 步骤 4 — 在 AI 客户端中首次使用
 
@@ -955,7 +949,6 @@ Forge/
 ├── scripts/
 │   ├── sync.ts                # core → adapter 同步脚本
 │   ├── install.ts             # adapter → 用户项目安装
-│   ├── install.sh / install.ps1 # 安装命令封装
 │   ├── dependency-graph.ts    # 文件级依赖图与 blast-radius 分析
 │   ├── validate-skill.mjs     # 跨平台 SKILL.md 校验（默认 pnpm validate-skill）
 │   ├── validate-skill.sh      # 完整校验 + --score 评分（pnpm validate-skill:bash）

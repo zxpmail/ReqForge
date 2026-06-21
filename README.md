@@ -415,7 +415,7 @@ flowchart LR
 - **Prompt remediation**: feedback template now includes a `prompt_remediation` field — each failure can carry a reusable prompt fragment to prevent recurrence.
 
 ### v1.14.2 — 2026-05-20
-- **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter and writes `.forge/quickref.md`; `install.sh` / `install.ps1` wrappers included
+- **forge-install**: `pnpm forge-install <client> --target <dir>` copies the adapter and writes `.forge/quickref.md`
 - **Safe upgrade**: `--force` merges without overwriting `feedback/` or `settings.local.json`
 
 ### v1.14.1 — 2026-05-20
@@ -511,19 +511,7 @@ pnpm forge-install cursor . --loadout lite
 pnpm forge-install claude-code --target ../my-app --loadout minimal --force
 ```
 
-```powershell
-# Windows — or use the PowerShell wrapper from the Forge repo root
-.\scripts\install.ps1 claude-code C:\path\to\my-app
-```
-
-```bash
-# macOS / Linux wrapper
-./scripts/install.sh opencode /path/to/my-app
-```
-
-Hook scripts (`core/hooks/*.{sh,bat,ps1}`) are auto-copied to the target project's
-hook directory (e.g. `.claude/hooks/`). On Windows, `settings.windows.json` (with `.bat` calls)
-is applied automatically. Use `--windows` on other platforms if needed.
+Hook scripts and platform settings (`.bat` / `.sh`, `settings.windows.json` on Windows) are applied automatically. Full options: `pnpm forge-install --help`.
 
 `forge-install` also writes into the project root (if missing):
 
@@ -587,13 +575,15 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\gemini-cli\.gemini C:\pat
 
 > **Gemini CLI** uses `.gemini/GEMINI.md` as the control file — **same Forge dispatch content as root `CLAUDE.md`**. [`/memory reload`](https://geminicli.com/docs/cli/tutorials/memory-management/) after copying to activate. **OpenCode** uses `.opencode/AGENTS.md` — also same Forge content (filename follows OpenCode convention). User-project constraint templates live under `templates/agents-template.md`.
 
-### Step 3 — Enable hooks (Claude Code & Cursor)
+### Step 3 — Enable hooks (Option B manual copy only)
 
-Hooks run before tool use, on commit, edit, session start, etc. Default `settings.json` registers **10 hooks** (including `hallucination-gate`, `phase-exit-guard`, `retry-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
+**Option A (`forge-install`)** applies hooks and platform settings automatically — skip this step.
+
+For **manual copy** (Claude Code & Cursor): default `settings.json` registers **10 hooks** (including `hallucination-gate`, `phase-exit-guard`, `retry-gate`; auto-push is optional). After copying `.claude/` or `.cursor/`:
 
 | Platform | Action |
 |----------|--------|
-| **Windows** | Run `pnpm use-platform` (or `node scripts/use-platform.mjs --windows`) to swap `.sh` → `.bat` hooks in `.claude/settings.json` |
+| **Windows** | In `.claude/` or `.cursor/`: copy `settings.windows.json` → `settings.json` |
 | **Linux / Mac** | Default `settings.json` uses `.sh` hooks — no change needed |
 | **OpenCode** | No `settings.json`; `.sh` / `.bat` hooks work per platform |
 
@@ -610,8 +600,6 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 | CLI / library | `cli-tool` |
 | Quick spike / script | `minimal` |
 
-- **Default install** copies all skills/agents (≈ `full` loadout hooks in `settings.json`).
-- **`--loadout <name>`** (`full`, `web-app`, `lite`, `cli-tool`, `minimal`): copies **only** that bundle’s skills/agents (+ `_shared`), merges its hooks, writes `.forge/loadout-active.json`.
 - **Trim hooks only** (maintainers, from Forge clone): `pnpm apply-loadout minimal claude-code` merges a lighter hook set into adapter `settings.json`. Add `--dry-run` to preview.
 - **Brownfield** (`/change-manager`): included in `full`, `web-app`, and `lite` only; `cli-tool` and `minimal` omit it — use `--loadout web-app` / `full`, or copy the skill from `core/skills/change-manager/`.
 
@@ -1007,7 +995,6 @@ Forge/
 ├── scripts/
 │   ├── sync.ts                # core → adapter sync script
 │   ├── install.ts             # adapter → user project install
-│   ├── install.sh / install.ps1 # install wrappers
 │   ├── dependency-graph.ts    # File-level import graph + blast-radius
 │   ├── validate-skill.mjs     # Cross-platform SKILL.md validator (default pnpm validate-skill)
 │   ├── validate-skill.sh      # Full validator + --score rubric (pnpm validate-skill:bash)

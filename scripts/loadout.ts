@@ -161,12 +161,12 @@ export function shouldIncludeForLoadout(
 function buildHookRun(prefix: string, scripts: string[], windows: boolean): string {
   const sep = " && ";
   const ext = windows ? ".bat" : ".sh";
-  const runner = windows ? "" : "sh ";
+  const runner = windows ? "cmd /c " : "sh ";
   return scripts
     .map((s) => {
       const script = s.endsWith(ext) ? s : `${s}${ext}`;
       const p = windows ? `${prefix}\\${script.replace(".sh", ".bat")}` : `${prefix}/${script}`;
-      return windows ? p : `${runner}${p}`;
+      return `${runner}${p}`;
     })
     .join(sep);
 }
