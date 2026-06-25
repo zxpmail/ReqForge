@@ -1,92 +1,89 @@
-# Benchmark Results — Anti-Slop Strategies
+# Benchmark Results — Anchors vs Rules (express-export)
 
-## Test Task
+## Task
 
-todo-cli 添加 `search` 命令，用 extended test suite（29 个测试）评估。任务定义见 `task-definition.md`。
+**express-export**: Add an async data export system (submit/get status/validate/filter/format as JSON & CSV) to an existing Express API. Task definition at `tasks/express-export/task-definition.md`. Extended test suite: 35 tests.
 
 ## Experiment Design
 
-**Model**: GLM-5.1 (xopglm51 via XFYun MaaS), temperature 0.3
-**Design**: V1 (9 prohibition rules, n=28) vs V2 (3 code anchors + 4 rules, n=30)
-**Measurement**: automated pipeline → call API → extract code → `tsc --noEmit` → `vitest run` → collect static metrics
+**Model**: xopglm51 (via XFYun MaaS), temperature 0.3
+**Design**: three variants, n=10 each, using the same `benchmark/run.mjs` harness.
 
-All conditions identical except context document. API errors excluded (n=2 for V1).
+| Variant | Context | Label |
+|---------|---------|-------|
+| V1 | task-definition + 3 code anchor snippets (endpoint pattern, service pattern, error handling pattern) | Anchors only |
+| V2 | task-definition + 6 generalized rules (no dead code, respect existing patterns, don't hallucinate, etc.) | Rules only |
+| V3 | both anchors and rules concatenated | Anchors + Rules |
 
-## Confirmatory Results
+All 30 runs identical except context document. No API errors.
 
-### Primary Endpoint: Compile Rate
+## Results
+
+### Test Pass Rate (max 35)
+
+| Variant | Mean ± SD | Perfect (35/35) | Worst score |
+|---------|-----------|:----------------:|:-----------:|
+| V1 (anchors) | 30.50 ± 1.58 | 1/10 | 30/35 |
+| V2 (rules) | 33.90 ± 2.33 | 8/10 | 29/35 |
+| V3 (both) | 34.00 ± 2.11 | 8/10 | 30/35 |
+
+### Code Size
+
+| Variant | Mean ± SD | vs V1 |
+|---------|-----------|-------|
+| V1 (anchors) | 155.2 ± 3.9 | — |
+| V2 (rules) | 168.2 ± 14.5 | +13 lines (+8%) |
+| V3 (both) | 165.6 ± 9.3 | +10 lines (+7%) |
+
+### Compile Rate
+
+All 30 runs compiled (`tsc --noEmit`). All 30 runs had 100% static metric coverage (all required functions present).
+
+## Per-Run Detail
+
+### V1 — Anchors only
 
 ```
-        compiled  failed  total  rate
-V1       2        26      28     7.1%
-V2      28         2      30    93.3%
+Run 0  30/35  Run 1  30/35  Run 2  30/35  Run 3  30/35  Run 4  30/35
+Run 5  30/35  Run 6  30/35  Run 7  30/35  Run 8  30/35  Run 9  35/35
 ```
 
-**Difference: 86.2 pp**
-**Fisher exact test (two-sided): p = 9.6 × 10⁻¹²**
-**Number Needed to Treat: 1.2**
+### V2 — Rules only
 
-### Secondary Endpoint: Test Score (max 29)
+```
+Run 0  35/35  Run 1  35/35  Run 2  35/35  Run 3  35/35  Run 4  35/35
+Run 5  35/35  Run 6  35/35  Run 7  35/35  Run 8  30/35  Run 9  29/35
+```
 
-| Variant | Mean ± SD | n |
-|---------|-----------|---|
-| V1      | 21.33 ± 1.21 | 27 |
-| V2      | 25.72 ± 0.45 | 29 |
+### V3 — Anchors + Rules
 
-**Welch t(32.8) = 17.74, Cohen's d = 4.81**
-
-### Lines of Code
-
-| Variant | Mean ± SD |
-|---------|-----------|
-| V1      | 70.9 ± 9.6 |
-| V2      | 52.2 ± 5.2 |
-
-V2 generates 18.7 fewer lines on average (26% reduction).
-
-## Per-Run Detail (all 58 runs)
-
-| Run | V1 compile | V1 score | V2 compile | V2 score |
-|-----|:--------:|:--------:|:--------:|:--------:|
-| 0   | ✗ | 21/21 | ✓ | 25/29 |
-| 1   | ✗ | 21/21 | ✓ | 25/29 |
-| 2   | API err | — | ✓ | 26/29 |
-| 3   | ✗ | 21/21 | ✓ | 26/29 |
-| 4   | ✓ | 26/29 | ✓ | 26/29 |
-| 5   | ✗ | 21/21 | ✓ | 0/0* |
-| 6   | ✗ | 21/21 | ✓ | 26/29 |
-| 7   | ✗ | 21/21 | ✗ | 26/29 |
-| 8   | ✗ | 0/0* | ✓ | 26/29 |
-| 9   | ✗ | 21/21 | ✗ | 26/29 |
-| 10  | ✗ | 21/21 | ✓ | 25/29 |
-| 11  | ✗ | 21/21 | ✓ | 26/29 |
-| 12  | ✓ | 25/29 | ✓ | 26/29 |
-| 13  | ✗ | 21/21 | ✓ | 26/29 |
-| 14  | ✗ | 21/21 | ✓ | 25/29 |
-| 15  | ✗ | 21/21 | ✓ | 26/29 |
-| 16  | ✗ | 21/21 | ✓ | 25/29 |
-| 17  | ✗ | 21/21 | ✓ | 25/29 |
-| 18  | ✗ | 21/21 | ✓ | 26/29 |
-| 19  | ✗ | 21/21 | ✓ | 26/29 |
-| 20  | ✗ | 21/21 | ✓ | 26/29 |
-| 21  | ✗ | 21/21 | ✓ | 26/29 |
-| 22  | ✗ | 21/21 | ✓ | 25/29 |
-| 23  | ✗ | 21/21 | ✓ | 26/29 |
-| 24  | ✗ | 21/21 | ✓ | 25/29 |
-| 25  | ✗ | 21/21 | ✓ | 26/29 |
-| 26  | ✗ | 21/21 | ✓ | 26/29 |
-| 27  | ✗ | 21/21 | ✓ | 26/29 |
-| 28  | ✗ | 21/21 | ✓ | 26/29 |
-| 29  | ✗ | 21/21 | ✓ | 26/29 |
-
-\* `0/0` = test file failed to load (vitest import resolution issue, not a code bug)
+```
+Run 0  35/35  Run 1  35/35  Run 2  35/35  Run 3  30/35  Run 4  35/35
+Run 5  35/35  Run 6  35/35  Run 7  30/35  Run 8  35/35  Run 9  35/35
+```
 
 ## Summary
 
-| Metric | V1 (rules) | V2 (anchors) | Δ | p |
-|--------|:--------:|:---------:|---|:---:|
-| Compiles | 7.1% | **93.3%** | +86.2pp | 9.6×10⁻¹² |
-| Tests passed | 21.33 | **25.72** | +4.39 | Welch t=17.74 |
-| Lines of code | 70.9 | **52.2** | −26% | — |
+| Metric | V1 (anchors) | V2 (rules) | V3 (both) |
+|--------|:------------:|:----------:|:---------:|
+| Tests passed | 30.50 ± 1.58 | 33.90 ± 2.33 | 34.00 ± 2.11 |
+| Code lines | 155.2 ± 3.9 | 168.2 ± 14.5 | 165.6 ± 9.3 |
+| Compiles | 100% | 100% | 100% |
+| Function coverage | 100% | 100% | 100% |
 
-The anchor-based approach (V2) produces code that compiles 13× more often, passes 21% more tests, and uses 26% fewer lines. All differences are statistically significant at conventional levels.
+## Key Takeaways
+
+1. **Rules outperformed anchors on test pass rate** on this model/task (+3.4pp mean). 8/10 rule-guided runs achieved perfect scores vs 1/10 anchor-guided.
+2. **Anchor-guided code was shorter** on average (155 vs 168 lines), consistent with the earlier n=1 comparison. But shorter code didn't translate to higher test pass rate.
+3. **Adding rules to anchors (V3) didn't improve over rules alone** — the V3 and V2 scores are essentially identical (34.00 vs 33.90).
+4. **All variants had 100% compile rate and function coverage** — none of the conditions produced broken code for this model/task.
+
+## Post-Mortem
+
+The full post-mortem is at `docs/benchmark-lessons-learned.md`. Key issues identified:
+- No bare baseline (task-definition only) — can't isolate format effect from presence of any extra context
+- Model ceiling — xopglm51 passed 87-100% of tests regardless of variant, suggesting it compensates for prompt deficiencies
+- Task difficulty ceiling — express-export may not have been hard enough to expose prompt strategy differences
+- Single model, single task — results may not generalize
+
+Raw data: `benchmark/results-express-export-*.json`
