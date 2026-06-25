@@ -550,7 +550,7 @@ export function parseInstallArgs(argv: string[]): ParsedInstallArgs {
     client: null,
     target: process.cwd(),
     force: false,
-    windows: false,
+    windows: process.platform === "win32",
     help: false,
   };
 

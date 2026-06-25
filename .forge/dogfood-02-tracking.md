@@ -101,3 +101,29 @@
 2. `cd C:\work\dogfood-02`
 3. 启动 `/product-spec-builder`
 4. 每完成一个 Phase，回来填一笔
+
+---
+
+## 副发现（Side Findings）
+
+> 不属于上面 6 个核心问题，但 dogfood #2 流程中发现的真实框架问题。**每条都证明 dogfood 流程本身在产生价值。**
+
+### S1 — `forge-install` Windows 默认检测失效（2026-06-25 启动阶段发现）
+
+**现象**：在 Windows 上 `pnpm forge-install claude-code --target <dir>`（不带 `--windows`）后，`.claude/settings.json` 是 Unix 版（`bash` + `.sh`），所有 hook 静默失效。
+
+**根因**：`scripts/install.ts:parseInstallArgs` 把 `windows` 默认设为 `false`，而 `installForge` 用 `options.windows ?? process.platform === "win32"` 想做平台 fallback —— `false` 不是 `undefined`，`??` 永远走不到 fallback。
+
+**影响**：v1.14.2（2026-05-20）引入，到 v1.48.3 没人发现。任何在 Windows 上首次跑 forge-install 但没看文档加 `--windows` 的用户，hooks 全是死的（包括 spec-before-code gate、hallucination gate、phase-exit guard 等所有关卡）。
+
+**为什么 1 个月没发现**：
+- 测试 `install.test.ts` 只覆盖显式 `windows: true`，没测"省略 `--windows` 时默认行为"
+- dogfood #1（gitlog2report）是 CLI 项目，可能根本没装 hooks 就跑了
+- 框架自己的 ReqForge 仓库早就装好了，不会重新触发 install
+
+**修复**：`parseInstallArgs` 默认改为 `process.platform === "win32"`（CLI 层）。+2 测试覆盖默认行为。已发 v1.48.4。
+
+**对 dogfood 论点的支持**：这证明"dogfood 必须真跑用户路径"——开发者自己的环境永远是热缓存，跑不出首次安装问题。
+
+---
+

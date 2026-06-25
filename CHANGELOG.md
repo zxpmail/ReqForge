@@ -2,6 +2,11 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.4] - 2026-06-25
+
+### Fixed
+- **`forge-install` Windows auto-detection broken since v1.14.2.** `parseInstallArgs` defaulted `windows: false`, but `installForge` used `options.windows ?? process.platform === "win32"` for fallback — since `false` is not `undefined`, the `??` never triggered and Windows users got Unix-style `settings.json` (`.sh` + `bash`) unless they passed `--windows` explicitly. All PreToolUse/PostToolUse hooks were silently dead in fresh Windows installs for ~1 month. Default is now `process.platform === "win32"` at the CLI parse layer. Found via dogfood #2 setup. (`scripts/install.ts`, `scripts/__tests__/install.test.ts`)
+
 ## [v1.48.3] - 2026-06-19
 
 ### Added

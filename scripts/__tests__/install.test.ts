@@ -45,6 +45,16 @@ describe("parseInstallArgs", () => {
       loadout: "lite",
     });
   });
+
+  it("defaults windows to process.platform === win32 when --windows is omitted", () => {
+    const parsed = parseInstallArgs(["claude-code", "."]);
+    expect(parsed.windows).toBe(process.platform === "win32");
+  });
+
+  it("forces windows true with --windows flag", () => {
+    expect(parseInstallArgs(["claude-code", ".", "--windows"]).windows).toBe(true);
+    expect(parseInstallArgs(["claude-code", ".", "-w"]).windows).toBe(true);
+  });
 });
 
 describe("copyInstallTree", () => {
