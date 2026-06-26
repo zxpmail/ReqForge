@@ -38,6 +38,13 @@ This template is used to generate a phased development plan. dev-builder reads t
 
 ## Phase 1: [Feature Name]
 
+**Nature**: Backend | UI | Data | Integration
+
+- **Backend**: Server-side logic, APIs, database — dispatch implementer
+- **UI**: Visual components, pages, interactions — main session writes directly
+- **Data**: Schema, migrations, data pipelines — dispatch implementer
+- **Integration**: Glue code, config, simple wiring — main session writes directly
+
 **Deliverables**:
 - [Start with a verb, describe deliverable 1 — what the user can do / what the system does]
 - [Deliverable 2]
@@ -112,6 +119,8 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 
 ## Phase 1: Electron + Next.js Skeleton
 
+**Nature**: UI
+
 **Deliverables**:
 - Electron main process + Next.js renderer basic framework
 - Three-area layout: left sidebar (collapsible) + main content area + right sidebar (collapsible)
@@ -136,6 +145,8 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 ---
 
 ## Phase 2: Chat Core + SQLite Persistence
+
+**Nature**: Backend
 
 **Deliverables**:
 - SQLite database initialization (better-sqlite3, WAL mode)

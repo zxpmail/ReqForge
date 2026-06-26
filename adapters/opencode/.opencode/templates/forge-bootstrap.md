@@ -11,7 +11,7 @@ Hook block messages are **hard stops** — do not negotiate around them.
 2. **Truth sources** — Read relevant `Product-Spec.md` / `DEV-PLAN.md` sections before implementation.
 3. **HARD-GATE — no spec, no code** — Until Spec saved + `.forge/spec-confirmed.json`: no `/dev-planner`/`/dev-builder`; no app source edits.
 4. **HARD-GATE — no plan, no build** — Until Plan saved + `.forge/plan-confirmed.json`: no `/dev-builder`.
-5. **Implementer gate** — App writes need `.forge/implementer-session.json` (implementer sub-agent only).
+5. **Implementer gate** — App writes need `.forge/implementer-session.json` (implementer sub-agent only). Exception: Phase Nature=UI/Integration 时 gate level 降为 "light" 跳过此门（主 session 直接写）。
 6. **Bugs** — `/bug-fixer`; no fix without reproduction + failing test.
 7. **Hooks are law** — PreToolUse chain + phase-exit/stop/retry/pre-commit. Blocking output = stop.
 8. **Phase boundary** — One Phase per `/dev-builder`; user re-invokes for next Phase.

@@ -144,6 +144,7 @@
         - 关键文件已确认
         - Baseline 已保存
         - Scope 已声明
+        - **Phase Nature 已读取（Backend/UI/Data/Integration）— dispatch 决策已定**
         - 下一步 → [Phase Execution Flow] Step 0: 感知天理
 
     [Phase Execution Flow]
@@ -164,6 +165,34 @@
             5. Use TaskCreate to list specific task inventory — one Task per page, component, or feature
             6. Once TaskList is ready, proceed directly to Step 2 — no need to wait for user confirmation
 
+        Step 1.5: Nature Gate — Implementer Dispatch Decision
+
+            Read the current Phase's **Nature** field from DEV-PLAN.md:
+
+            | Nature | Dispatch Decision | Rationale |
+            |--------|-------------------|-----------|
+            | **Backend** | Dispatch implementer per Task (standard isolation) | Server logic, APIs, DB — cleanly isolatable, low context overhead |
+            | **Data** | Dispatch implementer per Task (standard isolation) | Schema, migrations, pipelines — similar to backend |
+            | **UI** | **SKIP implementer + worktree.** Main session writes directly. | UI code benefits from full component context; implementer isolation adds overhead without proportional benefit (verified in Dogfood #2 — Phase 4 UI completed 15min main-session vs estimated 30min+ via implementer) |
+            | **Integration** | **SKIP implementer + worktree.** Main session writes directly. | Glue code, config, simple wiring — implementer overhead not justified |
+            | *(no Nature field)* | Default to implementer (conservative) | Backward compatibility — assume backend |
+
+            If the Nature says **skip implementer**, modify the per-Task loop:
+            - **Step 6**: Skip worktree creation entirely
+            - **Step 7**: Main session writes code directly (no implementer dispatch, no `.forge/implementer-session.json`)
+            - **Step 9**: Remove "MUST NOT Write/Edit" restriction — main session may edit freely
+            - **Step 17**: Skip worktree cleanup
+            - All other steps (self-review, micro-cycle verify, code-review, commit) remain unchanged
+
+            Additionally, **downgrade the hook gate level** so that the PreToolUse hook doesn't block main-session writes:
+            1. Read current `.forge/gate-config.json` — save its `level` to `.forge/.gate-level-backup.json` as `{"original":"full"|"light"|"none"}`
+            2. Write `.forge/gate-config.json` with `{"level":"light"}` — this skips the implementer-session.json check (gate 5) while still requiring Product-Spec.md to exist (gate 1)
+            3. This is safe because gates 2–4 (spec-confirmed, DEV-PLAN, plan-confirmed) are one-time checks already satisfied at project start
+
+            If the Nature says **dispatch implementer**, proceed with the full loop below (steps 6–9 apply).
+
+            > **Note**: This decision is scoped to the current Phase only. The next Phase re-evaluates independently.
+
         Step 2: Per-Task Implementation + Single Task Review Loop
 
             For each Task, execute the following loop:
@@ -175,6 +204,8 @@
             3. Read the visual direction and page notes for this Task from Design-Brief.md
             4. If design tool MCP is connected, find the design page corresponding to this Task through the design tool, read the exact values for that page and its components. Re-read for each Task, don't rely on memory
             5. Clarify the delivery goal for this Task: what functionality to implement, what visual result to achieve
+
+            *(If Nature Gate skipped implementer, skip steps 6–9 below and write directly)*
 
             Worktree isolation (before coding):
             6. **Worktree (MANDATORY)**: Before any code changes, create an isolated worktree unless already inside one:
@@ -279,6 +310,10 @@
             - When blocked, state clearly — don't force through
 
         Step 3: Phase Completion Verification
+            Before verification, if Nature Gate skipped implementer (UI/Integration Phase):
+            1. Restore the original gate level: read `.forge/.gate-level-backup.json`, write its `original` field back to `.forge/gate-config.json`
+            2. Delete `.forge/.gate-level-backup.json`
+
             After all Tasks are complete, execute the four-step verification in [Phase Completion Assessment]
             This is the final confirmation, ensuring all Task code together compiles, runs, and functions completely
             Before verification, rebuild the dependency graph: `pnpm dep-graph build` (if available)

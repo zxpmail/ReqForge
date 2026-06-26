@@ -7,6 +7,11 @@
  * 3) DEV-PLAN.md 存在
  * 4) .forge/plan-confirmed.json（用户已确认 Plan）
  * 5) .forge/implementer-session.json（implementer 子 Agent 活跃会话）
+ *
+ * Nature Gate bypass: dev-builder workflow Step 1.5 (Nature Gate) 在 Phase Nature
+ * 为 UI/Integration 时会将 gate level 降为 "light" 以跳过 gate 5（implementer-session
+ * 检查），让主 session 可直接写代码。Phase 完成后恢复原 level。
+ * 详情见 core/skills/dev-builder/references/workflow.md § Nature Gate.
  */
 import fs from "fs";
 import path from "path";

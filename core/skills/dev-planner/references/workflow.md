@@ -120,6 +120,19 @@
             If yes -> propagate the difficulty level (🔴/🟡/🟢) and the "预计缝在哪" strategy into the Phase's Difficulty field.
             If a Phase covers features not listed in Known Difficult Spots -> default to 🟡 中.
 
+        Step 2.5: Classify Phase Nature
+            For each Phase, determine its **Nature**: Backend | UI | Data | Integration.
+
+            分类规则：
+            - **Backend**: APIs, server logic, database queries, authentication, business logic — 以服务端代码为主的 Phase
+            - **UI**: 页面组件、交互、视觉呈现、动画 — 以 React/Vue 组件、CSS、前端状态管理为主的 Phase
+            - **Data**: Schema 设计、数据迁移、数据管道、ETL — 以数据库和数据处理为主的 Phase
+            - **Integration**: 胶水代码、配置接入、CI/CD、简单的第三方 SDK 接入
+
+            如果 Phase 同时包含 Backend + UI（Fullstack）:
+            - 按**主要工作量**决定。如果前后端大致对半 → 拆成两个子 Phase 或选 Backend（保守——走 implementer 隔离）。
+            - 示例：Phase "用户系统"如果有登录 API（Backend）+ 登录页（UI），看哪个占工作量多。API 多 → Backend；页面多 → UI。
+
         Step 3: Fill content
             Fill according to template structure:
             - **MVP Scope** (in scope, **out of scope**, scope amendment criteria — Founder's Playbook anti-creep)

@@ -2,30 +2,40 @@
 
 <!-- 从 SKILL.md 渐进披露；主流程见 ../SKILL.md -->
 
-[Sub-Agent Isolation — MANDATORY per Task]
+[Sub-Agent Isolation — CONDITIONAL per Phase Nature]
 
-每个 DEV-PLAN Task 的实现阶段（RED / GREEN / REFACTOR，Workflow Step 2 第 7–10 步）：
+每个 DEV-PLAN Task 的隔离决策**取决于当前 Phase 的 Nature 字段**（详见 `workflow.md` § Nature Gate）：
+
+| Phase Nature | Implementer? | Worktree? | 说明 |
+|-------------|-------------|-----------|------|
+| **Backend** | ✅ 强制 dispatch | ✅ 强制 | 服务端逻辑、API、DB — 安全隔离 |
+| **Data** | ✅ 强制 dispatch | ✅ 强制 | Schema、迁移、数据管道 |
+| **UI** | ❌ 跳过 | ❌ 跳过 | 主 session 直接写（更快，Dogfood #2 验证） |
+| **Integration** | ❌ 跳过 | ❌ 跳过 | Glue 代码、配置、简单接线 |
+| *(无 Nature 字段)* | ✅ 默认 dispatch | ✅ 默认 | 向后兼容 |
+
+当 Nature = Backend/Data 时，以下规则适用（原 MANDATORY 规则）：
 
 1. **MUST dispatch `implementer` sub-agent** — 主 session 不得在主上下文内直接 `Write`/`Edit` 业务代码。
 2. **隔离包** — 仅传递：`task_description`、`deliverables`、`files_to_modify`、`project_context`、`memory_context`（摘录）、`design_specs`（如有）。不得传递主 session 闲聊或上一 Task 失败叙述。
 3. **主 session 职责** — TaskCreate、读 Spec/Plan、派发 implementer、收报告、dep-graph、派发 code-reviewer、memory、commit、worktree 清理。
 4. **implementer 回报** — `DONE` | `DONE_WITH_CONCERNS` | `BLOCKED` | `NEEDS_CONTEXT`；主 session 在 review 通过后再 commit。
 
-[Worktree — MANDATORY]
+[Worktree — CONDITIONAL per Phase Nature]
 
 Step 2 第 6 步：
 
-- **MUST** 在首次改代码前创建 worktree（`git worktree add .claude/worktrees/<task-slug> <base-branch>`），除非已在 worktree 内（`GIT_DIR != GIT_COMMON_DIR`）。
-- 该 Task 全部实现与测试在 worktree 目录完成，合并后 Step 17 清理。
+- 当 Phase Nature = Backend/Data 时：**MUST** 在首次改代码前创建 worktree（`git worktree add .claude/worktrees/<task-slug> <base-branch>`），除非已在 worktree 内（`GIT_DIR != GIT_COMMON_DIR`）。该 Task 全部实现与测试在 worktree 目录完成，合并后 Step 17 清理。
+- 当 Phase Nature = UI/Integration 时：**跳过 worktree**。主 session 直接在项目目录写代码。
 
 [Rationalizations]
 
 | 借口 | 正确响应 |
 |------|----------|
-| 「这个 Task 太小，我直接写」 | 小 Task 也要 implementer + worktree；隔离不是可选项。 |
-| 「implementer 太慢，主 Agent 更快」 | 快但污染上下文；长跑必漂移。 |
-| 「我在主分支只改一行」 | 一行也在 worktree；避免与并行 Task 冲突。 |
-| 「implementer 已经用过，这轮我接着写」 | 每个 Task 必须**新的** implementer 实例 + 新鲜包。 |
+| 「这个 Task 太小，我直接写」 | 看 Phase Nature。UI/Integration → 可以，直接写。Backend/Data → 不行，dispatch implementer。 |
+| 「implementer 太慢，主 Agent 更快」 | 看 Phase Nature。UI → 确实，所以 UI Phase 跳过 implementer。Backend → 必须隔离，长跑必漂移。 |
+| 「我在主分支只改一行」 | 一行也要 worktree（Backend/Data Phase）。UI Phase 没有 worktree 要求。 |
+| 「implementer 已经用过，这轮我接着写」 | 每个 Task 必须**新的** implementer 实例 + 新鲜包（Backend/Data Phase 适用）。 |
 
 [Platform Execution Modes]
 

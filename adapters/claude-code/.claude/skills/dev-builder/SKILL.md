@@ -66,6 +66,9 @@ requires: []
 <!-- begin: hard-gate -->
 [HARD-GATE]
     主 Session **MUST NOT** 直接 Write/Edit 业务代码；每 Task dispatch implementer 并创建 `.forge/implementer-session.json`；首次改代码前 **MUST** git worktree。
+
+    **Exception**: Phase Nature（Backend/UI/Data/Integration）为 UI 或 Integration 时，主 session 可直接 Write/Edit 业务代码，不强制 implementer 和 worktree。理由：UI 代码需要完整组件上下文，implementer 隔离得不偿失（Dogfood #2 验证）。该豁免仅限当前 Phase，下一 Phase 重新评估。
+
     机器门与 Session 生命周期 → `../_shared/hard-gate-summary.md`（Hook 拦截为准）
 
 <!-- end: hard-gate -->
@@ -123,6 +126,8 @@ requires: []
     **Editing Spec/Plan during build**: Patching Product-Spec.md or DEV-PLAN.md to excuse implementation drift violates the prepare.py boundary. Route scope changes through change-manager or replan.
     **Missing verification**: Completing a Task without compile/func/regression verification. Every Task must have its own mini-verification before Phase Assessment.
     **Difficulty-blind execution**: Every Phase has a **Difficulty** level. 🔴 高 = 怵然为戒，每段代码追加自我评审，动刀甚微；🟢 低 = 快速通过，标准流程即可。不按难度调整行为，就像庖丁遇到筋骨交错还一刀砍过去。执行前先读 Phase 的 Difficulty 字段。
+    **Nature-blind execution**: Every Phase also has a **Nature** field (Backend/UI/Data/Integration). Backend/Data → dispatch implementer; UI/Integration → main session writes directly. 读 Nature 失败意味着做错 dispatch 决策——UI Phase 走了 implementer 浪费上下文中断开销，Backend Phase 走了主 session 污染上下文。执行前同时读 Difficulty + Nature。
+    **Skipping Nature Gate**: Launching into Step 2 per-Task loop without checking `references/workflow.md` § Nature Gate → incorrectly defaults to implementer for UI Phases. Always read Nature before first Task dispatch.
     **Skipping 善刀而藏之**: 做完一个 Phase 不收刀——不在 Spec 追加新发现的难点、不记决策日志、不清理上下文。下一个 Phase 会在上一轮的噪声上启动。杀完牛不等于结束，收刀才是。
 
 <!-- end: gotchas -->
