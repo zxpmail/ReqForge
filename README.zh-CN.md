@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.5-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,16 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.48.5 — 2026-06-27 — 每条 finding 的 `action` 三分法（借自 [no-mistakes](https://github.com/kunchenguid/no-mistakes)）
+
+- **每条 review finding 新增 `action` 字段**（`auto-fix` / `ask-user` / `no-op`）—— 回答"谁来修"，与 severity/risk_rank、Must-fix/Should-fix/Insight 桶正交。4 个 specialist reviewer 赋值；aggregator（`code-reviewer`）原样透传 + 计数。
+- **触碰意图的 finding 不再被自动修**：`dev-builder` Step 14.6 按 `action` 路由 —— `ask-user`（意图 / 产品行为 / 预存死代码 / S5 审美决策）**立即 escalate**（写 `.forge/.retry-counter.json` `state=escalated`，**不**消耗重试轮）并呈现既有 A/B/C 选项；只有 `auto-fix` 流向 `bug-fixer`；`no-op` 仅记录。复用 `retry-gate.sh`——无 hook / 无 loop 代码新增。
+- **非破坏性**：缺失 `action` 当 `auto-fix` 处理（fail-open = 原行为）。新增共享文档 `core/skills/_shared/finding-actions.md`。
+
+### v1.48.4 — 2026-06-25 — `forge-install` Windows 自动检测（dogfood #2）
+
+- **`forge-install` Windows 自动检测自 v1.14.2 起失效**：`parseInstallArgs` 默认 `windows: false`，但 `?? process.platform` 兜底从未触发（`false` ≠ `undefined`），导致全新 Windows 安装拿到 Unix 风格 `settings.json`（`.sh` + `bash`）—— 所有 hook 静默失效约 1 个月——除非显式传 `--windows`。现已在 CLI 解析层默认 `process.platform === "win32"`。(`scripts/install.ts`, `scripts/__tests__/install.test.ts`)
 
 ### v1.48.3 — 2026-06-19 — 需求蒸馏模式（Issue #7）
 

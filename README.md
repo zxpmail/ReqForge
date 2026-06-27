@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.3-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.48.5-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **From requirements to shippable products** — a full AI-guided path for founders, PMs, and indie developers (Spec → Plan → Build → Review → Release).
 
@@ -74,6 +74,16 @@ flowchart LR
 ---
 
 ## What's New
+
+### v1.48.5 — 2026-06-27 — Per-finding `action` taxonomy (borrowed from [no-mistakes](https://github.com/kunchenguid/no-mistakes))
+
+- **New `action` field on every review finding** (`auto-fix` / `ask-user` / `no-op`) — answers "who fixes this", orthogonal to severity/risk_rank and the Must-fix/Should-fix/Insight buckets. The 4 specialist reviewers assign it; the aggregator (`code-reviewer`) propagates + counts it unchanged.
+- **Intent-sensitive findings stop being auto-fixed**: `dev-builder` Step 14.6 routes by `action` — `ask-user` findings (intent / product-behavior / pre-existing dead-code / S5-aesthetic decisions) trip **immediate escalation** (set `.forge/.retry-counter.json` `state=escalated` *without* consuming a retry round) and surface the existing A/B/C options; only `auto-fix` flows to `bug-fixer`; `no-op` is logged only. Reuses `retry-gate.sh` — no hook or loop code added.
+- **Non-breaking**: a missing `action` is treated as `auto-fix` (fail-open = prior behavior). New shared doc `core/skills/_shared/finding-actions.md`.
+
+### v1.48.4 — 2026-06-25 — `forge-install` Windows auto-detection (dogfood #2)
+
+- **`forge-install` Windows auto-detection broken since v1.14.2**: `parseInstallArgs` defaulted `windows: false`, but the `?? process.platform` fallback never triggered (`false` ≠ `undefined`), so fresh Windows installs got Unix-style `settings.json` (`.sh` + `bash`) — all hooks silently dead for ~1 month — unless `--windows` was passed explicitly. Default is now `process.platform === "win32"` at the CLI parse layer. (`scripts/install.ts`, `scripts/__tests__/install.test.ts`)
 
 ### v1.48.3 — 2026-06-19 — Spec-Distillation Mode (issue #7)
 
