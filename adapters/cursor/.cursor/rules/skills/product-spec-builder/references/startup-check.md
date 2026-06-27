@@ -28,9 +28,10 @@ Matching rules:
 | **distill** / **蒸馏** / **infer what I need** / **我不确定我想要什么** | **Distillation** | `references/distillation-mode.md` only |
 | **grill me** / **stress-test** / **烤问** / **对齐计划** | **Light Grill** | `references/light-grill-mode.md` only |
 | Product requirements document found | **Iteration** | `references/workflow-iteration.md` |
-| Not found → ask: "Full deep-dive or quick start?" | | |
-| User says quick / fast / just get going / one-sentence description | **Quick** | **`references/workflow-quick-mode.md` only** — do NOT load 0-to-1 interview chain |
-| Otherwise | **0-to-1** | `references/workflow-0-to-1.md` + `references/conversation-strategy.md` as needed |
+| Not found → **quick-scope** by size (forge-size-detect criteria): | | |
+| → **Small** (CLI, ≤4 features, no auth, no DB, single user) | **Quick (auto)** | `references/workflow-quick-mode.md` only |
+| → **Medium / Large** (auth, DB, multi-role, full-stack, mobile, ≥5 features) | **0-to-1 (auto)** | `references/workflow-0-to-1.md` + `references/conversation-strategy.md` as needed |
+| → Can't determine | **Prompt user** | Ask "Full deep-dive or quick start?" — route per answer |
 
 ## Step 4: Execute corresponding workflow
 
