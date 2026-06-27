@@ -74,6 +74,13 @@ flowchart LR
 
 ## 近期更新
 
+### v1.48.6 — 2026-06-27 — DESIGN.md token 冻结（[Google design.md](https://github.com/google-labs-code/design.md)）
+
+- **design-maker v1.1.0**：mockup 验收后，除临时 `UI-Spec.md` 外，在项目根目录冻结 `DESIGN.md`（YAML token + 设计 rationale）。模板与流程：`core/skills/design-maker/templates/design-md-template.md`、`references/design-md-freeze.md`。
+- **dev-builder**：样式读取优先级 — `DESIGN.md` > 设计工具 MCP > `Design-Brief.md`（Brief 仍只写方向，不含 hex）。
+- **quickref**：新增「设计链与 DESIGN.md」章节；区分根目录 `DESIGN.md` 与 OpenSpec 的 `changes/<name>/design.md`。
+- **可选校验/导出**：`npx -p @google/design.md designmd lint DESIGN.md`（Windows 须用 `designmd` 别名）。
+
 ### v1.48.5 — 2026-06-27 — 每条 finding 的 `action` 三分法（借自 [no-mistakes](https://github.com/kunchenguid/no-mistakes)）
 
 - **每条 review finding 新增 `action` 字段**（`auto-fix` / `ask-user` / `no-op`）—— 回答"谁来修"，与 severity/risk_rank、Must-fix/Should-fix/Insight 桶正交。4 个 specialist reviewer 赋值；aggregator（`code-reviewer`）原样透传 + 计数。
@@ -593,7 +600,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 | 领域研究（可选，陌生领域） | `/domain-mapper` | `domain-map.md`（及可选竞品/社媒分析） |
 | 需求收集 | `/product-spec-builder` | `Product-Spec.md`（含 Multi-Stakeholder Review + 批判 Gate） |
 | 设计规范（可选） | `/design-brief-builder` | `Design-Brief.md` |
-| 设计稿（可选） | `/design-maker` | 设计稿 + `UI-Spec.md`（临时，不提交） |
+| 设计稿（可选） | `/design-maker` | 设计稿 + 临时 `UI-Spec.md` + `DESIGN.md`（冻结 token；[Google design.md](https://github.com/google-labs-code/design.md)） |
 | 开发计划 | `/dev-planner` | `DEV-PLAN.md` |
 | 存量功能增量（已有 Spec） | `/change-manager propose <名称>` → apply → verify → archive | `changes/<名称>/` → `changes/archive/` |
 | 编码实现 | `/dev-builder` | 代码 + 自动创建 `memory/` |
@@ -622,7 +629,9 @@ my-app/
 │   └── rules/                  # Claude Code: .claude/rules/*.md；Cursor: .cursor/rules/*.mdc
 ├── Product-Spec.md             # /product-spec-builder 之后
 ├── DEV-PLAN.md                 # /dev-planner 之后
-├── Design-Brief.md             # 可选
+├── Design-Brief.md             # 可选 — 仅方向（无 hex）
+├── DESIGN.md                   # 可选 — /design-maker 之后（冻结设计 token）
+├── UI-Spec.md                  # 可选 — 临时页面结构（不提交）
 ├── changes/                    # 可选 — 存量迭代（/change-manager）
 │   └── archive/
 ├── memory/                     # 首次 /dev-builder 时自动创建
@@ -812,7 +821,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **product-spec-builder** | 需求收集。Multi-Stakeholder Review 四视角扫描 + **批判 Gate**（3 个结构信号对抗讨好偏见）+ 多轮访谈产出 Product-Spec.md；可选 PM 框架（OST、JTBD、假设、竞品）与 CoT 模板。支持迭代与 Quick Mode。 |
 | **change-manager** | 存量项目增量变更。每个功能一个 `changes/<name>/` 目录：提议 → 实现 → 验收 → 归档（对齐 OpenSpec 思路，见 [openspec-comparison](core/docs/openspec-comparison.md)）。 |
 | **design-brief-builder** | 设计语言。将模糊描述（"暗色主题，简约"）量化为具体方向：调色板、交互风格、信息密度。 |
-| **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿；验证阶段产出临时 `UI-Spec.md` 供 dev-builder 读取。 |
+| **design-maker** | 设计原型。通过 Pencil 或 Figma MCP 生成完整页面设计稿；验证阶段产出临时 `UI-Spec.md`（结构）+ 根目录 `DESIGN.md`（token，[Google design.md](https://github.com/google-labs-code/design.md) 格式）。 |
 | **dev-planner** | 开发计划。分析依赖关系，拆分为多个阶段，输出分阶段开发计划。 |
 | **dev-builder** | 编码实现。将工作拆分为 Task——每个 Task 走"编码 → 审查 → 修复 → 提交"闭环。 |
 | **bug-fixer** | 四阶段系统调试 + `pnpm forge-bug-fix`（diagnose --scenario / bisect / classify / trace / verify）。不要猜测：收集证据 → 分析模式 → 提出假设 → 修复。 |
@@ -909,10 +918,10 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 ## 设计优先级
 
 ```
-设计工具稿（最高）→ Design-Brief.md → Product-Spec.md（功能逻辑）
+设计工具稿（最高）→ DESIGN.md（冻结 token）→ UI-Spec.md（结构）→ Design-Brief.md（方向）→ Product-Spec.md（功能逻辑）
 ```
 
-当存在设计稿时，所有 UI 必须与设计一致。冲突以设计工具为准。
+存在设计稿时，UI 必须与设计一致。**精确数值**以 `DESIGN.md` 为准（若存在）；冲突以设计工具为准。
 
 ---
 
@@ -922,7 +931,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 1. **描述你的想法** — `/product-spec-builder` 多轮访谈（或快速模式一句话）。0-to-1 默认 **Multi-Stakeholder Review** 四视角扫描 + **批判 Gate**（3 个结构信号对抗讨好偏见）；想法模糊时，可选 **PM 发现**（OST、假设）与 **CoT** 模板，先理清再写 Spec，不写业务代码。
 2. **生成 Spec** — 输出 `Product-Spec.md`（可含 JTBD、指标、竞品、假设等可选章节）→ 用户确认 → `.forge/spec-confirmed.json`
 3. **设计简报（可选）** — 调用 /design-brief-builder
-4. **设计稿（可选）** — 调用 /design-maker（产出临时 `UI-Spec.md` 供 dev-builder 读取）
+4. **设计稿（可选）** — 调用 /design-maker → 临时 `UI-Spec.md` + `DESIGN.md` 供 dev-builder 读取
 5. **开发计划** — 调用 /dev-planner，输出 DEV-PLAN.md
 6. **构建** — 调用 /dev-builder，逐个完成每个 Phase 的 Task
 7. **记忆自动更新** — 每个 Task 后自动更新项目记忆

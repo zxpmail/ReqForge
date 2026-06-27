@@ -75,6 +75,13 @@ flowchart LR
 
 ## What's New
 
+### v1.48.6 — 2026-06-27 — DESIGN.md token freeze ([Google design.md](https://github.com/google-labs-code/design.md))
+
+- **design-maker v1.1.0**: After mockup verification, freezes root `DESIGN.md` (YAML tokens + design rationale) alongside ephemeral `UI-Spec.md`. Template + workflow: `core/skills/design-maker/templates/design-md-template.md`, `references/design-md-freeze.md`.
+- **dev-builder**: Style priority — `DESIGN.md` > design tool MCP > `Design-Brief.md` (Brief stays direction-only, no hex).
+- **quickref**: New "Design chain & DESIGN.md" section; distinguishes root `DESIGN.md` from OpenSpec `changes/<name>/design.md`.
+- **Optional lint/export**: `npx -p @google/design.md designmd lint DESIGN.md` (Windows: use `designmd` alias).
+
 ### v1.48.5 — 2026-06-27 — Per-finding `action` taxonomy (borrowed from [no-mistakes](https://github.com/kunchenguid/no-mistakes))
 
 - **New `action` field on every review finding** (`auto-fix` / `ask-user` / `no-op`) — answers "who fixes this", orthogonal to severity/risk_rank and the Must-fix/Should-fix/Insight buckets. The 4 specialist reviewers assign it; the aggregator (`code-reviewer`) propagates + counts it unchanged.
@@ -625,7 +632,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 | Domain research (optional, unfamiliar domain) | `/domain-mapper` | `domain-map.md` (+ optional competitor/social analysis) |
 | Requirements | `/product-spec-builder` | `Product-Spec.md` (includes Multi-Stakeholder Review + Critique Gate) |
 | Design brief (optional) | `/design-brief-builder` | `Design-Brief.md` |
-| Design mockups (optional) | `/design-maker` | Mockups + ephemeral `UI-Spec.md` (not committed) |
+| Design mockups (optional) | `/design-maker` | Mockups + ephemeral `UI-Spec.md` + `DESIGN.md` (frozen tokens; [Google design.md](https://github.com/google-labs-code/design.md)) |
 | Dev plan | `/dev-planner` | `DEV-PLAN.md` |
 | Brownfield feature (existing Spec) | `/change-manager propose <name>` → apply → verify → archive | `changes/<name>/` → `changes/archive/` |
 | Implementation | `/dev-builder` | Code + `memory/` (auto-created) |
@@ -654,7 +661,9 @@ my-app/
 │   └── rules/                  # Claude Code: .claude/rules/*.md; Cursor: .cursor/rules/*.mdc
 ├── Product-Spec.md             # after /product-spec-builder
 ├── DEV-PLAN.md                 # after /dev-planner
-├── Design-Brief.md             # optional
+├── Design-Brief.md             # optional — direction only (no hex)
+├── DESIGN.md                   # optional — after /design-maker (frozen design tokens)
+├── UI-Spec.md                  # optional — ephemeral page structure (not committed)
 ├── changes/                    # optional — brownfield iterations (/change-manager)
 │   └── archive/
 ├── memory/                     # auto-created on first /dev-builder
@@ -857,7 +866,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 | **product-spec-builder** | Requirements gathering. Multi-Stakeholder Review (4 perspectives) + **Critique Gate** (3 structural signals against sycophancy bias) + multi-round interviews → Product-Spec.md; optional PM frameworks (OST, JTBD, assumptions, competitors) and CoT templates. Iterative + Quick Mode. |
 | **change-manager**       | Brownfield changes. One feature per `changes/<name>/` folder: propose → apply → verify → archive (OpenSpec-aligned; see [openspec-comparison](core/docs/openspec-comparison.md)). |
 | **design-brief-builder** | Design language. Quantifies vague descriptions ("dark theme, minimal") into concrete direction: color palette, interaction style, information density. |
-| **design-maker**         | Design prototyping. Full page mockups via Pencil or Figma MCP; verification phase emits ephemeral `UI-Spec.md` for dev-builder.                        |
+| **design-maker**         | Design prototyping. Full page mockups via Pencil or Figma MCP; verification emits ephemeral `UI-Spec.md` (structure) + root `DESIGN.md` (tokens, [Google design.md](https://github.com/google-labs-code/design.md) format). |
 | **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
 | **dev-builder**          | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop.                                                   |
 | **bug-fixer**            | Four-stage systematic debugging + `pnpm forge-bug-fix` (diagnose --scenario / bisect / classify / trace / verify). Gather evidence → analyze patterns → hypothesize → fix.   |
@@ -954,10 +963,10 @@ Every rule in CLAUDE.md must be traceable to a specific failure or feedback. Gen
 ## Design Priority
 
 ```
-Design tool mockups (highest) → Design-Brief.md → Product-Spec.md (functional logic)
+Design tool mockups (highest) → DESIGN.md (frozen tokens) → UI-Spec.md (structure) → Design-Brief.md (direction) → Product-Spec.md (functional logic)
 ```
 
-When design mockups exist, all UI must match the design. Conflicts are resolved in favor of the design tool.
+When design mockups exist, all UI must match the design. **Exact values** come from `DESIGN.md` when present; conflicts are resolved in favor of the design tool.
 
 ---
 
@@ -967,7 +976,7 @@ When design mockups exist, all UI must match the design. Conflicts are resolved 
 1. **Describe your idea** — `/product-spec-builder` interviews you (or Quick Mode for one sentence). 0-to-1 default **Multi-Stakeholder Review** (4 perspectives) + **Critique Gate** (3 structural signals against sycophancy bias). For fuzzy ideas, optional **PM discovery** (OST, assumptions) and **CoT** templates improve Spec quality before any code.
 2. **Generate spec** — Outputs `Product-Spec.md` (may include optional JTBD, metrics, competitors, assumptions sections) → user confirms → `.forge/spec-confirmed.json`
 3. **Design brief (optional)** — Invoke /design-brief-builder
-4. **Design mockups (optional)** — Invoke /design-maker (ephemeral `UI-Spec.md` for dev-builder)
+4. **Design mockups (optional)** — Invoke /design-maker → ephemeral `UI-Spec.md` + `DESIGN.md` for dev-builder
 5. **Development plan** — Invoke /dev-planner, outputs DEV-PLAN.md
 6. **Build** — Invoke /dev-builder, works through each Task in each Phase
 7. **Memory auto-update** — After each Task, project memory is updated automatically
