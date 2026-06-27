@@ -13,6 +13,7 @@
 | 产品规格 | [Product-Spec.md](./Product-Spec.md) | `/product-spec-builder` |
 | 开发计划 | [DEV-PLAN.md](./DEV-PLAN.md) | `/dev-planner` |
 | **业务代码（产物）** | [todo-cli/](./todo-cli/) | `/dev-builder` 按 Spec + Plan **生成/实现** |
+| **UI + DESIGN.md 示例** | [react-table/](./react-table/)（含 [DESIGN.md](./react-table/DESIGN.md)） | design-maker token 冻结格式参考；**不参与** golden-path 守门 |
 
 **`todo-cli/` 是什么**：`Product-Spec.md` + `DEV-PLAN.md` 经 ReqForge 开发流程后的 **示范产物**（示例 Todo 命令行程序）。  
 **它有什么用**：对最终用户 **几乎没有独立价值** —— 不是 ReqForge 的 CLI，不是框架依赖，不需要安装使用。唯一用途是：
@@ -71,7 +72,9 @@ test-demo/
 ├── run-golden-path.mjs    ← 黄金路径守门（维护者 / CI）
 ├── Product-Spec.md        ← 需求输入（Forge 产物之一）
 ├── DEV-PLAN.md            ← 计划输入（Forge 产物之一）
-└── todo-cli/              ← 代码产物（Forge 输出；无独立产品用途）
+├── todo-cli/              ← CLI 产物（Forge 输出；golden-path 守门）
+└── react-table/           ← Web UI 样例 + DESIGN.md（token 格式参考，非守门）
+    └── DESIGN.md          ← Google design.md 格式示例（对齐 src/index.css）
 ```
 
 `.claude/` 下若有 feedback/skills 片段，仅为进化示范，**不参与**黄金路径守门。
