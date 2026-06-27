@@ -9,9 +9,20 @@ All notable changes to Forge are documented here.
 - **dev-builder style priority:** `DESIGN.md` > design tool MCP > `Design-Brief.md` when implementing UI.
 - **quickref design chain:** `core/templates/forge-quickref.md` documents Brief → mockup → `UI-Spec.md` + `DESIGN.md` vs OpenSpec `changes/<name>/design.md`.
 - **code-review UI baseline:** When root `DESIGN.md` exists, design reviewer cross-references frozen tokens and component map before Brief/MCP (same priority as dev-builder).
+- **Nature Gate size pre-check.** Small Phases (≤3 key files + ≤5 deliverables) skip implementer isolation regardless of Nature — cold-start overhead exceeds actual coding time on small Backend/Data phases. Verified in Dogfood #3 (`@forge/ecosystem-cache`). (`core/skills/dev-builder/references/workflow.md` § Step 1.5, `references/sub-agent-isolation.md`, `SKILL.md` HARD-GATE)
+- **Phase-boundary detector (procedural version).** implementer receives `files_to_modify` as a strict scope boundary; off-scope writes trigger `DONE_WITH_CONCERNS`. After implementer returns, dev-builder Step 8.5 cross-references `file_changes` against `files_to_modify` — violations escalate to user (A: merge, B: reject, C: replan). This is Overstepping Gate's first real enforcement. (`core/agents/implementer.md`, `core/skills/dev-builder/references/workflow.md` § Step 8.5, `.forge/deferred-ideas.md`)
+- **package-integrity forge-smoke.** Validates `package.json` structure (fields, scripts targets, forge-hooks file references, bin entries, files whitelist). 39 checks, no network calls. (`scripts/forge-smoke/package-integrity.mjs`, forge-smoke now 14/14)
+
+### Fixed
+- **Machine Gates contract aligned with enforcement reality.** Sloppiness Gate's actual enforcement is `forge-verify` → `.verify-block` → `phase-exit-guard` (stop-time), not the PreToolUse write chain. Overstepping Gate marked "declared, not yet machine-enforced". `core/hooks/AGENTS.md` false claim ("Plus Sloppiness/Overstepping gates in the same hook chain") removed. (`CLAUDE.md`, `core/hooks/AGENTS.md`, `core/templates/forge-quickref.md`, `.forge/quickref.md`)
+- **machine-gates-doc smoke upgraded** from "assert names present" → "assert enforcement files exist" (25 checks). A future ghost gate now fails CI. (`scripts/forge-smoke/machine-gates-doc.mjs`)
+- **design-maker stall prevention.** Per-step and per-page HARD-GATE checkpoints write to `.forge/design-maker/` — token checkpoint (00-tokens-done.md), component checkpoint (01-components-done.md), per-page checkpoint (page-checkpoint.md). Prevents 15-20 minute silent stalls by forcing concrete output before proceeding. (`core/skills/design-maker/SKILL.md` [Design Phase] + [Gotchas])
+- **product-spec-builder size-aware default routing.** Catch-all "Otherwise → 0-to-1" replaced with size detection: small products (CLI, ≤4 features, no auth, no DB) default to Quick mode; medium/large default to 0-to-1. (`core/skills/product-spec-builder/references/startup-check.md`)
+- **forge-install Windows auto-detection** since v1.14.2 (repeated entry — already fixed in v1.48.4, included here for v1.48.6 branch consistency)
 
 ### Changed
 - **README / README.zh-CN:** v1.48.6 notes, Skill table, project layout, design priority, and workflow step 4 updated for `DESIGN.md`.
+- **deferred-ideas.md:** Parked 4 entries with concrete trigger conditions (CI-watch, gate-prose-generation, phase-boundary-detector hook upgrade, double-gate→single). Phase-boundary-detector procedural version shipped; hook-level entry preserved.
 
 ## [v1.48.5] - 2026-06-27
 
