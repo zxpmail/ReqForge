@@ -91,6 +91,7 @@ requires: []
     **Skipping component isolation**: Drawing the same button on 10 pages = 10 updates when the button changes. Build a component library first, compose pages from it. The extra 5 minutes saves hours.
     **Design tool sync loss**: The design tool has the source of truth, but the SKILL.md describes what was true at invocation time. If the design tool is available, re-read values before each Task — don't trust memory.
     **Inconsistent spacing/color system**: Using ad-hoc values instead of a design token system. Every color, spacing, and font size should come from a defined palette, not "this looks about right."
+    **Silent batching / cold stall**: Designing all pages in one thinking chain without producing concrete output per step causes 15-20 minute stalls with zero progress visible. The per-step and per-page checkpoints in [Design Phase] are MANDATORY, not optional — they break the silent-thinking chain by forcing a file write after each substep. If the agent is "thinking too long" about multiple pages at once, it's stalling. Stop and checkpoint.
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->
@@ -272,11 +273,15 @@ requires: []
             Based on the Design Brief's color, typography, and spacing direction, set global design tokens via the design tool API
             **In Multi-Alternative Mode**: create a separate token set per alternative (e.g. Alt A: warm palette, Alt B: cool palette)
 
+            **Checkpoint**: After all tokens are set, write `.forge/design-maker/00-tokens-done.md` confirming which tokens were created and their values. This forces a concrete output before the heavy design work — do NOT batch token setting with subsequent steps.
+
         Step 3: Create Reusable Components
             **Standard Mode**: Create components one by one according to the component list
             **Multi-Alternative Mode**: Create component sets for each alternative independently
             **Gradual Refinement Mode**: Create only structural components in Tier 1; add interactive components in Tier 2; create specialized components in Tier 3
             Take a screenshot for verification after each component is created
+
+            **Checkpoint**: After all components are created, write `.forge/design-maker/01-components-done.md` with the component list. Do NOT batch component creation with page design — close this step, write the checkpoint, then start pages.
 
         Step 4: Design Pages One by One
             **Standard Mode**: Design each page according to the page list
@@ -294,6 +299,14 @@ requires: []
             3. Cross-reference against the Product Spec description to confirm layout and content item by item
             4. Cross-reference against the Design Brief's visual notes to confirm the style
             5. Take a screenshot for verification
+            6. **HARD-GATE: Per-page checkpoint** — After completing the page (all states, screenshot, spec cross-ref done), write an entry to `.forge/design-maker/page-checkpoint.md` with:
+               ```markdown
+               ## [Page Name]
+               - States completed: default, [empty], [loading], [error], ...
+               - Screenshot taken: yes/no
+               - Spec cross-ref: Product-Spec.md § [section]
+               ```
+               Do NOT skip this checkpoint. Do NOT batch multiple pages into one entry. Each page is independently checkpointed before the next starts. If the agent crashes, this file is the recovery index — the next session reads it to know what's done.
 
         Step 5: Design State Variants
             Design each variant according to the variant list
