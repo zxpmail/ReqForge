@@ -39,7 +39,7 @@ dispatch 4 specialized agents concurrently:
 无论用哪种执行方式，每个维度都必须返回**同一份结构化结果**——这是跨平台不变量，聚合（`workflow.md` Step 4）只消费这份合约，不关心它怎么产出：
 
 - 每条 finding 带：`severity` / `impact` / `confidence (1–5)` / `risk_rank` / `evidence (file:line)`
-- **匿名审查包**：不传 implementer 任务叙述、session 往来、作者身份——只传 Spec 摘录、checklist、diff、文件内容、Design-Brief/MCP 取值
+- **匿名审查包**：不传 implementer 任务叙述、session 往来、作者身份——只传 Spec 摘录、checklist、diff、文件内容、DESIGN.md token（如有）、Design-Brief/MCP 取值
 - 聚合、置信度阈值、去重、cross-agent boost 规则一律见 `workflow.md` Step 4（此处不重复）
 
 ## 执行方式（按平台能力分两种模式）

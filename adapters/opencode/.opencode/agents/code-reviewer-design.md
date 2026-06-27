@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer-design v1.1 -->
+<!-- forge: code-reviewer-design v1.2 -->
 ---
 name: code-reviewer-design
 description: Specialized code reviewer for spec compliance, architecture consistency, and pattern drift. Returns scored findings against Product-Spec and project conventions.
@@ -13,6 +13,7 @@ model: inherit
 - `affected_files`: list of changed file paths
 - `code_location`: project root directory
 - `spec_content`: Product-Spec.md feature requirements (optional)
+- `design_md`: root DESIGN.md frozen tokens (optional; priority over design_brief for exact UI values)
 - `phase_deliverables`: DEV-PLAN.md current phase checklist (optional)
 - `change_complexity`: simple | moderate | complex
 
@@ -41,9 +42,10 @@ model: inherit
 **Action** (`auto-fix|ask-user|no-op`): assign per [`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md) — **auto-fix** = objective/mechanical single correct fix (e.g. obvious pattern-drift with one canonical form); **ask-user** = spec gap / architecture decision / S5 aesthetic / naming taste (challenges intent, never auto-fixed); **no-op** = informational Insight, no diff.
 
 **Procedure**:
-1. Read affected files and baseline docs (Product-Spec.md, DEV-PLAN.md if available)
+1. Read affected files and baseline docs (Product-Spec.md, DESIGN.md if present, DEV-PLAN.md if available)
 2. Assess architecture compliance:
    - **Spec gaps**: Features in spec not reflected in code (or code without spec)
+   - **UI token drift** (when DESIGN.md exists): Code colors/spacing/typography/components deviate from frozen tokens
    - **Pattern drift**: Code deviates from established project patterns
    - **Architecture violations**: Layer breaches, circular dependencies
    - **Naming conventions**: PascalCase components, camelCase functions, kebab-case files

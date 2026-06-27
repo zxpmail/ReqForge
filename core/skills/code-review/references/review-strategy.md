@@ -12,8 +12,9 @@
     3. Verify whether the behavior matches
     4. Record evidence (file_path:line_number)
 
-    **Design Value Comparison Method** (if design tools available)
-    1. Extract precise values of each design page through the design tool API
+    **Design Value Comparison Method** (if DESIGN.md and/or design tools available)
+    1. If root `DESIGN.md` exists -> parse component tokens and color/typography refs as the normative baseline
+    2. Else extract precise values of each design page through the design tool API
     2. Read the corresponding component's Tailwind class / style values in code
     3. Compare item by item: layout, color, spacing, font size, border radius
     4. Flag deviations

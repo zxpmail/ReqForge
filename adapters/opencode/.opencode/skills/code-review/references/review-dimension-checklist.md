@@ -18,12 +18,13 @@
         - Partially implemented — what exactly is missing
         - Not implemented — Spec original text citation
 
-    [UI Consistency] (if design mockups exist)
-        Check UI implementation against design mockups:
-        - If design tool MCP exists -> extract design values, compare against Tailwind class / style values in code item by item
+    [UI Consistency] (if design mockups or DESIGN.md exist)
+        Check UI implementation against design baseline (priority: DESIGN.md > design tool MCP > Design-Brief.md):
+        - If DESIGN.md exists -> compare Tailwind classes / CSS variables / inline styles against YAML `colors`, `typography`, and `components` tokens; flag ad-hoc hex/spacing not in token map
+        - If design tool MCP exists -> extract design values, compare against code item by item
         - Visually inspect design mockup aesthetics as reference
         - Compare: layout, components, colors, spacing, interaction states
-        - If Design-Brief.md exists -> cross-reference color direction, information density, interaction style
+        - If Design-Brief.md exists and DESIGN.md absent -> cross-reference color direction, information density, interaction style
 
     [Spec Drift Detection] (mandatory)
         Check if the code contains features not described in the Spec:

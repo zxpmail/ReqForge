@@ -1,15 +1,15 @@
 <!-- forge: code-review v2.2 -->
 ---
 name: code-review
-description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec and design mockups. Outputs a structured review report with evidence for each conclusion.
-version: 2.2.0
+description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec, DESIGN.md, and design mockups. Outputs a structured review report with evidence for each conclusion.
+version: 2.2.1
 updated: 2026-06-27
 requires: []
 ---
 
 <!-- begin: task -->
 [Task]
-    Review code implementation completeness and quality against Product-Spec.md and design mockups.
+    Review code implementation completeness and quality against Product-Spec.md, DESIGN.md (when present), and design mockups.
     Output a structured review report. Fixes are executed by the main Agent using dev-builder or bug-fixer Skill after receiving the report.
 
 <!-- end: task -->
@@ -31,8 +31,9 @@ requires: []
     Optional (enhances review capability):
     - `.forge/security-guidance.md` -> if present, **must read** for moderate/complex reviews or when `code-reviewer-security` runs
     - DEV-PLAN.md -> if available, cross-reference Phase delivery checklist
-    - Design-Brief.md -> if available, cross-reference visual specifications
-    - Design tool MCP -> if available, extract design values and compare with code
+    - Design-Brief.md -> if available, cross-reference visual direction (direction only when DESIGN.md absent)
+    - DESIGN.md -> if available, cross-reference frozen tokens and components (priority over Brief for exact UI values)
+    - Design tool MCP -> if available, extract design values and compare with code (supplements DESIGN.md when both exist)
     - Playwright plugin -> if available, automate UI interaction testing
     - git -> if available, use git diff to trace change scope
 

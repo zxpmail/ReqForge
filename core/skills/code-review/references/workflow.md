@@ -6,8 +6,9 @@
     [Step 1: Load Comparison Baseline]
         Read Product-Spec.md -> extract all functional requirements within the review scope, list them with numbers
         Read DEV-PLAN.md -> read the delivery checklist and key files for the current Phase or Task
-        If Design-Brief.md exists -> read the visual direction and page notes within the review scope
-        If design tool MCP exists -> find the design pages corresponding to the review scope through the design tool, read the precise values of those pages and their components as the baseline for UI consistency comparison
+        If DESIGN.md exists -> read frozen tokens (`colors`, `typography`, `components`) and Do's and Don'ts as the primary UI value baseline
+        If Design-Brief.md exists -> read the visual direction and page notes within the review scope (direction when DESIGN.md absent)
+        If design tool MCP exists -> find the design pages corresponding to the review scope through the design tool, read the precise values of those pages and their components (supplements DESIGN.md when both exist)
         Determine the review scope:
         - Full review (/code-review) -> all Spec features
         - Phase review (triggered by dev-builder Phase completion verification) -> current Phase's delivery checklist
@@ -17,7 +18,7 @@
         **Default**: If `change_complexity` is omitted, treat as **simple** (quick aggregator pass only).
         Escalate to moderate/complex only when caller sets it, or change touches multiple modules / new APIs / security-sensitive code.
         For simple changes (typo fix, single-file rename, comment-only, default), skip to [Step 3].
-        **Anonymous review packet** (moderate/complex): Remove implementer task description, session handoff, and "I just implemented…" narrative from inputs to specialized agents. Pass: Spec excerpts, DEV-PLAN checklist, affected files list, git diff or file contents, Design-Brief/MCP values. Do **not** pass author identity or prior assistant messages about the change.
+        **Anonymous review packet** (moderate/complex): Remove implementer task description, session handoff, and "I just implemented…" narrative from inputs to specialized agents. Pass: Spec excerpts, DEV-PLAN checklist, affected files list, git diff or file contents, DESIGN.md tokens (if present), Design-Brief/MCP values. Do **not** pass author identity or prior assistant messages about the change.
         For moderate/complex changes, execute the **4-dimension multi-perspective review**. The decision (which dimensions, what each checks) is platform-agnostic; only the **dispatch mechanism** is platform-specific:
         - **design**: Spec compliance (Functional Completeness, UI Consistency, Spec Drift)
         - **bug**: Bug patterns, null pointers, race conditions, resource leaks

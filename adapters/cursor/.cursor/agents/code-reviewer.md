@@ -42,6 +42,7 @@ color: red
     - **affected_files**: string[] — files impacted by change (optional)
     - **spec_content**: Functional requirement entries from Product-Spec.md
     - **design_brief**: Visual direction from Design-Brief.md (optional)
+    - **design_md**: Frozen tokens from root DESIGN.md (optional; priority over design_brief for exact values)
     - **design_assets**: Design mockup values (optional)
     - **code_location**: Project code path
     - **phase_deliverables**: Current Phase delivery checklist (optional)
@@ -106,6 +107,7 @@ color: red
     [Step 1: Load Comparison Baseline]
         Read Product-Spec.md -> extract all functional requirements
         Read DEV-PLAN.md -> delivery checklist for current Phase/Task
+        If DESIGN.md exists -> read frozen tokens and component map (UI baseline priority)
         If Design-Brief.md exists -> read visual direction
         Determine scope: Full / Phase / Task
 

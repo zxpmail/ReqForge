@@ -2,6 +2,17 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.6] - 2026-06-27
+
+### Added
+- **DESIGN.md token freeze ([Google design.md](https://github.com/google-labs-code/design.md)).** design-maker v1.1.0 merges Design-Brief direction with design-tool values into root `DESIGN.md` after mockup verification (Step 3e); templates + workflow in `core/skills/design-maker/templates/design-md-template.md` and `references/design-md-freeze.md`. Optional `npx -p @google/design.md designmd lint DESIGN.md` (Windows: `designmd` alias).
+- **dev-builder style priority:** `DESIGN.md` > design tool MCP > `Design-Brief.md` when implementing UI.
+- **quickref design chain:** `core/templates/forge-quickref.md` documents Brief → mockup → `UI-Spec.md` + `DESIGN.md` vs OpenSpec `changes/<name>/design.md`.
+- **code-review UI baseline:** When root `DESIGN.md` exists, design reviewer cross-references frozen tokens and component map before Brief/MCP (same priority as dev-builder).
+
+### Changed
+- **README / README.zh-CN:** v1.48.6 notes, Skill table, project layout, design priority, and workflow step 4 updated for `DESIGN.md`.
+
 ## [v1.48.5] - 2026-06-27
 
 ### Added
