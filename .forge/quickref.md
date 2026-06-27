@@ -74,7 +74,7 @@
 |--------|------|
 | 无 Spec § Idea Stage 就写业务代码 | Idea Validation Gate 拦截 |
 | 把可运行原型当「已验证」 | 须真人访谈证据写在 Spec |
-| 无验证输出就宣称完成 | Sloppiness Gate |
+| 无验证输出就宣称完成 | `forge-verify` → `.verify-block` → `phase-exit-guard`（Sloppiness Gate，stop-time 拦） |
 | 主 Session 直接改 `src/` | Implementer Gate |
 | 顺手加 Plan 外功能 | 查 DEV-PLAN Scope amendment criteria |
 | 单次验证失败仍标 DONE | 须验证循环 |
