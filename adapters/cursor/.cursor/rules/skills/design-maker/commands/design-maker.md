@@ -11,4 +11,5 @@ Entry: `/design-maker`. Prereq: `Product-Spec.md` + `Design-Brief.md` + design M
 |-------|----------|------------|
 | Setup | Prerequisites | MCP connected or skip to dev-builder |
 | Generate | Page & states | Spec UI covered |
-| Handoff | Verification | Ready for `/dev-builder` |
+| Freeze | Step 3c–3e | UI-Spec.md + root DESIGN.md |
+| Handoff | Verification | Ready for `/dev-planner` or `/dev-builder` |

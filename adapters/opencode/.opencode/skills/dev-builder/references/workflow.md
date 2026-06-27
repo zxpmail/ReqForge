@@ -13,6 +13,8 @@
             Read Product-Spec.md -> extract product overview, core features
             Read DEV-PLAN.md -> extract tech stack table, Phase 1 content, database tables (if any)
             If Design-Brief.md exists -> read color direction, information density (for configuring Tailwind theme)
+            If DESIGN.md exists -> read frozen tokens + component map (priority over Brief for exact values)
+            If UI-Spec.md exists -> read page structure and component list
             If design tool MCP exists -> read design data for Phase 1 related pages
 
     [Technical Solution Phase]
@@ -159,7 +161,7 @@
         Step 1: Plan + TaskList
             This step is a prerequisite for coding, cannot be skipped, does not require user confirmation. No code can be written without a Plan and TaskList.
             1. Read the Phase's delivery checklist and key files
-            2. If design tool MCP is connected, view the pages involved in this Phase, read exact values. If no design tool, use Design-Brief.md or Product-Spec.md as reference
+            2. If design tool MCP is connected, view the pages involved in this Phase, read exact values. Else if DESIGN.md exists, use frozen tokens + components. Else use Design-Brief.md or Product-Spec.md as reference
             3. Explore existing code, understand the current structure
             4. Plan implementation steps, clarify what to do first, what to do next
             5. Use TaskCreate to list specific task inventory — one Task per page, component, or feature
@@ -202,6 +204,7 @@
             1. Read the delivery checklist and key files corresponding to this Task from DEV-PLAN.md
             2. Read the feature description for this Task from Product-Spec.md
             3. Read the visual direction and page notes for this Task from Design-Brief.md
+            3b. If DESIGN.md exists, read matching component tokens and color/typography refs for this Task (overrides Brief for pixel values)
             4. If design tool MCP is connected, find the design page corresponding to this Task through the design tool, read the exact values for that page and its components. Re-read for each Task, don't rely on memory
             5. Clarify the delivery goal for this Task: what functionality to implement, what visual result to achieve
 

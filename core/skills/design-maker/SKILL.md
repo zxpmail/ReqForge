@@ -1,9 +1,9 @@
 <!-- forge: design-maker v1.0 -->
 ---
 name: design-maker
-description: Used when the Design Brief is complete and the user needs to generate mockups. Reads Product-Spec.md and Design-Brief.md, then generates a complete set of design deliverables through a design tool MCP, including all pages, state variants, component specifications, and design tokens.
-version: 1.0.0
-updated: 2026-05-26
+description: Used when the Design Brief is complete and the user needs to generate mockups. Reads Product-Spec.md and Design-Brief.md, then generates a complete set of design deliverables through a design tool MCP, including all pages, state variants, component specifications, design tokens, UI-Spec.md, and DESIGN.md (Google design.md format).
+version: 1.1.0
+updated: 2026-06-27
 requires: []
 ---
 
@@ -78,7 +78,10 @@ requires: []
     ```
     design-maker/
     ├── SKILL.md
+    ├── templates/
+    │   └── design-md-template.md          # DESIGN.md 输出格式（@google/design.md 兼容）
     └── references/
+        ├── design-md-freeze.md            # Brief + mockup → DESIGN.md 冻结流程
         ├── design-self-critique.md        # 五维自检 + anti-slop（交付前）
         ├── anti-rationalization.md
         └── dimension-checklist.md
@@ -136,6 +139,8 @@ requires: []
       - Reusable components
       - All page mockups
       - State variants (default, empty, loading, error, etc.)
+    - **UI-Spec.md** (project root — page structure for dev-builder)
+    - **DESIGN.md** (project root — frozen design tokens + rationale; `@google/design.md` format)
     - **Design Completion Report** (printed to screen)
 
 <!-- end: output-artifacts -->
@@ -355,6 +360,15 @@ requires: []
             | Best suited for | ... | ... | ... |
             Include a recommendation with clear rationale. Present to user for decision before proceeding.
 
+        Step 3e: Freeze DESIGN.md (required when mockups delivered)
+            Execute `references/design-md-freeze.md`; use `templates/design-md-template.md` as format reference.
+            Merge Design-Brief direction with exact token values from the design tool MCP (or `.forge/design-maker/00-tokens-done.md`).
+            Write `DESIGN.md` to project root — **not** `changes/<name>/design.md` (that is OpenSpec change-scoped).
+            **Multi-Alternative Mode**: generate only after user picks the winning alternative (Step 3d).
+            Recommended lint (if `@google/design.md` CLI available):
+            `npx -p @google/design.md designmd lint DESIGN.md` — fix errors before delivery report.
+            Skip this step only when user exited design-maker in no-mockup mode.
+
         Step 4: Output Report
             Present the design completion report to the user:
             - List of completed pages and variants
@@ -362,10 +376,10 @@ requires: []
             - Uncovered items and reasons (if any)
 
             Guide the next steps:
-            "Mockups are complete.
+            "Mockups are complete. UI-Spec.md and DESIGN.md are frozen.
 
              Next steps:
-             - Call /dev-planner to create a development plan (will reference the mockups)
+             - Call /dev-planner to create a development plan (will reference mockups + DESIGN.md)
              - Or continue the conversation to adjust design details"
 
     <!-- end: verification-phase -->

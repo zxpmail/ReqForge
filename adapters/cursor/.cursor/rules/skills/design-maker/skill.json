@@ -1,7 +1,7 @@
 {
   "name": "design-maker",
-  "version": "1.0.0",
-  "description": "When Design-Brief is complete and user needs design mockups generated",
+  "version": "1.1.0",
+  "description": "When Design-Brief is complete and user needs design mockups; delivers UI-Spec.md + DESIGN.md (Google design.md format)",
   "tier": "component",
   "intent": "Generate complete design mockups from a Design-Brief using external design tools — produces concrete visual artifacts from structured input",
   "author": "ReqForge",

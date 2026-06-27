@@ -36,8 +36,9 @@
     - Ask the user to confirm the final visual result in the browser
 
     If no design tool (degraded mode):
-    - Use Design-Brief.md as the primary reference
-    - If no Design-Brief -> use Product-Spec.md text description as reference
+    - Use DESIGN.md as the primary reference for exact token values (if present after design-maker)
+    - Else use Design-Brief.md as the primary reference
+    - If neither DESIGN.md nor Design-Brief -> use Product-Spec.md text description as reference
 
     **Ecosystem Cache Strategy (Cache-First for Library Discovery)**
     Skip if `.forge/config` has `FORGE_ECOSYSTEM=off`. Otherwise, before any online search for library discovery, check the global ecosystem cache:

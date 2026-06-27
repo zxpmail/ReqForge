@@ -42,6 +42,7 @@ requires: []
 
     Optional:
     - Design-Brief.md -> if missing, mark as "no design specification mode"
+    - DESIGN.md -> if present, use frozen tokens for Tailwind/theme (priority over Brief for exact values)
     - Design tool MCP -> if missing, mark as "no design draft mode"
     - gh CLI -> if available, can automatically create GitHub repo and push
     - playwright -> if available, can do UI automated testing

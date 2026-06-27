@@ -10,6 +10,9 @@
 | 文件 | 含义 |
 |------|------|
 | `Product-Spec.md` | 产品需求（无则先 `/product-spec-builder`） |
+| `Design-Brief.md` | 视觉方向（访谈产物，**无 hex**；有 UI 时） |
+| `UI-Spec.md` | 页面结构 / 组件清单（design-maker 产出，可不入库） |
+| `DESIGN.md` | 冻结设计 token + rationale（[Google design.md](https://github.com/google-labs-code/design.md) 格式；mockup 后） |
 | `§ Idea Stage Exit Criteria` | 构思三门禁：问题真实 / 方案对准 / 证据足够 |
 | `.forge/spec-confirmed.json` | Spec 已书面确认 |
 | `DEV-PLAN.md` | 开发计划（含 **MVP Scope**） |
@@ -41,7 +44,9 @@
 | 有 Spec，无 `Design-Brief.md`，**有 UI** | `/design-brief-builder` |
 | 有 Spec + Brief，无 `.forge/design-next-step.json` | **Brief 下一步门禁**：三选一 → 默认推荐 `/design-maker` |
 | 有 Brief + `design-next-step.json` → `design-maker` | `/design-maker` |
-| 有 Brief + `skip-mockup` | `/dev-planner` 或 `/dev-builder`（UI 仅依 Brief） |
+| mockup 完成，无 `DESIGN.md` | 回到 `/design-maker` Verification（Step 3e 冻结 token） |
+| 有 `DESIGN.md` + Plan，开发 UI Phase | `/dev-builder`（样式读 DESIGN.md，结构读 UI-Spec.md） |
+| 有 Brief + `skip-mockup` | `/dev-planner` 或 `/dev-builder`（UI 仅依 Brief，无 DESIGN.md） |
 | 有 Spec，无 `DEV-PLAN.md`，无代码 | Spec 完成 → `/dev-planner`（若已 skip mockup）或先 design 链 |
 | 有 Spec + Plan，无代码 | `/dev-builder` Phase 1 |
 | 有 Spec + 代码，无 Plan | `/dev-planner` |
@@ -50,7 +55,36 @@
 | 新功能请求（无 active change） | 优先 `/change-manager` propose |
 | `memory/` 存在 | Session 启动读三文件；有代码无 memory → dev-builder 后补 |
 
-汇报：Product Spec · active changes · Design Brief · DEV-PLAN · Code · Memory · **Next Step**。
+汇报：Product Spec · active changes · Design Brief · **DESIGN.md** · DEV-PLAN · Code · Memory · **Next Step**。
+
+---
+
+## 设计链与 DESIGN.md
+
+有 UI 产品的设计文档分工（勿与 OpenSpec 的 `changes/<name>/design.md` 混淆）：
+
+| 文件 | 阶段 | 内容 |
+|------|------|------|
+| `Design-Brief.md` | `/design-brief-builder` | 方向、参照产品、反 slop；**不写具体色值** |
+| Mockups | `/design-maker` | Figma / Pencil 稿 |
+| `UI-Spec.md` | design-maker Step 3c | 页面结构、组件、验收标准 |
+| `DESIGN.md` | design-maker Step 3e | YAML token + Markdown 设计 rationale |
+| `changes/<name>/design.md` | `/change-manager` | **单次变更**的技术/UI 方案，非全局 token |
+
+**dev-builder 读样式优先级**：`DESIGN.md` > 设计工具 MCP > `Design-Brief.md`。
+
+**校验与导出**（mockup 冻结后，可选）：
+
+```bash
+# Windows/PowerShell 须用 designmd 别名（.md 后缀与文件关联冲突）
+npx -p @google/design.md designmd lint DESIGN.md
+npx -p @google/design.md designmd export --format css-tailwind DESIGN.md > src/theme.css
+npx -p @google/design.md designmd diff DESIGN.md DESIGN-v2.md   # Brownfield 改 UI 时手动对比
+```
+
+项目 `package.json` 可封装：`"design:lint": "designmd lint DESIGN.md"`（需先 `npm i -D @google/design.md`）。
+
+Skill 细节 → `design-maker/references/design-md-freeze.md`、`templates/design-md-template.md`。
 
 ---
 
@@ -163,6 +197,8 @@
 | 阶段 | 命令 |
 |------|------|
 | 需求 | `/product-spec-builder` |
+| 设计方向 | `/design-brief-builder`（有 UI） |
+| 设计稿 + token 冻结 | `/design-maker` → `UI-Spec.md` + `DESIGN.md` |
 | 存量变更 | `/change-manager` |
 | 计划 | `/dev-planner` |
 | 开发 | `/dev-builder`（每 Phase 一次） |

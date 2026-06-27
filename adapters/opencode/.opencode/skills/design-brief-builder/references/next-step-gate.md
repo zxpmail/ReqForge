@@ -26,7 +26,8 @@
 向用户说明（可略改措辞，四项信息不可缺）：
 
 > **Design-Brief.md 是文字规格，不是界面稿。**  
-> 有 UI 的产品下一步通常应做 **可视化 mockup**，否则开发容易「按 Spec 猜 UI」。  
+> 有 UI 的产品下一步通常应做 **可视化 mockup**；mockup 确认后会冻结 **DESIGN.md**（设计 token，兼容 [Google design.md](https://github.com/google-labs-code/design.md)），供开发直接引用。  
+> 否则开发容易「按 Spec 猜 UI」。  
 > 请三选一（必须明确回复，不能默认跳过）：
 
 ### 2. 三选一（用 AskQuestion 或等价结构化选项）

@@ -5,7 +5,7 @@
 | Dimension | Must-Have | Recommended | Optional |
 |-----------|-----------|-------------|----------|
 | **Spec Impact** | specs.md updated | Product-Spec.md merged | Product-Spec-CHANGELOG.md updated |
-| **UI Change** | design.md filled | Design-Brief.md cross-ref | Design tool MCP for values |
+| **UI Change** | design.md filled | Root `DESIGN.md` cross-ref if global tokens shift | Design-Brief.md cross-ref; designmd lint optional |
 | **Scope Control** | single feature per folder | tasks.md with acceptance criteria | DEV-PLAN.md Phase entry |
 | **Review Depth** | /code-review on diff | regression on affected modules | full /code-review on whole project |
 | **Archive Readiness** | verify.md pass | user sign-off recorded | CHANGELOG updated |
