@@ -1,9 +1,9 @@
-<!-- forge: code-review v2.1 -->
+<!-- forge: code-review v2.2 -->
 ---
 name: code-review
 description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec and design mockups. Outputs a structured review report with evidence for each conclusion.
-version: 2.1.0
-updated: 2026-05-30
+version: 2.2.0
+updated: 2026-06-27
 requires: []
 ---
 
@@ -40,6 +40,7 @@ requires: []
 <!-- begin: shared-discipline -->
 [Shared Discipline]
     Review 时重点查 Surgical Changes + Simplicity First → `../_shared/karpathy-discipline.md`
+    每条 finding 带 `action`（auto-fix/ask-user/no-op，谁来修）→ `../_shared/finding-actions.md`
 
 <!-- end: shared-discipline -->
 <!-- begin: first-principles -->

@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer v2.0 -->
+<!-- forge: code-reviewer v2.1 -->
 ---
 name: code-reviewer
 description: Dispatched by the main Agent when code review is needed. Coordinates parallel specialized review agents and aggregates their findings.
@@ -57,6 +57,7 @@ color: red
     5. **Must-fix / Should-fix / Insight** counts and top items
     6. **Priority**: HIGH / MEDIUM / LOW
     7. **Compilation Result**: tsc --noEmit output
+    8. **Actions**: auto-fix / ask-user / no-op counts — `ask-user` escalate to human (never auto-fixed); only `auto-fix` routes to bug-fixer/dev-builder ([`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md))
 
 [Confidence Scoring & Aggregation]
     **Per-finding rubric (jobs-style, 1–5 each)** — each specialized agent MUST emit:
@@ -64,6 +65,8 @@ color: red
     - **impact** (1–5): Primary metric / whole module → 5; single file → 1–3
     - **confidence** (1–5): direct file:line evidence → 5; speculative → 1–2
     - **risk_rank** = severity × impact × confidence (integer, max 125)
+
+    **Action propagation** — each finding also carries an **`action`** (`auto-fix|ask-user|no-op`, assigned by the specialist per [`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md)). The aggregator **propagates it unchanged — never reclassifies**. Missing `action` → treat as `auto-fix` (fail-open). Also emit a report-level count `actions: {auto-fix, ask-user, no-op}`.
 
     **Legacy mapping** (when agent returns 0.0–1.0 confidence only): confidence_5 = max(1, round(confidence × 5)); treat high/medium/low severity as 5/3/1.
 
@@ -90,7 +93,8 @@ color: red
 
     **Data returned**:
     - stage: "1+2" | "aggregated"
-    - findings: (confirmed[] | suspected[]) — structured findings
+    - findings: (confirmed[] | suspected[]) — structured findings, each carrying its **`action`** (`auto-fix|ask-user|no-op`)
+    - actions: { auto-fix: N, ask-user: M, no-op: K } — per-report action counts
     - priority: "HIGH" | "MEDIUM" | "LOW"
 
     **Collaboration boundaries**:
@@ -127,7 +131,7 @@ color: red
          **Agent Coverage**: design ✅ | bug ✅ | security ✅ | types ✅
 
          **Confirmed Issues (X)** — sorted by **risk_rank** (S×I×C)
-         - [risk_rank] [category] [file:line] — description — S/I/C — agent — [bucket: Must-fix|Should-fix|Insight]
+         - [risk_rank] [category] [file:line] — description — S/I/C — agent — [bucket: Must-fix|Should-fix|Insight] — [action: auto-fix|ask-user|no-op]
 
          **Suspected Issues (X)** (after meta-review)
          - [category] [file:line] — description — uncertainty reason — [confidence%]

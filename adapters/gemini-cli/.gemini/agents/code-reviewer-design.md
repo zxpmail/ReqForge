@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer-design v1.0 -->
+<!-- forge: code-reviewer-design v1.1 -->
 ---
 name: code-reviewer-design
 description: Specialized code reviewer for spec compliance, architecture consistency, and pattern drift. Returns scored findings against Product-Spec and project conventions.
@@ -25,6 +25,7 @@ model: inherit
   "impact": 1,
   "confidence": 1,
   "risk_rank": 1,
+  "action": "auto-fix|ask-user|no-op",
   "category": "spec_gap|pattern_drift|architecture_violation|naming_convention|duplication|complexity",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
@@ -36,6 +37,8 @@ model: inherit
 - **impact**: 5 = Primary metric or whole module; 3 = multi-file; 1 = single line
 - **confidence**: 5 = direct evidence; 3 = likely; 1 = speculative (aggregator may suppress)
 - **risk_rank** = severity × impact × confidence (computed by reviewer; max 125)
+
+**Action** (`auto-fix|ask-user|no-op`): assign per [`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md) — **auto-fix** = objective/mechanical single correct fix (e.g. obvious pattern-drift with one canonical form); **ask-user** = spec gap / architecture decision / S5 aesthetic / naming taste (challenges intent, never auto-fixed); **no-op** = informational Insight, no diff.
 
 **Procedure**:
 1. Read affected files and baseline docs (Product-Spec.md, DEV-PLAN.md if available)

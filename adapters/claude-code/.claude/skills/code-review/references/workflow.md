@@ -55,6 +55,8 @@
         - **Should-fix**: quality/maintainability before Phase sign-off
         - **Insight**: architecture/note; no immediate fix required
 
+        **`action` orthogonality** — each finding also carries `action` (`auto-fix|ask-user|no-op`, orthogonal to the buckets above: buckets = *how important*, `action` = *who fixes*). Assign per [`../../_shared/finding-actions.md`](../../_shared/finding-actions.md). A Must-fix can be `ask-user` (blocks ship AND needs a human decision).
+
     [Step 5: Output Aggregated Review Report]
         Format:
         "**Code Review Report**
@@ -66,7 +68,7 @@
          ---
 
          **Confirmed Issues (X)** — sorted by **risk_rank** (high → low)
-         - [risk_rank] [category] [file:line] — description — S/I/C — [agent] — [Must-fix|Should-fix|Insight]
+         - [risk_rank] [category] [file:line] — description — S/I/C — [agent] — [Must-fix|Should-fix|Insight] — [action: auto-fix|ask-user|no-op]
 
          **Suspected Issues (X)** (confidence 30-60%, flagged for manual review)
          - [category] [file:line] — description — uncertainty reason — [confidence%]
@@ -103,7 +105,8 @@
          Medium: [auxiliary features, UI details, code quality — >= 60% confidence]
          Low: [enhancement suggestions, suspected issues < 60% confidence]"
 
-    Note: This Skill's scope ends at outputting the report. Fixes are routed by the main Agent after receiving the report:
-    - Confirmed missing features / non-compliant with Spec -> main Agent invokes dev-builder to fill the gap
-    - Bug / security / type issues -> main Agent invokes bug-fixer to fix
-    - After fixes are complete, the main Agent re-dispatches code-review starting from Step 1
+    Note: This Skill's scope ends at outputting the report. Fixes are routed by the main Agent after receiving the report, **filtered by each finding's `action`** ([`../../_shared/finding-actions.md`](../../_shared/finding-actions.md)):
+    - `auto-fix` only — Confirmed missing features / non-compliant with Spec -> main Agent invokes dev-builder to fill the gap; Bug / security / type issues -> main Agent invokes bug-fixer to fix
+    - `ask-user` -> escalate to the human immediately (**never auto-fixed**); dev-builder sets `.forge/.retry-counter.json` `state=escalated` and surfaces the A/B/C options without consuming a retry round
+    - `no-op` -> informational only; logged in the report, not routed
+    - After `auto-fix` fixes are complete, the main Agent re-dispatches code-review starting from Step 1

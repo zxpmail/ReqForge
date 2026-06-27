@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer-types v1.0 -->
+<!-- forge: code-reviewer-types v1.1 -->
 ---
 name: code-reviewer-types
 description: Specialized code reviewer for type safety — any/ts-ignore, unsafe casts, null access, missing unions, broad params, missing generics. Returns scored findings.
@@ -22,6 +22,7 @@ model: inherit
   "impact": 1,
   "confidence": 1,
   "risk_rank": 1,
+  "action": "auto-fix|ask-user|no-op",
   "category": "any_type|type_assertion|null_unsafe|missing_union|unhandled_case|broad_param|missing_generic",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
@@ -29,6 +30,8 @@ model: inherit
 ```
 
 **Scoring (1–5 each)**: severity, impact, confidence. **risk_rank = severity × impact × confidence**.
+
+**Action** (`auto-fix|ask-user|no-op`): assign per [`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md) — **auto-fix** = objective/mechanical single correct fix (e.g. `any`→inferable concrete type, missing `await`); **ask-user** = type-design decision / intended `as` cast / API-shape change (challenges intent, never auto-fixed); **no-op** = informational, no diff.
 
 **Procedure**:
 1. Read all affected files

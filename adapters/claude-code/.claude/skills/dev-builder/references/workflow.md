@@ -258,6 +258,12 @@
                - If `state == "active"` and `retries >= max_retries` -> set `state="escalated"`, then escalate per [Retry Escalation]. Do NOT continue the auto-fix loop.
                - Otherwise -> proceed to process review results normally.
 
+            14.6 **`ask-user` triage** (intent-sensitive findings — before any fix attempt):
+               - Filter the review's confirmed findings by `action` ([`../../_shared/finding-actions.md`](../../_shared/finding-actions.md)): separate `auto-fix` / `ask-user` / `no-op`.
+               - If ANY confirmed finding has `action="ask-user"` -> this is a human decision, NOT an agent-fixable bug. Write `state="escalated"` to `.forge/.retry-counter.json` (**do NOT increment `retries`** — `ask-user` escalation does not consume a retry round), list the `ask-user` findings for the user, and present the `[Retry Escalation]` A/B/C options. Do NOT auto-fix these, do NOT re-dispatch code-reviewer for them.
+               - `no-op` findings -> log only; never routed or fixed.
+               - Proceed to steps 14/15 below with **only the `auto-fix` subset** of confirmed issues.
+
             14. Confirmed spec/completeness issues (design agent, confidence >= 0.6):
                a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_spec_fail"`, set `state="active"`
                b. dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing]
@@ -268,7 +274,7 @@
             15. Confirmed bug/security/type issues:
                a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_quality_fail"`, set `state="active"`
                b. dispatch feedback-observer with trigger_reason="review_quality_fail", current_skill="dev-builder", ai_action=[quality issue]
-               c. call bug-fixer to fix
+               c. call bug-fixer to fix (only the `auto-fix` findings; `ask-user` items already escalated in 14.6)
                d. If retry_count < max_retries -> re-dispatch code-reviewer (go back to step 14)
                e. If retry_count >= max_retries -> set state="escalated", escalate to user per [Retry Escalation]
 
@@ -284,7 +290,7 @@
             18. Proceed to the next Task
 
             **[Retry Escalation]**
-            When retry_count reaches max_retries (default: 3), or state is "escalated", the auto-fix loop stops and escalates to the user:
+            When retry_count reaches max_retries (default: 3), or state is "escalated" — including when a confirmed finding is `action="ask-user"` (a human decision, not agent-fixable) — the auto-fix loop stops and escalates to the user. (`ask-user` escalation sets `state="escalated"` directly and does **not** increment `retries` — it does not consume a retry round.)
 
               Present exactly three options — do NOT auto-continue:
               A) **Manual fix** -> user fixes the issue themselves, then re-dispatches code-reviewer. After user confirms fix, reset counter: write {"state":"resolved","retries":0} to `.forge/.retry-counter.json`, then re-dispatch code-reviewer.

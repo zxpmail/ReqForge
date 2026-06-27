@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer-bug v1.0 -->
+<!-- forge: code-reviewer-bug v1.1 -->
 ---
 name: code-reviewer-bug
 description: Specialized code reviewer for bug patterns — null safety, race conditions, resource leaks, logic and error-handling defects. Returns scored findings (severity × impact × confidence).
@@ -23,6 +23,7 @@ model: inherit
   "impact": 1,
   "confidence": 1,
   "risk_rank": 1,
+  "action": "auto-fix|ask-user|no-op",
   "category": "null_safety|null_pointer|race_condition|resource_leak|logic_error|error_handling",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
@@ -30,6 +31,8 @@ model: inherit
 ```
 
 **Scoring (1–5 each)**: severity (5 = crash/data loss), impact (blast radius), confidence (evidence strength). **risk_rank = severity × impact × confidence**.
+
+**Action** (`auto-fix|ask-user|no-op`): assign per [`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md) — **auto-fix** = objective/mechanical single correct fix (e.g. missing `await`, null guard on a clearly-nullable path); **ask-user** = challenges author intent / behavior change / pre-existing dead-code (never auto-fixed); **no-op** = informational, no diff.
 
 **Procedure**:
 1. Read all affected files

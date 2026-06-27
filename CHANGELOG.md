@@ -2,6 +2,11 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.48.5] - 2026-06-27
+
+### Added
+- **Per-finding `action` taxonomy (auto-fix / ask-user / no-op) in code-review.** Borrowed from [no-mistakes](https://github.com/kunchenguid/no-mistakes): every review finding now carries an `action` field answering "who fixes this", **orthogonal** to severity / risk_rank / the Must-fix·Should-fix·Insight buckets / Priority. The four specialists (`code-reviewer-{bug,design,security,types}`) assign it; the aggregator (`code-reviewer`) propagates + counts it unchanged. Routing in `dev-builder` Step 14.6: only `auto-fix` findings flow to `bug-fixer`/`dev-builder`; `ask-user` (intent / product-behavior / pre-existing dead-code / S5-aesthetic decisions) trips **immediate escalation** — sets `.forge/.retry-counter.json` `state=escalated` **without** incrementing `retries` (does not consume a retry round) and surfaces the existing A/B/C options; `no-op` is logged only. Reuses the existing `retry-gate.sh` — **no hook or loop code added**. New shared pointer `core/skills/_shared/finding-actions.md` + full text `core/docs/finding-actions.md`. Non-breaking: a missing `action` is treated as `auto-fix` (fail-open = prior behavior). (`core/agents/code-reviewer*.md`, `core/skills/{code-review,bug-fixer,dev-builder}/`)
+
 ## [v1.48.4] - 2026-06-25
 
 ### Fixed

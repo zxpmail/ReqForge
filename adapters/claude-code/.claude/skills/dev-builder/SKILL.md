@@ -1,9 +1,9 @@
-<!-- forge: dev-builder v1.1 -->
+<!-- forge: dev-builder v1.2 -->
 ---
 name: dev-builder
 description: Used when DEV-PLAN.md is ready and the user says to start coding or continue developing the next Phase. Sets up the skeleton for new projects, implements features by Phase for existing projects.
-version: 1.1.0
-updated: 2026-05-26
+version: 1.2.0
+updated: 2026-06-27
 requires: []
 ---
 
@@ -61,6 +61,7 @@ requires: []
 <!-- begin: shared-discipline -->
 [Shared Discipline]
     Karpathy 四原则 → `../_shared/karpathy-discipline.md`（全文 `core/docs/behavior-rules.md`）
+    finding 的 `action` 三分（auto-fix/ask-user/no-op）驱动 Step 14.6 立即 escalate → `../_shared/finding-actions.md`
 
 <!-- end: shared-discipline -->
 <!-- begin: hard-gate -->

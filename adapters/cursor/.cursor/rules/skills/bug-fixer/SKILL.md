@@ -1,9 +1,9 @@
-<!-- forge: bug-fixer v1.1 -->
+<!-- forge: bug-fixer v1.2 -->
 ---
 name: bug-fixer
 description: Used when the user says "this feature is broken", "getting an error", "something's not right", or reports a bug, compilation error, or runtime exception. Locates root cause through a four-stage systematic debugging process and fixes it.
-version: 1.1.0
-updated: 2026-05-30
+version: 1.2.0
+updated: 2026-06-27
 requires: []
 ---
 
@@ -18,6 +18,8 @@ requires: []
     bug-fixer may be called in two scenarios:
     1. User directly reports a bug -> main Agent invokes bug-fixer -> after fix, suggest user run /code-review to verify
     2. code-review finds confirmed bug/security/type issues (confidence ≥ 0.6) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review
+
+    **Action filter**: bug-fixer receives **only `auto-fix` findings**. Findings with `action="ask-user"` (intent / product-behavior / dead-code decisions) are escalated to the human by dev-builder *before* reaching bug-fixer — never auto-fix them. See `../_shared/finding-actions.md`.
 
 <!-- end: invocation-context -->
 <!-- begin: not-for -->
@@ -48,6 +50,7 @@ requires: []
 <!-- begin: shared-discipline -->
 [Shared Discipline]
     Karpathy 四原则 → `../_shared/karpathy-discipline.md`（bug 场景：先证据后改码；最小修复）
+    只修 `auto-fix` finding；`ask-user`（意图/产品行为/死代码决策）已被上游 escalate → `../_shared/finding-actions.md`
 
 <!-- end: shared-discipline -->
 <!-- begin: first-principles -->

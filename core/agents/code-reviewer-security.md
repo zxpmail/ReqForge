@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer-security v1.0 -->
+<!-- forge: code-reviewer-security v1.1 -->
 ---
 name: code-reviewer-security
 description: Specialized code reviewer for security — credential leaks, injection, XSS, path traversal, unsafe eval/deserialization, deprecated APIs. Returns scored findings.
@@ -22,6 +22,7 @@ model: inherit
   "impact": 1,
   "confidence": 1,
   "risk_rank": 1,
+  "action": "auto-fix|ask-user|no-op",
   "category": "credential_leak|injection|xss|path_traversal|eval_usage|insecure_deserialize|deprecated_api",
   "finding": "Description of the issue",
   "evidence": "Code snippet or reasoning"
@@ -29,6 +30,8 @@ model: inherit
 ```
 
 **Scoring (1–5 each)**: severity (5 = exploitable secret/RCE), impact, confidence. **risk_rank = severity × impact × confidence**. Security findings default severity ≥ 4 when confirmed.
+
+**Action** (`auto-fix|ask-user|no-op`): assign per [`../skills/_shared/finding-actions.md`](../skills/_shared/finding-actions.md) — **auto-fix** = objective/mechanical single correct fix (e.g. sanitization missing with one canonical sanitizer); **ask-user** = threat-model / tradeoff decision / intended eval usage (challenges intent, never auto-fixed); **no-op** = informational, no diff.
 
 **Procedure**:
 1. Read all affected files
