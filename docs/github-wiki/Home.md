@@ -1,7 +1,9 @@
 # ReqForge（Forge）
 
-**当前版本：v1.48.1**（2026-06-19）  
+**当前版本：v1.48.6**（2026-06-27）  
 **主文档**：[README 中文](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md) · [README English](https://github.com/zxpmail/ReqForge/blob/main/README.md) · [CHANGELOG](https://github.com/zxpmail/ReqForge/blob/main/CHANGELOG.md)
+
+**v1.48.6 亮点**：mockup 验收后冻结根目录 `DESIGN.md`（[Google design.md](https://github.com/google-labs-code/design.md) 格式）；dev-builder / code-review 优先读 token，不再从 Brief 猜色值。
 
 ---
 
@@ -27,17 +29,17 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 
 ---
 
-## v1.43 要点（摘要）
+## v1.48 要点（摘要）
 
 | 主题 | 说明 |
 |------|------|
-| **Multi-Stakeholder Review** | 写 Spec 前四视角扫描（业务/技术/体验/范围与风险） |
-| **/domain-mapper** | 领域研究 → `domain-map.md`（独立于 spec→build 管线） |
-| **forge-bug-fix** | bisect / classify / trace / verify，已接入 bug-fixer |
-| **Gemini CLI** | 第 4 个适配器；`.gemini/GEMINI.md` |
-| **2.5 层 + UI-Spec** | design-maker → dev-builder 模型间中间表示 |
-| **Workflow Cookbook** | [workflow-cookbook.md](https://github.com/zxpmail/ReqForge/blob/main/core/docs/workflow-cookbook.md) |
-| **forge-install 写入** | `.forge/quickref.md`、dev-map、security-guidance、preflight |
+| **DESIGN.md 冻结** | design-maker → `UI-Spec.md` + `DESIGN.md`；与 OpenSpec `changes/.../design.md` 分工不同 |
+| **审查 action 三分法** | code-review finding：`auto-fix` / `ask-user` / `no-op`（v1.48.5） |
+| **Spec 蒸馏模式** | `/product-spec-builder` 可选 Distillation（v1.48.3） |
+| **forge-install Windows** | 自动检测修复（v1.48.4） |
+| **Multi-Stakeholder Review** | 写 Spec 前四视角扫描 + 批判 Gate |
+| **/domain-mapper** | 领域研究 → `domain-map.md` |
+| **2.5 层** | design-maker → dev-builder 模型间中间表示（结构 + token） |
 | **发版守门** | 维护者：`pnpm forge-smoke` |
 
 ---
@@ -49,7 +51,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 | 模糊路由 | `/request-dispatcher` | 推荐目标 Skill |
 | 领域研究（可选） | `/domain-mapper` | `domain-map.md` |
 | 需求 | `/product-spec-builder` | `Product-Spec.md` |
-| 设计（可选） | `/design-brief-builder` · `/design-maker` | `Design-Brief.md` · 设计稿 + 临时 `UI-Spec.md` |
+| 设计（可选） | `/design-brief-builder` · `/design-maker` | `Design-Brief.md` · 设计稿 + `UI-Spec.md` + `DESIGN.md` |
 | 存量变更 | `/change-manager` | `changes/<name>/` |
 | 计划 | `/dev-planner` | `DEV-PLAN.md` |
 | 开发 | `/dev-builder` | 代码 + `memory/` |
