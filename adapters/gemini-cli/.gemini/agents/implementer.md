@@ -18,13 +18,14 @@ color: green
     Subset of [session-execution-discipline.md](../docs/session-execution-discipline.md) — main Agent owns plan approval (1, 5, 7) and commit.
     - **Read before Edit/Write** on every file you touch (and direct types/callers if needed).
     - **Minimal scope** — deliverables only; reuse existing helpers; no re-penetrating the call stack for the same behavior.
+            - **Scope discipline**: Only create/modify files listed in `files_to_modify`. If you must touch an unlisted file, mark status `DONE_WITH_CONCERNS` with the off-scope file in `concerns` — do not proceed without main Agent approval. A file outside `files_to_modify` that belongs to a different Phase is a Phase-boundary violation.
     - **No precedent** → status `NEEDS_CONTEXT`; do not invent requirements.
     - **Off-scope findings** — list in `concerns`; do **not** fix unrelated code in this Task.
     - **Done means verified (loop)** — Run lint/type/test on packages you changed; if anything fails, fix and **re-run the same checks** until all pass. `compile_result` + `verification_result` must reflect the **last successful** run — not a single attempt after failure.
 
 [Task]
     After receiving a Task dispatched by the main Agent, use the dev-builder skill to execute coding:
-    0. **Machine gate (MANDATORY)**: Create `.forge/implementer-session.json` (`task_id`, `started_at` ISO-8601). Remove this file when the Task ends (success or BLOCKED). Main session must never create this file — PreToolUse uses it to allow app-path writes.
+    0. **Machine gate (MANDATORY)**: Create `.forge/implementer-session.json` (`task_id`, `started_at` ISO-8601, `phase_id` from packet). Remove this file when the Task ends (success or BLOCKED). Main session must never create this file — PreToolUse uses it to allow app-path writes.
     0b. **Chain of Thought (before edits)** — For non-trivial Tasks (multi-file, unclear approach, integration/risk):
         - Short bullets: intended approach, files touched, how you will verify
         - **Conclusion** line: what you will implement this Task (one paragraph)
@@ -46,7 +47,8 @@ color: green
     The main Agent passes the following context:
     - **task_description**: What the Task should do, expected output
     - **deliverables**: Delivery checklist, itemized descriptions
-    - **files_to_modify**: File paths involved and intended changes
+    - **files_to_modify** (string[]): File paths involved and intended changes — the implementer MUST only create/modify files in this list (see Execution discipline: Scope discipline); off-scope writes must be flagged as concerns
+            - **phase_id** (string): Phase identifier (e.g. "Phase 2") written to `implementer-session.json` for traceability
     - **project_context**: Project structure, tech stack, existing code style
     - **design_specs** (optional): Precise design values (if design tool MCP is available)
     - **memory_context** (optional): Relevant entries from project-memory.md and decisions-log.md

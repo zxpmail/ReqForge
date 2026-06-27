@@ -220,6 +220,13 @@
                - **GREEN**: minimal pass
                - **REFACTOR**: keep green
             8. Main session: receive implementer report; if `BLOCKED` or `NEEDS_CONTEXT` → resolve before review
+
+            8.5 **Phase-boundary check** — After implementer returns, read `file_changes` from the report. Cross-reference against the Task's `files_to_modify` from the dispatch packet:
+                - All files in `file_changes` are in `files_to_modify` → OK, proceed
+                - Any file NOT in `files_to_modify` → flag as **Phase-boundary violation**, present to user:
+                  > Implementer touched [off-scope files] outside the Task's allowed list. These files belong to a different Phase or are off-scope. Confirm: (A) Proceed anyway — merge into this Phase, (B) Reject — file belongs to a later Phase, (C) Replan — this Phase scope was wrong.
+                - Also cross-reference against DEV-PLAN.md current Phase's `**Key Files**:` section if `files_to_modify` looks incomplete (the implementer may have worked from a larger scope than the packet specified)
+
             9. Main session MUST NOT `Write`/`Edit` application source for this Task (steps 7–9 belong to implementer only)
 
             9.5 **自审回合（Self-review）**:

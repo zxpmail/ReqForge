@@ -1,5 +1,7 @@
 {
   "started_at": "YYYY-MM-DDTHH:mm:ssZ",
   "task_id": "task-slug",
-  "agent": "implementer"
+  "agent": "implementer",
+  "phase_id": "Phase-N",
+  "allowed_files": ["src/path/to/file1.ts", "src/path/to/file2.ts"]
 }

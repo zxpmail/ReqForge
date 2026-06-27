@@ -211,6 +211,7 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
    - Use full relative paths within the project
    - Attach a purpose description to each file
    - Do not list test files and configuration files (unless they are core deliverables of the Phase)
+   - The implementer's `files_to_modify` packet is built from this list — it defines the implementer's allowed file scope. After implementer returns, the Phase-boundary detector (dev-builder Step 8.5) cross-references actual file changes against this scope. If the Key Files list is incomplete, the implementer may prompt "NEEDS_CONTEXT" or produce a boundary violation flag.
 4. **Acceptance Criteria**:
    - Minimum requirement: compiles + starts + new features work
    - Recommended: existing features are not broken
