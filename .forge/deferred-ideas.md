@@ -59,17 +59,17 @@
 
 ## Phase-boundary-detector（= Overstepping Gate 的真实机器 enforcement）
 
-**想法**：implementer 产出文件若超出当前 DEV-PLAN Phase 声明的 deliverable 文件列表 → 发警告让 PM 确认是否合并 Phase。这是 Overstepping Gate 当前缺失的机器 enforcement（目前 Overstepping 仅 skill prose + `change-manager`，非 hook——见 CLAUDE.md 标注）。
+> **2026-06-27 更新**：程序式版本已交付（`dd59af2`）——implementer 纪律（`files_to_modify` 范围约束）+ dev-builder Step 8.5 返还后验证（`file_changes` vs `files_to_modify` 交叉核对）。以下条目保留给**钩子强制**版本（待条件满足时考虑升级）。
+
+**想法**：在 `spec-before-code-gate.mjs` 加钩子检查：implementer 写 `allowed_files` 之外的文件时拦截（当前程序式版本只警告不拦截）。这是 Overstepping Gate 的完整机器 enforcement。
 
 **触发条件**（满足任意一条）：
-1. dogfood #2 已观察到 implementer 在 Phase 1 批量交付 Phase 2-3 代码（Q1 证据）；当累计 ≥2 次"implementer 跨 Phase 交付导致返工 / Phase 边界失效"实例时
-2. DEV-PLAN 模板的 Phase deliverable 字段稳定到可机器解析（当前粒度/格式未统一）
+1. 程序式 Phase-boundary-detector 运行中出现 ≥2 次"implementer 无视范围纪律，提交 BLOCKED/DONE_WITH_CONCERNS 后才被主 session 发现"的实例（说明程序式不够，需要强制钩子）
+2. DEV-PLAN 的 Key Files 字段格式统一到可被 `.mjs` 正则解析（当前是自由 prose，解析脆弱）
 
-**为什么现在不做**：需 DEV-PLAN 每个 Phase 声明确定的文件列表；跨 Phase 交付目前由 human PM 在 `dev-builder` 调用边界把控。属 dogfood #2 deferred 提案之一（commit `436322a` 注明 deferred）。
+**为什么现在不做**：程序式版本（`dd59af2`）已覆盖核心用例——implementer 纪律约束 + 返还后交叉核对。钩子版本需要更稳定的 Key Files 格式 + 实际证据证明程序式不够。Simplicity First：程序式够了就先不写钩子。
 
-**当前优先级**：P2（dogfood 已有证据，待 DEV-PLAN deliverable 字段标准化）
-
-**记录日期**：2026-06-27
+**当前优先级**：P2（程序式已交付；钩子升级降为 P3）
 
 ---
 
