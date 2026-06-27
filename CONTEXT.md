@@ -4,7 +4,7 @@
 - **v1.48.6** — DESIGN.md 设计链 + code-review 对齐 token 基线
 
 ## 上次停在哪个位置
-- v1.48.6 GitHub Release + Wiki Home 已更新
+- `pnpm forge-wiki-sync` 已实现；Wiki Home 已 push（cb681ac）
 
 ## 测试
-- `pnpm test`（154 全过）· `pnpm forge-smoke`（13/13）· `pnpm preflight`
+- `pnpm test`（157 全过，含 forge-wiki-sync×3）· `pnpm forge-smoke` · `pnpm preflight`

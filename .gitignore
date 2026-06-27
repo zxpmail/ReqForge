@@ -37,3 +37,4 @@ eval-output/**/.next/
 .claude/settings.local.json
 .gstack/
 .forge/verify-baseline.json
+.forge/wiki-clone/

@@ -36,6 +36,7 @@
     "forge-skill-eval": "node scripts/forge-skill-eval.mjs",
     "forge-skill-retrieve": "node scripts/forge-skill-retrieve.mjs",
     "forge-release": "node scripts/forge-release.mjs",
+    "forge-wiki-sync": "node scripts/forge-wiki-sync.mjs",
     "forge-ops": "node scripts/forge-ops.mjs",
     "forge-ui-check": "node scripts/forge-ui-check.mjs",
     "forge-ui-loop": "node scripts/forge-ui-loop.mjs",

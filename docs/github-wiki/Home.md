@@ -80,7 +80,7 @@ ReqForge 是把 AI 编码助手变成**可交付产品开发操作系统**的开
 ## Wiki 维护说明
 
 - 本页源稿：`docs/github-wiki/Home.md`（随版本 bump 时一并更新）
-- **GitHub Wiki 不会**随 `git push` 自动更新，需维护者按 [`docs/github-wiki/README.md`](https://github.com/zxpmail/ReqForge/blob/main/docs/github-wiki/README.md) 手动粘贴
+- 同步命令：`pnpm forge-wiki-sync`（详见 [`docs/github-wiki/README.md`](https://github.com/zxpmail/ReqForge/blob/main/docs/github-wiki/README.md)）
 
 ---
 

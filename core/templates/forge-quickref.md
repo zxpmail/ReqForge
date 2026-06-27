@@ -259,6 +259,7 @@ pnpm forge-ops https://myapp.com --baseline compare       # 对比基线
 
 ```bash
 pnpm test && pnpm forge-smoke
+pnpm forge-wiki-sync --dry-run   # 发版后检查 Wiki 源稿是否与线上一致
 ```
 
 改 `core/` 后：`pnpm sync`
