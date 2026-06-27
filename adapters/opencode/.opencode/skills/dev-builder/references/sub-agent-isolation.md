@@ -6,15 +6,18 @@
 
 每个 DEV-PLAN Task 的隔离决策**取决于当前 Phase 的 Nature 字段**（详见 `workflow.md` § Nature Gate）：
 
-| Phase Nature | Implementer? | Worktree? | 说明 |
-|-------------|-------------|-----------|------|
-| **Backend** | ✅ 强制 dispatch | ✅ 强制 | 服务端逻辑、API、DB — 安全隔离 |
-| **Data** | ✅ 强制 dispatch | ✅ 强制 | Schema、迁移、数据管道 |
-| **UI** | ❌ 跳过 | ❌ 跳过 | 主 session 直接写（更快，Dogfood #2 验证） |
-| **Integration** | ❌ 跳过 | ❌ 跳过 | Glue 代码、配置、简单接线 |
-| *(无 Nature 字段)* | ✅ 默认 dispatch | ✅ 默认 | 向后兼容 |
+| Phase Size | Phase Nature | Implementer? | Worktree? | 说明 |
+|-----------|-------------|-------------|-----------|------|
+| **Small** | any | ❌ 跳过 | ❌ 跳过 | ≤3 key files + ≤5 deliverables — 主 session 直接写（Dogfood #3 验证） |
+| **Standard** | **Backend** | ✅ 强制 dispatch | ✅ 强制 | 服务端逻辑、API、DB — 安全隔离 |
+| **Standard** | **Data** | ✅ 强制 dispatch | ✅ 强制 | Schema、迁移、数据管道 |
+| **Standard** | **UI** | ❌ 跳过 | ❌ 跳过 | 主 session 直接写（更快，Dogfood #2 验证） |
+| **Standard** | **Integration** | ❌ 跳过 | ❌ 跳过 | Glue 代码、配置、简单接线 |
+| (未指定) | *(无 Nature 字段)* | ✅ 默认 dispatch | ✅ 默认 | 向后兼容 |
 
-当 Nature = Backend/Data 时，以下规则适用（原 MANDATORY 规则）：
+**Size** 由 `workflow.md` § Nature Gate Step 1.5 定义：读取当前 Phase 的 Key Files 和 Deliverables 条数，≤3 key files **且** ≤5 deliverables 为 Small，否则 Standard。
+
+当 Size = Standard 且 Nature = Backend/Data 时，以下规则适用（原 MANDATORY 规则）：
 
 1. **MUST dispatch `implementer` sub-agent** — 主 session 不得在主上下文内直接 `Write`/`Edit` 业务代码。
 2. **隔离包** — 仅传递：`task_description`、`deliverables`、`files_to_modify`、`project_context`、`memory_context`（摘录）、`design_specs`（如有）。不得传递主 session 闲聊或上一 Task 失败叙述。

@@ -169,15 +169,22 @@
 
         Step 1.5: Nature Gate — Implementer Dispatch Decision
 
-            Read the current Phase's **Nature** field from DEV-PLAN.md:
+            Read the current Phase's **Nature** field from DEV-PLAN.md.
 
-            | Nature | Dispatch Decision | Rationale |
-            |--------|-------------------|-----------|
-            | **Backend** | Dispatch implementer per Task (standard isolation) | Server logic, APIs, DB — cleanly isolatable, low context overhead |
-            | **Data** | Dispatch implementer per Task (standard isolation) | Schema, migrations, pipelines — similar to backend |
-            | **UI** | **SKIP implementer + worktree.** Main session writes directly. | UI code benefits from full component context; implementer isolation adds overhead without proportional benefit (verified in Dogfood #2 — Phase 4 UI completed 15min main-session vs estimated 30min+ via implementer) |
-            | **Integration** | **SKIP implementer + worktree.** Main session writes directly. | Glue code, config, simple wiring — implementer overhead not justified |
-            | *(no Nature field)* | Default to implementer (conservative) | Backward compatibility — assume backend |
+            **Size pre-check**: Before consulting the Nature table, count the Phase's key files and deliverables:
+            - Count entries under `**Key Files**:` and `**Deliverables**:` for this Phase
+            - If ≤3 key files **AND** ≤5 deliverables (combined) → this is a **Small Phase**
+            - Otherwise → this is a **Standard Phase**
+            - If Key Files/Deliverables aren't explicitly listed → treat as Standard (conservative)
+
+            | Size | Nature | Dispatch Decision | Rationale |
+            |------|--------|-------------------|-----------|
+            | **Small** | any | **SKIP implementer + worktree.** Main session writes directly. | Verified in Dogfood #3 — small Backend phases (few files, few deliverables) don't justify isolation overhead; implementer cold-start (2-5s) + packet bundling takes longer than the actual coding |
+            | **Standard** | **Backend** | Dispatch implementer per Task | Server logic, APIs, DB — cleanly isolatable, low context overhead |
+            | **Standard** | **Data** | Dispatch implementer per Task | Schema, migrations, pipelines — similar to backend |
+            | **Standard** | **UI** | **SKIP implementer + worktree.** Main session writes directly. | UI code benefits from full component context; isolation adds overhead without proportional benefit (Dogfood #2 Phase 4: 15min main-session vs 30min+ implementer) |
+            | **Standard** | **Integration** | **SKIP implementer + worktree.** Main session writes directly. | Glue code, config, simple wiring — implementer overhead not justified |
+            | (no size or Nature) | (any) | Default to implementer (conservative) | Backward compatibility — assume backend |
 
             If the Nature says **skip implementer**, modify the per-Task loop:
             - **Step 6**: Skip worktree creation entirely

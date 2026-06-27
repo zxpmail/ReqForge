@@ -69,7 +69,11 @@ requires: []
 [HARD-GATE]
     主 Session **MUST NOT** 直接 Write/Edit 业务代码；每 Task dispatch implementer 并创建 `.forge/implementer-session.json`；首次改代码前 **MUST** git worktree。
 
-    **Exception**: Phase Nature（Backend/UI/Data/Integration）为 UI 或 Integration 时，主 session 可直接 Write/Edit 业务代码，不强制 implementer 和 worktree。理由：UI 代码需要完整组件上下文，implementer 隔离得不偿失（Dogfood #2 验证）。该豁免仅限当前 Phase，下一 Phase 重新评估。
+    **Exception 1 — UI / Integration Phase**: 主 session 可直接 Write/Edit，不强制 implementer 和 worktree。理由：UI 代码需要完整组件上下文，implementer 隔离得不偿失（Dogfood #2 验证）。
+
+    **Exception 2 — Small Phase (any Nature)**: 当 Phase 的 Key Files ≤3 且 Deliverables ≤5（即"Small Phase"），主 session 可直接 Write/Edit，不强制 implementer 和 worktree。理由：小型 Phase 的 implementer 冷启动开销 > 实际编码工作量（Dogfood #3 验证：Greenfield CLI 全部 5 Phase 均小到不值得隔离）。尺寸判定详见 `references/workflow.md` § Nature Gate Step 1.5。
+
+    以上豁免均仅限当前 Phase，下一 Phase 重新评估。
 
     机器门与 Session 生命周期 → `../_shared/hard-gate-summary.md`（Hook 拦截为准）
 
