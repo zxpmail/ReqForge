@@ -22,6 +22,7 @@ const SMOKES = [
   "workflows-compliance",
   "platform-compliance-doc",
   "machine-gates-doc",
+  "package-integrity",
   "templates-present",
   "agents-complete",
   "hooks-wired",
