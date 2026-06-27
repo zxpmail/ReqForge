@@ -105,6 +105,7 @@ flowchart TB
 - 设计交付 + token 冻结：`core/skills/design-maker/SKILL.md`（Step 3e → `DESIGN.md`）
 - 示例 `DESIGN.md`：`test-demo/react-table/DESIGN.md`
 - Google 格式互操作：`core/skills/design-maker/templates/design-md-template.md`
+- 设计链 vs Google design.md：[design-md-comparison.md](./design-md-comparison.md)
 - OpenSpec：[openspec-comparison.md](./openspec-comparison.md)
 - Superpowers：[superpowers-comparison.md](./superpowers-comparison.md)
 - OpenHuman：[openhuman-comparison.md](./openhuman-comparison.md)

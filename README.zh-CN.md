@@ -707,7 +707,7 @@ pnpm preflight --strict             # 警告也视为失败
 > 2. 或 `~/.forge/config` / `%USERPROFILE%\.forge\config`
 > 3. 或环境变量 `FORGE_MODE=yolo`
 
-更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。对照文档：[OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md) · [RTK](core/docs/rtk-comparison.md) · [nanochat](core/docs/nanochat-comparison.md) · [autoresearch](core/docs/autoresearch-comparison.md) · [llm-council](core/docs/llm-council-comparison.md) · [jobs](core/docs/jobs-comparison.md) · [llm-wiki](core/docs/llm-wiki-comparison.md)。
+更多说明见 [core/docs/](core/docs/)（行为边界、记忆体系、Sub-Agent 编排）。对照文档：[OpenSpec](core/docs/openspec-comparison.md) · [Superpowers](core/docs/superpowers-comparison.md) · [Open Design](core/docs/open-design-comparison.md) · [Google design.md](core/docs/design-md-comparison.md) · [OpenHuman](core/docs/openhuman-comparison.md) · [RTK](core/docs/rtk-comparison.md) · [nanochat](core/docs/nanochat-comparison.md) · [autoresearch](core/docs/autoresearch-comparison.md) · [llm-council](core/docs/llm-council-comparison.md) · [jobs](core/docs/jobs-comparison.md) · [llm-wiki](core/docs/llm-wiki-comparison.md)。
 
 ---
 
@@ -1041,6 +1041,7 @@ pnpm dep-graph stats  # 查看图统计
 | [OpenSpec](https://github.com/Fission-AI/OpenSpec) | 规格驱动 `changes/` + CLI | [openspec-comparison.md](core/docs/openspec-comparison.md) — 已吸收为 `/change-manager` |
 | [Superpowers](https://github.com/obra/superpowers) | Skill + TDD + 子 Agent 驱动开发 | [superpowers-comparison.md](core/docs/superpowers-comparison.md) — 技能化/TDD 已融入 dev-builder |
 | [Open Design](https://github.com/nexu-io/open-design) | 设计稿、预览、Design System 库 | [open-design-comparison.md](core/docs/open-design-comparison.md) — 问卷/五预设/反 slop 已进 design Skill |
+| [Google design.md](https://github.com/google-labs-code/design.md) | DESIGN.md token 格式 + designmd CLI | [design-md-comparison.md](core/docs/design-md-comparison.md) — Brief→mockup→DESIGN.md 冻结 |
 | [OpenHuman](https://github.com/tinyhumansai/openhuman) | 个人 AI 运行时、Memory Tree、集成 | [openhuman-comparison.md](core/docs/openhuman-comparison.md) — 可选记忆后端与上下文规则 |
 | [RTK](https://github.com/rtk-ai/rtk) | Shell 输出压缩（PreToolUse Bash 代理） | [rtk-comparison.md](core/docs/rtk-comparison.md) — 可选第 5 层伙伴；verify 摘要+日志路径 |
 | [nanochat](https://github.com/karpathy/nanochat) | 端到端 LLM 训练 Harness（speedrun、排行榜） | [nanochat-comparison.md](core/docs/nanochat-comparison.md) — 黄金路径/快环纪律（方法论参照） |
