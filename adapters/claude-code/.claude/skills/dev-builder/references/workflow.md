@@ -362,6 +362,7 @@
         Step 6: Force Stop — One Phase Per Invocation
             Phase complete. Output to user:
             "✅ **Phase N verified and complete.**
+             Consider running **/code-review** for a holistic review (Spec alignment, security, performance) before starting the next Phase.
              Next up: Phase N+1. Invoke **/dev-builder** to continue."
 
             **Hard rules**:

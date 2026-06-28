@@ -39,7 +39,7 @@
     /dev-planner — Manual only. Prereq: Product-Spec.md
     /dev-builder — Manual only. Prereq: Product-Spec.md + DEV-PLAN.md. One Phase per invocation.
     /bug-fixer — Auto: user reports error/bug/breakage, or code-review found issues. Prereq: project code
-    /code-review — Auto: after each feature dev cycle. Manual: /code-review. Prereq: Product-Spec.md + code
+    /code-review — Manual: after each Phase. Automatically suggested in dev-builder Phase complete output; suggested by startup project-state detection when code exists but no review history found. Manual: /code-review. Prereq: Product-Spec.md + code
     /release-builder — Manual only. Prereq: project code
     /skill-builder — Auto: EVOLUTION.md Level 4 proposes new Skill and user confirms
     /feedback-writer — Invoked by feedback-observer sub-agent only

@@ -18,7 +18,7 @@ requires: []
       - 所以 Phase 1 宁可慢一点把骨架放稳，也不要为了"快点看到功能"而跳过
       - 骨架放好后，后续 Phase 的代码模型自然续写——因为"这个项目的代码长什么样"已经定了
 
-    **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop**. User must call /dev-builder again for next Phase.
+    **Continuous Development Mode**: Has code + has DEV-PLAN.md -> develop by Phase, **one Phase per /dev-builder invocation**. Each Phase: Plan Mode to plan implementation -> per-Task review + commit -> Phase four-step verification -> user confirmation -> **force stop** (suggests running **/code-review** for a holistic Phase-level review). User must call /dev-builder again for next Phase.
 
     **Change-Scoped Mode**: Invoked from `/change-manager apply` with `change-name=<name>` -> read `changes/<name>/` (specs, design, tasks), execute **only** unchecked items in `changes/<name>/tasks.md`. Do not pull unrelated DEV-PLAN Phases. Still uses implementer + TDD + two-tier review per Task.
 
