@@ -88,3 +88,20 @@
 **记录日期**：2026-06-27
 
 ---
+
+## Stop-time gate 接到非 Claude Code client（opencode / cursor / gemini-cli）
+
+**想法**：把 stop-time gate（`phase-exit-guard` / `stop-gate` / `retry-gate`）真正接到 opencode / cursor / gemini-cli 的 stop 生命周期，使 Sloppiness Gate 在这些 client 也机器生效。
+
+**触发条件**（满足任意一条才回头评估）：
+1. opencode 发布原生 `Stop` hook 支持（目前是 open feature request #14863，插件层做不到 Stop re-activation，需 core 支持）
+2. cursor adapter 决定重写——真实 schema 是 `.cursor/hooks.json` + `onStop`/`session.start` 等 camelCase 事件（非现有 `settings.json` + `BeforeCommand`），现有 adapter 已 stale；重写需先逐 client 调研每个事件的 stdin/exit 契约
+3. ≥1 个真实非-claude-code 用户反馈"stop-time gate 在我的 client 没生效，导致未验证就 done"
+
+**为什么现在不做**：只有 Claude Code 支持真正的 `Stop` 生命周期事件。opencode 无原生 Stop；cursor 当前 adapter 用的是错的 schema（`BeforeCommand` 在 cursor 里不是 stop 语义）；gemini-cli 无 hook 系统。强行写假 `Stop`/`BeforeCommand` 配置 = client 直接忽略 = 重蹈 dogfood #5 发现的 bug（"看起来接好了，实际从不触发"）。Simplicity First：不为不支持的 client 写假接线；现状在 `core/hooks/AGENTS.md` 已标注 Claude-Code-only。
+
+**当前优先级**：P3（依赖外部 client 能力，非框架单方面可控）
+
+**记录日期**：2026-07-02
+
+---

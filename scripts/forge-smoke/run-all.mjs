@@ -9,7 +9,7 @@
  *       pnpm forge-smoke
  *
  * 详表: scripts/forge-smoke/README.md
- * 每项 smoke 在独立子进程运行，互不污染。（共 12 项，含 test-demo 黄金路径）
+ * 每项 smoke 在独立子进程运行，互不污染。（共 13 项，含 test-demo 黄金路径）
  */
 import { spawnSync } from "child_process";
 import path from "path";
@@ -26,6 +26,7 @@ const SMOKES = [
   "templates-present",
   "agents-complete",
   "hooks-wired",
+  "stop-gate-wired",
   "skill-fixtures",
   "skill-bypass",
   "loadouts-valid",

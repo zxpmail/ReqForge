@@ -10,10 +10,17 @@
       {
         "matcher": "",
         "hooks": [
+          { "type": "command", "command": "cmd /c .claude\\hooks\\detect-feedback-signal.bat" }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
           { "type": "command", "command": "cmd /c .claude\\hooks\\phase-exit-guard.bat" },
           { "type": "command", "command": "cmd /c .claude\\hooks\\stop-gate.bat" },
-          { "type": "command", "command": "cmd /c .claude\\hooks\\retry-gate.bat" },
-          { "type": "command", "command": "cmd /c .claude\\hooks\\detect-feedback-signal.bat" }
+          { "type": "command", "command": "cmd /c .claude\\hooks\\retry-gate.bat" }
         ]
       }
     ],
