@@ -1,0 +1,185 @@
+# Dogfood #5 — YOLO 跨 Phase 续跑验证
+
+**项目**：`@forge/md-toc`（复用 #4 的 Spec + DEV-PLAN，3 Phase 全 Small/Backend/🟢）
+**目的**：验证 YOLO 模式的"Continue to the next Phase automatically"散文续跑，在真实多 Phase 长跑中到底掉不掉链子
+**目录**：`C:\work\dogfood-05\`
+**状态**：🟢 机器层已修（commit 待提交）→ 可在独立会话跑 Run #2 干净验证 prose-drift。详见文末 [Run #1 结果](#run-1-结果--根因分析) 与 [机器层修复](#机器层修复已落地)
+
+---
+
+## 起因（为什么跑这次 dogfood）
+
+代码审计（2026-07-02）发现 YOLO 续跑的真相：
+
+- `core/skills/dev-builder/references/workflow.md:382-385` YOLO 模式下 Step 5 Force Stop → 写 checkpoint → **"Continue to the next Phase automatically"**（散文）
+- `core/hooks/phase-exit-guard.sh:36-40` YOLO 模式下 hook **不 block**，只把 reason 写到 `.claude/.yolo-pending/phase-exit`
+
+**问题**：hook 只是"撤掉 stop 拦截"（`exit 0`），**没有驱动续跑**。续跑 100% 依赖 LLM 读到那句散文后自觉不停。
+机械层已测通（见下），但"LLM 在 context 变长、注意力分散后还续不续"是开放问题——而这个问题有 Heisenberg 性质，必须独立会话跑。
+
+---
+
+## 机械层预测试（已通过，零 LLM 污染）
+
+| 测试 | 期望 | 实际 | 判定 |
+|---|---|---|---|
+| 正常模式 + block 文件 | `decision:block` 阻止 stop | ✅ 输出 block JSON | PASS |
+| YOLO（`.forge/config`）+ block 文件 | 不 block，写 `.yolo-pending/phase-exit` | ✅ 无 block，log 写入 | PASS |
+| Windows `.forge/config` grep 检测 | project-level 命中 | ✅ 命中 `FORGE_MODE=yolo` | PASS |
+
+**结论**：plumbing 通。剩下的全是 LLM 自觉性问题——正是 #5 要测的。
+
+---
+
+## 靶子准备（已完成）
+
+```
+C:\work\dogfood-05\
+├── Product-Spec.md            # 复用 #4（md-toc）
+├── DEV-PLAN.md                # 复用 #4（3 Phase, 全 Small/Backend/🟢）
+├── .forge/config              # FORGE_MODE=yolo  ← 变量
+├── .forge/spec-confirmed.json # 预置（隔离变量：不重测一次性 confirm 门）
+├── .forge/plan-confirmed.json # 预置（同上）
+├── .claude/hooks/*.bat        # forge-install --windows，phase-exit-guard.bat 在列
+└── (无 src 代码 — greenfield)
+```
+
+**变量隔离**：spec-confirmed / plan-confirmed 预置，是为了把这次 dogfood 的变量收敛到**只有 YOLO 续跑**。冷启动 confirm 门是 #4 的活，不在 #5 范围。
+
+---
+
+## 真正要回答的 5 个问题
+
+| # | 问题 | 判定标准 |
+|---|------|----------|
+| **Q1** | **1 次 `/dev-builder` 能不能跑完 3 个 Phase？** | 数 invocation 次数。1 次→3 Phase = 续跑成立；每 Phase 都要再 invoke = 散文不足 |
+| Q2 | 如果停了，停在哪？ | Phase 1 后 / Phase 2 后 / RED retry escalation / context 爆 / 主动 Force Stop |
+| Q3 | run log 真落盘了吗？事后能不能复盘？ | 检查 `changes/<phase>/checkpoint.md` + `delivery-checklist.md` + `.claude/.yolo-pending/` 是否齐全 |
+| Q4 | context budget 够吗？跑完 3 Phase 还剩多少？ | 测 handoff + `/clear` 与"连续跑完整个项目"的张力 |
+| Q5 | 续跑产出的代码质量有没有滑坡？ | 对比 #4 单 Phase 跑的结果；尤关注自审/code-review 在无人值守下是否走过场 |
+
+---
+
+## 执行协议（必须在独立 Claude Code 会话跑）
+
+> ⚠️ **不能在 ReqForge 仓会话里跑**——那是热缓存（[[framework-author-hot-cache]]），且我作为 agent 刚读过 YOLO 规则，必然合规，测不出 drift。
+
+1. **新开**一个 Claude Code 会话，工作目录 `C:\work\dogfood-05`
+2. 只发**一条**消息：`/dev-builder`（或"开始开发"）
+3. **不要催、不要补指令**——纯观察
+4. 它停了就停了，记录停在哪、输出说了什么
+5. 跑完（或停）后，回来填下表 + 收集 artifact 证据
+
+### 观测记录表（Run #1 实测，2026-07-02）
+
+| Phase | 完成? | 用时 | /dev-builder 第几次调用? | 是否需要人介入? | 备注 |
+|-------|-------|------|--------------------------|------------------|------|
+| 1 | ✅ | — | 1 | ☐ | 17 测试过、build exit 0、smoke OK。**但走的是 normal Step 6 硬停**，未写 `changes/`、未走 YOLO Step 5 |
+| 2 | ☐ | — | — | — | 未触达（agent 主动停在 Phase 1 后拒绝续跑） |
+| 3 | ☐ | — | — | — | 未触达 |
+
+- `/dev-builder` 总调用次数：**1**
+- 是否有人介入（除初始一条消息外）：☐ 否 ☑ 是（1 次 — 但非指令性介入，仅回收 agent 的 Phase 1 报告用于本 tracking）
+- 最终状态：☐ 3 Phase 全完成 ☑ **中途停（停在 Phase 1，原因：YOLO 续跑未触发，agent 走 normal Step 6 硬停并主动声明"请勿让我自动续做第二阶段"）**
+
+---
+
+## 预测（先写下来，跑完对照）
+
+基于"散文续跑 = 靠 LLM 自觉"的判断：
+
+- **乐观**：md-toc 太小（全 Small），context 不会爆，agent 读到"continue automatically"会一路跑完。→ 证明散文在**小项目 + context 充裕**时够用。
+- **悲观**：即使跑完，也是因为项目小、我（agent）刚读过规则。换 5 天项目（如 #2 的 reading-tracker）或 context 紧张时，drift 会让它停在某个 Force Stop。→ 证明散文续跑**不可靠**，需要机器层面的循环驱动器（handoff → persist → /clear → re-invoke）。
+
+无论哪个结果，**结论都会指向**：真正的"我不管"需要一个能扛 context reset 的外层 driver，而不是依赖 skill 内散文。
+
+---
+
+## 局限性（已知）
+
+1. md-toc 太小（3 Phase 全 Small），context 压力测不出来 → Q4 只能得弱信号
+2. 单次 dogfood 不能区分"散文够用" vs "这次运气好" → 需要 ≥2 次不同规模项目
+3. 我（本次会话 agent）不能跑——污染
+
+---
+
+## Run #1 结果 + 根因分析（2026-07-02，独立会话实测后回填）
+
+### 5 问实测
+
+| # | 问题 | 结果 | 证据 |
+|---|------|------|------|
+| **Q1** | 1 次 `/dev-builder` 跑完 3 Phase？ | ❌ **FAIL** | 总调用 1 次，只完成 Phase 1 |
+| **Q2** | 如果停了，停在哪？ | Phase 1 后，**走 normal Step 6 硬停** | agent 输出"⚠️强制停止：第一阶段一调用一阶段。请勿让我自动续做第二阶段" |
+| **Q3** | run log 真落盘了吗？ | ❌ **全缺** | `find` 确认：无 `changes/`、无 `delivery-checklist.md`、无 `.claude/.yolo-pending/` |
+| Q4 | context budget 够吗？ | 未测到 | Phase 1 即停，未到 context 压力区 |
+| Q5 | 续跑产出代码质量滑坡？ | 不可比 | Phase 1 本身质量正常（17 测试过），续跑场景没产生 |
+
+### 根因 —— 两层都坏，且性质不同
+
+**🔧 机器层（可验证、可立刻修）：三处叠加缺陷**
+
+1. **`phase-exit-guard` 接错生命周期**（框架级）
+   它本该在 `Stop` 触发，却注册在 `PreToolUse`。整个框架**没有任何 adapter/template 注册了 `Stop` hook**（`grep '"Stop"'` adapters/ + core/templates/ 全空）。PreToolUse 时 block 文件尚不存在 → hook `exit 0` 无脑放行。
+
+2. **`.bat` 比 `.sh` 少了 `.verify-block` 回退**（Windows 专项 sync drift）
+   源 `core/hooks/phase-exit-guard.sh` 同时查 `phase-exit-block` **和** `.verify-block`；Windows `phase-exit-guard.bat` 只查 `phase-exit-block`。
+
+3. **没有任何代码创建 block 文件**
+   `grep -rln "phase-exit-block\|verify-block\|forge-verify"` 全 `core/`+`scripts/`，**只有 docs 命中**，无 hook/脚本去写。设计依赖 LLM 按 prose 自己写 `.forge/phase-exit-block`——而本次 agent 没写。
+
+→ 结论：`.claude/.yolo-pending/phase-exit` **永远不可能被创建**。文首"机械层预测试 PASS"是**假阳性**——它手工塞 block 文件再直接调 hook，测了 hook 内部 YOLO 分支逻辑，但**从没测接线**（哪个生命周期调它、真实 dev-builder 流程会不会创建 block 文件）。
+
+**📝 Prose 层（drift 信号，但有混淆）**
+`.forge/config` 里 `FORGE_MODE=yolo` 明确，`workflow.md:376-385` YOLO 分支写明"Continue to the next Phase automatically"，但 agent 跑了 normal Step 6 硬停。**prose 续跑没生效**——倾向支持"散文续跑不可靠"。
+
+**⚠️ 但这层信号被污染**：prose 的 YOLO 分支理论上独立于 hook（agent 自读 `.forge/config` 就该走），可现实中若 hook 也经 `.yolo-pending/` 给了 YOLO 信号**双重强化**，agent 更可能走对分支。现在机器层完全没信号，**无法干净区分**"prose 被忽略" vs "prose+hook 强化都才够"。
+
+### 对原预测的修正
+
+| 原预测 | Run #1 实测对照 |
+|--------|-----------------|
+| 乐观：小项目 + context 充裕 → agent 读到"continue automatically"会一路跑完 | ❌ 不成立。项目足够小、context 充裕，agent **仍**走 normal 硬停并主动拒绝续跑 |
+| 悲观：换大项目或 context 紧张时 drift 会让它停在 Force Stop | 部分印证——但在**最小项目、最充裕 context**下就已停，比悲观预期更早、更彻底 |
+| 无论哪个结果，结论指向"需要能扛 context reset 的外层 driver" | ✅ **成立且加强**——现在连"机器层都没给信号"，问题比设想的更底层：不是"散文 vs driver"之争，而是**散文和机器层当前都不可靠** |
+
+### 下一步（修正执行协议）
+
+**🛑 不要在现状下重跑 Phase 2/3 或重跑整个 dogfood** —— 重跑只会复现同样的 broken 行为，且：
+- Q3 要求的 run log 机器层永远不会落盘
+- prose-drift 问题被机器层故障污染，跑多少次都分不清根因
+
+**正确顺序**：
+1. 修机器层：① adapter settings 模板加 `Stop` 生命周期，把 `phase-exit-guard` 从 PreToolUse 挪过去；② `phase-exit-guard.bat` 补 `.verify-block` 回退对齐 `.sh`；③ 补一个真正创建 block 文件的机制（`forge-verify` hook，或让 dev-builder prose 在 Phase 退出时主动写 `.forge/phase-exit-block`）。
+2. 重新跑本文档原执行协议（独立会话、单条 `/dev-builder`、纯观察）。
+3. **那时候**才能干净回答"散文续跑到底可不可靠"——即真正测到 prose-drift 这个唯一开放变量。
+
+### 附：本次 dogfood 的真实价值
+
+Run #1 没有"验证 YOLO 续跑"，但它**暴露了一个更深的缺陷**：stop-time gate 整条链路（forge-verify → block 文件 → phase-exit-guard Stop 触发 → YOLO 分支）在框架里**从未真正接通过**。CLAUDE.md 把它列为"Sloppiness Gate — enforced at stop-time"，但实际没有 `Stop` wiring、没有 block 文件创建者、`.bat` 还 drifted。**这是 dogfood #5 比"通过/不通过"更有价值的产出。**
+
+> **2026-07-02 修正**：上文 "没有 block 文件创建者" 判断过宽——`.verify-block` 由 `scripts/forge-verify.mjs:292` 创建、`phase-exit-block` 由 dev-builder prose（`phase-completion-assessment.md:64`）创建，**生产者都在**。真正的 bug 只有接线 + `.bat` 两处。已修，见下。
+
+---
+
+## 机器层修复（已落地）
+
+修复计划已批准执行，改动清单（2026-07-02）：
+
+| 文件 | 改动 |
+|------|------|
+| `adapters/claude-code/.claude/settings.json` | phase-exit-guard / stop-gate / retry-gate 从 `PreToolUse` 挪到新顶层 `Stop` 数组；detect-feedback-signal 留 PreToolUse |
+| `adapters/claude-code/.claude/settings.windows.json` | 同上（`.bat` 路径） |
+| `core/hooks/phase-exit-guard.bat` | ① 补 `.verify-block` 回退（对齐 `.sh`，gate on either file、concat reasons）；② **修 YOLO 检测**——原 `set YOLO_ACTIVE=1 & goto :eof` 在 `if (...)` 块内失效（第三个 latent bug，Windows 下 YOLO 永远读 0 → 永远 block、永不写 `.yolo-pending`）；改 `if not errorlevel 1 (...)` |
+| `core/hooks/phase-exit-guard.sh` / `.bat` 头注释 | `BeforeCommand` → `Stop hook` |
+| `core/hooks/AGENTS.md` | stop/phase 表三行 `BeforeCommand` → `Stop`；加 Claude-Code-only 多 client 局限说明 |
+| `.forge/deferred-ideas.md` | 新条目：Stop-time gate 接到 opencode/cursor/gemini（待各自 client 支持 Stop 生命周期） |
+| `scripts/forge-smoke/stop-gate-wired.mjs`（新增）+ `run-all.mjs` | 回归 smoke：断言 claude-code 两个 settings 有 `Stop`、三 gate 在 Stop 下、detect-feedback-signal 在 PreToolUse 下。已验证能 fail-on-regression（5 条精准报错） |
+
+**验证**：`pnpm forge-smoke` 15/15 通过；`.bat` 经 6 场景实跑（无 block / phase-exit-block / .verify-block / 双文件 / YOLO config / YOLO env var）全 PASS——尤其 YOLO 分支现在正确写 `.claude/.yolo-pending/phase-exit`（Run #1 缺失的那个信号）。
+
+**范围**：只修能真生效的 claude-code。opencode（无原生 Stop hook）、cursor（真实 schema 是 `hooks.json`/`onStop`，现有 adapter stale）、gemini-cli（无 hooks）**不写假接线**——写假配置 = client 忽略 = 重蹈本次 bug。已记 deferred-ideas。
+
+### 下一步：Run #2
+
+机器层现在能正确在 `Stop` 触发、能正确检测 YOLO、能正确写 `.yolo-pending/phase-exit`。重跑 Dogfood #5（独立会话、`C:\work\dogfood-05`、先 `pnpm forge-install --client claude-code --target C:\work\dogfood-05` 刷新接线）即可**干净测试唯一剩下的开放变量**：prose-drift——agent 在收到 YOLO 信号后，"Continue to the next Phase automatically" 散文续跑到底成不成立。
