@@ -217,6 +217,21 @@ function checkScope() {
   }
 }
 
+function checkContentQuality() {
+  // 只做配置检查，实际验证由独立的 content-verify 脚本执行
+  // 因为需要 LLM API 调用（异步），不适合嵌入同步 checks 数组
+  const configPath = join(ROOT, ".forge", "content-verify.json");
+  if (!existsSync(configPath)) {
+    return "skip — 未配置 .forge/content-verify.json，不执行语义验证";
+  }
+  const cfg = JSON.parse(readFileSync(configPath, "utf-8"));
+  if (!cfg.task || !cfg.files || cfg.files.length === 0) {
+    return "skip — .forge/content-verify.json 缺少 task/files 字段";
+  }
+  // 配置有效，提示用户运行独立的验证脚本
+  return `已配置 (${cfg.files.length} 文件)。运行 pnpm forge-verify-content 执行语义验证`;
+}
+
 // --- Run all checks ---
 const checks = [
   run("skill-quality", checkSkillQuality),
@@ -227,6 +242,7 @@ const checks = [
   run("security-patterns", checkSecurityPatterns),
   run("trace-fresh", checkTraceFresh),
   run("scope-check", checkScope),
+  run("content-quality", checkContentQuality),
 ];
 
 // --- Build results map ---
