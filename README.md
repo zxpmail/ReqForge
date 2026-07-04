@@ -300,7 +300,8 @@ flowchart LR
 
 ### v1.28.0 — 2026-05-27
 - **dev-map**: Project-level navigation index at `.forge/dev-map.md` — AI explores module structure and existing patterns before coding. Maintained by dev-builder (who changes code updates the map). Template installed via `pnpm forge-install`.
-- **forge-verify**: Unified post-verification entry `pnpm forge-verify` with 5 checks and baseline comparison (`--baseline save|compare|check`). Turns "I think I'm done" into "the system confirms I'm done."
+- **forge-verify**: Unified post-verification entry `pnpm forge-verify` with 9 checks (skill-quality, compile, test, no-placeholders, dev-map-fresh, security-patterns, trace-fresh, scope-check, content-quality) and baseline comparison (`--baseline save|compare|check`). Turns "I think I'm done" into "the system confirms I'm done."
+- **forge-verify-content**: Optional semantic content verification `pnpm forge-verify-content` — uses LLM (DeepSeek, configurable) to check whether Phase output files actually satisfy the task requirements. Catches semantic garbage that symbolic checks (file-exists / exit-code) miss. Skip by default; opt-in via `.forge/content-verify.json`. Based on experiment E (cross-model semantic consensus).
 - **dev-builder integrated**: Loading Phase auto-saves baseline; Phase Completion runs forge-verify + compares baseline + updates dev-map. New Post-Verification Gate principle.
 
 ### v1.27.0 — 2026-05-27
