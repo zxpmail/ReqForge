@@ -183,3 +183,71 @@ Run #1 没有"验证 YOLO 续跑"，但它**暴露了一个更深的缺陷**：s
 ### 下一步：Run #2
 
 机器层现在能正确在 `Stop` 触发、能正确检测 YOLO、能正确写 `.yolo-pending/phase-exit`。重跑 Dogfood #5（独立会话、`C:\work\dogfood-05`、先 `pnpm forge-install --client claude-code --target C:\work\dogfood-05` 刷新接线）即可**干净测试唯一剩下的开放变量**：prose-drift——agent 在收到 YOLO 信号后，"Continue to the next Phase automatically" 散文续跑到底成不成立。
+
+---
+
+## Run #2 结果（2026-07-03，独立会话实测后回填）
+
+### 执行记录
+
+| Phase | 完成? | 用时 | /dev-builder 第几次调用? | 是否需要人介入? | 备注 |
+|-------|-------|------|--------------------------|------------------|------|
+| 1 | ✅ | — | 1 | ☐ | 17 测试过、build exit 0、CLI 验证通过 |
+| 2 | ☐ | — | — | — | 未触达（agent 停在 Phase 1 后手动续跑提示） |
+| 3 | ☐ | — | — | — | 未触达 |
+
+- `/dev-builder` 总调用次数：**1**
+- 是否有人介入：☐ 否 ☑ 是（纯观察，无指令性介入）
+- 最终状态：☐ 3 Phase 全完成 ☑ **中途停（停在 Phase 1，agent 输出 "Next up: Phase 2. Invoke /dev-builder to continue. All tasks complete."）**
+
+> 与 Run #1 行为**完全相同**——agent 在 Phase 1 完成后安全停止，未自动续跑。唯一的区别是 Run #1 走的是 normal Step 6 硬停，Run #2 也一样。
+
+### 5 问实测
+
+| # | 问题 | 结果 | 证据 |
+|---|------|------|------|
+| **Q1** | 1 次 `/dev-builder` 跑完 3 Phase？ | ❌ **FAIL** | 总调用 1 次，只完成 Phase 1 |
+| **Q2** | 如果停了，停在哪？ | Phase 1 后 | agent 输出 "Next up: Phase 2 — 功能扩展. Invoke /dev-builder to continue." |
+| **Q3** | run log 真落盘了吗？ | ❌ **全缺** | `find` 确认：无 `changes/`、无 `delivery-checklist.md`、无 `.claude/.yolo-pending/` |
+| Q4 | context budget 够吗？ | 未测到 | Phase 1 即停，未到 context 压力区 |
+| Q5 | 续跑产出代码质量滑坡？ | 不可比 | 续跑场景没产生 |
+
+### 机器层验证
+
+| 组件 | 状态 | 证据 |
+|------|------|------|
+| Stop 生命周期接线 | ✅ | `settings.json` 三 gate 在 `Stop` 下 |
+| YOLO 检测 (`FORGE_MODE=yolo`) | ✅ | `.forge/config` 存在且内容正确 |
+| `.bat` YOLO 分支 (`if not errorlevel 1`) | ✅ | 修复已落地 |
+| `.yolo-pending/phase-exit` 创建 | ⚠️ **未创建** | 目录不存在 — 但原因正确（见下） |
+
+### 为什么 `.yolo-pending` 没创建 → 关键洞见
+
+```
+Phase 1 顺利跑完 → 无 block 文件存在
+                → Stop hook: "if not exist phase-exit-block && if not exist .verify-block → exit /b 0"
+                → 从未进入 YOLO 分支
+                → 不写 .yolo-pending/phase-exit
+                → agent 唯一续跑信号只剩散文
+                → 散文说 "Continue to the next Phase automatically"
+                → agent 实际说 "Invoke /dev-builder to continue"
+```
+
+**机器层是"负向门"（block bad stop），不是"正向驱动器"（trigger continue）。**
+它在"顺利跑完"的场景下无事可做。`phase-exit-guard` 的 YOLO 分支只在该有的场景（block 文件存在时放行）生效——那是削除停等，不是推动前进。
+
+### 对 Run #1 预测的终局验证
+
+| 原预测 | Run #1 | Run #2（机器层修后） | 结论 |
+|--------|--------|---------------------|------|
+| 乐观：小项目 + context 充裕 → prose 续跑成立 | ❌ 不成立 | ❌ 不成立 | **证据重复，确认散文不足** |
+| 悲观：即使跑完也是因为项目小 | ❌ 根本没跑完 | ❌ 根本没跑完 | 两个独立会话行为一致 |
+| 结论指向"需要能扛 context reset 的外层 driver" | ✅ 推论 | ✅ **验证** | 正式确证 |
+
+### 最终结论
+
+> **机器层修好了，但它修的不是续跑问题。** 它修的是"YOLO 下 block 文件导致错误停等"的问题 —— 那是必须修的 bug，但修完之后续跑问题原封未动。续跑依赖的散文在两次独立会话中**都不成立**。真正的续跑需要正向驱动机制。
+
+### 下一步
+
+设计并实现 YOLO 的**正向驱动器**（外层循环驱动 dev-builder Phase re-invoke），而不是依赖 skill 内散文。
