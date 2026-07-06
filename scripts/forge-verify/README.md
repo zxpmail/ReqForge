@@ -19,7 +19,7 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 | 4 | no-placeholders | grep TBD/FIXME in src/ | 所有项目 |
 | 5 | dev-map-fresh | .forge/dev-map.md 存在且已填充 | 所有项目 |
 | 6 | security-patterns | `eval` / `new Function` 轻量扫描（需 security-guidance.md） | 有 src/ 的项目 |
-| 7 | content-quality | 跨模型语义验证 — 用 LLM 检查输出内容是否满足任务要求 | 已配置 `.forge/content-verify.json` 的项目 |
+| 7 | content-quality | 四层结构化内容验证（L0 形状 → L1 合约 → L2 LLM → L3 分歧） | 已配置 `.forge/content-verify.json` 的项目 |
 
 ## 基线对比流程
 
@@ -33,9 +33,41 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 
 ---
 
-## 语义内容验证（可选）
+## 四层内容验证（可选，实验 F 架构）
 
-在 Phase Gate 的符号层检查（文件存在 / exit code）之外，`content-quality` 检查用 LLM 验证**产物内容是否确实满足任务要求**——这是实验 E 中验证过的跨模型语义共识方案的工程化实现。
+`content-quality` 检查用分层架构验证产物内容是否满足任务要求。架构来源于实验 F（blog 仓 `agent-determinism-illusions`，评论区 Alexey Spinov / Manuel Bruña 的分层建议）：
+
+```
+         ┌──────────────┐
+ 产物 →  │  Layer 0      │  形状/存在性
+         │  (确定性代码)  │  空文件？纯标点？占位符？零用例？
+         └──────┬───────┘
+                │ 通过        ┌──────────────┐
+                ├────────────→│  Layer 1      │  合约匹配
+                │             │  (确定性代码)  │  minLen/keywords/noKeywords
+                │             └──────┬───────┘
+                │ 通过              │ 通过
+                │                   ├────────────→┌──────────────┐
+                │                   │              │  Layer 2      │  LLM 瘦审查
+                │                   │              │  (语义充分性)  │  只处理确定性无法判断的残差
+                │                   │              └──────┬───────┘
+                │                   │  分歧 > 阈值        │ 全票一致
+                │                   ├──────────────────→┌──────────────┐
+                │                   │                   │  Layer 3      │  转人工 / 写报告
+                │                   │                   └──────────────┘
+                ↓                   ↓
+             ❌ 拒绝             ❌ 拒绝              ✅ 自动通过
+```
+
+### 实验数据（8 场景 + 30 样本验证）
+
+| 指标 | Layer 0/1（零成本） | Layer 2（LLM） |
+|------|-------------------|---------------|
+| 垃圾拦截率（P1 8 场景） | **100%**（4/4 垃圾在到达 LLM 前拦截） | — |
+| 垃圾拦截率（P4 30 样本） | **80%**（8/10 垃圾零成本拦截） | 剩余 2 个语义模糊样本 |
+| LLM 调用节省（P1） | **50%**（4/8 根本不调 LLM） | — |
+| LLM 调用节省（P4） | **33%**（10/30 不调 LLM） | — |
+| 确定性层假阳性 | **0%**（不误杀合法） | — |
 
 ### 配置
 
@@ -43,44 +75,54 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 
 ```json
 {
-  "task": "当前 Phase 的任务描述（如：实现用户注册 API，含参数校验 + 异常处理 + 测试）",
-  "files": ["src/api/register.ts", "tests/register.test.ts", "docs/api/register.md"]
+  "task": "当前 Phase 的任务描述",
+  "files": ["src/api/register.ts", "tests/register.test.ts"],
+  "contracts": {
+    "src/api/register.ts": {
+      "minLen": 100,
+      "keywords": ["register", "validate", "password"],
+      "noKeywords": ["TODO", "FIXME"]
+    }
+  },
+  "layer3": {
+    "divergence_threshold": 0.8,
+    "uncertain_output": ".forge/verify-uncertain.json"
+  }
 }
 ```
+
+- **`contracts`**（选填）：Layer 1 文件级合约。`minLen` 最小字符数，`keywords` 需含关键词（≥1/3 匹配即通过），`noKeywords` 禁用关键词。
+- **`layer3.divergence_threshold`**（选填，默认 0.8）：Layer 3 分歧阈值。当 N 次投票中最大比例低于此值 → UNCLEAR 转人工，不做多数决。
+- **`layer3.uncertain_output`**（选填）：UNCLEAR 结果写入路径。
 
 ### 运行
 
 ```bash
-pnpm forge-verify-content
+pnpm forge-verify-content          # 从 .forge/content-verify.json 读配置
+pnpm forge-verify-content --from-config  # 显式指定
 ```
 
-检查结果将逐文件显示 `PASS` / `REJECT` / `UNCLEAR`，并附带模型给出的判断理由（便于追溯）。未通过的检查可被 `forge-verify` 的 `content-quality` 项发现（前提是 `.forge/content-verify.json` 已配置）。
+逐文件输出各层判定结果：
+
+```
+  📄 src/api/register.ts
+  ❌ REJECT @ L3: REJECT (3/3 票)
+    └ L1: UNCLEAR — 含禁用关键词: FIXME
+    └ L2: [REJECT/REJECT/REJECT] PASS=0 REJ=3
+    └ L3: REJECT — REJECT (3/3 票)
+```
 
 ### 环境变量
 
 | 变量 | 说明 | 默认值 |
 |------|------|--------|
-| `ANTHROPIC_AUTH_TOKEN` | API token | — |
+| `ANTHROPIC_AUTH_TOKEN` | API token（必填） | — |
 | `ANTHROPIC_BASE_URL` | API 地址 | `https://api.deepseek.com` |
 | `ANTHROPIC_MODEL` | 模型名 | `deepseek-chat` |
-| `VERIFY_RUNS` | 每文件投票次数（抗温度 0 发散） | `3` |
+| `VERIFY_RUNS` | 每文件投票次数 | `3` |
 
-### 原理
+### 已知局限
 
-对应实验 E 的设计：符号层（Phase Gate / 零成本） → 语义验证层（LLM-judge / 每次 N 调用，默认 3 次投票） → 人工兜底（不确定场景）。提供了配置无关的 skip 行为和 async LLM 调用链路。
+跨模型语义验证（Layer 2）存在不可消除的精度-召回权衡。分层架构的作用不是消除这个权衡——它通过在 Layer 0/1 用确定性代码拦截明显垃圾，来**减少喂到 Layer 2 的样本量**。Layer 2 的权衡依然存在，但影响范围缩小了。
 
-### 已知局限（来自实验 E 实测）
-
-跨模型语义验证存在一个不可消除的权衡：**模型越强，假阳率越低，但误杀合法产物的比例同步上升。**
-
-| 模型 | 假阳率（垃圾被放行） | 误杀合法（好的被毙） | 说明 |
-|------|-------------------|-------------------|------|
-| qwen3:0.5b（弱模型） | 25% | 50% | 适合容忍少量垃圾的场景 |
-| gemma3:4.3b（中等） | 25% | 50% | 更稳，但边界相同 |
-| GLM-5.2 / DeepSeek（强模型） | 0% | **75%** | 不放垃圾但大量误杀 |
-
-没有免费午餐。选择什么强度的模型取决于工程上更能接受漏垃圾（假阳）还是误杀合法（误杀）。
-
-**建议：** 默认使用 3 次多数投票（`--runs 3`）抗温度 0 发散。如果误杀率过高，尝试切换弱模型并接受更高的假阳率；如果假阳率过高，切换强模型并为误杀准备人工复查通道。
-
-详细实验数据见 `github.com/zxpmail/blog` → `agent-determinism-illusions`。
+详细实验数据见 `github.com/zxpmail/blog` → `agent-determinism-illusions` → 实验 F + 终章补遗。

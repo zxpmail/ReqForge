@@ -218,8 +218,9 @@ function checkScope() {
 }
 
 function checkContentQuality() {
-  // 只做配置检查，实际验证由独立的 content-verify 脚本执行
-  // 因为需要 LLM API 调用（异步），不适合嵌入同步 checks 数组
+  // 配置检查，实际验证由独立的 content-verify 脚本执行（四层管道）
+  // 架构：L0 形状 → L1 合约 → L2 LLM 瘦审查 → L3 分歧转人工
+  // 详见 scripts/forge-verify/content-verify.mjs
   const configPath = join(ROOT, ".forge", "content-verify.json");
   if (!existsSync(configPath)) {
     return "skip — 未配置 .forge/content-verify.json，不执行语义验证";
@@ -228,8 +229,10 @@ function checkContentQuality() {
   if (!cfg.task || !cfg.files || cfg.files.length === 0) {
     return "skip — .forge/content-verify.json 缺少 task/files 字段";
   }
-  // 配置有效，提示用户运行独立的验证脚本
-  return `已配置 (${cfg.files.length} 文件)。运行 pnpm forge-verify-content 执行语义验证`;
+  const contracts = cfg.contracts || {};
+  const contractFiles = Object.keys(contracts).length;
+  const l3Config = cfg.layer3 ? "L3分歧检测" : "无分歧配置";
+  return `已配置 (${cfg.files.length} 文件, ${contractFiles} 份合约, ${l3Config})。运行 pnpm forge-verify-content 执行四层验证`;
 }
 
 // --- Run all checks ---
