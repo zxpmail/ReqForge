@@ -33,9 +33,13 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 
 ---
 
-## 四层内容验证（可选，实验 F 架构）
+## 内容验证（可选，双模式）
 
-`content-quality` 检查用分层架构验证产物内容是否满足任务要求。架构来源于实验 F（blog 仓 `agent-determinism-illusions`，评论区 Alexey Spinov / Manuel Bruña 的分层建议）：
+`content-quality` 检查支持两种管道：
+
+### 模式 A：传统四层（无证据门）
+
+产物内容逐文件通过 L0→L0e→L1→L2→L3 管道。适用于不需要证据文件的工作流。
 
 ```
          ┌──────────────┐
@@ -43,21 +47,70 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
          │  (确定性代码)  │  空文件？纯标点？占位符？零用例？
          └──────┬───────┘
                 │ 通过        ┌──────────────┐
-                ├────────────→│  Layer 1      │  合约匹配
-                │             │  (确定性代码)  │  minLen/keywords/noKeywords
+                ├────────────→│  Layer 0e     │  Re-Stat（复述检测）
+                │             │  (确定性代码)  │  未来时态/桩代码/元评论
                 │             └──────┬───────┘
                 │ 通过              │ 通过
                 │                   ├────────────→┌──────────────┐
-                │                   │              │  Layer 2      │  LLM 瘦审查
-                │                   │              │  (语义充分性)  │  只处理确定性无法判断的残差
+                │                   │              │  Layer 1      │  合约匹配
+                │                   │              │  (确定性代码)  │  minLen/keywords/noKeywords
                 │                   │              └──────┬───────┘
-                │                   │  分歧 > 阈值        │ 全票一致
-                │                   ├──────────────────→┌──────────────┐
-                │                   │                   │  Layer 3      │  转人工 / 写报告
-                │                   │                   └──────────────┘
-                ↓                   ↓
+                │                   │ 通过              │ 通过
+                │                   │                    ├────────→┌──────────────┐
+                │                   │                    │         │  Layer 2     │  LLM 瘦审查
+                │                   │                    │         │  (语义充分)  │
+                │                   │                    │         └──────┬───────┘
+                │                   │                    │  分歧>阈值     │全票一致
+                │                   │                    ├─────────────→┌──────────────┐
+                │                   │                    │              │  Layer 3     │  分歧/转人工
+                │                   │                    │              └──────────────┘
+                ↓                   ↓                    ↓
              ❌ 拒绝             ❌ 拒绝              ✅ 自动通过
 ```
+
+### 模式 B：证据门管道（推荐，实验通道对比 + 合约验证结论）
+
+当配置了 `evidence_gates` 时，产物文件通过 L0→L0e→L1 后进入证据门管道，替代传统的 L2 自由文本 LLM。
+
+```
+         L0 → L0e → L1 (同上)
+              │ 通过
+         ┌────▼──────────────┐
+         │  Evidence Gate     │  证据文件存在且非空（确定性，零成本）
+         │  (check filesystem)│  对应实验 Phase 1 Channel B
+         └───────┬───────────┘
+                 │ pass?
+            ┌────┴────┐
+          ╱ NO        YES
+         ❌ 拒绝       │
+                 ┌────▼──────────────┐
+                 │  C1 合约正则       │  逐需求 regex 匹配证据内容（确定性，零成本）
+                 │  (确定性的)         │  对应实验 Phase 2 C1
+                 └───────┬───────────┘
+                         │ pass?
+                    ┌────┴────┐
+                  ╱ NO        YES  ──────→  L3
+                 ❌ 拒绝      │
+                              │ 若 type=llm 需求存在或 C1 UNCLEAR
+                         ┌────▼──────────────┐
+                         │  C2 逐需求 LLM     │  逐条判断证据是否满足需求（有成本）
+                         │  (per-req LLM)     │  对应实验 Phase 2 C2，检测率 100%
+                         └───────┬───────────┘
+                                 │ pass?
+                            ┌────┴────┐
+                          ╱ NO        YES ──→ L3
+                         ❌ 拒绝
+
+         L3 分歧检测（共享，所有路径最终汇聚）
+```
+
+**实验结论（2026-07-09, 19 场景, deepseek-v4-flash）：**
+- C0（自由文本 LLM，旧 L2）：42.9% 准确率 — 被 agent 话术说服
+- C1（合约正则）：85.7%，检测率 80% — 数值约束近零误报，但有"否定盲区"
+- C2（逐需求 LLM）：85.7%，**检测率 100%** — 逐需求判断防止整体被说服
+- Evidence Gate + C1 + C2 组合：**91.7% 准确率**，唯一共享盲区是 DPI 语义缺口
+
+详见 blog 仓 `agent-determinism-illusions` → `channel-comparison-experiment.md` + `channel-comparison-experiment-phase2.md`
 
 ### 实验数据（8 场景 + 30 样本验证）
 
@@ -92,6 +145,36 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 ```
 
 - **`contracts`**（选填）：Layer 1 文件级合约。`minLen` 最小字符数，`keywords` 需含关键词（≥1/3 匹配即通过），`noKeywords` 禁用关键词。
+- **`evidence_gates`**（选填，推荐）：证据门管道。配置后替代 L2 自由文本 LLM，走 `EG → C1 → C2` 管道。
+
+  ```json
+  "evidence_gates": {
+    "evidence_dir": ".skillgate/evidence",
+    "requirements": [
+      {
+        "id": "REQ-1",
+        "desc": "IP 级别限流",
+        "evidence_file": "test-output.txt",
+        "pattern": "(?i)(RateLimiter.*IP|isRateLimited.*IP)",
+        "type": "regex"
+      },
+      {
+        "id": "REQ-2",
+        "desc": "write-invalidation 语义判断",
+        "evidence_file": "diff-review.md",
+        "type": "llm"
+      }
+    ]
+  }
+  ```
+
+  - **`evidence_dir`**：证据文件目录，相对于项目根或绝对路径。
+  - **`requirements[].pattern`**：C1 合约正则的 JS RegExp 模式。支持 `(?i)` 前缀转换为 `i` 标志。
+  - **`requirements[].type`**：
+    - `"regex"` → 走 C1（合约正则，确定性，零成本）。适合数值约束（覆盖率≥85%）、格式固定的文本（lint errors）、功能名匹配。
+    - `"llm"` → 走 C2（逐需求 LLM，有成本）。适合语义判断（"是否真正实现了 write-invalidation"）。
+  - **推荐策略**：数值约束和固定格式用 regex，语义判断用 llm。同一批需求可以混合两种 type，先过 C1 再过 C2。
+
 - **`layer3.divergence_threshold`**（选填，默认 0.8）：Layer 3 分歧阈值。当 N 次投票中最大比例低于此值 → UNCLEAR 转人工，不做多数决。
 - **`layer3.uncertain_output`**（选填）：UNCLEAR 结果写入路径。
 

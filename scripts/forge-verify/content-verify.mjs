@@ -1,16 +1,30 @@
 #!/usr/bin/env node
 /**
- * forge-verify content-verify — 四层结构化内容验证
+ * forge-verify content-verify — 结构化内容验证管道
  *
- * 架构（实验 F，见 blog 仓 agent-determinism-illusions）：
+ * 架构（实验 F + 通道对比 + 合约验证，见 blog 仓 agent-determinism-illusions）：
  *
- *   Layer 0  形状/存在性 → 确定性代码（正则、长度、关键字黑名单）  零成本
- *   Layer 0e Re-Stat     → 复述检测（nexus-lab-zen 设计）          零成本
- *                          zero-verified = RED：无实际执行结果的输出必须拒绝
- *                          识别未来时态密度/桩代码/元评论三类模式
- *   Layer 1  期望匹配   → 文件级合约（minLen, keywords, noKeywords）  零成本
- *   Layer 2  语义充分性 → LLM 瘦 prompt（只处理残差）              有成本
- *   Layer 3  分歧/残差  → 分歧度检测 → 转人工队列                  运维成本
+ *   ┌─ 基础管道（所有文件）──────────────┐
+ *   │  Layer 0  形状/存在性 （确定性）    │  零成本
+ *   │  Layer 0e Re-Stat   （确定性）      │  零成本
+ *   │  Layer 1  文件级合约 （确定性）      │  零成本
+ *   └────────────────────────────────────┘
+ *
+ *   ┌─ 证据门管道（配置 evidence_gates 时）┐
+ *   │  Evidence Gate - 证据存在检查（确定性）│  零成本
+ *   │  Contract Regex  - 逐需求正则（确定性）│  零成本
+ *   │  Per-Requirement LLM - 逐需求 LLM    │  有成本
+ *   ├─ 后备管道（无 evidence_gates 时）─────┤
+ *   │  Layer 2  LLM 语义 （自由文本）       │  有成本
+ *   └──────────────────────────────────────┘
+ *
+ *   Layer 3  分歧检测（所有路径共享）        │  运维成本
+ *
+ * 实验结论（2026-07-09）：
+ *   - 自由文本 LLM（C0）检测率 20%：被 agent 话术说服
+ *   - 合约正则（C1）  检测率 80%：数值约束近零误报，但存在"否定盲区"
+ *   - 逐需求 LLM（C2）检测率 100%：唯一补 DPI 缺口的机制
+ *   详见 blog 仓 channel-comparison-experiment.md + channel-comparison-experiment-phase2.md
  *
  * 用法：
  *   node scripts/forge-verify/content-verify.mjs [--task "..."] [--files f1,f2] [--runs 3]
@@ -23,22 +37,28 @@
  *     "model": "",                                 // 模型覆盖（选填）
  *     "contracts": {                                // Layer 1 合约（选填）
  *       "src/auth.ts": {
- *         "minLen": 100,                           // 最小字符数
- *         "keywords": ["login", "password"],       // 需含关键词
- *         "noKeywords": ["TODO", "FIXME"]          // 禁止关键词
+ *         "minLen": 100,
+ *         "keywords": ["login", "password"],
+ *         "noKeywords": ["TODO", "FIXME"]
  *       }
  *     },
- *     "layer3": {                                  // Layer 3 分歧处理（选填）
- *       "divergence_threshold": 0.8,               // 分歧阈值，低于此→UNCLEAR
+ *     "evidence_gates": {                          // 证据门管道（选填，推荐）
+ *       "evidence_dir": ".skillgate/evidence",     // 证据文件目录
+ *       "requirements": [
+ *         {
+ *           "id": "REQ-1",
+ *           "desc": "IP 级别限流",
+ *           "evidence_file": "test-output.txt",
+ *           "pattern": "(?i)(RateLimiter.*IP|isRateLimited.*IP)",  // C1 正则
+ *           "type": "regex"                        // 或 "llm"
+ *         }
+ *       ]
+ *     },
+ *     "layer3": {
+ *       "divergence_threshold": 0.8,
  *       "uncertain_output": ".forge/verify-uncertain.json"
  *     }
  *   }
- *
- * 实验 F 背景：
- *   分层架构验证（8 场景 + 30 样本）：
- *   - P1 8 场景: LLM 调用节省 50%, 垃圾 100% Layer 0/1 拦截
- *   - P4 30 样本: LLM 调用节省 33%, 垃圾 80% 零成本拦截
- *   详见 blog 仓 agent-determinism-illusions/scripts/forge-verify-layered-prototype.py
  *
  * 退出码：
  *   0 — 全部通过
@@ -386,8 +406,234 @@ function layer3Check(verdicts, divergenceThreshold) {
            reason: `${finalVerdict} (${Math.max(passCnt, rejectCnt)}/${n} 票)` };
 }
 
+// ====== Evidence Gate — 证据文件存在性检查 ======
+// 纯函数：同一文件系统状态 → 同一结论。无模型，零成本。
+// 对应实验 Phase 1 Channel B：文件存在且非空 → PASS
+function evidenceGateCheck(evidenceDir, requirements) {
+  if (!requirements || requirements.length === 0) {
+    return { verdict: "PASS", layer: "EvidenceGate", check: "EG_no_reqs", reason: "" };
+  }
+
+  const missing = [];
+  const empty = [];
+
+  for (const req of requirements) {
+    const filePath = join(evidenceDir, req.evidence_file);
+    try {
+      const stat = existsSync(filePath) ? null : "missing";
+      if (stat === "missing") {
+        missing.push(`${req.id}: ${req.evidence_file}`);
+        continue;
+      }
+      const size = readFileSync(filePath).length;
+      if (size === 0) {
+        empty.push(`${req.id}: ${req.evidence_file}`);
+      }
+    } catch {
+      missing.push(`${req.id}: ${req.evidence_file}`);
+    }
+  }
+
+  if (missing.length > 0 && empty.length > 0) {
+    return { verdict: "REJECT", layer: "EvidenceGate", check: "EG_missing_and_empty",
+             reason: `缺失: ${missing.join(", ")}; 空: ${empty.join(", ")}` };
+  }
+  if (missing.length > 0) {
+    return { verdict: "REJECT", layer: "EvidenceGate", check: "EG_missing",
+             reason: `证据文件缺失: ${missing.join(", ")}` };
+  }
+  if (empty.length > 0) {
+    return { verdict: "REJECT", layer: "EvidenceGate", check: "EG_empty",
+             reason: `证据文件为空: ${empty.join(", ")}` };
+  }
+
+  return { verdict: "PASS", layer: "EvidenceGate", check: "EG_pass",
+           reason: `${requirements.length} 个证据文件全部存在且非空` };
+}
+
+// ====== C1 — 合约正则检查 ======
+// 对每个需求读对应证据文件内容，regex 匹配。无模型，零成本。
+// 对应实验 Phase 2 C1：逐需求正则匹配
+function contractRegexCheck(evidenceDir, requirements) {
+  if (!requirements || requirements.length === 0) {
+    return { verdict: "PASS", layer: "C1", check: "C1_no_reqs", reason: "" };
+  }
+
+  // 只检查 type=regex 的需求
+  const regexReqs = requirements.filter(r => r.type === "regex" && r.pattern);
+  if (regexReqs.length === 0) {
+    return { verdict: "PASS", layer: "C1", check: "C1_no_regex_reqs", reason: "" };
+  }
+
+  // 将 PCRE 风格 (?i) 转换为 JS RegExp flags
+  function toJsRegex(pattern) {
+    let flags = "";
+    let p = pattern;
+    while (/^\(\?([ims]+)\)/.test(p)) {
+      const m = p.match(/^\(\?([ims]+)\)/);
+      flags += m[1];
+      p = p.slice(m[0].length);
+    }
+    // 去重、排序
+    flags = [...new Set(flags.split(""))].sort().join("");
+    return { pattern: p, flags };
+  }
+
+  const failures = [];
+  const passes = [];
+
+  for (const req of regexReqs) {
+    const filePath = join(evidenceDir, req.evidence_file);
+    let content;
+    try {
+      content = readFileSync(filePath, "utf-8");
+    } catch {
+      failures.push(`${req.id}: 证据文件 ${req.evidence_file} 不可读`);
+      continue;
+    }
+
+    try {
+      const { pattern, flags } = toJsRegex(req.pattern);
+      const re = new RegExp(pattern, flags);
+      if (re.test(content)) {
+        passes.push(req.id);
+      } else {
+        failures.push(`${req.id}: 模式 /${pattern}/ 在 ${req.evidence_file} 中未匹配`);
+      }
+    } catch (e) {
+      failures.push(`${req.id}: 正则错误 ${e.message}`);
+    }
+  }
+
+  if (failures.length === 0) {
+    return { verdict: "PASS", layer: "C1", check: "C1_pass",
+             reason: `${passes.length}/${regexReqs.length} 合约正则通过` };
+  }
+
+  // 全部失败 → REJECT；部分失败 → UNCLEAR（传 C2）
+  if (failures.length === regexReqs.length) {
+    return { verdict: "REJECT", layer: "C1", check: "C1_all_fail",
+             reason: `全部 ${regexReqs.length} 条合约正则未通过: ${failures.join("; ")}` };
+  }
+
+  return { verdict: "UNCLEAR", layer: "C1", check: "C1_partial",
+           reason: `${passes.length}/${regexReqs.length} 通过; 未通过: ${failures.join("; ")}` };
+}
+
+// ====== C2 — 逐需求 LLM 检查 ======
+// 对每个需求逐条调用 LLM，判断证据内容是否满足该需求。
+// 对应实验 Phase 2 C2：逐条判断防止被整体叙述说服
+const C2_PROMPT = `You are a QA inspector checking ONE specific requirement.
+
+Requirement: {req_desc}
+
+Evidence file ({evidence_file}):
+\`\`\`
+{content}
+\`\`\`
+
+Does this evidence PROVE that the requirement is met? Do not accept claims like
+"all tests passed" without specific test names. Look for concrete evidence.
+
+Respond in JSON only:
+{"pass": true/false, "reason": "one sentence"}`;
+
+async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, apiConfig) {
+  if (!requirements || requirements.length === 0) {
+    return { verdict: "PASS", layer: "C2", check: "C2_no_reqs", reason: "" };
+  }
+
+  // 只检查 type=llm 的需求（以及 regex 未覆盖的需求可选）
+  const llmReqs = requirements.filter(r => r.type === "llm");
+  if (llmReqs.length === 0) {
+    return { verdict: "PASS", layer: "C2", check: "C2_no_llm_reqs", reason: "" };
+  }
+
+  const { baseUrl, token } = apiConfig;
+  const results = [];
+
+  for (const req of llmReqs) {
+    const filePath = join(evidenceDir, req.evidence_file);
+    let content;
+    try {
+      content = readFileSync(filePath, "utf-8").trim().slice(0, 2000);
+    } catch {
+      results.push({ req_id: req.id, pass: false, reason: "evidence file missing or unreadable" });
+      continue;
+    }
+
+    if (content.length === 0) {
+      results.push({ req_id: req.id, pass: false, reason: "evidence file empty" });
+      continue;
+    }
+
+    const prompt = C2_PROMPT
+      .replace("{req_desc}", req.desc)
+      .replace("{evidence_file}", req.evidence_file)
+      .replace("{content}", content);
+
+    // N 次投票
+    const votes = [];
+    for (let i = 0; i < nRuns; i++) {
+      try {
+        const resp = await fetch(`${baseUrl}/v1/chat/completions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            model,
+            max_tokens: 128,
+            temperature: 0.0,
+            messages: [{ role: "user", content: prompt }],
+          }),
+        });
+
+        const body = await resp.json();
+        const text = (body?.choices?.[0]?.message?.content || "").trim();
+
+        let parsed;
+        try {
+          parsed = JSON.parse(text);
+        } catch {
+          const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+          try { parsed = JSON.parse(cleaned); } catch { votes.push(false); continue; }
+        }
+        votes.push(parsed.pass === true);
+      } catch {
+        votes.push(false);
+      }
+    }
+
+    const passCount = votes.filter(Boolean).length;
+    const pass = passCount > nRuns / 2;
+    results.push({
+      req_id: req.id,
+      pass,
+      pass_count: passCount,
+      nRuns,
+      reason: pass ? "majority passes" : `majority rejects (${passCount}/${nRuns})`,
+    });
+  }
+
+  const passed = results.filter(r => r.pass).length;
+  const failed = results.filter(r => !r.pass).length;
+
+  if (failed === 0) {
+    return { verdict: "PASS", layer: "C2", check: "C2_pass",
+             reason: `全部 ${results.length} 条需求通过 LLM 判断` };
+  }
+  if (passed === 0) {
+    return { verdict: "REJECT", layer: "C2", check: "C2_all_fail",
+             reason: `全部 ${results.length} 条需求未通过: ${results.filter(r => !r.pass).map(r => r.req_id).join(", ")}` };
+  }
+  return { verdict: "UNCLEAR", layer: "C2", check: "C2_partial",
+           reason: `${passed}/${results.length} 通过; 未通过: ${results.filter(r => !r.pass).map(r => r.req_id).join(", ")}` };
+}
+
 // ====== 完整管道 ======
-async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, fileContract, apiConfig) {
+async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, fileContract, apiConfig, evidenceGates) {
   // 读取文件
   let content;
   try {
@@ -425,21 +671,71 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
              reason: l1.reason, stages };
   }
 
-  // Layer 2 — LLM 语义审查
-  const l2 = await layer2Check(content, task, model, nRuns, apiConfig);
-  const passCnt = l2.verdicts.filter(v => v === "PASS").length;
-  const rejectCnt = l2.verdicts.filter(v => v === "REJECT").length;
-  stages.push({
-    layer: "L2",
-    verdicts: l2.verdicts,
-    passCnt,
-    rejectCnt,
-    nRuns: l2.verdicts.length,
-    reasons: l2.reasons,
-  });
+  // ── 分流：证据门管道 vs 传统 LLM ──
+  let verdictsForL3;
+  let finalStage = null;
 
-  // Layer 3 — 分歧检测
-  const l3 = layer3Check(l2.verdicts, divergenceThreshold);
+  if (evidenceGates && evidenceGates.requirements && evidenceGates.requirements.length > 0) {
+    const evidenceDir = evidenceGates.evidence_dir
+      ? (evidenceGates.evidence_dir.startsWith("/") || /^[A-Za-z]:[/\\]/.test(evidenceGates.evidence_dir)
+          ? evidenceGates.evidence_dir
+          : join(ROOT, evidenceGates.evidence_dir))
+      : join(dirname(filePath), ".skillgate", "evidence");
+
+    // Evidence Gate — 文件存在性检查
+    const eg = evidenceGateCheck(evidenceDir, evidenceGates.requirements);
+    stages.push({ layer: "EvidenceGate", verdict: eg.verdict, check: eg.check, reason: eg.reason });
+    if (eg.verdict === "REJECT") {
+      return { file: filePath, verdict: "REJECT", layer: "EvidenceGate", check: eg.check,
+               reason: eg.reason, stages };
+    }
+
+    // C1 — 合约正则（确定性）
+    const c1 = contractRegexCheck(evidenceDir, evidenceGates.requirements);
+    stages.push({ layer: "C1", verdict: c1.verdict, check: c1.check, reason: c1.reason });
+    if (c1.verdict === "REJECT") {
+      return { file: filePath, verdict: "REJECT", layer: "C1", check: c1.check,
+               reason: c1.reason, stages };
+    }
+
+    // C1 UNCLEAR（部分通过）或 C1 PASS 但有 type=llm 的需求 → 传 C2
+    const llmReqs = evidenceGates.requirements.filter(r => r.type === "llm");
+    const needC2 = (c1.verdict === "UNCLEAR" || llmReqs.length > 0);
+
+    if (needC2) {
+      const c2 = await perRequirementLlmCheck(evidenceDir, evidenceGates.requirements, model, nRuns, apiConfig);
+      stages.push({ layer: "C2", verdict: c2.verdict, check: c2.check, reason: c2.reason });
+      finalStage = c2;
+    } else {
+      finalStage = { verdict: "PASS", layer: "C1_to_L3" };
+    }
+
+    // 构造 L3 兼容的 verdicts 数组
+    if (finalStage.verdict === "PASS") {
+      verdictsForL3 = ["PASS", "PASS", "PASS"];
+    } else if (finalStage.verdict === "REJECT") {
+      verdictsForL3 = ["REJECT", "REJECT", "REJECT"];
+    } else {
+      verdictsForL3 = ["UNCLEAR"];
+    }
+  } else {
+    // 传统管道：Layer 2 — LLM 语义审查
+    const l2 = await layer2Check(content, task, model, nRuns, apiConfig);
+    const passCnt = l2.verdicts.filter(v => v === "PASS").length;
+    const rejectCnt = l2.verdicts.filter(v => v === "REJECT").length;
+    stages.push({
+      layer: "L2",
+      verdicts: l2.verdicts,
+      passCnt,
+      rejectCnt,
+      nRuns: l2.verdicts.length,
+      reasons: l2.reasons,
+    });
+    verdictsForL3 = l2.verdicts;
+  }
+
+  // Layer 3 — 分歧检测（所有路径共享）
+  const l3 = layer3Check(verdictsForL3, divergenceThreshold);
   stages.push({ layer: "L3", verdict: l3.verdict, check: l3.check, reason: l3.reason });
 
   return {
@@ -448,8 +744,11 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
     layer: l3.layer,
     check: l3.check,
     reason: l3.reason,
-    confidence: Math.round(Math.max(passCnt, rejectCnt) / l2.verdicts.length * 100),
-    votes: l2.verdicts,
+    confidence: Math.round(Math.max(
+      verdictsForL3.filter(v => v === "PASS").length,
+      verdictsForL3.filter(v => v === "REJECT").length,
+    ) / verdictsForL3.length * 100),
+    votes: verdictsForL3,
     stages,
   };
 }
@@ -467,6 +766,7 @@ function parseConfig() {
   let model = "";
   let runs = DEFAULT_RUNS;
   let contracts = {};
+  let evidenceGates = null;
   let divergenceThreshold = DEFAULT_DIVERGENCE_THRESHOLD;
   let uncertainOutput = DEFAULT_UNCERTAIN_OUTPUT;
 
@@ -481,6 +781,7 @@ function parseConfig() {
     files = cfg.files || [];
     model = cfg.model || "";
     contracts = cfg.contracts || {};
+    evidenceGates = cfg.evidence_gates || null;
     if (cfg.layer3) {
       if (cfg.layer3.divergence_threshold != null) divergenceThreshold = cfg.layer3.divergence_threshold;
       if (cfg.layer3.uncertain_output) uncertainOutput = cfg.layer3.uncertain_output;
@@ -494,6 +795,7 @@ function parseConfig() {
       files = cfg.files || [];
       model = cfg.model || "";
       contracts = cfg.contracts || {};
+      evidenceGates = cfg.evidence_gates || null;
       if (cfg.layer3) {
         if (cfg.layer3.divergence_threshold != null) divergenceThreshold = cfg.layer3.divergence_threshold;
         if (cfg.layer3.uncertain_output) uncertainOutput = cfg.layer3.uncertain_output;
@@ -525,10 +827,15 @@ function parseConfig() {
   const effectiveModel = model || process.env.ANTHROPIC_MODEL || "deepseek-v4-flash";
 
   // 确保 files 是绝对路径
-  const resolvedFiles = files.map(f => (f.startsWith("/") ? join(ROOT, f.replace(/^\//, "")) : join(ROOT, f)));
+  const resolvedFiles = files.map(f => {
+    // 已是绝对路径（Unix / 或 Windows X:\ 或 C:/）
+    if (f.startsWith("/") || /^[A-Za-z]:[/\\]/.test(f)) return f;
+    return join(ROOT, f);
+  });
 
   return { task, files: resolvedFiles, rawFiles: files, model: effectiveModel, runs,
-           divergenceThreshold, uncertainOutput, contracts, apiConfig: { baseUrl, token } };
+           divergenceThreshold, uncertainOutput, contracts, evidenceGates,
+           apiConfig: { baseUrl, token } };
 }
 
 // ====== 主函数 ======
@@ -544,16 +851,31 @@ async function main() {
     process.exit(2);
   }
 
-  console.log(`\n🔍 forge-verify: content-verify — 四层结构化验证`);
+  const hasEvidenceGates = cfg.evidenceGates && cfg.evidenceGates.requirements && cfg.evidenceGates.requirements.length > 0;
+  const hasLlmReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "llm");
+  const hasRegexReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "regex");
+
+  console.log(`\n🔍 forge-verify: content-verify — ${hasEvidenceGates ? "证据门管道" : "结构化验证"}`);
   console.log(`  模型: ${cfg.model}`);
   console.log(`  任务: ${cfg.task.slice(0, 80)}${cfg.task.length > 80 ? "..." : ""}`);
   console.log(`  文件: ${cfg.rawFiles.length > 0 ? cfg.rawFiles.join(", ") : "(无)"}`);
   console.log(`  投票: ${cfg.runs} 次 | 分歧阈值: ${cfg.divergenceThreshold}`);
+  if (hasEvidenceGates) {
+    console.log(`  证据门合约: ${cfg.evidenceGates.requirements.length} 条需求`);
+    console.log(`    - 正则检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "regex").length} 条`);
+    console.log(`    - LLM 检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "llm").length} 条`);
+  }
   console.log(`  ─管道─`);
   console.log(`    L0  形状检查   (空/标点/占位符/零用例) — 零成本`);
   console.log(`    L0e Re-Stat   (复述检测: 承诺时态/桩代码/元评论) — 零成本`);
   console.log(`    L1  合约匹配   (minLen/keywords/blacklist) — 零成本`);
-  console.log(`    L2  LLM 语义   (瘦prompt, 只问残差)`);
+  if (hasEvidenceGates) {
+    console.log(`    EG  证据门      (文件存在且非空) — 零成本`);
+    if (hasRegexReqs) console.log(`    C1  合约正则    (逐需求regex匹配证据内容) — 零成本`);
+    if (hasLlmReqs)  console.log(`    C2  逐需求LLM   (逐条判断证据是否满足需求)`);
+  } else {
+    console.log(`    L2  LLM 语义   (瘦prompt, 只问残差)`);
+  }
   console.log(`    L3  分歧检测   (maxFrac < ${cfg.divergenceThreshold} → UNCLEAR 转人工)`);
   console.log(`  ──────`);
 
@@ -573,7 +895,7 @@ async function main() {
     console.log(`\n  📄 ${relativePath}`);
 
     const r = await layeredVerify(fullPath, cfg.task, cfg.model, cfg.runs,
-                                  cfg.divergenceThreshold, fileContract, cfg.apiConfig);
+                                  cfg.divergenceThreshold, fileContract, cfg.apiConfig, cfg.evidenceGates);
     results.push(r);
 
     // 输出
@@ -584,7 +906,8 @@ async function main() {
 
     if (r.stages) {
       for (const s of r.stages) {
-        if (s.verdict === "PASS" || s.check?.startsWith("L0_pass") || s.check?.startsWith("L1_pass") || s.check?.startsWith("L1_no_contract")) continue;
+        if (s.verdict === "PASS" || s.check?.startsWith("L0_pass") || s.check?.startsWith("L1_pass") || s.check?.startsWith("L1_no_contract") || s.check?.startsWith("EG_pass")) continue;
+        if (s.check?.startsWith("C1_pass") || s.check?.startsWith("C2_pass")) continue;
         if (s.verdicts) {
           // L2 阶段
           const vStr = s.verdicts.join("/");
@@ -614,7 +937,11 @@ async function main() {
 
   console.log(`\n  ─── 结果 ───`);
   console.log(`  通过: ${passed}  拒绝: ${rejected}  不确定: ${uncertain}`);
-  console.log(`  分层节省: L0+L1 拦截 = ${results.filter(r => r.layer === "L0" || r.layer === "L1").length} 文件免于 LLM 调用`);
+  const llmSaved = results.filter(r =>
+    r.layer === "L0" || r.layer === "L0e" || r.layer === "L1" ||
+    r.layer === "EvidenceGate" || r.layer === "C1"
+  ).length;
+  console.log(`  分层节省: 确定性层拦截 = ${llmSaved} 文件免于 LLM 调用`);
 
   // 输出 UNCLEAR 报告
   if (uncertainResults.length > 0) {
