@@ -1,7 +1,7 @@
 #!/bin/sh
-# BeforeCommand: block agent stop while .forge/phase-exit-block exists (Ralph-style phase completion)
-# Agent writes the file when Phase/DEV-PLAN acceptance is incomplete; removes it when truly done.
-# YOLO: log to .yolo-pending instead of blocking (same pattern as stop-gate)
+# Stop hook: block agent stop while .forge/phase-exit-block or .forge/.verify-block exists (Ralph-style phase completion)
+# Agent writes phase-exit-block when Phase/DEV-PLAN acceptance is incomplete; forge-verify CLI writes .verify-block on new failures.
+# Wired to the Claude Code `Stop` lifecycle event. YOLO: log to .yolo-pending instead of blocking (same pattern as stop-gate).
 
 is_yolo_mode() {
   [ -f "$CLAUDE_PROJECT_DIR/.forge/config" ] && grep -qi "^FORGE_MODE=yolo" "$CLAUDE_PROJECT_DIR/.forge/config" 2>/dev/null && return 0

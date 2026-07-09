@@ -17,6 +17,20 @@
         - Follow the existing codebase style — don't force your own preferences
         - YAGNI: Don't write code for hypothetical future requirements
 
+    [CSS Sanity Check]
+        AI-generated CSS has blind spots — it looks right in code but renders wrong. Run this check before any UI Phase verification (tests, build, QA, or commit). Scan for these common bugs:
+
+        - `writing-mode` set to anything other than `horizontal-tb`? → likely accidental vertical text
+        - Single `padding` / `margin` > 64px? → audit if intentional (could be layout-breaking whitespace)
+        - `word-break: break-all` on non-CJK text? → likely breaking English words mid-word
+        - `flex-direction: column` on a container with inline-style children? → wrong axis, likely meant row
+        - `gap` > 48px? → can create unreasonable whitespace in mobile view
+        - Container inside flex context without `min-width: 0`? → risk of child collapsing to zero width
+        - Fixed width > 375px without horizontal scroll handling? → mobile overflow
+        - `position: absolute` / `fixed` without explicit `top`/`left`/`transform`? → element likely off-screen
+
+        Run this check before any UI commit. Fix what fails. If uncertain, ask the user to verify in browser.
+
     [Project Structure Standards]
         Project code goes in a subfolder named after the project, not flat in the root. The root directory only holds planning documents, design resources, and framework definition directories.
 
@@ -150,6 +164,7 @@
         - [x] Empty state (no-data state has guidance)
         - [x] Basic input validation (required fields, format)
         - [x] No sensitive information hardcoded
+        - [x] **UI Phase**: CSS Sanity Check passed (see [CSS Sanity Check] above)
 
     [Modification Discipline]
         Before every code change, execute:

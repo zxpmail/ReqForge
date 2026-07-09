@@ -34,11 +34,13 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 | `check-evolution` | SessionStart | **Part 0**: inject `forge-bootstrap.md` iron laws. **Part 1**: if `feedback/FEEDBACK-INDEX.md` has entries → mandatory evolution-runner. **Part 2**: Product-Spec / DEV-PLAN / code state + routing (incl. HARD-GATE hints). Resolves bootstrap + feedback paths for Claude, Cursor, OpenCode, and `core/` framework repo. |
 
 ### Stop / phase hooks
+> **Wired to the Claude Code `Stop` lifecycle event.** These gates emit `{"decision":"block"}` (exit 0) to prevent the agent from stopping. **Claude-Code-only for now:** opencode has no native `Stop` hook (open feature request), cursor's real schema is `hooks.json`/`onStop` (adapter rewrite needed), gemini-cli has no hooks. Do NOT add fake `Stop`/`BeforeCommand` wiring for those clients — see `.forge/deferred-ideas.md`.
+
 | Name | Trigger | Purpose |
 |------|---------|---------|
-| `phase-exit-guard` | BeforeCommand | Block stop while `.forge/phase-exit-block` exists (Ralph-style Phase completion) |
-| `stop-gate` | BeforeCommand | Block stop when code changed but not reviewed |
-| `retry-gate` | BeforeCommand | Block proceed when `.forge/.retry-counter.json` is `escalated` (max retries exceeded) |
+| `phase-exit-guard` | Stop | Block stop while `.forge/phase-exit-block` or `.forge/.verify-block` exists (Ralph-style Phase completion + forge-verify failures) |
+| `stop-gate` | Stop | Block stop when code changed but not reviewed (reads `.claude/.needs-review`) |
+| `retry-gate` | Stop | Block proceed when `.forge/.retry-counter.json` is `escalated` (max retries exceeded) |
 
 ### Composite hooks
 | Name | Trigger | Delegates to |

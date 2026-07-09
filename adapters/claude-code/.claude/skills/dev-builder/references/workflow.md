@@ -379,10 +379,29 @@
     All user confirmation gates switch to async write mode for 🟢/🟡 actions:
         Report the four-step verification results to the file, mark Phase as complete.
 
-    **Step 5 (Force Stop)** -> Write `changes/<phase>/checkpoint.md`:
+    **Step 5 (Phase Handoff)** -> Write `changes/<phase>/checkpoint.md`:
         Record current Phase status, artifact paths, and next Phase name.
-        Continue to the next Phase automatically.
         The async files serve as a run log for later review and feed the evolution engine.
+
+    **Step 5a — Write .yolo-continue signal**:
+        Write `.forge/.yolo-continue` as JSON:
+        ```json
+        {"completedPhase": "Phase N", "nextPhase": "Phase N+1", "timestamp": "<ISO-8601>"}
+        ```
+        This file is the machine-readable handoff signal for the external `yolo-driver` script.
+        The external driver reads this after `claude -p` exits and decides whether to re-invoke.
+
+    **Step 6 — Stop (same as normal mode)**:
+        Phase complete. Output to user:
+        "✅ **Phase N verified and complete — YOLO mode.**
+         yolo-continue signal written. External driver will pick up Phase N+1."
+
+        **Hard rules**:
+        - Agent MUST stop here. Do NOT start the next Phase.
+        - Do NOT read the next Phase's content or pre-plan.
+        - Do NOT write any code for the next Phase.
+        - The external driver (`yolo-driver.sh`/`.bat`) re-invokes `/dev-builder` for the next Phase.
+        - One Phase per invocation — this is not negotiable, even in YOLO mode.
 
     **Phase delivery checklist** -> Write `changes/<phase>/delivery-checklist.md`:
         Cross-reference each item, mark pass/fail, attach evidence.
