@@ -1,6 +1,6 @@
 # ReqForge
 
-[![version](https://img.shields.io/badge/version-v1.48.6-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
+[![version](https://img.shields.io/badge/version-v1.49.0-blue)](CHANGELOG.md) [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![English](https://img.shields.io/badge/lang-en-blue)](README.md) [![中文](https://img.shields.io/badge/lang-zh--CN-red)](README.zh-CN.md)
 
 **从需求到可交付产品** — 面向独立开发者、产品与创业团队的完整 AI 引导流程（需求 → 计划 → 开发 → 审查 → 发布）。
 
@@ -73,6 +73,16 @@ flowchart LR
 ---
 
 ## 近期更新
+
+### v1.49.0 — 2026-07-09 — Weng Harness 综述：可写面、failure_class、held-in/held-out、trace、harness 搜索
+
+- **可写面（Editable Surface）**：`.forge/editable-surface.json` 显式定义进化引擎的读写路径，排除验证代码（`scripts/forge-verify/`）和门控配置。受 DGM（Zhang et al. 2025）启发：evaluator 和权限控制必须在 loop 之外。
+- **failure_class 加入 forge-verify 阶段输出**：每个 REJECT/UNCLEAR 携带 failure_class（`execution-lapse`、`skill-defect`、`unset`），连接验证流水线和 feedback-observer，实现自动进化触发。
+- **Held-in/held-out 提案验证**：演化提案携带 `held_in_files`（目标失败）和 `held_out_files`（回归检查），两分割均 PASS 后提案才最终确定。受 Self-Harness（Zhang et al. 2026）启发。
+- **Chain-of-evidence 追溯**：forge-verify 每个阶段输出包含 `evidence` 字段，标注产生判据的源文件或证据文件。最终输出含 `trace.chain` 全链追溯。受 ScientistOne（Meng et al. 2026）启发。
+- **模型陈旧检测**：旧模型版本下毕业的规则，在当前模型不再需要时提议退役（而非持续强化），防止循环进化。
+- **Harness 搜索空间**：`.forge/harnesses/` 目录含候选注册表和模板，支持配置级交叉变异。evolution-engine 的 [Harness Search] 节定义了生成和评估配置变体的模式。受 Meta-Harness（Lee et al. 2026）启发。
+- **测试**：`test-dfv2-failure-class.mjs`（20 DF v2 场景 × 确定性层）、`test-evidence-gate.mjs`（EG→C1→C2 管道，12/12 通过）。
 
 ### v1.48.6 — 2026-06-27 — DESIGN.md token 冻结（[Google design.md](https://github.com/google-labs-code/design.md)）
 
