@@ -301,7 +301,7 @@ flowchart LR
 ### v1.28.0 — 2026-05-27
 - **dev-map**: Project-level navigation index at `.forge/dev-map.md` — AI explores module structure and existing patterns before coding. Maintained by dev-builder (who changes code updates the map). Template installed via `pnpm forge-install`.
 - **forge-verify**: Unified post-verification entry `pnpm forge-verify` with 9 checks (skill-quality, compile, test, no-placeholders, dev-map-fresh, security-patterns, trace-fresh, scope-check, content-quality) and baseline comparison (`--baseline save|compare|check`). Turns "I think I'm done" into "the system confirms I'm done."
-- **forge-verify-content**: Optional semantic content verification `pnpm forge-verify-content` — uses LLM (DeepSeek, configurable) to check whether Phase output files actually satisfy the task requirements. Catches semantic garbage that symbolic checks (file-exists / exit-code) miss. Skip by default; opt-in via `.forge/content-verify.json`. Based on experiment E (cross-model semantic consensus).
+- **forge-verify-content**: Optional semantic content verification `pnpm forge-verify-content` — uses LLM (DeepSeek, configurable) to check whether Phase output files actually satisfy the task requirements. Catches semantic garbage that symbolic checks (file-exists / exit-code) miss. Includes evidence gate pipeline (EG→C1→C2) with chain-of-evidence trace, failure_class for feedback-observer bridging, and held-in/held-out validation. Based on experiment E and Weng (2026) harness survey.
 - **dev-builder integrated**: Loading Phase auto-saves baseline; Phase Completion runs forge-verify + compares baseline + updates dev-map. New Post-Verification Gate principle.
 
 ### v1.27.0 — 2026-05-27
@@ -321,7 +321,7 @@ flowchart LR
 - **Harness hardening**: `forge-bootstrap` session iron laws; PreToolUse chain (Spec → confirmations → Plan → implementer session); **HARD-GATE** on product-spec, dev-planner, dev-builder; implementer + worktree per Task; forge-smoke **12** items.
 - **PM frameworks (product-spec)**: Optional [pm-skills](https://github.com/phuryn/pm-skills)-inspired references (MIT) — OST, JTBD, assumptions, competitors; see [Requirements depth](#requirements-depth-pm-frameworks--chain-of-thought).
 - **Chain-of-Thought (CoT)**: Step-by-step reasoning before conclusions in spec interviews, implementer, bug-fixer, bootstrap Iron Law 9.
-- **Evolution**: `failure_class` + RED/GREEN/Verify-by on evolution proposals.
+- **Evolution**: `failure_class` + RED/GREEN/Verify-by on evolution proposals. Editable surface boundary (`.forge/editable-surface.json`) prevents evolution from modifying evaluator code. Harness search space (`.forge/harnesses/`) allows config-level crossover. Model staleness detection graduates rules when newer models no longer need them.
 - **Agent execution discipline (8 rules)**: Plan → approve → act; read before edit; minimal diff; diff approval before commit; **verify loop** (re-run checks until pass) — [full doc](core/docs/session-execution-discipline.md), summary in `forge-bootstrap`, user copy in [agents-template.md](core/templates/agents-template.md); human quickref `.forge/quickref.md` on install.
 
 ### v1.24.0 — 2026-05-24

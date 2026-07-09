@@ -204,6 +204,68 @@ pnpm forge-verify-content --from-config  # 显式指定
 | `ANTHROPIC_MODEL` | 模型名 | `deepseek-chat` |
 | `VERIFY_RUNS` | 每文件投票次数 | `3` |
 
+### 输出增强字段（v2）
+
+每次验证运行输出增加以下字段：
+
+#### `failure_class`
+
+每个阶段 verdict 附带 failure_class（映射到 feedback-observer 分类）：
+
+| failure_class | 阶段 | 含义 |
+|---------------|------|------|
+| `execution-lapse` | L0, L0e, EG, C2 | Agent 没做/没产出（空、桩、证据缺失） |
+| `skill-defect` | L1, C1 | 合约/正则已定义但输出不满足（skill 未覆盖） |
+| `unset` | L0e, L1, C1, C2, L3 | 语义不确定/API 错误/无法归类 |
+
+failure_class 连接 forge-verify 和 feedback-observer：一次 verification REJECT 自动触发对应 failure_class 的 feedback，无需额外分类。
+
+#### `evidence`（chain-of-evidence）
+
+每个阶段输出包含 `evidence` 字段，追溯判据来源：
+
+- L0/L0e/L1/L2: `file:<relative-path>` — 内联内容
+- EG: `evidence:<filename>` — 证据文件路径
+- C1: `evidence:<filename>(<pattern>)` — 证据文件 + 正则模式
+- C2: `evidence:<filename>(<req-id>)` — 证据文件 + 需求 ID
+
+最终输出包含 `trace` 对象：
+
+```json
+"trace": {
+  "chain": [
+    { "stage": "L0", "verdict": "PASS", "evidence": "file:src/rate-limit.ts" },
+    { "stage": "EvidenceGate", "verdict": "PASS", "evidence": "evidence:test-output.txt" },
+    { "stage": "C1", "verdict": "PASS", "evidence": "evidence:test-output.txt((?i)isRateLimited)" }
+  ],
+  "evidence_files": {
+    "test-output.txt": { "path": "...", "size": 142, "mtime": 1234567890 }
+  },
+  "checked_at": 1234567890123
+}
+```
+
+`evidence_files` 记录证据文件 mtime，用于 STALE 检测：如果证据文件在验证后被修改，trace 标记为可能过期。
+
+### 测试脚本
+
+| 脚本 | 用途 |
+|------|------|
+| `test-dfv2-failure-class.mjs` | 20 DF v2 场景 × 确定性层，验证 failure_class 映射 |
+| `test-evidence-gate.mjs` | EG → C1 → C2 管道，验证 failure_class 传播 + 短路行为 |
+
+运行：`node scripts/forge-verify/test-evidence-gate.mjs`
+
+### 进化引擎边界（editable-surface.json）
+
+`.forge/editable-surface.json` 定义 evolution-engine 可写的文件范围：
+
+- **可选路径**：`core/skills/`, `core/hooks/`, `.forge/harnesses/` 等
+- **只读路径**：`scripts/forge-verify/`（验证代码）、`.forge/content-verify.json`（生产配置）
+- 演化引擎不能修改自己的边界定义（`editable-surface.json` 本身是只读的）
+
+详见 `core/skills/evolution-engine/SKILL.md` → [Harness Search] 和 [Editable Surface Check]。
+
 ### 已知局限
 
 跨模型语义验证（Layer 2）存在不可消除的精度-召回权衡。分层架构的作用不是消除这个权衡——它通过在 Layer 0/1 用确定性代码拦截明显垃圾，来**减少喂到 Layer 2 的样本量**。Layer 2 的权衡依然存在，但影响范围缩小了。
