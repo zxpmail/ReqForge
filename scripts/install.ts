@@ -187,6 +187,7 @@ const PLAYWRIGHT_VERIFY_SPEC_SRC = "core/templates/tests/verify-phase.template.s
 const PREFLIGHT_CONFIG_SRC = "core/templates/preflight-config.template.json";
 const PREFLIGHT_WECHAT_EXAMPLE_SRC = "core/templates/preflight-wechat.example.json";
 const ECORESULT_SRC = "core/templates/ecoresult-template.json";
+const DEFERRED_IDEAS_SRC = "core/templates/deferred-ideas-template.md";
 
 /** Copy forge-quickref into user project `.forge/quickref.md` */
 export function installForgeQuickref(
@@ -250,6 +251,29 @@ export function installSecurityGuidance(
   }
   if (fs.existsSync(dest) && !force) {
     log(`  ⏭️  .forge/security-guidance.md exists (use --force to overwrite)`);
+    return;
+  }
+  fs.mkdirSync(forgeDir, { recursive: true });
+  fs.copyFileSync(src, dest);
+  log(`  ✅ ${dest}`);
+}
+
+/** Copy deferred-ideas template into user project `.forge/deferred-ideas.md` */
+export function installDeferredIdeas(
+  targetRoot: string,
+  forgeRoot: string,
+  log: (msg: string) => void,
+  force?: boolean,
+): void {
+  const src = path.join(forgeRoot, DEFERRED_IDEAS_SRC);
+  const forgeDir = path.join(targetRoot, ".forge");
+  const dest = path.join(forgeDir, "deferred-ideas.md");
+  if (!fs.existsSync(src)) {
+    log(`  ⚠️  deferred-ideas template not found: ${src}`);
+    return;
+  }
+  if (fs.existsSync(dest) && !force) {
+    log(`  ⏭️  .forge/deferred-ideas.md exists (use --force to overwrite)`);
     return;
   }
   fs.mkdirSync(forgeDir, { recursive: true });
@@ -501,6 +525,7 @@ export function installForge(
   installForgeQuickref(path.resolve(targetRoot), forgeRoot, log, options.force);
   installDevMap(path.resolve(targetRoot), forgeRoot, log, options.force);
   installSecurityGuidance(path.resolve(targetRoot), forgeRoot, log, options.force);
+  installDeferredIdeas(path.resolve(targetRoot), forgeRoot, log, options.force);
   installProjectTaste(path.resolve(targetRoot), forgeRoot, log, options.force);
   installPreflightConfig(path.resolve(targetRoot), forgeRoot, log, options.force);
   installEcoreSult(path.resolve(targetRoot), forgeRoot, log, options.force);

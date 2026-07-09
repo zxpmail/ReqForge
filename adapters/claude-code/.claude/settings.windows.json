@@ -6,7 +6,9 @@
         "hooks": [
           { "type": "command", "command": "cmd /c .claude\\hooks\\hallucination-gate.bat" }
         ]
-      },
+      }
+    ],
+    "UserPromptSubmit": [
       {
         "matcher": "",
         "hooks": [
