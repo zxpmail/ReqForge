@@ -109,6 +109,25 @@ requires: []
     - `held_in_files`: files that should go from REJECT/UNCLEAR → PASS after the edit
     - `held_out_files`: files that should remain PASS (regression check)
 
+[Harness Search]
+    When feedback suggests that the forge-verify configuration (thresholds, contracts, evidence
+    requirements) is the bottleneck rather than skill text, propose a harness-level search:
+
+    - Baseline config lives at `.forge/content-verify.json`
+    - Candidate harnesses are stored in `.forge/harnesses/<name>/` with:
+      - `config.json` — divergence threshold, runs, contracts, evidence_gates
+      - `scores.json` — accuracy, llm_calls_saved, latency
+      - `history.jsonl` — per-run results
+    - Generate a candidate by varying one dimension of the baseline config
+      (e.g., tighten divergence threshold, add a contract pattern, switch evidence gate type)
+    - Evaluate candidate against held-in/held-out splits (same as [Held-In / Held-Out Validation])
+    - If candidate outperforms baseline on both splits, register it in `.forge/harnesses/index.json`
+      and suggest it as a proposal
+
+    The `.forge/harnesses/` directory is in the editable surface (see `.forge/editable-surface.json`),
+    so evolution-engine can create new candidates. The production config at
+    `.forge/content-verify.json` is readonly — switching to a candidate requires human approval.
+
 [Anti-Rationalization Checklist]
     → `references/anti-rationalization.md`
     遇 premature graduation / skipping cross-reference / skipping Verify-by 时读取。

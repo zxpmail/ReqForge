@@ -1,0 +1,5 @@
+{
+  "version": 1,
+  "harnesses": [],
+  "description": "Harness candidate registry. Each entry points to a subdirectory under .forge/harnesses/<name>/ containing config.json, scores.json, and history.jsonl. Managed by evolution-engine when proposing harness-level search."
+}
