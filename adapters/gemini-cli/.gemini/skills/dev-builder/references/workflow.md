@@ -390,6 +390,10 @@
         ```
         This file is the machine-readable handoff signal for the external `yolo-driver` script.
         The external driver reads this after `claude -p` exits and decides whether to re-invoke.
+        Driver source: `scripts/yolo-driver.sh` / `.bat` in the Forge repo
+        (https://github.com/zxpmail/ReqForge). Not installed into user projects by
+        `forge-install` — run it from a Forge checkout, or re-invoke `/dev-builder`
+        manually between Phases.
 
     **Step 6 — Stop (same as normal mode)**:
         Phase complete. Output to user:
