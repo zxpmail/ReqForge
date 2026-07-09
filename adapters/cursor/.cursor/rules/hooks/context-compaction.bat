@@ -41,4 +41,4 @@ powershell -NoProfile -Command ^
   "for($j=$firstData+$excess-1;$j -lt $lines.Count;$j++){$keep+=$lines[$j]};" ^
   "Set-Content $f $keep"
 
-exit /b 0
+exit /b 0
