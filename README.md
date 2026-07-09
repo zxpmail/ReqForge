@@ -75,6 +75,16 @@ flowchart LR
 
 ## What's New
 
+### v1.49.0 — 2026-07-09 — Weng harness survey: editable surface, failure_class, held-in/held-out, trace, harness search
+
+- **Editable surface**: `.forge/editable-surface.json` defines explicit read/write paths for evolution engine, excluding evaluator code (`scripts/forge-verify/`) and gate config from evolution scope. Inspired by DGM (Zhang et al. 2025): evaluator and permission control must live outside the loop.
+- **failure_class on forge-verify stages**: Each REJECT/UNCLEAR verdict carries failure_class (`execution-lapse`, `skill-defect`, `unset`), bridging verification pipeline to feedback-observer for automatic evolution triggering.
+- **Held-in/held-out proposal validation**: Evolution proposals carry `held_in_files` (target failures) and `held_out_files` (regression check). Both splits must PASS before proposal is finalized. Inspired by Self-Harness (Zhang et al. 2026).
+- **Chain-of-evidence trace**: Each forge-verify stage output includes `evidence` field referencing the source file or evidence file that produced the verdict. Final output includes `trace.chain` with per-stage evidence trail. Inspired by ScientistOne (Meng et al. 2026).
+- **Model staleness detection**: Rules graduated under older model versions can be proposed for retirement when current model no longer needs them. Prevents circular evolution.
+- **Harness search space**: `.forge/harnesses/` directory with candidate registry and template for config-level crossover. Evolution-engine [Harness Search] section defines the pattern for generating and evaluating config variants. Inspired by Meta-Harness (Lee et al. 2026).
+- **Tests**: `test-dfv2-failure-class.mjs` (20 DF v2 scenarios × deterministic layers), `test-evidence-gate.mjs` (EG→C1→C2 pipeline, 12/12 pass).
+
 ### v1.48.6 — 2026-06-27 — DESIGN.md token freeze ([Google design.md](https://github.com/google-labs-code/design.md))
 
 - **design-maker v1.1.0**: After mockup verification, freezes root `DESIGN.md` (YAML tokens + design rationale) alongside ephemeral `UI-Spec.md`. Template + workflow: `core/skills/design-maker/templates/design-md-template.md`, `references/design-md-freeze.md`.
@@ -301,7 +311,7 @@ flowchart LR
 ### v1.28.0 — 2026-05-27
 - **dev-map**: Project-level navigation index at `.forge/dev-map.md` — AI explores module structure and existing patterns before coding. Maintained by dev-builder (who changes code updates the map). Template installed via `pnpm forge-install`.
 - **forge-verify**: Unified post-verification entry `pnpm forge-verify` with 9 checks (skill-quality, compile, test, no-placeholders, dev-map-fresh, security-patterns, trace-fresh, scope-check, content-quality) and baseline comparison (`--baseline save|compare|check`). Turns "I think I'm done" into "the system confirms I'm done."
-- **forge-verify-content**: Optional semantic content verification `pnpm forge-verify-content` — uses LLM (DeepSeek, configurable) to check whether Phase output files actually satisfy the task requirements. Catches semantic garbage that symbolic checks (file-exists / exit-code) miss. Includes evidence gate pipeline (EG→C1→C2) with chain-of-evidence trace, failure_class for feedback-observer bridging, and held-in/held-out validation. Based on experiment E and Weng (2026) harness survey.
+- **forge-verify-content (v1.49)**: Optional semantic content verification `pnpm forge-verify-content` — uses LLM (DeepSeek, configurable) to check whether Phase output files actually satisfy the task requirements. Catches semantic garbage that symbolic checks (file-exists / exit-code) miss. Includes evidence gate pipeline (EG→C1→C2) with chain-of-evidence trace, failure_class for feedback-observer bridging, and held-in/held-out validation. Based on experiment E and Weng (2026) harness survey.
 - **dev-builder integrated**: Loading Phase auto-saves baseline; Phase Completion runs forge-verify + compares baseline + updates dev-map. New Post-Verification Gate principle.
 
 ### v1.27.0 — 2026-05-27
