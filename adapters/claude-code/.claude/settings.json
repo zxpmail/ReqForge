@@ -6,7 +6,9 @@
         "hooks": [
           { "type": "command", "command": "bash .claude/hooks/hallucination-gate.sh" }
         ]
-      },
+      }
+    ],
+    "UserPromptSubmit": [
       {
         "matcher": "",
         "hooks": [

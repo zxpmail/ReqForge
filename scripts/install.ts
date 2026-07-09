@@ -429,12 +429,13 @@ export function installHooks(
 
   fs.mkdirSync(destDir, { recursive: true });
 
-  // Remove stale cross-platform files that don't match current platform
-  const keepExt = isWindows ? ".bat" : ".sh";
+  // Remove stale cross-platform files that don't match current platform.
+  // Windows keeps .bat + .ps1 (.bat calls .ps1 via `powershell -File`); Unix keeps .sh.
+  const keepExt = isWindows ? new Set([".bat", ".ps1"]) : new Set([".sh"]);
   for (const name of fs.readdirSync(destDir)) {
     if (name === "AGENTS.md" || name.endsWith(".md")) continue;
     const ext = name.slice(name.lastIndexOf("."));
-    if (ext !== keepExt && (ext === ".sh" || ext === ".bat" || ext === ".ps1")) {
+    if (!keepExt.has(ext) && (ext === ".sh" || ext === ".bat" || ext === ".ps1")) {
       try { fs.rmSync(path.join(destDir, name)); } catch {}
     }
   }
@@ -444,8 +445,8 @@ export function installHooks(
     if (name === "AGENTS.md") continue;
     if (name.endsWith(".md")) continue;
 
-    // Platform filtering: Windows → .bat only, Unix → .sh only
-    if (isWindows && (name.endsWith(".sh") || name.endsWith(".ps1"))) continue;
+    // Platform filtering: Windows → .bat + .ps1, Unix → .sh
+    if (isWindows && name.endsWith(".sh")) continue;
     if (!isWindows && (name.endsWith(".bat") || name.endsWith(".ps1"))) continue;
 
     const srcFile = path.join(srcDir, name);

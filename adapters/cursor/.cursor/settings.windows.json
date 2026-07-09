@@ -7,7 +7,7 @@
       "run": "cmd /c .cursor\rules\hooks\pre-commit-check.bat"
     },
     "BeforeCommand": {
-      "run": "cmd /c .cursor\rules\hooks\phase-exit-guard.bat && cmd /c .cursor\rules\hooks\stop-gate.bat && cmd /c .cursor\rules\hooks\retry-gate.bat && cmd /c .cursor\rules\hooks\detect-feedback-signal.bat"
+      "run": "cmd /c .cursor\rules\hooks\phase-exit-guard.bat && cmd /c .cursor\rules\hooks\stop-gate.bat && cmd /c .cursor\rules\hooks\retry-gate.bat"
     },
     "AfterCommand": {
       "run": "cmd /c .cursor\rules\hooks\mark-review-needed.bat && cmd /c .cursor\rules\hooks\memory-check.bat"
