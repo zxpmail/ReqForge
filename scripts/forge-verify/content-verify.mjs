@@ -25,6 +25,11 @@
  *   skill-defect    — verifier 发现合约/证据不匹配（skill 未覆盖）
  *   unset           — 语义判据分歧（API 错误/LLM 不确定/无法归类）
  *
+ * 每个阶段增加 evidence 字段追踪判据来源（chain-of-evidence）：
+ *   - L0/L0e/L1: "file:<relative-path>"（inline 内容）
+ *   - EG/C1/C2:   "evidence:<evidence-file>"（外部证据文件 + 修改时间）
+ *   trace 数组在输出中完整保留，支持后续 STALE 检测
+ *
  * 实验结论（2026-07-09）：
  *   - 自由文本 LLM（C0）检测率 20%：被 agent 话术说服
  *   - 合约正则（C1）  检测率 80%：数值约束近零误报，但存在"否定盲区"
@@ -71,7 +76,7 @@
  *   2 — 配置缺失
  */
 
-import { readFileSync, writeFileSync, existsSync } from "fs";
+import { readFileSync, writeFileSync, existsSync, statSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -668,41 +673,63 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
   } catch {
     return { file: filePath, verdict: "FILE_NOT_FOUND", layer: "L0", check: "L0_file_missing",
              failure_class: "execution-lapse",
-             reason: "文件不存在或无法读取", stages: [] };
+             reason: "文件不存在或无法读取", stages: [], trace: { chain: [] } };
   }
 
   const filename = filePath.split(/[/\\]/).pop();  // 提取文件名用于 re-stat 检查
   const stages = [];
+  const trace = [];  // chain-of-evidence
+
+  // 获取证据文件 mtime（用于 trace staleness 检测）
+  function evidenceFileMeta(filePath) {
+    try {
+      const s = statSync(filePath);
+      return { path: filePath, size: s.size, mtime: s.mtimeMs };
+    } catch {
+      return { path: filePath, size: 0, mtime: 0 };
+    }
+  }
+
+  // 相对路径用于 trace（优先 ROOT 相对路径）
+  function relPath(absPath) {
+    if (absPath && absPath.startsWith(ROOT)) return absPath.slice(ROOT.length + 1).replace(/\\/g, "/");
+    return absPath || "unknown";
+  }
+
+  const fileEvidence = `file:${relPath(filePath)}`;
 
   // Layer 0 — 形状/存在性
   const l0 = layer0Check(content);
   stages.push({ layer: "L0", verdict: l0.verdict, check: l0.check, reason: l0.reason,
-                failure_class: l0.failure_class || null });
+                failure_class: l0.failure_class || null,
+                evidence: fileEvidence });
   if (l0.verdict === "REJECT") {
     return { file: filePath, verdict: "REJECT", layer: "L0", check: l0.check,
              failure_class: l0.failure_class,
-             reason: l0.reason, stages };
+             reason: l0.reason, stages, trace };
   }
 
   // Layer 0e — Re-Stat 检查（nexus-lab-zen: zero-verified = RED）
   const l0e = layer0RestatCheck(content, filename);
   stages.push({ layer: "L0e", verdict: l0e.verdict, check: l0e.check, reason: l0e.reason,
-                failure_class: l0e.failure_class || null });
+                failure_class: l0e.failure_class || null,
+                evidence: fileEvidence });
   if (l0e.verdict === "REJECT") {
     return { file: filePath, verdict: "REJECT", layer: "L0e", check: l0e.check,
              failure_class: l0e.failure_class,
-             reason: l0e.reason, stages };
+             reason: l0e.reason, stages, trace };
   }
   // UNCLEAR 传下去（Layer 1/2 可能挽回）
 
   // Layer 1 — 合约匹配
   const l1 = layer1Check(content, fileContract || null);
   stages.push({ layer: "L1", verdict: l1.verdict, check: l1.check, reason: l1.reason,
-                failure_class: l1.failure_class || null });
+                failure_class: l1.failure_class || null,
+                evidence: fileEvidence });
   if (l1.verdict === "REJECT") {
     return { file: filePath, verdict: "REJECT", layer: "L1", check: l1.check,
              failure_class: l1.failure_class,
-             reason: l1.reason, stages };
+             reason: l1.reason, stages, trace };
   }
 
   // ── 分流：证据门管道 vs 传统 LLM ──
@@ -718,22 +745,25 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
     // Evidence Gate — 文件存在性检查
     const eg = evidenceGateCheck(evidenceDir, evidenceGates.requirements);
+    const egEvidence = evidenceGates.requirements.map(r => `evidence:${r.evidence_file}`).join(",");
     stages.push({ layer: "EvidenceGate", verdict: eg.verdict, check: eg.check, reason: eg.reason,
-                  failure_class: eg.failure_class || null });
+                  failure_class: eg.failure_class || null, evidence: egEvidence });
     if (eg.verdict === "REJECT") {
       return { file: filePath, verdict: "REJECT", layer: "EvidenceGate", check: eg.check,
                failure_class: eg.failure_class,
-               reason: eg.reason, stages };
+               reason: eg.reason, stages, trace };
     }
 
     // C1 — 合约正则（确定性）
     const c1 = contractRegexCheck(evidenceDir, evidenceGates.requirements);
+    const c1Reqs = evidenceGates.requirements.filter(r => r.type === "regex");
+    const c1Evidence = c1Reqs.map(r => `evidence:${r.evidence_file}(${r.pattern})`).join(";");
     stages.push({ layer: "C1", verdict: c1.verdict, check: c1.check, reason: c1.reason,
-                  failure_class: c1.failure_class || null });
+                  failure_class: c1.failure_class || null, evidence: c1Evidence });
     if (c1.verdict === "REJECT") {
       return { file: filePath, verdict: "REJECT", layer: "C1", check: c1.check,
                failure_class: c1.failure_class,
-               reason: c1.reason, stages };
+               reason: c1.reason, stages, trace };
     }
 
     // C1 UNCLEAR（部分通过）或 C1 PASS 但有 type=llm 的需求 → 传 C2
@@ -742,7 +772,10 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
     if (needC2) {
       const c2 = await perRequirementLlmCheck(evidenceDir, evidenceGates.requirements, model, nRuns, apiConfig);
-      stages.push({ layer: "C2", verdict: c2.verdict, check: c2.check, reason: c2.reason });
+      const c2Reqs = evidenceGates.requirements.filter(r => r.type === "llm");
+      const c2Evidence = c2Reqs.map(r => `evidence:${r.evidence_file}(${r.id})`).join(";");
+      stages.push({ layer: "C2", verdict: c2.verdict, check: c2.check, reason: c2.reason,
+                    evidence: c2Evidence });
       finalStage = c2;
     } else {
       finalStage = { verdict: "PASS", layer: "C1_to_L3" };
@@ -768,6 +801,7 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
       rejectCnt,
       nRuns: l2.verdicts.length,
       reasons: l2.reasons,
+      evidence: fileEvidence,
     });
     verdictsForL3 = l2.verdicts;
   }
@@ -775,11 +809,37 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
   // Layer 3 — 分歧检测（所有路径共享）
   const l3 = layer3Check(verdictsForL3, divergenceThreshold);
   stages.push({ layer: "L3", verdict: l3.verdict, check: l3.check, reason: l3.reason,
-                failure_class: l3.failure_class || null });
+                failure_class: l3.failure_class || null,
+                evidence: fileEvidence });
 
   // failure_class: 取最终判定阶段的值，如果 L3 是 unset 则向上看哪个阶段决定性拒绝
   const decisiveStage = stages.filter(s => s.verdict === "REJECT" || s.verdict === "PASS").pop();
   const finalFailureClass = decisiveStage?.failure_class || l3.failure_class || "unset";
+
+  // ── chain-of-evidence trace ──
+  const checkedAt = Date.now();
+  // 收集所有证据文件元数据用于 STALE 检测
+  const evidenceFiles = {};
+  if (evidenceGates && evidenceGates.requirements) {
+    for (const req of evidenceGates.requirements) {
+      const efPath = join(
+        evidenceGates.evidence_dir
+          ? (evidenceGates.evidence_dir.startsWith("/") || /^[A-Za-z]:[/\\]/.test(evidenceGates.evidence_dir)
+              ? evidenceGates.evidence_dir
+              : join(ROOT, evidenceGates.evidence_dir))
+          : join(dirname(filePath), ".skillgate", "evidence"),
+        req.evidence_file
+      );
+      evidenceFiles[req.evidence_file] = evidenceFileMeta(efPath);
+    }
+  }
+  const trace = stages.map(s => ({
+    stage: s.layer,
+    verdict: s.verdict,
+    check: s.check,
+    evidence: s.evidence || null,
+    failure_class: s.failure_class || null,
+  }));
 
   return {
     file: filePath,
@@ -794,6 +854,11 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
     ) / verdictsForL3.length * 100),
     votes: verdictsForL3,
     stages,
+    trace: {
+      chain: trace,
+      evidence_files: Object.keys(evidenceFiles).length > 0 ? evidenceFiles : undefined,
+      checked_at: checkedAt,
+    },
   };
 }
 
