@@ -32,6 +32,13 @@ requires: []
     Required:
     - ../../feedback/FEEDBACK-INDEX.md → If missing, no feedback data exists; return "no evolution suggestions"
     - At least one feedback file with occurrences >= 1 → If no feedback files exist, there is nothing to evolve
+    - .forge/editable-surface.json — Must exist and be readable. Defines directories/files the evolution engine is allowed to modify. If missing, create one with sensible defaults before proceeding.
+
+    Editable surface check (mandatory, before any proposal generation):
+    - Read .forge/editable-surface.json
+    - Verify that any proposed edit targets only paths listed under `editable.directories` or `editable.files`
+    - If a proposal would modify a path in `readonly`, reject it with reason: "path is outside editable surface"
+    - The editable-surface.json itself is in `readonly` — evolution engine cannot modify its own boundary definition
 
     Optional:
     - memory/ files → cross-reference task-history.md to validate whether pattern is real or coincidence
@@ -46,6 +53,18 @@ requires: []
     **Skill TDD Gate**: Every proposal MUST include RED observation (what the Agent did without the rule), GREEN change (exact target file/section), Predicted effect, and Verify by. Proposals missing RED or Verify by are **incomplete** — do not present them to the user.
 
 <!-- end: first-principles -->
+[Model Staleness Detection]
+    When a feedback entry contains a `model_version` field that differs from the version used when the target Skill was written:
+
+    - Prioritize "rule outdated (model no longer needs this guidance)" over "rule needs strengthening"
+    - Check: is the same failure pattern still reproducible with the newer model? If not → propose rule retirement rather than rule graduation
+    - Record the model version delta in the proposal metadata
+
+    Rule retirement candidates:
+    - A rule that has ≥3 feedback entries, all from an older model version
+    - A rule that was graduated ≥2 versions ago and has 0 feedback entries from the current model
+    - Propose deactivation (not deletion) — keep the rule text in SKILL.md but mark as `status: deprecated` with the model version that made it obsolete
+
 <!-- begin: proposal-quality-checklist -->
 [Proposal Quality Checklist]
     Before presenting an evolution proposal to the user, verify each criterion:
@@ -70,6 +89,26 @@ requires: []
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->
+[Held-In / Held-Out Validation]
+    After applying a proposal (Skill edit, rule graduation, or hook change), validate the change:
+
+    Held-in split: Verify that the target failure pattern is resolved.
+    - Run the scenario that triggered the feedback (e.g., forge-verify on the same file that failed)
+    - Expected: PASS on the previously failing check
+    - If the check is forge-verify related, use: `node scripts/forge-verify/content-verify.mjs --from-config`
+
+    Held-out split: Verify that the change did not introduce regressions.
+    - Run forge-verify on files that previously passed and are not related to the target failure
+    - Expected: same verdicts as before the change
+    - Also check: a different skill or workflow that should be unaffected still works
+
+    Both splits must PASS before the proposal is considered applied.
+    If either fails, record the result but do NOT finalize the proposal. Revert and log.
+
+    Split configuration per proposal:
+    - `held_in_files`: files that should go from REJECT/UNCLEAR → PASS after the edit
+    - `held_out_files`: files that should remain PASS (regression check)
+
 [Anti-Rationalization Checklist]
     → `references/anti-rationalization.md`
     遇 premature graduation / skipping cross-reference / skipping Verify-by 时读取。
@@ -181,6 +220,13 @@ requires: []
     - **GREEN change**: exact target (`SKILL.md` section, hook, `forge-bootstrap.md`, `CLAUDE.md` rule) and the text to add or change
     - **Predicted effect**: which failure class should decrease (e.g. hallucinated paths, skipped tests, spec-before-code violations)
     - **Verify by**: how to check after applying (e.g. "re-run scenario X", "zero feedback with tag `skill-defect:spec-before-code` in next 5 runs", `pnpm test`, `grep SKILL for new rule`)
+    - **Held-in files** (list): files that should go from REJECT/UNCLEAR → PASS after the edit — used after apply to confirm the fix
+    - **Held-out files** (list): files that should remain PASS — used after apply to confirm no regression
+    - **Model version** (string): the model version that will apply this proposal — used for future staleness detection
+
+    When forge-verify is available, held-in and held-out validation runs automatically after apply:
+      `node scripts/forge-verify/content-verify.mjs --task "..." --files <held-in>`
+      `node scripts/forge-verify/content-verify.mjs --task "..." --files <held-out>`
 
     "**Evolution Suggestions** (N total)
 
@@ -247,6 +293,11 @@ requires: []
     - Skip -> Mark skipped: true, do not propose again
 
     After apply: run the proposal's **Verify by** step and note pass/fail in the feedback topic or `memory/decisions-log.md`.
+
+    Held-in/held-out validation (when forge-verify is available):
+    - Run forge-verify on `held_in_files`: all must PASS. If any REJECT/UNCLEAR, the edit did not resolve the target failure.
+    - Run forge-verify on `held_out_files`: all must return the same verdict as before the edit. Any new REJECT = regression.
+    - Both splits must pass. Record the result with the model version in the proposal metadata for future staleness detection.
     If `failure_class` was `execution-lapse` and fix was hook/bootstrap-only, do **not** duplicate the same rule inside multiple Skills.
 
 <!-- end: post-confirmation-execution -->

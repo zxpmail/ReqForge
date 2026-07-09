@@ -20,6 +20,11 @@
  *
  *   Layer 3  分歧检测（所有路径共享）        │  运维成本
  *
+ * 每个阶段输出增加 failure_class 字段，映射到 feedback-observer 分类：
+ *   execution-lapse — verifier 拒绝输出（内容不足、空、桩）
+ *   skill-defect    — verifier 发现合约/证据不匹配（skill 未覆盖）
+ *   unset           — 语义判据分歧（API 错误/LLM 不确定/无法归类）
+ *
  * 实验结论（2026-07-09）：
  *   - 自由文本 LLM（C0）检测率 20%：被 agent 话术说服
  *   - 合约正则（C1）  检测率 80%：数值约束近零误报，但存在"否定盲区"
@@ -88,6 +93,7 @@ function layer0Check(content) {
   // 0a. 空或极短
   if (c.length < 5) {
     return { verdict: "REJECT", layer: "L0", check: "L0_min_length",
+             failure_class: "execution-lapse",
              reason: `内容极短 (${c.length} 字符)，无法构成有效输出` };
   }
 
@@ -97,6 +103,7 @@ function layer0Check(content) {
   const punctRatio = punctMatch ? punctMatch.length / c.length : 0;
   if (punctRatio > 0.5) {
     return { verdict: "REJECT", layer: "L0", check: "L0_punctuation_ratio",
+             failure_class: "execution-lapse",
              reason: `标点占比 ${(punctRatio * 100).toFixed(0)}%，超过 50% 阈值` };
   }
 
@@ -105,6 +112,7 @@ function layer0Check(content) {
   for (const ph of PLACEHOLDER_KEYWORDS) {
     if (cLower.includes(ph) && c.length < 30) {
       return { verdict: "REJECT", layer: "L0", check: "L0_placeholder",
+               failure_class: "execution-lapse",
                reason: `包含占位符 "${ph}" 且长度极短 (${c.length} 字符)` };
     }
   }
@@ -112,6 +120,7 @@ function layer0Check(content) {
   // 0d. 零测试用例
   if (/0\s+passed/.test(cLower) && /no\s+tests?\s+collected/.test(cLower)) {
     return { verdict: "REJECT", layer: "L0", check: "L0_zero_tests",
+             failure_class: "execution-lapse",
              reason: "测试结果: 0 passed, no tests collected — 零用例通过" };
   }
 
@@ -169,6 +178,7 @@ function layer0RestatCheck(content, filename) {
   if (totalLines < 3) {
     if (reasons.length > 0) {
       return { verdict: "UNCLEAR", layer: "L0e", check: "L0e_re_stat_social_unclear",
+               failure_class: "unset",
                reason: reasons[0] };
     }
     return { verdict: "PASS", layer: "L0e", check: "L0e_re_stat_pass", reason: "" };
@@ -243,6 +253,7 @@ function layer0RestatCheck(content, filename) {
     const stubCount = stubMatch ? parseInt(stubMatch[0], 10) : 0;
     if (stubCount >= 3) {
       return { verdict: "REJECT", layer: "L0e", check: "L0e_re_stat_stub_reject",
+               failure_class: "execution-lapse",
                reason: stubReason };
     }
   }
@@ -250,9 +261,11 @@ function layer0RestatCheck(content, filename) {
   // ≥2 项指标 → REJECT；仅 1 项 → UNCLEAR（交 Layer 2 语义判断）
   if (reasons.length >= 2) {
     return { verdict: "REJECT", layer: "L0e", check: "L0e_re_stat_reject",
+             failure_class: "execution-lapse",
              reason: reasons.join("; ") };
   }
   return { verdict: "UNCLEAR", layer: "L0e", check: "L0e_re_stat_unclear",
+           failure_class: "unset",
            reason: reasons[0] };
 }
 
@@ -296,10 +309,14 @@ function layer1Check(content, fileContract) {
 
   // ≥2 项失败 → REJECT；1 项 → UNCLEAR（交 Layer 2 语义判断）
   if (failures.length >= 2) {
-    return { verdict: "REJECT", layer: "L1", check: "L1_reject", reason: failures.join("; ") };
+    return { verdict: "REJECT", layer: "L1", check: "L1_reject",
+             failure_class: "skill-defect",
+             reason: failures.join("; ") };
   }
 
-  return { verdict: "UNCLEAR", layer: "L1", check: "L1_unclear", reason: failures.join("; ") };
+  return { verdict: "UNCLEAR", layer: "L1", check: "L1_unclear",
+           failure_class: "unset",
+           reason: failures.join("; ") };
 }
 
 // ====== Layer 2 — 瘦 LLM 语义审查 ======
@@ -389,6 +406,7 @@ async function layer2Check(content, task, model, nRuns, apiConfig) {
 function layer3Check(verdicts, divergenceThreshold) {
   const n = verdicts.length;
   if (n === 0) return { verdict: "UNCLEAR", layer: "L3", check: "L3_no_data",
+                        failure_class: "unset",
                         reason: "无有效投票数据" };
 
   const passCnt = verdicts.filter(v => v === "PASS").length;
@@ -398,11 +416,13 @@ function layer3Check(verdicts, divergenceThreshold) {
   // 分歧度高于阈值 → 不做多数决，转 Layer 3
   if (maxFrac < divergenceThreshold) {
     return { verdict: "UNCLEAR", layer: "L3", check: "L3_divergence",
+             failure_class: "unset",
              reason: `分歧: ${passCnt}PASS/${rejectCnt}REJ (maxFrac=${(maxFrac * 100).toFixed(0)}% < ${(divergenceThreshold * 100).toFixed(0)}% 阈值)` };
   }
 
   const finalVerdict = passCnt > rejectCnt ? "PASS" : "REJECT";
   return { verdict: finalVerdict, layer: "L3", check: "L3_majority",
+           failure_class: "unset",
            reason: `${finalVerdict} (${Math.max(passCnt, rejectCnt)}/${n} 票)` };
 }
 
@@ -436,14 +456,17 @@ function evidenceGateCheck(evidenceDir, requirements) {
 
   if (missing.length > 0 && empty.length > 0) {
     return { verdict: "REJECT", layer: "EvidenceGate", check: "EG_missing_and_empty",
+             failure_class: "execution-lapse",
              reason: `缺失: ${missing.join(", ")}; 空: ${empty.join(", ")}` };
   }
   if (missing.length > 0) {
     return { verdict: "REJECT", layer: "EvidenceGate", check: "EG_missing",
+             failure_class: "execution-lapse",
              reason: `证据文件缺失: ${missing.join(", ")}` };
   }
   if (empty.length > 0) {
     return { verdict: "REJECT", layer: "EvidenceGate", check: "EG_empty",
+             failure_class: "execution-lapse",
              reason: `证据文件为空: ${empty.join(", ")}` };
   }
 
@@ -513,10 +536,12 @@ function contractRegexCheck(evidenceDir, requirements) {
   // 全部失败 → REJECT；部分失败 → UNCLEAR（传 C2）
   if (failures.length === regexReqs.length) {
     return { verdict: "REJECT", layer: "C1", check: "C1_all_fail",
+             failure_class: "skill-defect",
              reason: `全部 ${regexReqs.length} 条合约正则未通过: ${failures.join("; ")}` };
   }
 
   return { verdict: "UNCLEAR", layer: "C1", check: "C1_partial",
+           failure_class: "unset",
            reason: `${passes.length}/${regexReqs.length} 通过; 未通过: ${failures.join("; ")}` };
 }
 
@@ -626,9 +651,11 @@ async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, a
   }
   if (passed === 0) {
     return { verdict: "REJECT", layer: "C2", check: "C2_all_fail",
+             failure_class: "execution-lapse",
              reason: `全部 ${results.length} 条需求未通过: ${results.filter(r => !r.pass).map(r => r.req_id).join(", ")}` };
   }
   return { verdict: "UNCLEAR", layer: "C2", check: "C2_partial",
+           failure_class: "unset",
            reason: `${passed}/${results.length} 通过; 未通过: ${results.filter(r => !r.pass).map(r => r.req_id).join(", ")}` };
 }
 
@@ -640,6 +667,7 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
     content = readFileSync(filePath, "utf-8").trim();
   } catch {
     return { file: filePath, verdict: "FILE_NOT_FOUND", layer: "L0", check: "L0_file_missing",
+             failure_class: "execution-lapse",
              reason: "文件不存在或无法读取", stages: [] };
   }
 
@@ -648,26 +676,32 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
   // Layer 0 — 形状/存在性
   const l0 = layer0Check(content);
-  stages.push({ layer: "L0", verdict: l0.verdict, check: l0.check, reason: l0.reason });
+  stages.push({ layer: "L0", verdict: l0.verdict, check: l0.check, reason: l0.reason,
+                failure_class: l0.failure_class || null });
   if (l0.verdict === "REJECT") {
     return { file: filePath, verdict: "REJECT", layer: "L0", check: l0.check,
+             failure_class: l0.failure_class,
              reason: l0.reason, stages };
   }
 
   // Layer 0e — Re-Stat 检查（nexus-lab-zen: zero-verified = RED）
   const l0e = layer0RestatCheck(content, filename);
-  stages.push({ layer: "L0e", verdict: l0e.verdict, check: l0e.check, reason: l0e.reason });
+  stages.push({ layer: "L0e", verdict: l0e.verdict, check: l0e.check, reason: l0e.reason,
+                failure_class: l0e.failure_class || null });
   if (l0e.verdict === "REJECT") {
     return { file: filePath, verdict: "REJECT", layer: "L0e", check: l0e.check,
+             failure_class: l0e.failure_class,
              reason: l0e.reason, stages };
   }
   // UNCLEAR 传下去（Layer 1/2 可能挽回）
 
   // Layer 1 — 合约匹配
   const l1 = layer1Check(content, fileContract || null);
-  stages.push({ layer: "L1", verdict: l1.verdict, check: l1.check, reason: l1.reason });
+  stages.push({ layer: "L1", verdict: l1.verdict, check: l1.check, reason: l1.reason,
+                failure_class: l1.failure_class || null });
   if (l1.verdict === "REJECT") {
     return { file: filePath, verdict: "REJECT", layer: "L1", check: l1.check,
+             failure_class: l1.failure_class,
              reason: l1.reason, stages };
   }
 
@@ -684,17 +718,21 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
     // Evidence Gate — 文件存在性检查
     const eg = evidenceGateCheck(evidenceDir, evidenceGates.requirements);
-    stages.push({ layer: "EvidenceGate", verdict: eg.verdict, check: eg.check, reason: eg.reason });
+    stages.push({ layer: "EvidenceGate", verdict: eg.verdict, check: eg.check, reason: eg.reason,
+                  failure_class: eg.failure_class || null });
     if (eg.verdict === "REJECT") {
       return { file: filePath, verdict: "REJECT", layer: "EvidenceGate", check: eg.check,
+               failure_class: eg.failure_class,
                reason: eg.reason, stages };
     }
 
     // C1 — 合约正则（确定性）
     const c1 = contractRegexCheck(evidenceDir, evidenceGates.requirements);
-    stages.push({ layer: "C1", verdict: c1.verdict, check: c1.check, reason: c1.reason });
+    stages.push({ layer: "C1", verdict: c1.verdict, check: c1.check, reason: c1.reason,
+                  failure_class: c1.failure_class || null });
     if (c1.verdict === "REJECT") {
       return { file: filePath, verdict: "REJECT", layer: "C1", check: c1.check,
+               failure_class: c1.failure_class,
                reason: c1.reason, stages };
     }
 
@@ -736,13 +774,19 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
   // Layer 3 — 分歧检测（所有路径共享）
   const l3 = layer3Check(verdictsForL3, divergenceThreshold);
-  stages.push({ layer: "L3", verdict: l3.verdict, check: l3.check, reason: l3.reason });
+  stages.push({ layer: "L3", verdict: l3.verdict, check: l3.check, reason: l3.reason,
+                failure_class: l3.failure_class || null });
+
+  // failure_class: 取最终判定阶段的值，如果 L3 是 unset 则向上看哪个阶段决定性拒绝
+  const decisiveStage = stages.filter(s => s.verdict === "REJECT" || s.verdict === "PASS").pop();
+  const finalFailureClass = decisiveStage?.failure_class || l3.failure_class || "unset";
 
   return {
     file: filePath,
     verdict: l3.verdict,
     layer: l3.layer,
     check: l3.check,
+    failure_class: finalFailureClass,
     reason: l3.reason,
     confidence: Math.round(Math.max(
       verdictsForL3.filter(v => v === "PASS").length,
@@ -922,6 +966,7 @@ async function main() {
       uncertainResults.push({
         file: relativePath,
         verdict: r.verdict,
+        failure_class: r.failure_class || "unset",
         confidence: r.confidence,
         votes: r.votes,
         reason: r.reason,

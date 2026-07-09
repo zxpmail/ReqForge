@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "description": "Defines which directories evolution-engine (check-evolution → feedback-observer → evolution-runner) is allowed to read and write. Evaluator code and gate configuration are explicitly excluded.",
+  "editable": {
+    "directories": [
+      "core/skills",
+      "core/hooks",
+      "core/agents",
+      "core/templates",
+      ".claude/feedback",
+      "changes"
+    ],
+    "files": [
+      "CLAUDE.md",
+      "AGENTS.md",
+      ".forge/active-scope.json",
+      ".forge/gate-config.json"
+    ]
+  },
+  "readonly": {
+    "directories": [
+      "scripts/forge-verify",
+      ".forge"
+    ],
+    "files": [
+      ".forge/editable-surface.json",
+      ".forge/content-verify.json"
+    ]
+  },
+  "constraints": {
+    "editable_surface_itself": false,
+    "gate_config": false,
+    "verify_code": false
+  }
+}
