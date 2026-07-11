@@ -74,6 +74,14 @@ flowchart LR
 
 ## 近期更新
 
+### v1.50.0 — 2026-07-11 — forge-verify LLM 层：协议自适应、诚实降级
+
+- **LLM 协议自适应层**：L2 与 C2 经统一的 `llmComplete()` 调用层，按 `ANTHROPIC_BASE_URL` 自动选协议 —— 含 `/anthropic` → Anthropic Messages（如智谱 GLM 的 `/api/anthropic` 网关，与 Claude Code 同链路），否则 → OpenAI Chat Completions（如 deepseek）。一份 `ANTHROPIC_*` env 在两类端点下都可用，无需改代码。此前所有调用硬编码走 OpenAI 且剥掉 `/anthropic`，导致 GLM 环境下每次 L2/C2 调用都拿到 HTTP 403。
+- **C2 诚实降级**：C2（逐需求 LLM）把 API/解析错误（HTTP 非 2xx、空响应、网络异常）记为非投票 → `UNCLEAR (C2_api_errors)`，绝不伪装成 `REJECT (execution-lapse)` —— 模型不可达时不再误报"agent 偷懒"。L2 本就如此（`API_ERROR`/`API_PARSE_ERROR` 为非投票 → L3 UNCLEAR），C2 现已对齐。
+- **`--runs`/`--task`/`--files` 在 `--from-config` 下生效**：CLI 覆盖块原在 parseConfig 的 else 分支内，`--from-config --runs 1` 被静默忽略（恒跑 3 次）。现两种模式下 CLI 参数都覆盖配置默认。
+- **测试 import 生产管道**：`test-evidence-gate.mjs` 直接从 `content-verify.mjs` 导入 `evidenceGateCheck`/`contractRegexCheck`/`perRequirementLlmCheck`（现已导出；`main()` 用 `import.meta.url` 守卫），不再维护已漂移的内联副本 —— 内联 C2 还停在旧的纯 OpenAI 协议。净删 171 行，零漂移。
+- **修复 —— content-verify 自 v1.49.0 起无法加载**：chain-of-evidence 那次提交留下的重复 `const trace`（SyntaxError）导致 `content-verify.mjs` 根本无法解析/运行。已删除。
+
 ### v1.49.0 — 2026-07-09 — Weng Harness 综述：可写面、failure_class、held-in/held-out、trace、harness 搜索
 
 - **可写面（Editable Surface）**：`.forge/editable-surface.json` 显式定义进化引擎的读写路径，排除验证代码（`scripts/forge-verify/`）和门控配置。受 DGM（Zhang et al. 2025）启发：evaluator 和权限控制必须在 loop 之外。
