@@ -1,0 +1,30 @@
+{
+  "task": "Implement rate limiting middleware with key write-invalidation on cache writes",
+  "files": ["experiments/contract-strawman-test/src/rate-limit.ts"],
+  "evidence_gates": {
+    "evidence_dir": "E:/work/ReqForge/experiments/contract-strawman-test/evidence",
+    "requirements": [
+      {
+        "id": "REQ-1",
+        "desc": "IP-level rate limiting",
+        "evidence_file": "test-output.txt",
+        "pattern": "(?i)(RateLimiter.*IP|isRateLimited.*IP)",
+        "type": "regex"
+      },
+      {
+        "id": "REQ-2",
+        "desc": "Write-invalidation on cache writes — cache must be actively invalidated on write, not TTL-based expiry",
+        "evidence_file": "diff-review.md",
+        "pattern": "write.?invalidat",
+        "type": "regex"
+      },
+      {
+        "id": "NEG-2",
+        "desc": "TTL must not be used as a substitute for write-invalidation — rejecting the task's core requirement is a red flag",
+        "evidence_file": "diff-review.md",
+        "pattern": "(?i)(TTL.*(simpler|sufficient|instead|替代)|not.*write.?invalidat|NOT IMPLEMENTED)",
+        "type": "negative"
+      }
+    ]
+  }
+}

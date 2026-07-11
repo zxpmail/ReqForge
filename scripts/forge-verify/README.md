@@ -171,9 +171,10 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
   - **`evidence_dir`**：证据文件目录，相对于项目根或绝对路径。
   - **`requirements[].pattern`**：C1 合约正则的 JS RegExp 模式。支持 `(?i)` 前缀转换为 `i` 标志。
   - **`requirements[].type`**：
-    - `"regex"` → 走 C1（合约正则，确定性，零成本）。适合数值约束（覆盖率≥85%）、格式固定的文本（lint errors）、功能名匹配。
+    - `"regex"` → 走 C1 正向合约（确定性，零成本）。pattern 匹配证据内容 → PASS，不匹配 → FAIL。
+    - `"negative"` → 走 C1 负向合约（确定性，零成本）。pattern 匹配证据内容 → FAIL（证据含不应出现的内容），不匹配 → PASS。
     - `"llm"` → 走 C2（逐需求 LLM，有成本）。适合语义判断（"是否真正实现了 write-invalidation"）。
-  - **推荐策略**：数值约束和固定格式用 regex，语义判断用 llm。同一批需求可以混合两种 type，先过 C1 再过 C2。
+  - **推荐策略**：数值约束和固定格式用 regex，语义判断用 llm。需要堵 scope-matches-claim 缺口（如正向关键词匹配但上下文是否定）时用 negative。同一批需求可以混合三种 type，先过 C1 正向/负向、再过 C2。
 
 - **`layer3.divergence_threshold`**（选填，默认 0.8）：Layer 3 分歧阈值。当 N 次投票中最大比例低于此值 → UNCLEAR 转人工，不做多数决。
 - **`layer3.uncertain_output`**（选填）：UNCLEAR 结果写入路径。

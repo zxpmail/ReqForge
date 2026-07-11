@@ -508,13 +508,19 @@ export function evidenceGateCheck(evidenceDir, requirements) {
 // ====== C1 — 合约正则检查 ======
 // 对每个需求读对应证据文件内容，regex 匹配。无模型，零成本。
 // 对应实验 Phase 2 C1：逐需求正则匹配
+//
+// 两种合约类型：
+//   type="regex"    — 正向合约：证据含模式 → PASS；不含 → FAIL
+//   type="negative" — 负向合约：证据含模式 → FAIL（出现不应出现的内容）；不含 → PASS
+//   负向合约堵 scope-matches-claim 缺口：正向关键词匹配了但上下文是否定（如 "NOT write-invalidation"），
+//   负向合约通过模式匹配 "TTL.*instead|not.*write.?invalidat" 捕获。
 export function contractRegexCheck(evidenceDir, requirements) {
   if (!requirements || requirements.length === 0) {
     return { verdict: "PASS", layer: "C1", check: "C1_no_reqs", reason: "" };
   }
 
-  // 只检查 type=regex 的需求
-  const regexReqs = requirements.filter(r => r.type === "regex" && r.pattern);
+  // 检查 type=regex（正向）和 type=negative（负向）的需求
+  const regexReqs = requirements.filter(r => (r.type === "regex" || r.type === "negative") && r.pattern);
   if (regexReqs.length === 0) {
     return { verdict: "PASS", layer: "C1", check: "C1_no_regex_reqs", reason: "" };
   }
@@ -546,13 +552,26 @@ export function contractRegexCheck(evidenceDir, requirements) {
       continue;
     }
 
+    const isNegative = req.type === "negative";
+
     try {
       const { pattern, flags } = toJsRegex(req.pattern);
       const re = new RegExp(pattern, flags);
-      if (re.test(content)) {
-        passes.push(req.id);
+      const matched = re.test(content);
+      if (isNegative) {
+        // 负向合约：匹配到不应出现的内容 → FAIL
+        if (matched) {
+          failures.push(`${req.id}: 负向合约命中 — 证据含不应出现的内容 (/${pattern}/)`);
+        } else {
+          passes.push(req.id);
+        }
       } else {
-        failures.push(`${req.id}: 模式 /${pattern}/ 在 ${req.evidence_file} 中未匹配`);
+        // 正向合约：匹配到预期内容 → PASS
+        if (matched) {
+          passes.push(req.id);
+        } else {
+          failures.push(`${req.id}: 模式 /${pattern}/ 在 ${req.evidence_file} 中未匹配`);
+        }
       }
     } catch (e) {
       failures.push(`${req.id}: 正则错误 ${e.message}`);
@@ -781,7 +800,7 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
     // C1 — 合约正则（确定性）
     const c1 = contractRegexCheck(evidenceDir, evidenceGates.requirements);
-    const c1Reqs = evidenceGates.requirements.filter(r => r.type === "regex");
+    const c1Reqs = evidenceGates.requirements.filter(r => (r.type === "regex" || r.type === "negative"));
     const c1Evidence = c1Reqs.map(r => `evidence:${r.evidence_file}(${r.pattern})`).join(";");
     stages.push({ layer: "C1", verdict: c1.verdict, check: c1.check, reason: c1.reason,
                   failure_class: c1.failure_class || null, evidence: c1Evidence });
@@ -801,7 +820,14 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
       const c2Evidence = c2Reqs.map(r => `evidence:${r.evidence_file}(${r.id})`).join(";");
       stages.push({ layer: "C2", verdict: c2.verdict, check: c2.check, reason: c2.reason,
                     evidence: c2Evidence });
-      finalStage = c2;
+      // C1 有冲突（如正/负向合约同时触发）但 C2 无 LLM 需求可判断 → 冲突本身传给 L3
+      if (c1.verdict === "UNCLEAR" && c2.verdict === "PASS" && c2.check === "C2_no_llm_reqs") {
+        finalStage = { verdict: "UNCLEAR", layer: "C1_conflict_no_C2",
+                       failure_class: "unset",
+                       reason: `C1 合约冲突 (${c1.reason})，无 LLM 需求做语义判断，转人工` };
+      } else {
+        finalStage = c2;
+      }
     } else {
       finalStage = { verdict: "PASS", layer: "C1_to_L3" };
     }
@@ -989,7 +1015,8 @@ async function main() {
 
   const hasEvidenceGates = cfg.evidenceGates && cfg.evidenceGates.requirements && cfg.evidenceGates.requirements.length > 0;
   const hasLlmReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "llm");
-  const hasRegexReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "regex");
+  const hasRegexReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "regex" || r.type === "negative");
+  const hasNegativeReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "negative");
 
   console.log(`\n🔍 forge-verify: content-verify — ${hasEvidenceGates ? "证据门管道" : "结构化验证"}`);
   console.log(`  模型: ${cfg.model}`);
@@ -998,7 +1025,8 @@ async function main() {
   console.log(`  投票: ${cfg.runs} 次 | 分歧阈值: ${cfg.divergenceThreshold}`);
   if (hasEvidenceGates) {
     console.log(`  证据门合约: ${cfg.evidenceGates.requirements.length} 条需求`);
-    console.log(`    - 正则检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "regex").length} 条`);
+    console.log(`    - 正则检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "regex").length} 条
+    - 负向合约: ${cfg.evidenceGates.requirements.filter(r => r.type === "negative").length} 条`);
     console.log(`    - LLM 检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "llm").length} 条`);
   }
   console.log(`  ─管道─`);
@@ -1007,7 +1035,7 @@ async function main() {
   console.log(`    L1  合约匹配   (minLen/keywords/blacklist) — 零成本`);
   if (hasEvidenceGates) {
     console.log(`    EG  证据门      (文件存在且非空) — 零成本`);
-    if (hasRegexReqs) console.log(`    C1  合约正则    (逐需求regex匹配证据内容) — 零成本`);
+    if (hasRegexReqs) console.log(`    C1  合约正则    (正/负向regex匹配证据内容) — 零成本${hasNegativeReqs ? " • 负向合约命中=FAIL" : ""}`);
     if (hasLlmReqs)  console.log(`    C2  逐需求LLM   (逐条判断证据是否满足需求)`);
   } else {
     console.log(`    L2  LLM 语义   (瘦prompt, 只问残差)`);
