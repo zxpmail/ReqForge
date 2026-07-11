@@ -678,7 +678,6 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
   const filename = filePath.split(/[/\\]/).pop();  // 提取文件名用于 re-stat 检查
   const stages = [];
-  const trace = [];  // chain-of-evidence
 
   // 获取证据文件 mtime（用于 trace staleness 检测）
   function evidenceFileMeta(filePath) {
