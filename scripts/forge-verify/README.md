@@ -19,7 +19,7 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 | 4 | no-placeholders | grep TBD/FIXME in src/ | 所有项目 |
 | 5 | dev-map-fresh | .forge/dev-map.md 存在且已填充 | 所有项目 |
 | 6 | security-patterns | `eval` / `new Function` 轻量扫描（需 security-guidance.md） | 有 src/ 的项目 |
-| 7 | content-quality | 四层结构化内容验证（L0 形状 → L1 合约 → L2 LLM → L3 分歧） | 已配置 `.forge/content-verify.json` 的项目 |
+| 7 | content-quality | 分层结构化内容验证（L0 形状 → L0e Re-Stat → L1 合约 → L2 LLM → L3 分歧） | 已配置 `.forge/content-verify.json` 的项目 |
 
 ## 基线对比流程
 
@@ -202,7 +202,6 @@ pnpm forge-verify-content --from-config  # 显式指定
 | `ANTHROPIC_AUTH_TOKEN` | API token（必填） | — |
 | `ANTHROPIC_BASE_URL` | API 地址（含 `/anthropic` → 走 Anthropic Messages 协议；否则 → OpenAI） | `https://api.deepseek.com` |
 | `ANTHROPIC_MODEL` | 模型名 | `deepseek-chat` |
-| `VERIFY_RUNS` | 每文件投票次数 | `3` |
 
 **LLM 协议自适应：** L2/C2 经统一 `llmComplete()` 调用层，依据 `ANTHROPIC_BASE_URL` 是否含 `/anthropic` 自动选协议 —— 含则走 Anthropic Messages（`/v1/messages` + `x-api-key`，如智谱 GLM 的 `/api/anthropic` 网关，与 Claude Code 同链路），不含则走 OpenAI Chat Completions（`/v1/chat/completions` + `Bearer`，如 deepseek）。一份 `ANTHROPIC_*` env 在两类端点下都可用，无需改代码。`--runs N`（含 `--from-config` 模式）控制每需求投票次数。
 
