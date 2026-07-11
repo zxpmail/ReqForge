@@ -348,60 +348,86 @@ OUTPUT:
 Respond in JSON only:
 {"pass": true/false, "reason": "one sentence on semantic sufficiency"}`;
 
+// ====== LLM 调用统一层（协议自适应）======
+// base URL 含 /anthropic → Anthropic Messages 协议（与 Claude Code 同链路，智谱等）；
+// 否则 → OpenAI Chat Completions 协议（deepseek 等）。一份 ANTHROPIC_* env 两端通吃。
+// 返回 { ok:true, text } 或 { ok:false, error }；ok=false 时绝不产出文本，
+// 调用方据此把 API 错误记为非投票（→ UNCLEAR），不伪装成判定。
+async function llmComplete(prompt, { model, maxTokens = 256, temperature = 0 } = {}, { baseUrl, token } = {}) {
+  const isAnthropic = /\/anthropic(\/|$)/i.test(baseUrl || "");
+  const url = (baseUrl || "").replace(/\/+$/, "") + (isAnthropic ? "/v1/messages" : "/v1/chat/completions");
+
+  let resp;
+  try {
+    const headers = isAnthropic
+      ? { "Content-Type": "application/json", "x-api-key": token, "anthropic-version": "2023-06-01" }
+      : { "Content-Type": "application/json", Authorization: `Bearer ${token}` };
+    resp = await fetch(url, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        model, max_tokens: maxTokens, temperature,
+        messages: [{ role: "user", content: prompt }],
+      }),
+    });
+  } catch (err) {
+    return { ok: false, error: `API call failed: ${err.message?.slice(0, 80) ?? err}` };
+  }
+
+  if (!resp.ok) {
+    let detail = `HTTP ${resp.status}`;
+    try { const eb = await resp.json(); if (eb?.error?.message) detail += `: ${eb.error.message}`; } catch {}
+    return { ok: false, error: detail };
+  }
+
+  let body;
+  try { body = await resp.json(); } catch { return { ok: false, error: "response not JSON" }; }
+
+  const text = isAnthropic
+    ? (Array.isArray(body?.content) ? (body.content.find(c => c?.type === "text")?.text ?? "") : "")
+    : (body?.choices?.[0]?.message?.content ?? "");
+
+  if (!text || !text.trim()) return { ok: false, error: "empty response content" };
+  return { ok: true, text: text.trim() };
+}
+
 async function layer2Check(content, task, model, nRuns, apiConfig) {
-  const { baseUrl, token } = apiConfig;
   const prompt = LAYER2_PROMPT.replace("{task}", task).replace("{content}", content.slice(0, 4000));
 
   const verdicts = [];
   const reasons = [];
 
   for (let i = 0; i < nRuns; i++) {
-    try {
-      const resp = await fetch(`${baseUrl}/v1/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          model,
-          max_tokens: 256,
-          temperature: 0.0,
-          messages: [{ role: "user", content: prompt }],
-        }),
-      });
-
-      const body = await resp.json();
-      const text = (body?.choices?.[0]?.message?.content || "").trim();
-
-      // Try JSON parse first
-      let parsed;
-      try {
-        parsed = JSON.parse(text);
-      } catch {
-        // Fallback: strip markdown and retry
-        const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
-        try {
-          parsed = JSON.parse(cleaned);
-        } catch {
-          verdicts.push("API_PARSE_ERROR");
-          reasons.push(`JSON parse failed: ${text.slice(0, 80)}`);
-          continue;
-        }
-      }
-
-      if (parsed.pass === true) {
-        verdicts.push("PASS");
-      } else if (parsed.pass === false) {
-        verdicts.push("REJECT");
-      } else {
-        verdicts.push("UNCLEAR");
-      }
-      reasons.push(typeof parsed.reason === "string" ? parsed.reason : "");
-    } catch (err) {
+    const r = await llmComplete(prompt, { model, maxTokens: 256, temperature: 0 }, apiConfig);
+    if (!r.ok) {
       verdicts.push("API_ERROR");
-      reasons.push(`API call failed: ${err.message?.slice(0, 60)}`);
+      reasons.push(r.error);
+      continue;
     }
+    // Try JSON parse first
+    let parsed;
+    try {
+      parsed = JSON.parse(r.text);
+    } catch {
+      // Fallback: strip markdown and retry
+      const cleaned = r.text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch {
+        verdicts.push("API_PARSE_ERROR");
+        reasons.push(`JSON parse failed: ${r.text.slice(0, 80)}`);
+        continue;
+      }
+    }
+
+    if (parsed.pass === true) {
+      verdicts.push("PASS");
+    } else if (parsed.pass === false) {
+      verdicts.push("REJECT");
+    } else {
+      verdicts.push("UNCLEAR");
+    }
+    reasons.push(typeof parsed.reason === "string" ? parsed.reason : "");
   }
 
   return { verdicts, reasons };
@@ -579,7 +605,6 @@ async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, a
     return { verdict: "PASS", layer: "C2", check: "C2_no_llm_reqs", reason: "" };
   }
 
-  const { baseUrl, token } = apiConfig;
   const results = [];
 
   for (const req of llmReqs) {
@@ -607,45 +632,20 @@ async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, a
     const votes = [];
     let lastApiError = "";
     for (let i = 0; i < nRuns; i++) {
-      try {
-        const resp = await fetch(`${baseUrl}/v1/chat/completions`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            model,
-            max_tokens: 128,
-            temperature: 0.0,
-            messages: [{ role: "user", content: prompt }],
-          }),
-        });
-
-        // 非 2xx（401/403/429/5xx…）→ API 错误，不计为 fail
-        if (!resp.ok) {
-          let detail = `HTTP ${resp.status}`;
-          try { const eb = await resp.json(); if (eb?.error?.message) detail += `: ${eb.error.message}`; } catch {}
-          lastApiError = detail;
-          votes.push(null);
-          continue;
-        }
-
-        const body = await resp.json();
-        const text = (body?.choices?.[0]?.message?.content || "").trim();
-
-        let parsed;
-        try {
-          parsed = JSON.parse(text);
-        } catch {
-          const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
-          try { parsed = JSON.parse(cleaned); } catch { lastApiError = `JSON parse failed: ${text.slice(0, 80)}`; votes.push(null); continue; }
-        }
-        votes.push(parsed.pass === true);
-      } catch (err) {
-        lastApiError = `API call failed: ${err.message?.slice(0, 60)}`;
+      const r = await llmComplete(prompt, { model, maxTokens: 128, temperature: 0 }, apiConfig);
+      if (!r.ok) {
+        lastApiError = r.error;
         votes.push(null);
+        continue;
       }
+      let parsed;
+      try {
+        parsed = JSON.parse(r.text);
+      } catch {
+        const cleaned = r.text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+        try { parsed = JSON.parse(cleaned); } catch { lastApiError = `JSON parse failed: ${r.text.slice(0, 80)}`; votes.push(null); continue; }
+      }
+      votes.push(parsed.pass === true);
     }
 
     const genuine = votes.filter(v => v === true || v === false);
@@ -955,8 +955,10 @@ function parseConfig() {
   // API 配置
   // 注意：DeepSeek Anthropic 兼容端地址是 https://api.deepseek.com/anthropic
   // 打开 AI 兼容端需要剥离 /anthropic 后缀
-  const rawUrl = process.env.ANTHROPIC_BASE_URL || "https://api.deepseek.com";
-  const baseUrl = rawUrl.replace(/\/anthropic\/?$/i, "");
+  // 不剥 /anthropic：llmComplete 依据 base 是否含 /anthropic 分发协议
+  //   含 /anthropic → Anthropic Messages（智谱等，与 Claude Code 同链路）
+  //   否则         → OpenAI Chat Completions（deepseek 等）
+  const baseUrl = process.env.ANTHROPIC_BASE_URL || "https://api.deepseek.com";
   const token = process.env.ANTHROPIC_AUTH_TOKEN || "";
   const effectiveModel = model || process.env.ANTHROPIC_MODEL || "deepseek-v4-flash";
 
