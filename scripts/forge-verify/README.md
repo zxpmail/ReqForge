@@ -200,9 +200,13 @@ pnpm forge-verify-content --from-config  # 显式指定
 | 变量 | 说明 | 默认值 |
 |------|------|--------|
 | `ANTHROPIC_AUTH_TOKEN` | API token（必填） | — |
-| `ANTHROPIC_BASE_URL` | API 地址 | `https://api.deepseek.com` |
+| `ANTHROPIC_BASE_URL` | API 地址（含 `/anthropic` → 走 Anthropic Messages 协议；否则 → OpenAI） | `https://api.deepseek.com` |
 | `ANTHROPIC_MODEL` | 模型名 | `deepseek-chat` |
 | `VERIFY_RUNS` | 每文件投票次数 | `3` |
+
+**LLM 协议自适应：** L2/C2 经统一 `llmComplete()` 调用层，依据 `ANTHROPIC_BASE_URL` 是否含 `/anthropic` 自动选协议 —— 含则走 Anthropic Messages（`/v1/messages` + `x-api-key`，如智谱 GLM 的 `/api/anthropic` 网关，与 Claude Code 同链路），不含则走 OpenAI Chat Completions（`/v1/chat/completions` + `Bearer`，如 deepseek）。一份 `ANTHROPIC_*` env 在两类端点下都可用，无需改代码。`--runs N`（含 `--from-config` 模式）控制每需求投票次数。
+
+**C2 诚实降级：** C2 把 API/解析错误（HTTP 非 2xx、空响应、网络异常）记为非投票（`null`），降级为 `UNCLEAR (C2_api_errors)`，绝不伪装成 `REJECT (execution-lapse)` —— 模型不可达时不会误报"agent 偷懒"。L2 同理（`API_ERROR`/`API_PARSE_ERROR` 为非投票 → L3 分歧 → UNCLEAR）。
 
 ### 输出增强字段（v2）
 

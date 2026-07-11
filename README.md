@@ -75,6 +75,14 @@ flowchart LR
 
 ## What's New
 
+### v1.50.0 — 2026-07-11 — forge-verify LLM layer: protocol-adaptive, honest degradation
+
+- **LLM protocol-adaptive layer**: L2 and C2 route through a unified `llmComplete()` that picks protocol from `ANTHROPIC_BASE_URL` — containing `/anthropic` → Anthropic Messages (e.g. Zhipu GLM's `/api/anthropic` gateway, the same path Claude Code uses), otherwise → OpenAI Chat Completions (e.g. deepseek). One `ANTHROPIC_*` env works across both endpoint families with no code change. Previously every call was hardcoded to OpenAI and stripped `/anthropic`, so under a GLM env every L2/C2 call hit HTTP 403.
+- **C2 honest degradation**: C2 (per-requirement LLM) now records API/parse errors (non-2xx, empty body, network) as non-votes → `UNCLEAR (C2_api_errors)`, never a false `REJECT (execution-lapse)`. An unreachable model no longer reads as "the agent did sloppy work". L2 already behaved this way (`API_ERROR`/`API_PARSE_ERROR` non-votes → L3 UNCLEAR); C2 now matches.
+- **`--runs`/`--task`/`--files` honored under `--from-config`**: the CLI override block sat inside parseConfig's else branch, so `--from-config --runs 1` was silently ignored (always 3). Overrides now apply in both modes.
+- **Tests import production pipeline**: `test-evidence-gate.mjs` imports `evidenceGateCheck`/`contractRegexCheck`/`perRequirementLlmCheck` from `content-verify.mjs` (now exported; `main()` guarded by `import.meta.url`) instead of inline copies that had drifted — the inline C2 was still on the old OpenAI-only protocol. −171 lines, zero drift.
+- **Fixed — content-verify unloadable since v1.49.0**: a duplicate `const trace` (SyntaxError) left by the chain-of-evidence commit meant `content-verify.mjs` could not parse or run at all. Removed.
+
 ### v1.49.0 — 2026-07-09 — Weng harness survey: editable surface, failure_class, held-in/held-out, trace, harness search
 
 - **Editable surface**: `.forge/editable-surface.json` defines explicit read/write paths for evolution engine, excluding evaluator code (`scripts/forge-verify/`) and gate config from evolution scope. Inspired by DGM (Zhang et al. 2025): evaluator and permission control must live outside the loop.
