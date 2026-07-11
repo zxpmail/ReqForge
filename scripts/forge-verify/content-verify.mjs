@@ -460,7 +460,7 @@ function layer3Check(verdicts, divergenceThreshold) {
 // ====== Evidence Gate — 证据文件存在性检查 ======
 // 纯函数：同一文件系统状态 → 同一结论。无模型，零成本。
 // 对应实验 Phase 1 Channel B：文件存在且非空 → PASS
-function evidenceGateCheck(evidenceDir, requirements) {
+export function evidenceGateCheck(evidenceDir, requirements) {
   if (!requirements || requirements.length === 0) {
     return { verdict: "PASS", layer: "EvidenceGate", check: "EG_no_reqs", reason: "" };
   }
@@ -508,7 +508,7 @@ function evidenceGateCheck(evidenceDir, requirements) {
 // ====== C1 — 合约正则检查 ======
 // 对每个需求读对应证据文件内容，regex 匹配。无模型，零成本。
 // 对应实验 Phase 2 C1：逐需求正则匹配
-function contractRegexCheck(evidenceDir, requirements) {
+export function contractRegexCheck(evidenceDir, requirements) {
   if (!requirements || requirements.length === 0) {
     return { verdict: "PASS", layer: "C1", check: "C1_no_reqs", reason: "" };
   }
@@ -594,7 +594,7 @@ Does this evidence PROVE that the requirement is met? Do not accept claims like
 Respond in JSON only:
 {"pass": true/false, "reason": "one sentence"}`;
 
-async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, apiConfig) {
+export async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, apiConfig) {
   if (!requirements || requirements.length === 0) {
     return { verdict: "PASS", layer: "C2", check: "C2_no_reqs", reason: "" };
   }
@@ -1093,7 +1093,10 @@ async function main() {
   process.exit(rejected > 0 ? 1 : 0);
 }
 
-main().catch(err => {
-  console.error("FATAL:", err);
-  process.exit(3);
-});
+// 仅在直接运行时启动 CLI；被测试 import 时不触发 main
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  main().catch(err => {
+    console.error("FATAL:", err);
+    process.exit(3);
+  });
+}
