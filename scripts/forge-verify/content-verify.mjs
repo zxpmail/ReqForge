@@ -935,15 +935,15 @@ function parseConfig() {
         if (cfg.layer3.uncertain_output) uncertainOutput = cfg.layer3.uncertain_output;
       }
     }
+  }
 
-    // CLI 覆盖
-    if (taskIdx >= 0 && taskIdx + 1 < args.length) task = args[taskIdx + 1];
-    if (filesIdx >= 0 && filesIdx + 1 < args.length) {
-      files = args[filesIdx + 1].split(",").map(f => f.trim());
-    }
-    if (runsIdx >= 0 && runsIdx + 1 < args.length) {
-      runs = parseInt(args[runsIdx + 1], 10) || DEFAULT_RUNS;
-    }
+  // CLI 覆盖（两种模式都生效：--from-config 提供默认，CLI 参数可覆盖）
+  if (taskIdx >= 0 && taskIdx + 1 < args.length) task = args[taskIdx + 1];
+  if (filesIdx >= 0 && filesIdx + 1 < args.length) {
+    files = args[filesIdx + 1].split(",").map(f => f.trim());
+  }
+  if (runsIdx >= 0 && runsIdx + 1 < args.length) {
+    runs = parseInt(args[runsIdx + 1], 10) || DEFAULT_RUNS;
   }
 
   // 环境变量后备
