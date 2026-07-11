@@ -602,8 +602,10 @@ async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, a
       .replace("{evidence_file}", req.evidence_file)
       .replace("{content}", content);
 
-    // N 次投票
+    // N 次投票 — true=通过, false=真实未通过, null=API/解析错误（绝不计入 fail）
+    // 与 L2/L3 一致：API 错误是非投票，不能伪装成“需求未满足”。
     const votes = [];
+    let lastApiError = "";
     for (let i = 0; i < nRuns; i++) {
       try {
         const resp = await fetch(`${baseUrl}/v1/chat/completions`, {
@@ -620,6 +622,15 @@ async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, a
           }),
         });
 
+        // 非 2xx（401/403/429/5xx…）→ API 错误，不计为 fail
+        if (!resp.ok) {
+          let detail = `HTTP ${resp.status}`;
+          try { const eb = await resp.json(); if (eb?.error?.message) detail += `: ${eb.error.message}`; } catch {}
+          lastApiError = detail;
+          votes.push(null);
+          continue;
+        }
+
         const body = await resp.json();
         const text = (body?.choices?.[0]?.message?.content || "").trim();
 
@@ -628,40 +639,55 @@ async function perRequirementLlmCheck(evidenceDir, requirements, model, nRuns, a
           parsed = JSON.parse(text);
         } catch {
           const cleaned = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
-          try { parsed = JSON.parse(cleaned); } catch { votes.push(false); continue; }
+          try { parsed = JSON.parse(cleaned); } catch { lastApiError = `JSON parse failed: ${text.slice(0, 80)}`; votes.push(null); continue; }
         }
         votes.push(parsed.pass === true);
-      } catch {
-        votes.push(false);
+      } catch (err) {
+        lastApiError = `API call failed: ${err.message?.slice(0, 60)}`;
+        votes.push(null);
       }
     }
 
-    const passCount = votes.filter(Boolean).length;
-    const pass = passCount > nRuns / 2;
+    const genuine = votes.filter(v => v === true || v === false);
+    const passCount = votes.filter(v => v === true).length;
+    const errorCount = votes.filter(v => v === null).length;
+    // 全部投票出错 → 无法判定（pass=null）；否则取 GENUINE 投票多数
+    const pass = genuine.length === 0 ? null : passCount > genuine.length / 2;
     results.push({
       req_id: req.id,
       pass,
       pass_count: passCount,
+      error_count: errorCount,
       nRuns,
-      reason: pass ? "majority passes" : `majority rejects (${passCount}/${nRuns})`,
+      reason: pass === null
+        ? `无法判定 (API 错误 ${errorCount}/${nRuns}: ${lastApiError})`
+        : (pass ? "majority passes" : `majority rejects (${passCount}/${genuine.length})`),
     });
   }
 
-  const passed = results.filter(r => r.pass).length;
-  const failed = results.filter(r => !r.pass).length;
+  // passed=真实通过, failed=真实未通过, errored=无法判定（API 错误，绝不计为 fail）
+  const passed = results.filter(r => r.pass === true).length;
+  const failed = results.filter(r => r.pass === false).length;
+  const errored = results.filter(r => r.pass === null).length;
 
-  if (failed === 0) {
+  if (failed === 0 && errored === 0) {
     return { verdict: "PASS", layer: "C2", check: "C2_pass",
              reason: `全部 ${results.length} 条需求通过 LLM 判断` };
+  }
+  if (failed === 0 && errored > 0) {
+    // 有需求因 API 错误无法验证 → 不能假装 PASS，转人工
+    return { verdict: "UNCLEAR", layer: "C2", check: "C2_api_errors",
+             failure_class: "unset",
+             reason: `${errored}/${results.length} 条需求 API 调用失败，无法确认: ${results.filter(r => r.pass === null).map(r => `${r.req_id}(${r.reason})`).join(", ")}` };
   }
   if (passed === 0) {
     return { verdict: "REJECT", layer: "C2", check: "C2_all_fail",
              failure_class: "execution-lapse",
-             reason: `全部 ${results.length} 条需求未通过: ${results.filter(r => !r.pass).map(r => r.req_id).join(", ")}` };
+             reason: `全部 ${results.length} 条需求未通过: ${results.filter(r => r.pass === false).map(r => r.req_id).join(", ")}` };
   }
   return { verdict: "UNCLEAR", layer: "C2", check: "C2_partial",
            failure_class: "unset",
-           reason: `${passed}/${results.length} 通过; 未通过: ${results.filter(r => !r.pass).map(r => r.req_id).join(", ")}` };
+           reason: `${passed}/${results.length} 通过; 未通过: ${results.filter(r => r.pass === false).map(r => r.req_id).join(", ")}${errored > 0 ? `; API 错误: ${results.filter(r => r.pass === null).map(r => r.req_id).join(", ")}` : ""}` };
 }
 
 // ====== 完整管道 ======
