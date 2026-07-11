@@ -1,0 +1,29 @@
+{
+  "task": "Implement rate limiting middleware with key write-invalidation on cache writes",
+  "files": ["experiments/contract-strawman-test/src/rate-limit.ts"],
+  "evidence_gates": {
+    "evidence_dir": "E:/work/ReqForge/experiments/contract-strawman-test/evidence",
+    "requirements": [
+      {
+        "id": "REQ-1",
+        "desc": "IP-level rate limiting — verify the implementation can identify and rate-limit requests by source IP",
+        "evidence_file": "test-output.txt",
+        "pattern": "(?i)(RateLimiter.*IP|rate.?limit)",
+        "type": "regex"
+      },
+      {
+        "id": "REQ-2",
+        "desc": "Write-invalidation on cache writes — this means cache entries must be actively invalidated/purged when data is written. TTL-based expiry does NOT satisfy this requirement because TTL does not invalidate on write, it expires on time. Check whether the implementation actually calls an invalidation function (e.g. invalidate(), purge(), deleteKey()) on write, or whether it relies on TTL.",
+        "evidence_file": "diff-review.md",
+        "type": "llm"
+      },
+      {
+        "id": "REQ-3",
+        "desc": "Code coverage >= 85%",
+        "evidence_file": "coverage-summary.txt",
+        "pattern": "(8[5-9]|90+)%",
+        "type": "regex"
+      }
+    ]
+  }
+}

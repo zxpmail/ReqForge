@@ -1,0 +1,13 @@
+=== Test Results: Rate Limiter Middleware ===
+
+PASS  RateLimiter - should limit requests by IP
+PASS  RateLimiter - should limit requests by User
+PASS  RateLimiter - should allow requests within limit
+PASS  RateLimiter - should reset counter after window
+PASS  RateLimiter - should handle Redis connection error
+PASS  RateLimiter - should respect custom window size
+PASS  RateLimiter - should differentiate between different IPs
+PASS  RateLimiter - should work with tiered limits (IP < User < Global)
+
+Ran 8 tests in 1.234s
+8 passed, 0 failed, 0 skipped
