@@ -13,6 +13,7 @@
  *   ┌─ 证据门管道（配置 evidence_gates 时）┐
  *   │  Evidence Gate - 证据存在检查（确定性）│  零成本
  *   │  Contract Regex  - 逐需求正则（确定性）│  零成本
+ *   │  argument-space - 独立 runner(side fx)│  零成本 C3
  *   │  Per-Requirement LLM - 逐需求 LLM    │  有成本
  *   ├─ 后备管道（无 evidence_gates 时）─────┤
  *   │  Layer 2  LLM 语义 （自由文本）       │  有成本
@@ -60,7 +61,7 @@
  *           "desc": "IP 级别限流",
  *           "evidence_file": "test-output.txt",
  *           "pattern": "(?i)(RateLimiter.*IP|isRateLimited.*IP)",  // C1 正则
- *           "type": "regex"                        // 或 "llm"
+ *           "type": "regex"                        // "regex"|"negative"|"llm"|"argument-space"
  *         }
  *       ]
  *     },
@@ -77,6 +78,7 @@
  */
 
 import { readFileSync, writeFileSync, existsSync, statSync } from "fs";
+import { execFileSync } from "child_process";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -709,6 +711,61 @@ export async function perRequirementLlmCheck(evidenceDir, requirements, model, n
            reason: `${passed}/${results.length} 通过; 未通过: ${results.filter(r => r.pass === false).map(r => r.req_id).join(", ")}${errored > 0 ? `; API 错误: ${results.filter(r => r.pass === null).map(r => r.req_id).join(", ")}` : ""}` };
 }
 
+// ====== C3 — argument-space 检查 ======
+// 对每个 type=argument-space 的需求，执行其 verify_command（独立 runner），观察 exit code。
+//   exit 0 → PASS（side effect 观察到）   exit 1 → REJECT（side effect 缺失，skill-defect）
+//   其他 → exec/setup 错误，归为 fail（不静默放行）
+//
+// series Part 13 的 argument-space 层：判定维度是观察到的 side effect（在 claim 命名指称
+// 上），在 producer 的词汇/文本操纵可达范围之外 → 同义词免疫、确定性。与 C1/C2
+// （word-space）正交：C3 不读 evidence 文本，只运行代码。
+//
+// 安全前提（editable-surface.json enforce）：
+//   - verify_command 在 .forge/content-verify.json（readonly）
+//   - verify 脚本在 .forge/verify/（readonly；constraints.verify_code=false）
+//   agent 改不了 verify_command（注入）也改不了脚本。execFileSync 不经 shell，进一步降注入面。
+export function argumentSpaceCheck(requirements, projectRoot) {
+  const argReqs = (requirements || []).filter(r => r.type === "argument-space" && r.verify_command);
+  if (argReqs.length === 0) {
+    return { verdict: "PASS", layer: "C3", check: "C3_no_reqs", reason: "" };
+  }
+
+  const failures = [];
+  const passes = [];
+  for (const req of argReqs) {
+    const argv = req.verify_command.split(/\s+/).filter(Boolean);
+    const [cmd, ...cmdArgs] = argv;
+    let exitCode = 0;
+    let out = "";
+    try {
+      out = execFileSync(cmd, cmdArgs, {
+        cwd: projectRoot, encoding: "utf-8", timeout: 30000,
+        stdio: ["ignore", "pipe", "pipe"],
+      });
+    } catch (e) {
+      exitCode = (typeof e.status === "number") ? e.status : -1;
+      out = `${e.stdout || ""}${e.stderr || ""}`;
+    }
+    const lastLine = out.split("\n").map(s => s.trim()).filter(Boolean).pop() || "(no output)";
+
+    if (exitCode === 0) {
+      passes.push(req.id);
+    } else {
+      failures.push(`${req.id}: ${exitCode === 1 ? "" : `error(exit ${exitCode}) — `}${lastLine}`);
+    }
+  }
+
+  if (failures.length === 0) {
+    return { verdict: "PASS", layer: "C3", check: "C3_pass",
+             reason: `${passes.length}/${argReqs.length} argument-space checks passed` };
+  }
+  // argument-space 是强确定性证据：任一 fail → REJECT（skill-defect），不 UNCLEAR
+  const reason = `${passes.length}/${argReqs.length} passed; failed: ${failures.join("; ")}`;
+  return { verdict: "REJECT", layer: "C3",
+           check: failures.length === argReqs.length ? "C3_all_fail" : "C3_partial",
+           failure_class: "skill-defect", reason };
+}
+
 // ====== 完整管道 ======
 async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, fileContract, apiConfig, evidenceGates) {
   // 读取文件
@@ -808,6 +865,18 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
       return { file: filePath, verdict: "REJECT", layer: "C1", check: c1.check,
                failure_class: c1.failure_class,
                reason: c1.reason, stages, trace };
+    }
+
+    // C3 — argument-space（确定性，强证据：观察 side effect，不读 evidence 文本）
+    const c3 = argumentSpaceCheck(evidenceGates.requirements, ROOT);
+    const c3Reqs = evidenceGates.requirements.filter(r => r.type === "argument-space");
+    const c3Evidence = c3Reqs.map(r => `runner:${r.verify_command}`).join(";");
+    stages.push({ layer: "C3", verdict: c3.verdict, check: c3.check, reason: c3.reason,
+                  failure_class: c3.failure_class || null, evidence: c3Evidence });
+    if (c3.verdict === "REJECT") {
+      return { file: filePath, verdict: "REJECT", layer: "C3", check: c3.check,
+               failure_class: c3.failure_class,
+               reason: c3.reason, stages, trace };
     }
 
     // C1 UNCLEAR（部分通过）或 C1 PASS 但有 type=llm 的需求 → 传 C2
@@ -1017,6 +1086,7 @@ async function main() {
   const hasLlmReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "llm");
   const hasRegexReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "regex" || r.type === "negative");
   const hasNegativeReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "negative");
+  const hasArgSpaceReqs = hasEvidenceGates && cfg.evidenceGates.requirements.some(r => r.type === "argument-space");
 
   console.log(`\n🔍 forge-verify: content-verify — ${hasEvidenceGates ? "证据门管道" : "结构化验证"}`);
   console.log(`  模型: ${cfg.model}`);
@@ -1027,7 +1097,8 @@ async function main() {
     console.log(`  证据门合约: ${cfg.evidenceGates.requirements.length} 条需求`);
     console.log(`    - 正则检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "regex").length} 条
     - 负向合约: ${cfg.evidenceGates.requirements.filter(r => r.type === "negative").length} 条`);
-    console.log(`    - LLM 检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "llm").length} 条`);
+    console.log(`    - LLM 检查: ${cfg.evidenceGates.requirements.filter(r => r.type === "llm").length} 条
+    - argument-space: ${cfg.evidenceGates.requirements.filter(r => r.type === "argument-space").length} 条 (独立 runner, side effect)`);
   }
   console.log(`  ─管道─`);
   console.log(`    L0  形状检查   (空/标点/占位符/零用例) — 零成本`);
@@ -1036,6 +1107,7 @@ async function main() {
   if (hasEvidenceGates) {
     console.log(`    EG  证据门      (文件存在且非空) — 零成本`);
     if (hasRegexReqs) console.log(`    C1  合约正则    (正/负向regex匹配证据内容) — 零成本${hasNegativeReqs ? " • 负向合约命中=FAIL" : ""}`);
+    if (hasArgSpaceReqs) console.log(`    C3  argument-space (独立runner观察side effect) — 零成本 • exit0=PASS/1=REJECT`);
     if (hasLlmReqs)  console.log(`    C2  逐需求LLM   (逐条判断证据是否满足需求)`);
   } else {
     console.log(`    L2  LLM 语义   (瘦prompt, 只问残差)`);

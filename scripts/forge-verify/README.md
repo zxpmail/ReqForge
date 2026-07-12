@@ -173,8 +173,11 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
   - **`requirements[].type`**：
     - `"regex"` → 走 C1 正向合约（确定性，零成本）。pattern 匹配证据内容 → PASS，不匹配 → FAIL。
     - `"negative"` → 走 C1 负向合约（确定性，零成本）。pattern 匹配证据内容 → FAIL（证据含不应出现的内容），不匹配 → PASS。
+    - `"argument-space"` → 走 C3（确定性，零成本）。执行 `verify_command`（独立 runner）观察 side effect，exit 0 → PASS，exit 1 → REJECT（skill-defect）。**不读 evidence 文本，同义词免疫**——series Part 13 的 argument-space 层。
     - `"llm"` → 走 C2（逐需求 LLM，有成本）。适合语义判断（"是否真正实现了 write-invalidation"）。
-  - **推荐策略**：数值约束和固定格式用 regex，语义判断用 llm。需要堵 scope-matches-claim 缺口（如正向关键词匹配但上下文是否定）时用 negative。同一批需求可以混合三种 type，先过 C1 正向/负向、再过 C2。
+  - **`requirements[].verify_command`**（type=`argument-space` 必填）：独立 runner 命令，forge-verify 用 `execFileSync` 执行（不经 shell）。例如 `node .forge/verify/write-invalidation.js src/rate-limit.ts`。runner 断言 claim 命名指称上的 side effect，exit 0/1 编码结果。
+  - **推荐策略**：数值约束和固定格式用 regex，语义判断用 llm，**可执行 claim（有可观察 side effect）用 argument-space**。需要堵 scope-matches-claim 缺口（如正向关键词匹配但上下文是否定）时用 negative。同一批需求可混合四种 type；管道顺序 EG → C1（正/负）→ C3（argument-space）→ C2（llm）→ L3，C1/C3 任一 REJECT 直接终止。
+  - **安全前提**（`editable-surface.json` enforce）：`verify_command` 在 `.forge/content-verify.json`、verify 脚本在 `.forge/verify/`，均在 readonly 区（`constraints.verify_code: false`）。agent 改不了命令（注入）也改不了脚本。详见 [series Part 13 — argument-space, tested](https://dev.to/zxpmail)（实测 C3 5/5，C1/C2 word-space 与真实脱钩）。
 
 - **`layer3.divergence_threshold`**（选填，默认 0.8）：Layer 3 分歧阈值。当 N 次投票中最大比例低于此值 → UNCLEAR 转人工，不做多数决。
 - **`layer3.uncertain_output`**（选填）：UNCLEAR 结果写入路径。
