@@ -105,3 +105,23 @@
 **记录日期**：2026-07-02
 
 ---
+
+## Contract type="addressable" — 写时 referent 强制验证
+
+**想法**：加 `type="addressable"` contract，强制需求写明 key/path/entity 等 addressable referent，不写全 C1 直接 FAIL。Mike Czerwinski 推的逻辑：relevant 不是不可寻址，是作者没算。把 scope 决策从运行时压到需求写入时。
+
+**触发条件**（满足任意一条才回头评估）：
+1. L3 监控数据连续 2+ 周显示"C3 ABSTAIN（无可执行指称）"的需求占人工审查时间 >30%，证明含糊 referent 是真实的 reviewer 负担来源
+2. 出现至少 1 个真实案例：一条因 referent 含糊而 C3 ABSTAIN 的需求，C2 通过了但实际有严重缺陷（当前理论上有此可能，但无实例）
+
+**为什么现在不做**：
+- 收益已被管道优雅降级覆盖：C3 ABSTAIN → C2 → L3 是正确行为，不是缺口
+- C1 是正则层，做不了语义分类。硬做需启发式（脆弱）或偷渡 LLM（越层）
+- 真实破口在别处：C1 在真实 agent 产出上 collapse 到 24%（正则匹配不上正确工作），优先级更高
+- 没有实测数据证明含糊 referent 是当前的 reviewer 负担大头
+
+**当前优先级**：P4
+
+**记录日期**：2026-07-14
+
+---

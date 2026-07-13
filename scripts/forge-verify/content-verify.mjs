@@ -522,7 +522,8 @@ export function contractRegexCheck(evidenceDir, requirements) {
   }
 
   // 检查 type=regex（正向）和 type=negative（负向）的需求
-  const regexReqs = requirements.filter(r => (r.type === "regex" || r.type === "negative") && r.pattern);
+  // 支持 pattern（单字符串）和 patterns（数组，OR 语义）两种格式
+  const regexReqs = requirements.filter(r => (r.type === "regex" || r.type === "negative") && (r.pattern || (r.patterns && r.patterns.length > 0)));
   if (regexReqs.length === 0) {
     return { verdict: "PASS", layer: "C1", check: "C1_no_regex_reqs", reason: "" };
   }
@@ -541,8 +542,20 @@ export function contractRegexCheck(evidenceDir, requirements) {
     return { pattern: p, flags };
   }
 
+  // 获取需求的所有 pattern（patterns 数组优先于 pattern 字符串）
+  function getPatterns(req) {
+    if (req.patterns && Array.isArray(req.patterns) && req.patterns.length > 0) {
+      return req.patterns;
+    }
+    if (req.pattern) {
+      return [req.pattern];
+    }
+    return [];
+  }
+
   const failures = [];
   const passes = [];
+  const failedReqs = [];    // 逐需求失败记录（用于 C2→C1 反馈环）
 
   for (const req of regexReqs) {
     const filePath = join(evidenceDir, req.evidence_file);
@@ -551,32 +564,56 @@ export function contractRegexCheck(evidenceDir, requirements) {
       content = readFileSync(filePath, "utf-8");
     } catch {
       failures.push(`${req.id}: 证据文件 ${req.evidence_file} 不可读`);
+      failedReqs.push({ id: req.id, evidence_file: req.evidence_file, reason: "evidence_unreadable" });
       continue;
     }
 
     const isNegative = req.type === "negative";
+    const patterns = getPatterns(req);
 
-    try {
-      const { pattern, flags } = toJsRegex(req.pattern);
-      const re = new RegExp(pattern, flags);
-      const matched = re.test(content);
-      if (isNegative) {
-        // 负向合约：匹配到不应出现的内容 → FAIL
-        if (matched) {
-          failures.push(`${req.id}: 负向合约命中 — 证据含不应出现的内容 (/${pattern}/)`);
-        } else {
-          passes.push(req.id);
+    // 尝试所有 pattern，任一匹配即通过（OR 语义）
+    let matchedAny = false;
+    const errors = [];
+    for (const p of patterns) {
+      try {
+        const { pattern, flags } = toJsRegex(p);
+        const re = new RegExp(pattern, flags);
+        if (re.test(content)) {
+          matchedAny = true;
+          break;
         }
-      } else {
-        // 正向合约：匹配到预期内容 → PASS
-        if (matched) {
-          passes.push(req.id);
-        } else {
-          failures.push(`${req.id}: 模式 /${pattern}/ 在 ${req.evidence_file} 中未匹配`);
-        }
+      } catch (e) {
+        errors.push(e.message);
       }
-    } catch (e) {
-      failures.push(`${req.id}: 正则错误 ${e.message}`);
+    }
+
+    if (errors.length === patterns.length && patterns.length > 0) {
+      // 所有 pattern 都正则错误
+      failures.push(`${req.id}: 所有模式正则错误 ${errors.join("; ")}`);
+      failedReqs.push({ id: req.id, evidence_file: req.evidence_file, reason: "regex_error" });
+      continue;
+    }
+
+    if (isNegative) {
+      // 负向合约：任一匹配到不应出现的内容 → FAIL
+      if (matchedAny) {
+        const patternList = patterns.length === 1 ? `/${patterns[0]}/` : `(${patterns.length} 个模式)`;
+        failures.push(`${req.id}: 负向合约命中 — 证据含不应出现的内容 ${patternList}`);
+        failedReqs.push({ id: req.id, evidence_file: req.evidence_file, reason: "negative_hit" });
+      } else {
+        passes.push(req.id);
+      }
+    } else {
+      // 正向合约：任一匹配到预期内容 → PASS
+      if (matchedAny) {
+        passes.push(req.id);
+      } else {
+        const patternList = patterns.length === 1
+          ? `模式 /${patterns[0]}/`
+          : `所有 ${patterns.length} 个模式均`;
+        failures.push(`${req.id}: ${patternList}在 ${req.evidence_file} 中未匹配`);
+        failedReqs.push({ id: req.id, evidence_file: req.evidence_file, reason: "no_match" });
+      }
     }
   }
 
@@ -589,12 +626,14 @@ export function contractRegexCheck(evidenceDir, requirements) {
   if (failures.length === regexReqs.length) {
     return { verdict: "REJECT", layer: "C1", check: "C1_all_fail",
              failure_class: "skill-defect",
-             reason: `全部 ${regexReqs.length} 条合约正则未通过: ${failures.join("; ")}` };
+             reason: `全部 ${regexReqs.length} 条合约正则未通过: ${failures.join("; ")}`,
+             failed_reqs: failedReqs };
   }
 
   return { verdict: "UNCLEAR", layer: "C1", check: "C1_partial",
            failure_class: "unset",
-           reason: `${passes.length}/${regexReqs.length} 通过; 未通过: ${failures.join("; ")}` };
+           reason: `${passes.length}/${regexReqs.length} 通过; 未通过: ${failures.join("; ")}`,
+           failed_reqs: failedReqs };
 }
 
 // ====== C2 — 逐需求 LLM 检查 ======
@@ -836,6 +875,8 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
   // ── 分流：证据门管道 vs 传统 LLM ──
   let verdictsForL3;
   let finalStage = null;
+  let c1FailedReqs = [];   // C1 失败的需求（用于 C2→C1 反馈环）
+  let patternSuggestions = []; // C2→C1 反馈环：C2 通过但 C1 未匹配时的模式建议
 
   if (evidenceGates && evidenceGates.requirements && evidenceGates.requirements.length > 0) {
     const evidenceDir = evidenceGates.evidence_dir
@@ -858,9 +899,10 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
     // C1 — 合约正则（确定性）
     const c1 = contractRegexCheck(evidenceDir, evidenceGates.requirements);
     const c1Reqs = evidenceGates.requirements.filter(r => (r.type === "regex" || r.type === "negative"));
-    const c1Evidence = c1Reqs.map(r => `evidence:${r.evidence_file}(${r.pattern})`).join(";");
+    const c1Evidence = c1Reqs.map(r => `evidence:${r.evidence_file}(${r.pattern || (r.patterns ? r.patterns.join("|") : "")})`).join(";");
     stages.push({ layer: "C1", verdict: c1.verdict, check: c1.check, reason: c1.reason,
                   failure_class: c1.failure_class || null, evidence: c1Evidence });
+    if (c1.failed_reqs) c1FailedReqs = c1.failed_reqs;
     if (c1.verdict === "REJECT") {
       return { file: filePath, verdict: "REJECT", layer: "C1", check: c1.check,
                failure_class: c1.failure_class,
@@ -896,6 +938,31 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
                        reason: `C1 合约冲突 (${c1.reason})，无 LLM 需求做语义判断，转人工` };
       } else {
         finalStage = c2;
+      }
+
+      // ── C2→C1 反馈环：C2 通过但 C1 未匹配 → 提取模式建议 ──
+      if (finalStage.verdict === "PASS" && c1FailedReqs.length > 0) {
+        for (const fr of c1FailedReqs) {
+          if (fr.reason !== "no_match") continue; // 只有"未匹配"适合建议，regex_error 和 negative_hit 不适合
+          const efPath = join(evidenceDir, fr.evidence_file);
+          let efContent;
+          try { efContent = readFileSync(efPath, "utf-8"); } catch { continue; }
+          // 从证据文本提取关键词作为 pattern 建议
+          const words = efContent
+            .replace(/[^a-zA-Z0-9一-鿿_\-]/g, " ")
+            .split(/\s+/)
+            .filter(w => w.length >= 3)
+            .slice(0, 8);
+          if (words.length > 0) {
+            const suggestion = {
+              req_id: fr.id,
+              evidence_file: fr.evidence_file,
+              hint: "C2 通过但 C1 正则未匹配 — evidence 含以下关键词，可考虑加入 patterns",
+              candidate_terms: [...new Set(words)],
+            };
+            patternSuggestions.push(suggestion);
+          }
+        }
       }
     } else {
       finalStage = { verdict: "PASS", layer: "C1_to_L3" };
@@ -974,6 +1041,7 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
     ) / verdictsForL3.length * 100),
     votes: verdictsForL3,
     stages,
+    pattern_suggestions: patternSuggestions.length > 0 ? patternSuggestions : undefined,
     trace: {
       chain: trace,
       evidence_files: Object.keys(evidenceFiles).length > 0 ? evidenceFiles : undefined,
@@ -1151,6 +1219,14 @@ async function main() {
         } else {
           console.log(`    └ ${s.layer}: ${s.verdict} — ${(s.reason || "").slice(0, 80)}`);
         }
+      }
+    }
+
+    // C2→C1 反馈环：显示 pattern 建议
+    if (r.pattern_suggestions && r.pattern_suggestions.length > 0) {
+      for (const s of r.pattern_suggestions) {
+        console.log(`    💡 ${s.req_id}: ${s.hint}`);
+        console.log(`       候选关键词: ${s.candidate_terms.join(", ")}`);
       }
     }
 

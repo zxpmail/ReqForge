@@ -20,6 +20,14 @@ mkdirSync(TMP + "/evidence", { recursive: true });
 writeFileSync(TMP + "/evidence/pass-output.txt",
   "[PASS] RateLimiter-IP: 192.168.1.100 isRateLimited=true\n" +
   "2 tests passed, 0 failed\n");
+writeFileSync(TMP + "/evidence/per-ip-limit-output.txt",
+  "Testing per-IP rate limiting...\n" +
+  "IP-based throttling: OK\n" +
+  "3 tests passed\n");
+writeFileSync(TMP + "/evidence/ttl-output.txt",
+  "Using TTL-based cache invalidation: TTL=300s\n" +
+  "Write-through cache updated\n" +
+  "All tests passed\n");
 writeFileSync(TMP + "/evidence/empty-output.txt", "", "utf-8");
 writeFileSync(TMP + "/evidence/no-match-output.txt",
   "[PASS] Database connection ok\n" +
@@ -111,7 +119,7 @@ console.log("\n## 场景 E: 部分通过/部分不通过 → C1 UNCLEAR (unset)\
   check("C1 UNCLEAR + fc=unset", c1, "UNCLEAR", "unset");
 }
 
-console.log("\n## 场景 F: 全部不通过 → C1 REJECT (skill-defect)\n");
+console.log("## 场景 F: 全部不通过 → C1 REJECT (skill-defect)\n");
 {
   const reqs = [
     { id: "REQ-ALL-FAIL-1", evidence_file: "pass-output.txt", pattern: "(?i)(nothingmatches)", type: "regex" },
@@ -121,6 +129,91 @@ console.log("\n## 场景 F: 全部不通过 → C1 REJECT (skill-defect)\n");
   check("EG PASS (文件存在)", eg, "PASS", null);
   const c1 = contractRegexCheck(TMP + "/evidence", reqs);
   check("C1 REJECT + fc=skill-defect", c1, "REJECT", "skill-defect");
+}
+
+console.log("\n## 场景 H: 多模式(patterns) — 任一匹配 → PASS\n");
+{
+  const reqs = [
+    { id: "REQ-MULTI", evidence_file: "per-ip-limit-output.txt",
+      patterns: [
+        "(?i)(RateLimiter.*IP|isRateLimited.*IP)",
+        "(?i)(IP.*throttl|IP.*limit)",
+        "(?i)per.?IP rate"
+      ],
+      type: "regex" },
+  ];
+  const eg = evidenceGateCheck(TMP + "/evidence", reqs);
+  check("EG PASS (文件存在)", eg, "PASS", null);
+  const c1 = contractRegexCheck(TMP + "/evidence", reqs);
+  check("C1 PASS — patterns 数组第二模(IP.*throttl)匹配", c1, "PASS", null);
+}
+
+console.log("\n## 场景 I: 多模式(patterns) — 全不匹配 → REJECT\n");
+{
+  const reqs = [
+    { id: "REQ-MULTI-FAIL", evidence_file: "per-ip-limit-output.txt",
+      patterns: [
+        "(?i)(RateLimiter.*IP)",
+        "(?i)isRateLimited",
+        "(?i)X-RateLimit",
+      ],
+      type: "regex" },
+  ];
+  const eg = evidenceGateCheck(TMP + "/evidence", reqs);
+  check("EG PASS (文件存在)", eg, "PASS", null);
+  const c1 = contractRegexCheck(TMP + "/evidence", reqs);
+  check("C1 REJECT + fc=skill-defect", c1, "REJECT", "skill-defect");
+}
+
+console.log("\n## 场景 J: 多模式(patterns) — 混合正向+负向需求\n");
+{
+  const reqs = [
+    { id: "REQ-IP", evidence_file: "ttl-output.txt",
+      patterns: [
+        "(?i)(IP.*limit|per.?IP.*rate)",
+        "(?i)(RateLimiter.*IP|isRateLimited)",
+        "(?i)(throttl.*IP|IP.*throttl)",
+      ],
+      type: "regex" },
+    { id: "NEG-TTL", evidence_file: "ttl-output.txt",
+      patterns: [
+        "(?i)TTL.*(simpler|sufficient|instead)",
+        "(?i)cache.*(ttl|timeout).*(enough|fine|ok)",
+      ],
+      type: "negative" },
+  ];
+  const eg = evidenceGateCheck(TMP + "/evidence", reqs);
+  check("EG PASS (文件存在)", eg, "PASS", null);
+  const c1 = contractRegexCheck(TMP + "/evidence", reqs);
+  check("C1 UNCLEAR — REQ-IP 不匹配, NEG-TTL 命中 → fc=unset", c1, "UNCLEAR", "unset");
+}
+
+console.log("\n## 场景 K: patterns 优先于 pattern（两者同时提供）\n");
+{
+  const reqs = [
+    { id: "REQ-BOTH", evidence_file: "per-ip-limit-output.txt",
+      pattern: "(?i)(nothingmatches)",
+      patterns: ["(?i)(IP.*throttl|per.?IP)"],
+      type: "regex" },
+  ];
+  const eg = evidenceGateCheck(TMP + "/evidence", reqs);
+  check("EG PASS (文件存在)", eg, "PASS", null);
+  const c1 = contractRegexCheck(TMP + "/evidence", reqs);
+  check("C1 PASS — patterns 优先, pattern(单体)被忽略", c1, "PASS", null);
+}
+
+console.log("\n## 场景 L: 空 patterns 数组 → 回退到 pattern\n");
+{
+  const reqs = [
+    { id: "REQ-EMPTY-PATTERNS", evidence_file: "pass-output.txt",
+      patterns: [],
+      pattern: "(?i)(RateLimiter.*IP|isRateLimited)",
+      type: "regex" },
+  ];
+  const eg = evidenceGateCheck(TMP + "/evidence", reqs);
+  check("EG PASS (文件存在)", eg, "PASS", null);
+  const c1 = contractRegexCheck(TMP + "/evidence", reqs);
+  check("C1 PASS — patterns 空数组回退到 pattern", c1, "PASS", null);
 }
 
 // --- C2 场景（生产 perRequirementLlmCheck，nRuns=1 省钱）---

@@ -170,12 +170,28 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 
   - **`evidence_dir`**：证据文件目录，相对于项目根或绝对路径。
   - **`requirements[].pattern`**：C1 合约正则的 JS RegExp 模式。支持 `(?i)` 前缀转换为 `i` 标志。
+  - **`requirements[].patterns`**：（v2）C1 多模式数组，OR 语义——任一模式匹配即通过。用于覆盖同一需求的不同措辞变体。与 `pattern` 互斥，`patterns` 优先。
   - **`requirements[].type`**：
-    - `"regex"` → 走 C1 正向合约（确定性，零成本）。pattern 匹配证据内容 → PASS，不匹配 → FAIL。
-    - `"negative"` → 走 C1 负向合约（确定性，零成本）。pattern 匹配证据内容 → FAIL（证据含不应出现的内容），不匹配 → PASS。
+    - `"regex"` → 走 C1 正向合约（确定性，零成本）。pattern/patterns 匹配证据内容 → PASS，全不匹配 → FAIL。
+    - `"negative"` → 走 C1 负向合约（确定性，零成本）。pattern/patterns 匹配证据内容 → FAIL（证据含不应出现的内容），全不匹配 → PASS。
     - `"argument-space"` → 走 C3（确定性，零成本）。执行 `verify_command`（独立 runner）观察 side effect，exit 0 → PASS，exit 1 → REJECT（skill-defect）。**不读 evidence 文本，同义词免疫**——series Part 13 的 argument-space 层。
     - `"llm"` → 走 C2（逐需求 LLM，有成本）。适合语义判断（"是否真正实现了 write-invalidation"）。
   - **`requirements[].verify_command`**（type=`argument-space` 必填）：独立 runner 命令，forge-verify 用 `execFileSync` 执行（不经 shell）。例如 `node .forge/verify/write-invalidation.js src/rate-limit.ts`。runner 断言 claim 命名指称上的 side effect，exit 0/1 编码结果。
+  - **多模式示例**（覆盖 agent 输出措辞变体）：
+    ```json
+    {
+      "id": "REQ-1",
+      "desc": "IP 级别限流",
+      "evidence_file": "test-output.txt",
+      "patterns": [
+        "(?i)(RateLimiter.*IP|isRateLimited.*IP)",
+        "(?i)(IP.*throttl|IP.*limit)",
+        "(?i)per.?IP rate"
+      ],
+      "type": "regex"
+    }
+    ```
+    三条 pattern 任一模匹配即通过：agent 输出 "IP-based throttling"、"per-IP rate limiting"、"RateLimiter-IP" 任一都能通过 C1。
   - **推荐策略**：数值约束和固定格式用 regex，语义判断用 llm，**可执行 claim（有可观察 side effect）用 argument-space**。需要堵 scope-matches-claim 缺口（如正向关键词匹配但上下文是否定）时用 negative。同一批需求可混合四种 type；管道顺序 EG → C1（正/负）→ C3（argument-space）→ C2（llm）→ L3，C1/C3 任一 REJECT 直接终止。
   - **安全前提**（`editable-surface.json` enforce）：`verify_command` 在 `.forge/content-verify.json`、verify 脚本在 `.forge/verify/`，均在 readonly 区（`constraints.verify_code: false`）。agent 改不了命令（注入）也改不了脚本。详见 [series Part 13 — argument-space, tested](https://dev.to/zxpmail)（实测 C3 5/5，C1/C2 word-space 与真实脱钩）。
 
