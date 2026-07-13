@@ -653,7 +653,7 @@ export async function perRequirementLlmCheck(evidenceDir, requirements, model, n
     const votes = [];
     let lastApiError = "";
     for (let i = 0; i < nRuns; i++) {
-      const r = await llmComplete(prompt, { model, maxTokens: 128, temperature: 0 }, apiConfig);
+      const r = await llmComplete(prompt, { model, maxTokens: 512, temperature: 0 }, apiConfig);
       if (!r.ok) {
         lastApiError = r.error;
         votes.push(null);
