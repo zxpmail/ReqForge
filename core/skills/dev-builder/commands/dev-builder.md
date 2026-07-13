@@ -1,6 +1,6 @@
 ---
 description: Build project code for the current DEV-PLAN phase
-argument-hint: [phase-number]
+argument-hint: "[phase-number]"
 ---
 
 # Command: /dev-builder
