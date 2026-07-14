@@ -88,6 +88,7 @@ requires: []
 [Output Artifacts]
     - **DEV-PLAN.md** — Phased development plan (created in generation mode, updated in iteration mode)
     - **changes/\<change-name\>/tasks.md** — Task breakdown (filled when `/change-manager apply` invokes dev-planner for that change only — not by product-spec-builder iteration)
+    - **`.forge/content-verify.json`** — (optional, recommended) forge-verify contract base generated from Phase requirements. Produced by Step 6 of Output Phase when user confirms plan. See `references/generate-contracts.md`.
 
 <!-- end: output-artifacts -->
 <!-- begin: analysis-dimension-checklist -->

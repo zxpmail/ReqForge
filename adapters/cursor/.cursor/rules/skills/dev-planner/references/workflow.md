@@ -162,6 +162,25 @@
              Next steps (after you confirm the plan above):
              - Call /dev-builder to start development by Phase
              - Or call /design-brief-builder first to determine visual direction (if not done yet)
+
+        Step 6 (optional, strongly recommended): Generate forge-verify contracts
+            Read `references/generate-contracts.md` and construct a `.forge/content-verify.json`
+            from the DEV-PLAN.md phases using `scripts/forge-verify/generate-contracts.mjs`.
+
+            Procedure:
+            a) After user confirms DEV-PLAN.md (Step 4), build a requirements JSON array from
+               the Phase list. For each Phase, extract 2-4 key requirements from:
+               - Acceptance Criteria (preferred — most verifiable)
+               - Deliverables checklist
+               - Key Files list (as `files` for context)
+            b) Write the JSON to a temp file `.forge/phase-requirements.json`
+            c) Run:
+               node scripts/forge-verify/generate-contracts.mjs --in .forge/phase-requirements.json
+               Redirect the stdout JSON output to `.forge/content-verify.json`
+            d) Present the result to user: "已生成 forge-verify 合约基底 (N 条需求)。
+               可手工调整 patterns 后生效。运行 pnpm forge-verify-content 验证。"
+            e) Do NOT block the /dev-builder flow — this step is additive and can be
+               refined later.
              - Want to adjust Phase granularity or order? Just tell me."
 
         Step 6 (optional): GitHub issue slices

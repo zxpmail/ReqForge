@@ -39,7 +39,12 @@ if not "%FEEDBACK_INDEX%"=="" (
     if "!LINE:~0,3!"=="- [" set /a COUNT+=1
   )
   if !COUNT! gtr 0 (
-    echo {"additionalContext": "Mandatory action: Project has !COUNT! feedback entries with scored data. You MUST dispatch evolution-runner sub-agent now to scan for evolution proposals. Do not skip this step."}
+    set "SURFACE_FILE=%PROJECT_DIR%\.forge\editable-surface.json"
+    if exist "!SURFACE_FILE!" (
+      echo {"additionalContext": "Mandatory action: Project has !COUNT! feedback entries with scored data. You MUST dispatch evolution-runner sub-agent now to scan for evolution proposals. Editable surface defined at .forge/editable-surface.json — verify that evaluator code (scripts/forge-verify/) and gate config (.forge/content-verify.json) are excluded from evolution scope. Do not skip this step."}
+    ) else (
+      echo {"additionalContext": "Mandatory action: Project has !COUNT! feedback entries with scored data. You MUST dispatch evolution-runner sub-agent now to scan for evolution proposals. Do not skip this step."}
+    )
   )
 )
 
