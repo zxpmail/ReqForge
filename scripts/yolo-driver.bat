@@ -86,8 +86,8 @@ if exist ".forge\.yolo-continue" (
     echo → ✓ Phase complete: !NEXT_PHASE:~0,200!
     del ".forge\.yolo-continue" 2>nul
 
-    REM Clear context so next Phase starts fresh
-    claude --clear 2>nul
+    REM Each `claude -p` is a fresh session (no --resume/--continue),
+    REM so context is already clean — no explicit clear needed.
 
     echo → Continuing to next Phase...
     echo.

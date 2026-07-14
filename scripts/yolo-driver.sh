@@ -74,9 +74,8 @@ while true; do
     echo "→ ✓ Phase complete: $(cat ".forge/.yolo-continue" | head -c 200)"
     rm -f ".forge/.yolo-continue"
 
-    # Clear context so next Phase starts fresh
-    claude --clear 2>/dev/null || true
-
+    # Each `claude -p` is a fresh session (no --resume/--continue), so context
+    # is already clean — no explicit clear needed.
     echo "→ Continuing to next Phase..."
     echo ""
   else

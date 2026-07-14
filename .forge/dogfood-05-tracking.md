@@ -251,3 +251,120 @@ Phase 1 顺利跑完 → 无 block 文件存在
 ### 下一步
 
 设计并实现 YOLO 的**正向驱动器**（外层循环驱动 dev-builder Phase re-invoke），而不是依赖 skill 内散文。
+
+---
+
+## 实现落地（fc88a2d, 2026-07-04）
+
+正向驱动器已交付，10 天后此 commit 仍未 Run #3 验证：
+
+| 文件 | 角色 |
+|------|------|
+| `scripts/yolo-driver.sh` / `.bat` | 外层循环：`claude -p "/dev-builder"` → 读 `.forge/.yolo-continue` → 删 → 重新 invoke |
+| `core/skills/dev-builder/references/workflow.md` § YOLO Mode Step 5a | dev-builder Phase 完成后写 `.forge/.yolo-continue` JSON（含 `completedPhase` / `nextPhase` / `timestamp`） |
+| 同上 Step 6 | 改"Continue automatically"散文 → "Stop. External driver re-invokes" |
+
+**设计要点**：
+- `.yolo-continue` 是**唯一**的 machine-readable handoff，无 prose-drift 风险。
+- `nextPhase` 字段当前**不被 yolo-driver 传递给下一轮**——下一轮 agent 必须自己根据 `changes/<phase>/checkpoint.md` + DEV-PLAN.md 判断下一个 Phase。这是 fail-safe（drift 让循环过早停，不会误跑），但潜在 drift 点（见 Run #3 观测项）。
+- yolo-driver 不通过 `forge-install` 装到用户项目——从 Forge checkout 跑，cd 进用户项目目录。
+
+### 静态修缮（2026-07-14，本会话）
+
+| 改动 | 文件 | 原因 |
+|------|------|------|
+| 删 `claude --clear` 调用 + 改注释 | `scripts/yolo-driver.sh:77-78` / `.bat:89-90` | `claude` CLI 无 `--clear` flag（`--help` 验证），调用静默失败；每次 `claude -p` 已是新 session（不 `--resume`/`--continue`），context 天然 fresh，调用冗余且误导 |
+| 未发现其他确定 bug | — | 审查 6 项，5 项 fail-safe / OK，仅 `nextPhase` 信息丢弃是潜在设计问题，按 Simplicity First 等 Run #3 实测再决定是否修 |
+
+---
+
+## Run #3 待跑（独立会话）
+
+唯一剩下的开放变量：**yolo-driver 闭环在独立会话真的能跨 Phase 跑通吗？**
+
+Run #1/#2 测的是 prose 续跑（FAIL）。机器层修后 `phase-exit-guard` 接通 `Stop` lifecycle（dogfood-05 机器层修复章节），但那只解决"YOLO 下错误停等"，不解决续跑。fc88a2d 加的 yolo-driver 才是续跑的正向驱动。
+
+执行清单见 `[Run #3 执行清单]`（独立会话开跑前打开）。
+
+---
+
+## Run #3 执行清单
+
+### 0. 铁律（同 Run #1/#2）
+
+- **不能在 ReqForge 仓会话里跑** —— 热缓存，且读过 YOLO 规则，必然合规，测不出 drift。
+- **单条消息触发，不补指令** —— 纯观察。
+- 独立会话 = 新开一个 Claude Code 会话，工作目录 `C:\work\dogfood-05`。
+
+### 1. 重建靶子（Run #1/#2 后目录已不存在）
+
+```powershell
+# 在 ReqForge 仓
+mkdir C:\work\dogfood-05
+cd C:\work\dogfood-05
+
+# 复用 #4 的 md-toc Spec + DEV-PLAN（3 Phase 全 Small/Backend/🟢）
+# 从 git 历史或 dogfood-04-tracking.md 找源文，落盘到当前目录
+
+# .forge/config — 变量
+mkdir .forge
+echo "FORGE_MODE=yolo" > .forge\config
+
+# 预置 confirmed markers — 隔离变量（不重测一次性 confirm 门）
+echo '{"confirmed": true, "ts": "2026-07-14"}' > .forge\spec-confirmed.json
+echo '{"confirmed": true, "ts": "2026-07-14"}' > .forge\plan-confirmed.json
+
+# 刷新接线
+cd C:\work\ReqForge
+pnpm forge-install --client claude-code --target C:\work\dogfood-05 --windows
+```
+
+### 2. 跑 yolo-driver（独立会话）
+
+**关键**：yolo-driver 不在用户项目，从 Forge checkout 跑：
+
+```powershell
+# 独立 Claude Code 会话，工作目录 C:\work\dogfood-05
+# 但 yolo-driver 脚本在 ReqForge 仓
+cd C:\work\ReqForge
+bash scripts\yolo-driver.sh C:\work\dogfood-05
+# 或 Windows 原生：
+scripts\yolo-driver.bat C:\work\dogfood-05
+```
+
+yolo-driver 会循环：
+1. cd 进 dogfood-05
+2. `claude -p "/dev-builder"`
+3. 检查 `.forge/.yolo-continue` → 有则删、循环；无则退出
+4. 输出每轮迭代的 Phase 进度
+
+**不要催、不要补指令**。让它自己跑完或停。
+
+### 3. 观测记录表（Run #3 实测，独立会话后回填）
+
+| Phase | 完成? | 用时 | `claude -p` 第几次调用? | `.yolo-continue` 写入? | 备注 |
+|-------|-------|------|--------------------------|------------------------|------|
+| 1 | ☐ | — | 1 | ☐ | — |
+| 2 | ☐ | — | — | — | — |
+| 3 | ☐ | — | — | — | — |
+
+- `claude -p` 总调用次数：____
+- yolo-driver 退出原因：☐ 全 Phase 完成 ☐ 中途停（停在第 __ 轮） ☐ 死循环（手动 Ctrl-C）
+- 是否有人介入：☐ 否 ☐ 是（描述）
+
+### 4. 五问实测
+
+| # | 问题 | 判定标准 |
+|---|------|----------|
+| **Q1** | **yolo-driver 闭环跑完 3 Phase？** | `claude -p` 调用 = 3 次 = 续跑成立；<3 = 过早停；>3 = 死循环 |
+| **Q2** | 停在哪？ | 哪轮迭代退出？什么原因？`.yolo-continue` 缺失还是 agent 没写？ |
+| **Q3** | run log 落盘了吗？ | `changes/<phase>/checkpoint.md` + `delivery-checklist.md` + `.yolo-continue`（每 Phase） |
+| **Q4** | **第二轮 agent 正确识别"下一个 Phase"？** | 看 agent 第 2/3 轮的输出 / active-scope.json 内容 / `git log` 改了哪些 Phase 的代码。**这是 `nextPhase` 信息丢弃的潜在 drift 验证** |
+| Q5 | 续跑代码质量 | 与 #4 单 Phase 跑对比，是否有滑坡 |
+
+### 5. 判定分支
+
+- **Q1 = 3 次且 Q4 正确** → ✅ yolo-driver 闭环成立，dogfood #5 收尾。`nextPhase` 信息丢弃不构成 drift，方案 A（不修）确认。
+- **Q1 = 3 次但 Q4 错误**（如第二轮跑回 Phase 1）→ 🔴 `nextPhase` drift 实证，需走方案 B/C（在下一轮 prompt 传 nextPhase 或改 dev-builder prose）。
+- **Q1 < 3**（过早停） → fail-safe 触发，看 `.yolo-continue` 缺失在哪轮，定位是 agent 没写还是 yolo-driver 没读到。
+- **Q1 > 3**（死循环）→ 罕见，意味着 `.yolo-continue` 在最后一轮仍被写入——可能是 dev-builder 不知道"已是最后一个 Phase"。

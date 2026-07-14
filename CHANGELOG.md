@@ -2,6 +2,47 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.51.0] - Unreleased
+
+### Fixed
+- **Removed invalid `claude --clear` call from yolo-driver.** `claude` CLI has no `--clear` flag (verified via `claude --help`); the call in `scripts/yolo-driver.sh:78` and `yolo-driver.bat:90` silently failed (`2>/dev/null || true` / `2>nul`). Each `claude -p` invocation is already a fresh session (no `--resume`/`--continue`), so context is naturally clean — the call was redundant and misleading. Comments updated to explain why no explicit clear is needed.
+
+### Changed
+- **dogfood-05-tracking.md: "实现落地" + Run #3 plan.** Backfilled post-fc88a2d documentation: marked the YOLO forward-driver as implemented (2026-07-04 commit fc88a2d had shipped the driver + dev-builder Step 5a/6 changes but tracking doc still said "next: design the driver"), recorded static review findings (6 items, only `claude --clear` was a real bug), and wrote the full Run #3 execution checklist (rebuild target dir, run driver, 5-question observation table, decision branches). yolo-driver was retroactively attributed to v1.49 (fc88a2d predates 1af96ac by 5 days) — see v1.49 entry below.
+
+## [v1.50.0] - 2026-07-11
+
+### Added
+- **forge-verify LLM protocol-adaptive layer.** L2 and C2 route through a unified `llmComplete()` that picks protocol from `ANTHROPIC_BASE_URL` — containing `/anthropic` → Anthropic Messages (e.g. Zhipu GLM's `/api/anthropic` gateway, the same path Claude Code uses), otherwise → OpenAI Chat Completions (e.g. deepseek). One `ANTHROPIC_*` env works across both endpoint families with no code change. Previously every call was hardcoded to OpenAI and stripped `/anthropic`, so under a GLM env every L2/C2 call hit HTTP 403. (`bd0a912`)
+
+### Fixed
+- **C2 honest degradation.** C2 (per-requirement LLM) now records API/parse errors (non-2xx, empty body, network) as non-votes → `UNCLEAR (C2_api_errors)`, never a false `REJECT (execution-lapse)`. An unreachable model no longer reads as "the agent did sloppy work". L2 already behaved this way (`API_ERROR`/`API_PARSE_ERROR` non-votes → L3 UNCLEAR); C2 now matches. (`ffff4cc`)
+- **`--runs`/`--task`/`--files` honored under `--from-config`.** The CLI override block sat inside parseConfig's else branch, so `--from-config --runs 1` was silently ignored (always 3). Overrides now apply in both modes. (`2ff784c`)
+- **content-verify unloadable since v1.49.0.** A duplicate `const trace` (SyntaxError) left by the chain-of-evidence commit meant `content-verify.mjs` could not parse or run at all. Removed. (`98d8a36`)
+
+### Changed
+- **Tests import production pipeline.** `test-evidence-gate.mjs` imports `evidenceGateCheck`/`contractRegexCheck`/`perRequirementLlmCheck` from `content-verify.mjs` (now exported; `main()` guarded by `import.meta.url`) instead of inline copies that had drifted — the inline C2 was still on the old OpenAI-only protocol. −171 lines, zero drift. (`cdcdaa7`, `3157316`)
+
+## [v1.49.0] - 2026-07-09
+
+### Added
+- **forge-verify four-layer pipeline (L0-L3).** Refactored `content-verify.mjs` from ad-hoc checks into a layered pipeline: L0 shape (file exists, non-empty, non-placeholder, has test cases) → L0e Re-Stat (catches future-tense / stub / meta-comment "restating the requirement" instead of demonstrating it) → L1 contract regex (min/keywords) → L2 LLM thin audit → L3 disagreement escalation. Inspired by nexus-lab-zen design. (`164c991`, `c1200ce`)
+- **Evidence Gate pipeline (EG→C1→C2).** Optional pipeline for projects with `.forge/content-verify.json`: evidence files exist + non-empty (EG, deterministic, zero-cost) → C1 contract regex per-requirement → C2 per-requirement LLM. Replaces the traditional L2 free-text audit when configured. (`050cc35`)
+- **content-quality check (cross-model semantic verification).** New `pnpm forge-verify` check that runs the pipeline across Phase output files. Catches semantic garbage that symbolic checks (file-exists / exit-code) miss. (`8279de1`)
+- **YOLO forward-driver for cross-Phase continuation.** External loop drives `/dev-builder` across all Phases without relying on skill prose. Dogfood #5 Run #1 + Run #2 both proved the prior design (agent reads "Continue to the next Phase automatically" prose and self-re-invokes) fails: in two independent sessions the agent stopped after Phase 1 and never re-invoked, regardless of context headroom. The Stop-hook machine-layer fix (see Fixed) only addressed erroneous stop-waiting; it does not drive continuation. New design: dev-builder YOLO Step 5a writes `.forge/.yolo-continue` JSON (`completedPhase` / `nextPhase` / `timestamp`) at Phase completion; `scripts/yolo-driver.sh` + `.bat` loops `claude -p "/dev-builder"` → read signal → delete → re-invoke. One Phase per invocation stays non-negotiable, even in YOLO mode. Not installed into user projects by `forge-install` — run from a Forge checkout. Scope: claude-code only (native `Stop` hook). **Pending Run #3 validation in an independent session.** (`fc88a2d`: `scripts/yolo-driver.sh`, `scripts/yolo-driver.bat`, `core/skills/dev-builder/references/workflow.md` § YOLO Mode, `.forge/dogfood-05-tracking.md`)
+- **CSS Sanity Check in dev-builder.** Catches AI blind-spot layout bugs (z-index stacking, overflow clipping, missing display rules) that compile clean but render wrong. (`861514f`)
+- **Editable surface.** `.forge/editable-surface.json` defines explicit read/write paths for evolution engine, excluding evaluator code (`scripts/forge-verify/`) and gate config from evolution scope. Inspired by DGM (Zhang et al. 2025): evaluator and permission control must live outside the loop. (`b223577`)
+- **`failure_class` on forge-verify verdicts.** Each REJECT/UNCLEAR verdict carries failure_class (`execution-lapse`, `skill-defect`, `unset`), bridging verification pipeline to feedback-observer for automatic evolution triggering. (`b223577`)
+- **Held-in/held-out proposal validation.** Evolution proposals carry `held_in_files` (target failures) and `held_out_files` (regression check). Both splits must PASS before proposal is finalized. Inspired by Self-Harness (Zhang et al. 2026). (`b223577`)
+- **Chain-of-evidence trace.** Each forge-verify stage output includes `evidence` field referencing the source file or evidence file that produced the verdict. Final output includes `trace.chain` with per-stage evidence trail. Inspired by ScientistOne (Meng et al. 2026). (`b888e19`)
+- **Model staleness detection.** Rules graduated under older model versions can be proposed for retirement when current model no longer needs them. Prevents circular evolution.
+- **Harness search space.** `.forge/harnesses/` directory with candidate registry and template for config-level crossover. Evolution-engine [Harness Search] section defines the pattern for generating and evaluating config variants. Inspired by Meta-Harness (Lee et al. 2026). (`8813bb6`)
+- **Tests:** `test-dfv2-failure-class.mjs` (20 DF v2 scenarios × deterministic layers), `test-evidence-gate.mjs` (EG→C1→C2 pipeline, 12/12 pass).
+
+### Fixed
+- **Stop-time gates wired to Claude Code `Stop` lifecycle.** `phase-exit-guard`, `stop-gate`, `retry-gate` were registered under `PreToolUse`, but their block files (`phase-exit-block`, `.verify-block`) are written later — so the hooks always exited 0 (no-op). Moved to the `Stop` array in `adapters/claude-code/.claude/settings.json` + `settings.windows.json`. `detect-feedback-signal` stays PreToolUse. `phase-exit-guard.bat` also gained `.verify-block` fallback (was `phase-exit-block`-only, drift from `.sh`) and a YOLO-detection fix (`if not errorlevel 1` inside `if (...)` block, which had made YOLO forever read 0). New `stop-gate-wired` smoke asserts the wiring. Found via dogfood #5 Run #1. (`60e6e2d`, `de70852`)
+- **Cursor death loop (4 commits).** Cursor's `BeforeCommand` hook chain triggered a feedback-signal / stop-gate infinite loop on every prompt. Cleared the chain (`bc8549f`), killed the loop in `detect-feedback-signal` (`129838b`), backfilled adapter drift from `60e6e2d` (`da83a58`), closed dangling refs in install + Windows death-loop in `context-compaction.bat` (`1d9419b`, `f7515e1`).
+
 ## [v1.48.6] - 2026-06-27
 
 ### Added
