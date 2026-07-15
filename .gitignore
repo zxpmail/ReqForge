@@ -38,4 +38,5 @@ eval-output/**/.next/
 .gstack/
 .forge/verify-baseline.json
 .forge/wiki-clone/
-/forge/verify-uncertain.json
+.forge/verify-uncertain.json
+.forge/verify-pattern-suggestions.json

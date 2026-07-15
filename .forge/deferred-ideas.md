@@ -125,3 +125,45 @@
 **记录日期**：2026-07-14
 
 ---
+
+## forge-verify 支持 `--root` 参数（用户项目验证）
+
+**想法**：`scripts/forge-verify.mjs:30` 和 `scripts/forge-verify/content-verify.mjs:87` 的 `ROOT = join(__dirname, "..")` 写死成 ReqForge 仓，导致 `forge-verify` **只能验证 ReqForge 自己**，不能验证用户项目。用户项目 `.forge/quickref.md` 指导跑 `pnpm forge-verify`，但用户项目没有这个脚本，即使有也跑不了——**文档误导**。应加 `--root <path>` 参数或检测 `process.cwd()`。
+
+**触发条件**（满足任意一条才回头评估）：
+1. 真实用户项目（非 dogfood）需要跑 forge-verify 验证，且遇到"找不到文件"或"验证的不是我的项目"问题 ≥1 次
+2. dogfood-05 之外的 dogfood 项目出现，且作者尝试用 forge-verify 验证发现限制
+3. forge-verify 被列为用户项目主推验证手段时（当前 CLAUDE.md 已列，但实际不通）
+
+**为什么现在不做**：
+- dogfood-05 用 content-verify.mjs + 绝对路径 `--files` 临时绕过，能跑
+- forge-verify 的主消费者是 ReqForge 仓自身（框架内省），用户项目验证是次要场景
+- 改 ROOT 需要同步改所有 `join(ROOT, ...)` 调用点（17 处），且要处理 `--root` 缺失时的 fallback 逻辑，工作量不小
+- 当前主线是 yolo-driver 闭环验证，不是 forge-verify 的用户项目支持
+
+**当前优先级**：P3
+
+**记录日期**：2026-07-15
+
+---
+
+## content-verify L2 LLM 投票输出 reject reason
+
+**想法**：`content-verify.mjs` 的 L2 LLM 投票只给 PASS/REJECT/UNCLEAR 判定，**不记录 reject reason**。dogfood-05 Phase 2 验证时 `scanner.ts` 被 3/3 REJECT 但无原因，无法定位是代码真有问题还是 LLM 误判。应在 L2 投票时让 LLM 输出 reason 字段，写入 `.forge/verify-uncertain.json` 或新 `.forge/verify-rejects.json`。
+
+**触发条件**（满足任意一条才回头评估）：
+1. dogfood 或真实项目用 content-verify 遇到 REJECT 但无法定位原因 ≥2 次
+2. content-verify 被列为 dev-builder Phase 验收的主手段时（当前是辅助）
+3. 用户主动反馈"REJECT 无 reason 黑盒"
+
+**为什么现在不做**：
+- content-verify 当前是辅助验证手段，不是主验收门（主验收是 pnpm test + build）
+- L2 加 reason 输出需要改 prompt + 解析逻辑 + 输出文件格式，工作量中等
+- 当前 L2 信号已经有价值（UNCLEAR 转人工复核），reason 是锦上添花
+- 优先级低于 yolo-driver 闭环验证
+
+**当前优先级**：P4
+
+**记录日期**：2026-07-15
+
+---
