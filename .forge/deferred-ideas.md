@@ -126,23 +126,27 @@
 
 ---
 
-## forge-verify 支持 `--root` 参数（用户项目验证）
+## forge-verify 支持 `--root` 参数（用户项目验证）✅ 已实现
 
 **想法**：`scripts/forge-verify.mjs:30` 和 `scripts/forge-verify/content-verify.mjs:87` 的 `ROOT = join(__dirname, "..")` 写死成 ReqForge 仓，导致 `forge-verify` **只能验证 ReqForge 自己**，不能验证用户项目。用户项目 `.forge/quickref.md` 指导跑 `pnpm forge-verify`，但用户项目没有这个脚本，即使有也跑不了——**文档误导**。应加 `--root <path>` 参数或检测 `process.cwd()`。
 
-**触发条件**（满足任意一条才回头评估）：
+**实现状态**（2026-07-15）：
+- `scripts/forge-verify.mjs` 加 `--root <path>` 参数 + `resolveRoot()`：优先级 `--root` > cwd (若含 `.forge/` 或 `package.json`) > REQFORGE_ROOT fallback
+- 验证通过：ReqForge 自验证 6 pass / 0 fail；`node forge-verify.mjs --root C:/work/dogfood-05` 正确切到 dogfood-05
+- 顺带修复 dogfooding 暴露的 `checkNoPlaceholders` 扫描 node_modules 的 bug（加 `--exclude-dir=node_modules/dist/.git/.next/build`）
+- `content-verify.mjs` 的 ROOT 写死未改（它已通过 `--files` 绝对路径支持用户项目，不需要 --root）
+
+**为什么现在做**：dogfood-05 跑 `forge-verify` 触发"dogfooding 发现工具缺陷 > 读代码审视"模式——这是真实使用场景，不是假设。
+
+**原触发条件**（保留供未来类似决策参考）：
 1. 真实用户项目（非 dogfood）需要跑 forge-verify 验证，且遇到"找不到文件"或"验证的不是我的项目"问题 ≥1 次
 2. dogfood-05 之外的 dogfood 项目出现，且作者尝试用 forge-verify 验证发现限制
 3. forge-verify 被列为用户项目主推验证手段时（当前 CLAUDE.md 已列，但实际不通）
 
-**为什么现在不做**：
-- dogfood-05 用 content-verify.mjs + 绝对路径 `--files` 临时绕过，能跑
-- forge-verify 的主消费者是 ReqForge 仓自身（框架内省），用户项目验证是次要场景
-- 改 ROOT 需要同步改所有 `join(ROOT, ...)` 调用点（17 处），且要处理 `--root` 缺失时的 fallback 逻辑，工作量不小
-- 当前主线是 yolo-driver 闭环验证，不是 forge-verify 的用户项目支持
-
-**当前优先级**：P3
-
-**记录日期**：2026-07-15
+**原不做理由**（已被 dogfooding 推翻）：
+- dogfood-05 用 content-verify.mjs + 绝对路径 `--files` 临时绕过，能跑 → 但绕过不等于正确，且绕过本身是认知负担
+- forge-verify 的主消费者是 ReqForge 仓自身（框架内省），用户项目验证是次要场景 → 次要 ≠ 不做，dogfood 就是用户项目
+- 改 ROOT 需要同步改所有 `join(ROOT, ...)` 调用点（17 处） → 实际只需改 `const ROOT = ...` 一处，所有 join(ROOT, ...) 自动用新值
+- 当前主线是 yolo-driver 闭环验证 → 不冲突，并行做
 
 ---

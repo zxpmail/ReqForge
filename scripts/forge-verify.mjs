@@ -3,7 +3,7 @@
  * forge-verify.mjs — 事后统一验证入口
  *
  * 用法：
- *   pnpm forge-verify [--baseline <save|compare|check>]
+ *   pnpm forge-verify [--baseline <save|compare|check>] [--root <path>]
  *
  * 验证项：
  *   1. skill-quality   — pnpm validate-skill（仅 ReqForge 框架仓）
@@ -18,26 +18,45 @@
  * --baseline save    : 运行验证并保存结果到 .forge/verify-baseline.json
  * --baseline compare : 运行验证并与基线对比，输出增量
  * --baseline check   : 运行验证，有增量失败则 exit 1（默认）
+ *
+ * --root <path>      : 验证目标项目根目录。缺省时优先用 cwd（若 cwd 含 .forge/ 或
+ *                      package.json），否则 fallback 到 ReqForge 仓自身。
+ *                      让用户项目能跑 forge-verify，而非只能验证 ReqForge 自己。
  */
 
 import { execSync } from "child_process";
 import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, unlinkSync } from "fs";
-import { join, dirname, relative } from "path";
+import { join, dirname, relative, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadBaseline, saveBaseline, compareBaseline } from "./forge-verify/baseline.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const ROOT = join(__dirname, "..");
+const REQFORGE_ROOT = join(__dirname, "..");
 
 // --- Parse args ---
 const args = process.argv.slice(2);
 let baselineMode = "check"; // save | compare | check
+let rootArg = null;
 for (let i = 0; i < args.length; i++) {
   if (args[i] === "--baseline" && args[i + 1]) {
     baselineMode = args[i + 1];
     i++;
+  } else if (args[i] === "--root" && args[i + 1]) {
+    rootArg = args[i + 1];
+    i++;
   }
 }
+
+// --- Resolve ROOT: --root > cwd (if has .forge/ or package.json) > ReqForge repo ---
+function resolveRoot() {
+  if (rootArg) return resolve(rootArg);
+  const cwd = process.cwd();
+  if (existsSync(join(cwd, ".forge")) || existsSync(join(cwd, "package.json"))) {
+    return cwd;
+  }
+  return REQFORGE_ROOT;
+}
+const ROOT = resolveRoot();
 
 // --- Check runners ---
 function run(name, fn) {
@@ -101,7 +120,7 @@ function checkNoPlaceholders() {
 
   try {
     const out = execSync(
-      `grep -rn "TBD\\|FIXME" ${dirs.join(" ")} --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" || true`,
+      `grep -rn "TBD\\|FIXME" ${dirs.join(" ")} --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git --exclude-dir=.next --exclude-dir=build || true`,
       { cwd: ROOT, encoding: "utf-8", timeout: 30000, stdio: "pipe" }
     ).trim();
     if (out) {
