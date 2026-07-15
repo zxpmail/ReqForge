@@ -80,8 +80,13 @@ if exist ".forge\active-scope.json" (
 REM Run dev-builder in non-interactive YOLO mode.
 REM --dangerously-skip-permissions: skip all approval prompts (in -p mode, default
 REM   permission mode hangs waiting for stdin = "black screen no output")
-REM Output buffers until exit (no stream-json on .bat; use yolo-driver.sh via git-bash for streaming)
+REM Output buffers until exit (no stream-json on .bat; use yolo-driver.ps1 or .sh for streaming)
 claude -p "/dev-builder" --dangerously-skip-permissions < NUL
+set EXIT_CODE=%ERRORLEVEL%
+
+if not "%EXIT_CODE%"=="0" (
+    echo ⚠️  claude exited with non-zero status (%EXIT_CODE%) at iteration !ITERATION!
+)
 
 REM Check handoff signal
 if exist ".forge\.yolo-continue" (
@@ -97,9 +102,22 @@ if exist ".forge\.yolo-continue" (
     goto loop
 )
 
+if "%EXIT_CODE%"=="0" (
+    echo.
+    echo ═══════════════════════════════════════════
+    echo   ✅ All phases complete (%ITERATION% iteration^(s^))
+    echo ═══════════════════════════════════════════
+    goto done
+)
+
+REM Non-zero exit + no handoff = error
 echo.
 echo ═══════════════════════════════════════════
-echo   ✅ All phases complete (%ITERATION% iteration^(s^))
+echo   ❌ claude errored at iteration !ITERATION! (exit %EXIT_CODE%)
+echo   No .yolo-continue handoff written.
+echo   529 / 429 = rate limit (retry^); other codes = check auth/config.
 echo ═══════════════════════════════════════════
+exit /b 1
 
+:done
 endlocal

@@ -25,6 +25,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# UTF-8 console encoding so claude's Unicode output (Chinese errors, etc.) doesn't garble
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+
 Set-Location $Project
 
 # === Preflight checks ===
@@ -110,11 +114,23 @@ while ($true) {
         Remove-Item ".forge\.yolo-continue" -Force
         Write-Host "-> Continuing to next Phase..."
         Write-Host ""
-    } else {
+    } elseif ($exitCode -eq 0) {
+        # Clean exit + no handoff = genuine completion (last Phase done)
         Write-Host ""
         Write-Host "==================================================================="
         Write-Host "  [DONE] All phases complete (${iteration} iteration(s))"
         Write-Host "==================================================================="
         break
+    } else {
+        # Non-zero exit + no handoff = claude errored (API limit, auth, etc.)
+        # Don't mistake this for completion.
+        Write-Host ""
+        Write-Host "==================================================================="
+        Write-Host "  [FAIL] claude errored at iteration ${iteration} (exit ${exitCode})"
+        Write-Host "  No .yolo-continue handoff written."
+        Write-Host "  Check .forge\yolo-run-${iteration}.jsonl for details."
+        Write-Host "  529 / 429 = rate limit (retry); other codes = check auth/config."
+        Write-Host "==================================================================="
+        exit 1
     }
 }

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # yolo-driver.sh — YOLO forward driver: loop /dev-builder across all Phases
 #
 # Each iteration:
@@ -19,7 +19,8 @@
 #
 # Design: https://github.com/zxpmail/ReqForge (dogfood-05-tracking.md)
 
-set -e
+# pipefail so pipeline exit reflects claude failure (not jq/tee); no -e (we handle errors in loop)
+set -o pipefail
 PROJECT="${1:-$(pwd)}"
 cd "$PROJECT" || { echo "❌ Cannot access: $PROJECT"; exit 1; }
 
@@ -71,23 +72,25 @@ while true; do
   # jq filter extracts assistant text for readability; raw JSONL saved to log file.
   # < /dev/null closes stdin to prevent any prompt from hanging.
   if command -v jq >/dev/null 2>&1; then
-    if ! claude -p "/dev-builder" \
-        --dangerously-skip-permissions \
-        --output-format stream-json --verbose --include-partial-messages \
-        < /dev/null 2>&1 | \
-        tee ".forge/yolo-run-${ITERATION}.jsonl" | \
-        jq -r 'select(.type=="assistant") | .message.content[]? | select(.type=="text") | .text'; then
-      echo "⚠️  claude exited with non-zero status at iteration $ITERATION"
-    fi
+    claude -p "/dev-builder" \
+      --dangerously-skip-permissions \
+      --output-format stream-json --verbose --include-partial-messages \
+      < /dev/null 2>&1 | \
+      tee ".forge/yolo-run-${ITERATION}.jsonl" | \
+      jq -r 'select(.type=="assistant") | .message.content[]? | select(.type=="text") | .text'
+    EXIT_CODE=${PIPESTATUS[0]}
   else
     echo "⚠️  jq not installed — raw stream-json will be shown. Install jq for readable output."
-    if ! claude -p "/dev-builder" \
-        --dangerously-skip-permissions \
-        --output-format stream-json --include-partial-messages \
-        < /dev/null 2>&1 | \
-        tee ".forge/yolo-run-${ITERATION}.jsonl"; then
-      echo "⚠️  claude exited with non-zero status at iteration $ITERATION"
-    fi
+    claude -p "/dev-builder" \
+      --dangerously-skip-permissions \
+      --output-format stream-json --include-partial-messages \
+      < /dev/null 2>&1 | \
+      tee ".forge/yolo-run-${ITERATION}.jsonl"
+    EXIT_CODE=${PIPESTATUS[0]}
+  fi
+
+  if [ "$EXIT_CODE" -ne 0 ]; then
+    echo "⚠️  claude exited with non-zero status ($EXIT_CODE) at iteration $ITERATION"
   fi
 
   # Check handoff signal
@@ -99,11 +102,22 @@ while true; do
     # is already clean — no explicit clear needed.
     echo "→ Continuing to next Phase..."
     echo ""
-  else
+  elif [ "$EXIT_CODE" -eq 0 ]; then
+    # Clean exit + no handoff = genuine completion (last Phase done)
     echo ""
     echo "═══════════════════════════════════════════"
     echo "  ✅ All phases complete ($ITERATION iteration(s))"
     echo "═══════════════════════════════════════════"
     break
+  else
+    # Non-zero exit + no handoff = claude errored (API limit, auth, etc.)
+    echo ""
+    echo "═══════════════════════════════════════════"
+    echo "  ❌ claude errored at iteration $ITERATION (exit $EXIT_CODE)"
+    echo "  No .yolo-continue handoff written."
+    echo "  Check .forge/yolo-run-${ITERATION}.jsonl for details."
+    echo "  529 / 429 = rate limit (retry); other codes = check auth/config."
+    echo "═══════════════════════════════════════════"
+    exit 1
   fi
 done
