@@ -35,6 +35,7 @@
     "forge-bug-fix": "node scripts/forge-bug-fix.mjs",
     "forge-verify-content": "node scripts/forge-verify/content-verify.mjs",
     "forge-verify-gen": "node scripts/forge-verify/generate-contracts.mjs",
+    "test-generate-contracts": "node scripts/forge-verify/test-generate-contracts.mjs",
     "forge-skill-eval": "node scripts/forge-skill-eval.mjs",
     "forge-skill-retrieve": "node scripts/forge-skill-retrieve.mjs",
     "forge-release": "node scripts/forge-release.mjs",

@@ -163,13 +163,13 @@ function isNegativeDesc(desc) {
  * 从 desc 抽取数字范围（如 ≥ 85% → 85, 百分比）
  * 返回 { min, unit, suffix } 或 null
  */
-function extractNumericConstraint(desc) {
+export function extractNumericConstraint(desc) {
   // 匹配 "≥ N" 或 ">= N" 或 "N% 以上" 或 "> N"
   const numPatterns = [
     /[≥>=]\s*(\d+)\s*(%|秒|毫秒|ms|s|个|次|行|条)?/,
     /(\d+)\s*(%)\s*以[上下]/,
     /coverage\s*[≥>=]\s*(\d+)\s*(%|percent)/i,
-    /(至少|最少|不少于|不低于|at least|minimum|min)\s*(\d+)\s*(%|秒|ms|s)?/i,
+    /(?:至少|最少|不少于|不低于|at least|minimum|min)\s*(\d+)\s*(%|秒|ms|s)?/i,
   ];
   for (const pat of numPatterns) {
     const m = desc.match(pat);
@@ -186,8 +186,8 @@ function extractNumericConstraint(desc) {
  * 生成数字范围正则（百分比）
  * 如 min=85 → (8[5-9]|90+)%
  */
-function genPercentPattern(min) {
-  if (min >= 100) return "100%";
+export function genPercentPattern(min) {
+  if (min >= 100) return "(?<!\\d)100%";
   const tens = Math.floor(min / 10);
   const ones = min % 10;
   const parts = [];
@@ -201,7 +201,7 @@ function genPercentPattern(min) {
   }
   // 100%
   parts.push("100");
-  return `(${parts.join("|")})%`;
+  return `(?<!\\d)(${parts.join("|")})%`;
 }
 
 /**
@@ -430,6 +430,6 @@ function generate(input) {
   console.error(`✅ 生成 ${generatedCount} 条需求的 patterns（共 ${generated.evidence_gates.requirements.length} 条）`);
 }
 
-if (process.argv[1] && (process.argv[1].endsWith("generate-contracts.mjs") || process.argv[1].endsWith("generate-contracts"))) {
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   main();
 }
