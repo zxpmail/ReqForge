@@ -1,11 +1,25 @@
 @echo off
 REM Stop hook: block agent stop while .forge/phase-exit-block or .forge/.verify-block exists (Ralph-style phase completion)
 REM Mirrors phase-exit-guard.sh. Agent writes phase-exit-block when Phase/DEV-PLAN acceptance is incomplete; forge-verify CLI writes .verify-block on new failures.
+REM
+REM YOLO mode: .yolo-continue is written on EVERY Stop (machine handoff, not prose-dependent).
+REM The external yolo-driver reads this file and re-invokes /dev-builder for the next Phase.
+REM Without YOLO: block files gate the Stop as usual.
 
 setlocal enabledelayedexpansion
 
 call :check_yolo
 set YOLO_ACTIVE=!YOLO_ACTIVE!
+
+REM YOLO mode → unconditional handoff (even without block files)
+REM Fixes dogfood-05 Run #2/#3: phase-exit-guard exited /b 0 at block-file check,
+REM never reached YOLO branch, so .yolo-continue was never written.
+REM The dev-builder's Step 5a prose instruction to write .yolo-continue was unreliable.
+REM Machine-enforced: the hook writes it directly on every Stop in YOLO mode.
+if !YOLO_ACTIVE! equ 1 (
+    echo {"yolo":true} > "%CLAUDE_PROJECT_DIR%\.forge\.yolo-continue"
+    exit /b 0
+)
 
 set BLOCK_FILE=%CLAUDE_PROJECT_DIR%\.forge\phase-exit-block
 set VERIFY_BLOCK=%CLAUDE_PROJECT_DIR%\.forge\.verify-block
@@ -27,12 +41,6 @@ if defined BLOCK_REASON (
 )
 
 if "!REASON!"=="" set REASON=Phase or DEV-PLAN acceptance criteria not complete, or forge-verify detected new failures. See DEV-PLAN.md and dev-builder phase verification.
-
-if !YOLO_ACTIVE! equ 1 (
-    if not exist "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending" mkdir "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending"
-    echo phase-exit-guard: !REASON! > "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending\phase-exit"
-    exit /b 0
-)
 
 echo {"decision": "block", "reason": "!REASON! — Complete Phase four-step verification and fix forge-verify failures, then remove block files before stopping."}
 exit /b 0
