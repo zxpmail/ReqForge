@@ -808,7 +808,7 @@ export function argumentSpaceCheck(requirements, projectRoot) {
 }
 
 // ====== 完整管道 ======
-async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, fileContract, apiConfig, evidenceGates) {
+export async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, fileContract, apiConfig, evidenceGates) {
   // 读取文件
   let content;
   try {
