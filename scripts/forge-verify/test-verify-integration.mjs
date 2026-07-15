@@ -10,7 +10,7 @@
 
 import { writeFileSync, rmSync, mkdirSync, existsSync } from "fs";
 import { join } from "path";
-import { layeredVerify, contractRegexCheck, evidenceGateCheck } from "./content-verify.mjs";
+import { layeredVerify, contractRegexCheck, evidenceGateCheck, LAYER2_PROMPT } from "./content-verify.mjs";
 
 const TMP = ".forge/tmp-verify-integration";
 const EVD = join(TMP, "evidence");
@@ -110,6 +110,22 @@ const rNoEg = await layeredVerify(
 );
 check("非 evidence_gates 路径 trace.evidence_files 为 undefined",
   rNoEg.trace.evidence_files === undefined, "");
+
+// ============================================================
+// 4. L2 prompt structural 检查 — 防止 multi-file 语义错配回归
+// ============================================================
+console.log("\n## 4. LAYER2_PROMPT structural 检查（防 multi-file 错配回归）\n");
+
+check("LAYER2_PROMPT 已 export",
+  typeof LAYER2_PROMPT === "string" && LAYER2_PROMPT.length > 0, "");
+check("LAYER2_PROMPT 含 multi-file handling 段落",
+  /multi-file task/i.test(LAYER2_PROMPT), "防单文件被误判为遗漏其他组件");
+check("LAYER2_PROMPT 含 {task} 占位符",
+  LAYER2_PROMPT.includes("{task}"), "");
+check("LAYER2_PROMPT 含 {content} 占位符",
+  LAYER2_PROMPT.includes("{content}"), "");
+check("LAYER2_PROMPT 要求 JSON 响应含 reason",
+  /"reason"/.test(LAYER2_PROMPT), "L2 投票必须输出 reason");
 
 // ============================================================
 console.log(`\n## 汇总\n通过: ${passCount}  失败: ${failCount}  总检查点: ${passCount + failCount}`);

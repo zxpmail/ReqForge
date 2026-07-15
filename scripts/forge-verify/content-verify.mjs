@@ -329,7 +329,7 @@ function layer1Check(content, fileContract) {
 }
 
 // ====== Layer 2 — 瘦 LLM 语义审查 ======
-const LAYER2_PROMPT = `You are a quality inspector.
+export const LAYER2_PROMPT = `You are a quality inspector.
 
 The output below has already passed basic format checks:
 - Not empty, not pure punctuation, not a placeholder keyword
