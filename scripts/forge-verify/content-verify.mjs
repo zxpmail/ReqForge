@@ -339,6 +339,12 @@ The output below has already passed basic format checks:
 Your job is ONLY to judge the SEMANTIC dimension:
 Does this output substantively satisfy the CORE requirements of the task?
 
+IMPORTANT — multi-file task handling:
+The TASK may describe multiple files or components (e.g., "scanner.ts + writer.ts + cli.ts").
+The OUTPUT is ONE of those files. Judge ONLY whether THIS file satisfies its portion
+of the task. Do NOT reject a file because the task mentions other files that are
+not in this output — those are verified separately.
+
 DO NOT reject for missing keywords, short length, or formatting issues.
 Only reject if the output fundamentally misses the INTENT or is semantically insufficient.
 
@@ -1238,6 +1244,13 @@ async function main() {
           // L2 阶段
           const vStr = s.verdicts.join("/");
           console.log(`    └ L2: [${vStr}] PASS=${s.passCnt} REJ=${s.rejectCnt}`);
+          // 输出每次投票的 reason（消除黑盒：REJECT/UNCLEAR 时定位 LLM 判断依据）
+          if (s.reasons && s.reasons.length > 0) {
+            for (let i = 0; i < s.reasons.length; i++) {
+              const reason = s.reasons[i];
+              if (reason) console.log(`       vote#${i + 1} [${s.verdicts[i]}]: ${reason.slice(0, 200)}`);
+            }
+          }
         } else {
           console.log(`    └ ${s.layer}: ${s.verdict} — ${(s.reason || "").slice(0, 80)}`);
         }

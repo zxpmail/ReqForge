@@ -146,24 +146,3 @@
 **记录日期**：2026-07-15
 
 ---
-
-## content-verify L2 LLM 投票输出 reject reason
-
-**想法**：`content-verify.mjs` 的 L2 LLM 投票只给 PASS/REJECT/UNCLEAR 判定，**不记录 reject reason**。dogfood-05 Phase 2 验证时 `scanner.ts` 被 3/3 REJECT 但无原因，无法定位是代码真有问题还是 LLM 误判。应在 L2 投票时让 LLM 输出 reason 字段，写入 `.forge/verify-uncertain.json` 或新 `.forge/verify-rejects.json`。
-
-**触发条件**（满足任意一条才回头评估）：
-1. dogfood 或真实项目用 content-verify 遇到 REJECT 但无法定位原因 ≥2 次
-2. content-verify 被列为 dev-builder Phase 验收的主手段时（当前是辅助）
-3. 用户主动反馈"REJECT 无 reason 黑盒"
-
-**为什么现在不做**：
-- content-verify 当前是辅助验证手段，不是主验收门（主验收是 pnpm test + build）
-- L2 加 reason 输出需要改 prompt + 解析逻辑 + 输出文件格式，工作量中等
-- 当前 L2 信号已经有价值（UNCLEAR 转人工复核），reason 是锦上添花
-- 优先级低于 yolo-driver 闭环验证
-
-**当前优先级**：P4
-
-**记录日期**：2026-07-15
-
----

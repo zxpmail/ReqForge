@@ -349,7 +349,11 @@ node C:/work/ReqForge/scripts/forge-verify/content-verify.mjs \
 
 1. **phase-exit-guard 修复**（b62cf78，已 push）：YOLO check hoist 到 block-file-exit 前，hook 无条件写 `.yolo-continue`。机器层修复落地，但未在真实 dev-builder 流程中验证。
 2. **Phase 2 代码审视清单**（本次会话产出）：15 项问题（5 错误 + 4 遗漏 + 6 冗余），全部修复。可作为 dev-builder 代码自审的参考 checklist。
-3. **forge-verify 框架级缺陷发现**：ROOT 写死，不支持用户项目。应加 `--root` 参数或检测 cwd。
+3. **forge-verify 框架级缺陷发现**：ROOT 写死，不支持用户项目。应加 `--root` 参数或检测 cwd（已记 deferred P3）。
+4. **content-verify L2 黑盒消除 + 多文件语义错配修复**（本次会话续）：
+   - **黑盒消除**：`layer2Check` 已收集 `reasons` 数组但从未输出。在控制台 L2 阶段加 vote-level reason 输出（`content-verify.mjs:1240-1247`）。原 P4 deferred idea 已实现，从 deferred 删除。
+   - **多文件语义错配修复**：dogfood-05 Phase 2 三文件验证时 scanner.ts/writer.ts 被 3/3 REJECT，reason 揭示根因——LLM 把「Phase 2: scanner + writer + cli」当作「单次输出应含全部三组件」评判，逐文件验证时单个文件自然「遗漏其他两个」。`LAYER2_PROMPT` 加「multi-file task handling」段落，明确「OUTPUT 是其中一个文件，只评判它那部分」。修复后三文件全 3/3 PASS。
+   - **验证**：46 个 content-verify 测试（integration 13 + c2c1 11 + evidence-gate 22）全 PASS，无回归。dogfood-05 Phase 2 代码经 content-verify 验证全 PASS。
 
 ### Run #3 真正闭环待跑
 
