@@ -371,11 +371,17 @@ node C:/work/ReqForge/scripts/forge-verify/content-verify.mjs \
 1. **权限挂起**：`claude -p "/dev-builder"` 默认 `default` 权限模式，遇到工具调用需批准时**挂起等 stdin**——脚本没喂 stdin，进程永久阻塞。这是「黑屏」主因。
 2. **输出缓冲**：默认 `--output-format text` 把全部响应缓冲到退出时才打印。即使权限不挂起，5 分钟 Phase 期间也是黑屏。
 
-**修复**（scripts/yolo-driver.sh + .bat）：
+**修复**（scripts/yolo-driver.sh + .bat + .ps1）：
 - 加 `--dangerously-skip-permissions`（YOLO = 跳过所有批准；用户 settings.json 已有 `skipDangerousModePermissionPrompt: true`，启动确认不会卡）
 - .sh 加 `--output-format stream-json --verbose --include-partial-messages` + `jq` 过滤出 assistant 文本 + `tee` 保存 raw JSONL 到 `.forge/yolo-run-N.jsonl`；`jq` 缺失时 fallback 到 raw stream-json
-- .bat 只加 `--dangerously-skip-permissions`（无 jq，输出仍缓冲但至少跑通；要流式用 `bash scripts/yolo-driver.sh`）
+- .bat 只加 `--dangerously-skip-permissions`（无 jq，输出仍缓冲但至少跑通；Windows 用户推荐用 .ps1）
+- **新增 .ps1**（PowerShell 原生，Windows 10+ 自带）：`cmd /c claude ... | Tee-Object | ForEach-Object { ConvertFrom-Json }` 流式解析 JSON 提取 assistant 文本，raw JSONL 同步落盘。纯 ASCII 避开 PowerShell 5.1 的 UTF-8 编码坑（emoji 会让 `"$var:"` 之类的字符串解析失败）
 - 加 `< /dev/null` / `< NUL` 关闭 stdin 防任何 prompt 挂起
+
+**Windows 脚本选型**：
+- **.ps1（推荐）**：`powershell -ExecutionPolicy Bypass -File scripts\yolo-driver.ps1 C:\work\dogfood-05` — 流式可读，无依赖
+- .sh via git-bash：`bash scripts/yolo-driver.sh` — 需 jq 才流式可读，否则 raw JSON
+- .bat：`scripts\yolo-driver.bat` — 输出缓冲（5 分钟黑屏后一次性 dump），仅作 fallback
 
 **待验证**：修复后 yolo-driver 能否真正跨 3 Phase 闭环。仍需独立会话跑。
 
