@@ -268,7 +268,17 @@ failure_class 连接 forge-verify 和 feedback-observer：一次 verification RE
 }
 ```
 
-`evidence_files` 记录证据文件 mtime，用于 STALE 检测：如果证据文件在验证后被修改，trace 标记为可能过期。
+`evidence_files` 记录证据文件路径、大小和 mtime。验证结束后重 stat 并与预读 mtime 比对：若不一致则标记该文件 `stale: true`（同运行期被外部修改）。顶层 `trace.stale` 在任一文件过期时为 `true`。
+
+输出中的 mtime 字段可供消费者在后续时间点自行比对：`当前 mtime > trace.evidence_files[f].mtime` 说明验证结果可能已过期。
+
+### C2→C1 反馈环
+
+当 C2（逐需求 LLM）通过但 C1（合约正则）未匹配时，系统从证据文本中提取关键词作为 pattern 建议：
+
+- **持久化**：建议写入 `.forge/verify-pattern-suggestions.json`，供下一轮迭代使用
+- **自动合并**：`node scripts/forge-verify/content-verify.mjs --from-config --apply-suggestions` 将建议的新 pattern 合并到 `.forge/content-verify.json`（自动去重）
+- 系统不自动修改配置——合并需显式 `--apply-suggestions` 或人工审阅后手动添加
 
 ### 测试脚本
 

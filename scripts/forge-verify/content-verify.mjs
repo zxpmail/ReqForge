@@ -39,7 +39,8 @@
  *
  * 用法：
  *   node scripts/forge-verify/content-verify.mjs [--task "..."] [--files f1,f2] [--runs 3]
- *   node scripts/forge-verify/content-verify.mjs --from-config
+ *   node scripts/forge-verify/content-verify.mjs --from-config [--apply-suggestions]
+ *
  *
  * 配置 .forge/content-verify.json:
  *   {
@@ -88,6 +89,7 @@ const ROOT = join(__dirname, "..", "..");
 // ====== 默认参数 ======
 const DEFAULT_DIVERGENCE_THRESHOLD = 0.8;  // 低于此 → UNCLEAR（不做多数决）
 const DEFAULT_UNCERTAIN_OUTPUT = ".forge/verify-uncertain.json";
+const DEFAULT_SUGGESTIONS_OUTPUT = ".forge/verify-pattern-suggestions.json";
 const DEFAULT_RUNS = 3;
 
 // ====== Layer 0 — 确定性形状/存在性检查 ======
@@ -819,7 +821,8 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
 
   const filename = filePath.split(/[/\\]/).pop();  // 提取文件名用于 re-stat 检查
   const stages = [];
-
+  let trace = [];  // 在 main return 处重建；早定义供 early return 使用
+  let preReadEvidence = {};  // STALE 检测基线（可能被 EG 块填充，trace 块读取）
   // 获取证据文件 mtime（用于 trace staleness 检测）
   function evidenceFileMeta(filePath) {
     try {
@@ -884,6 +887,14 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
           ? evidenceGates.evidence_dir
           : join(ROOT, evidenceGates.evidence_dir))
       : join(dirname(filePath), ".skillgate", "evidence");
+
+    // 证据文件预读统计（STALE 检测基线）
+    preReadEvidence = {};
+    for (const req of evidenceGates.requirements) {
+      const efPath = join(evidenceDir, req.evidence_file);
+      try { const s = statSync(efPath); preReadEvidence[req.evidence_file] = { mtime: s.mtimeMs };
+      } catch { preReadEvidence[req.evidence_file] = { mtime: 0 }; }
+    }
 
     // Evidence Gate — 文件存在性检查
     const eg = evidenceGateCheck(evidenceDir, evidenceGates.requirements);
@@ -1007,6 +1018,7 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
   const checkedAt = Date.now();
   // 收集所有证据文件元数据用于 STALE 检测
   const evidenceFiles = {};
+  let anyStale = false;
   if (evidenceGates && evidenceGates.requirements) {
     for (const req of evidenceGates.requirements) {
       const efPath = join(
@@ -1019,8 +1031,17 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
       );
       evidenceFiles[req.evidence_file] = evidenceFileMeta(efPath);
     }
+
+    // 预读 vs 当前 mtime：检测同运行期 STALE（外部修改）
+    for (const [filename, meta] of Object.entries(evidenceFiles)) {
+      const pre = preReadEvidence[filename];
+      if (pre && pre.mtime > 0 && meta.mtime !== pre.mtime) {
+        meta.stale = true;
+        anyStale = true;
+      }
+    }
   }
-  const trace = stages.map(s => ({
+  trace = stages.map(s => ({
     stage: s.layer,
     verdict: s.verdict,
     check: s.check,
@@ -1045,6 +1066,7 @@ async function layeredVerify(filePath, task, model, nRuns, divergenceThreshold, 
     trace: {
       chain: trace,
       evidence_files: Object.keys(evidenceFiles).length > 0 ? evidenceFiles : undefined,
+      stale: anyStale || undefined,
       checked_at: checkedAt,
     },
   };
@@ -1240,6 +1262,61 @@ async function main() {
         reason: r.reason,
         timestamp: new Date().toISOString(),
       });
+    }
+  }
+
+  // ── C2→C1 反馈环持久化 ──
+  const allSuggestions = results.flatMap(r => r.pattern_suggestions || []);
+  if (allSuggestions.length > 0) {
+    const suggestionsPath = join(ROOT, DEFAULT_SUGGESTIONS_OUTPUT);
+    writeFileSync(suggestionsPath, JSON.stringify({
+      generated_at: new Date().toISOString(),
+      config_path: ".forge/content-verify.json",
+      suggestions: allSuggestions.map(s => {
+        const req = cfg.evidenceGates?.requirements?.find(r => r.id === s.req_id);
+        return {
+          req_id: s.req_id,
+          evidence_file: s.evidence_file,
+          hint: s.hint,
+          candidate_terms: s.candidate_terms,
+          existing_patterns: req?.patterns || (req?.pattern ? [req.pattern] : []),
+        };
+      }),
+    }, null, 2), "utf-8");
+    console.log(`  💡 模式建议已写入 ${DEFAULT_SUGGESTIONS_OUTPUT}（${allSuggestions.length} 条）`);
+
+    // --apply-suggestions：自动合并到配置文件
+    if (process.argv.includes("--apply-suggestions")) {
+      const configPath = join(ROOT, ".forge", "content-verify.json");
+      if (!existsSync(configPath)) {
+        console.log(`  ❌ --apply-suggestions 但 .forge/content-verify.json 不存在，跳过`);
+      } else {
+        const config = JSON.parse(readFileSync(configPath, "utf-8"));
+        let appliedCount = 0;
+        for (const s of allSuggestions) {
+          const req = config.evidence_gates?.requirements?.find(r => r.id === s.req_id);
+          if (!req || !s.candidate_terms || s.candidate_terms.length === 0) continue;
+
+          const existing = req.patterns || (req.pattern ? [req.pattern] : []);
+          const existingNorm = new Set(existing.map(p => p.replace(/\s/g, "")));
+          const toAdd = s.candidate_terms
+            .filter(t => t.length >= 3 && /[a-zA-Z]/.test(t))
+            .map(t => `(?i)${t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}`)
+            .filter(p => !existingNorm.has(p.replace(/\s/g, "")));
+
+          if (toAdd.length > 0) {
+            if (!req.patterns) req.patterns = existing;
+            req.patterns.push(...toAdd);
+            appliedCount++;
+          }
+        }
+        if (appliedCount > 0) {
+          writeFileSync(configPath, JSON.stringify(config, null, 2), "utf-8");
+          console.log(`  ✅ ${appliedCount} 条建议已合并到 .forge/content-verify.json`);
+        } else {
+          console.log(`  ℹ️  无新模式可添加（已有 patterns 已覆盖建议）`);
+        }
+      }
     }
   }
 

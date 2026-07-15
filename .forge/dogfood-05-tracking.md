@@ -280,6 +280,13 @@ Phase 1 顺利跑完 → 无 block 文件存在
 
 ## Run #3 待跑（独立会话）
 
+**靶子已准备（2026-07-15）**：`C:\work\dogfood-05\` 已重建，含：
+- Product-Spec.md / DEV-PLAN.md — 从 dogfood-04-tracking.md 记录重构（3 Phase Small/Backend/🟢）
+- `.forge/config` — `FORGE_MODE=yolo`
+- `.forge/spec-confirmed.json` / `plan-confirmed.json` — 预置
+- hooks 已通过 `forge-install claude-code C:\work\dogfood-05 --windows` 接线
+- 注意：Spec 和 Plan 是从 tracking 元数据重构的近似版本，非原始精确复制
+
 唯一剩下的开放变量：**yolo-driver 闭环在独立会话真的能跨 Phase 跑通吗？**
 
 Run #1/#2 测的是 prose 续跑（FAIL）。机器层修后 `phase-exit-guard` 接通 `Stop` lifecycle（dogfood-05 机器层修复章节），但那只解决"YOLO 下错误停等"，不解决续跑。fc88a2d 加的 yolo-driver 才是续跑的正向驱动。
