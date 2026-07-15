@@ -363,6 +363,22 @@ node C:/work/ReqForge/scripts/forge-verify/content-verify.mjs \
 
 执行清单见下节 `[Run #3 执行清单]`。
 
+### yolo-driver 黑屏修复（2026-07-15，本会话续）
+
+**dogfood 第 N 次发现**：用户按执行清单跑 `scripts/yolo-driver.bat C:\work\dogfood-05`，进入黑屏无输出。
+
+**根因（两个，叠加）**：
+1. **权限挂起**：`claude -p "/dev-builder"` 默认 `default` 权限模式，遇到工具调用需批准时**挂起等 stdin**——脚本没喂 stdin，进程永久阻塞。这是「黑屏」主因。
+2. **输出缓冲**：默认 `--output-format text` 把全部响应缓冲到退出时才打印。即使权限不挂起，5 分钟 Phase 期间也是黑屏。
+
+**修复**（scripts/yolo-driver.sh + .bat）：
+- 加 `--dangerously-skip-permissions`（YOLO = 跳过所有批准；用户 settings.json 已有 `skipDangerousModePermissionPrompt: true`，启动确认不会卡）
+- .sh 加 `--output-format stream-json --verbose --include-partial-messages` + `jq` 过滤出 assistant 文本 + `tee` 保存 raw JSONL 到 `.forge/yolo-run-N.jsonl`；`jq` 缺失时 fallback 到 raw stream-json
+- .bat 只加 `--dangerously-skip-permissions`（无 jq，输出仍缓冲但至少跑通；要流式用 `bash scripts/yolo-driver.sh`）
+- 加 `< /dev/null` / `< NUL` 关闭 stdin 防任何 prompt 挂起
+
+**待验证**：修复后 yolo-driver 能否真正跨 3 Phase 闭环。仍需独立会话跑。
+
 ---
 
 ## Run #3 执行清单

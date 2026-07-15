@@ -77,8 +77,11 @@ if exist ".forge\active-scope.json" (
     echo ▶ [!ITERATION!] Starting Phase 1
 )
 
-REM Run dev-builder in non-interactive mode
-claude -p "/dev-builder"
+REM Run dev-builder in non-interactive YOLO mode.
+REM --dangerously-skip-permissions: skip all approval prompts (in -p mode, default
+REM   permission mode hangs waiting for stdin = "black screen no output")
+REM Output buffers until exit (no stream-json on .bat; use yolo-driver.sh via git-bash for streaming)
+claude -p "/dev-builder" --dangerously-skip-permissions < NUL
 
 REM Check handoff signal
 if exist ".forge\.yolo-continue" (

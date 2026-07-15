@@ -63,10 +63,31 @@ while true; do
     echo "▶ [$ITERATION] Starting Phase 1"
   fi
 
-  # Run dev-builder in non-interactive mode
-  # claude -p processes the message, runs tools, prints response, then exits.
-  if ! claude -p "/dev-builder"; then
-    echo "⚠️  claude exited with non-zero status at iteration $ITERATION"
+  # Run dev-builder in non-interactive YOLO mode.
+  # --dangerously-skip-permissions: skip all approval prompts (in -p mode, default
+  #   permission mode hangs waiting for stdin → "black screen no output")
+  # --output-format stream-json --include-partial-messages: stream tokens live
+  #   (default text format buffers everything until exit → black screen for minutes)
+  # jq filter extracts assistant text for readability; raw JSONL saved to log file.
+  # < /dev/null closes stdin to prevent any prompt from hanging.
+  if command -v jq >/dev/null 2>&1; then
+    if ! claude -p "/dev-builder" \
+        --dangerously-skip-permissions \
+        --output-format stream-json --verbose --include-partial-messages \
+        < /dev/null 2>&1 | \
+        tee ".forge/yolo-run-${ITERATION}.jsonl" | \
+        jq -r 'select(.type=="assistant") | .message.content[]? | select(.type=="text") | .text'; then
+      echo "⚠️  claude exited with non-zero status at iteration $ITERATION"
+    fi
+  else
+    echo "⚠️  jq not installed — raw stream-json will be shown. Install jq for readable output."
+    if ! claude -p "/dev-builder" \
+        --dangerously-skip-permissions \
+        --output-format stream-json --include-partial-messages \
+        < /dev/null 2>&1 | \
+        tee ".forge/yolo-run-${ITERATION}.jsonl"; then
+      echo "⚠️  claude exited with non-zero status at iteration $ITERATION"
+    fi
   fi
 
   # Check handoff signal
