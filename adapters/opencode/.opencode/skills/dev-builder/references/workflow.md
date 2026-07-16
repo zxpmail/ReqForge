@@ -281,7 +281,7 @@
                - `no-op` findings -> log only; never routed or fixed.
                - Proceed to steps 14/15 below with **only the `auto-fix` subset** of confirmed issues.
 
-            14. Confirmed spec/completeness issues (design agent, confidence >= 0.6):
+            14. Confirmed spec/completeness issues (design agent, confidence_5 ≥ 4 or legacy ≥ 0.6):
                a. Increment retry counter: read `.forge/.retry-counter.json`, set `retries += 1`, record the failure in `history[]` with `trigger="review_spec_fail"`, set `state="active"`
                b. dispatch feedback-observer with trigger_reason="review_spec_fail", current_skill="dev-builder", ai_action=[what was missing]
                c. fill in the implementation

@@ -47,7 +47,9 @@ for README_FILE in "$CLAUDE_PROJECT_DIR/README.md" "$CLAUDE_PROJECT_DIR/README.z
   if [ ! -f "$README_FILE" ]; then
     continue
   fi
-  VERSIONS=$(grep -oP '^### v\K\d+\.\d+\.\d+' "$README_FILE" 2>/dev/null | head -10)
+  # Portable: avoid GNU grep -oP (missing on macOS/BSD)
+  VERSIONS=$(grep -E '^### v[0-9]+\.[0-9]+\.[0-9]+' "$README_FILE" 2>/dev/null \
+    | sed -E 's/^### v([0-9]+\.[0-9]+\.[0-9]+).*/\1/' | head -10)
   if [ -z "$VERSIONS" ]; then
     continue
   fi

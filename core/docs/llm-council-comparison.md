@@ -63,7 +63,7 @@ flowchart LR
 |------|------|
 | 匿名化 | 传给 reviewer 前剥离 implementer session / task 叙述；**保留** `file:line` |
 | 互评 | **Meta-review**：aggregator 对 suspected 二次裁决（非 full peer mesh） |
-| 加权综合 | 综合结论 + Must-fix/Should-fix/Insight；跨 Agent 同 line 佐证仍用 confidence +0.1 |
+| 加权综合 | 综合结论 + Must-fix/Should-fix/Insight；跨 Agent 同 line 佐证用 **risk_rank × 1.1**（cap 125） |
 | 历史权重 | **路线图 P2**（需 `.forge/reviewer-stats.json`） |
 
 ### 2. Spec 质量 Council — **已落地**

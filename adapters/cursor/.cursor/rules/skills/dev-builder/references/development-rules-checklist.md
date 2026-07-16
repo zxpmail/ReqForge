@@ -192,7 +192,7 @@
         - If remote is not configured -> remind the user to configure it first
 
         Commit threshold:
-        - Minimum threshold for atomic commit: compiles (tsc --noEmit zero errors)
+        - Minimum threshold for atomic commit: language-aware compile/verify passes (prefer `forge-verify` / `.forge/dev-map.md`; not assume `tsc`)
         - Phase completion threshold: all four steps pass
         - No commit allowed if compilation fails
 

@@ -58,7 +58,7 @@ color: green
     - **status**: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
     - **reasoning_summary** (optional but recommended): 3–5 bullet plan + one-sentence conclusion used before coding
     - **implemented_items**: Implemented content, checked against the delivery checklist item by item
-    - **compile_result**: tsc --noEmit output
+    - **compile_result**: language-aware verify output (`pnpm forge-verify` preferred; else `.forge/dev-map.md` compile/typecheck command; TS/JS fallback `tsc --noEmit`)
     - **verification_result**: Functional verification result
     - **file_changes**: List of newly created and modified files
     - **self_check_findings**: Remaining issues found during self-check
@@ -89,7 +89,7 @@ color: green
     - Structured report:
       - **Status**: DONE | DONE_WITH_CONCERNS | BLOCKED | NEEDS_CONTEXT
       - **Implemented Items**: Checked against deliverables item by item
-      - **Compilation Result**: tsc --noEmit output
+      - **Compilation Result**: language-aware verify command + output (not hardcoded `tsc`)
       - **Functional Verification**: Verification result after starting the project
       - **File Changes**: List of newly created and modified files
       - **Self-Check Findings**: Whether there are remaining issues

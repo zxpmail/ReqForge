@@ -2,18 +2,27 @@
 
 ## Dispatchable Sub-Agents
 
-| Agent | File | Skill Used | Responsibility |
+Canonical definitions live in `core/agents/`. After `pnpm sync` / `forge-install`, copies land under the active adapter (not only Claude Code):
+
+| Adapter | Agents directory |
+|---------|------------------|
+| Claude Code | `.claude/agents/` |
+| Cursor | `.cursor/agents/` |
+| OpenCode | `.opencode/agents/` |
+| Gemini CLI | `.gemini/agents/` |
+
+| Agent | File (relative to adapter agents dir) | Skill Used | Responsibility |
 |-------|------|------------|---------------|
-| code-reviewer | .claude/agents/code-reviewer.md | code-review | Aggregate parallel review findings |
-| code-reviewer-design | .claude/agents/code-reviewer-design.md | code-review | Spec compliance, architecture, drift |
-| code-reviewer-bug | .claude/agents/code-reviewer-bug.md | code-review | Bug patterns, null pointers, race conditions, obvious performance |
-| code-reviewer-security | .claude/agents/code-reviewer-security.md | code-review | OWASP Top 10, credential leaks, XSS |
-| code-reviewer-types | .claude/agents/code-reviewer-types.md | code-review | Type safety (language-aware), edge cases |
-| implementer | .claude/agents/implementer.md | dev-builder | Code + compile verify + self-check |
-| feedback-observer | .claude/agents/feedback-observer.md | feedback-writer | Record user feedback |
-| evolution-runner | .claude/agents/evolution-runner.md | evolution-engine | Scan feedback + generate evolution proposals |
-| planner | .claude/agents/planner.md | dev-planner | Architecture design + Phase splitting |
-| test-writer | .claude/agents/test-writer.md | dev-builder | Generate Vitest tests for scripts/utilities |
+| code-reviewer | `code-reviewer.md` | code-review | Aggregate parallel review findings |
+| code-reviewer-design | `code-reviewer-design.md` | code-review | Spec compliance, architecture, drift |
+| code-reviewer-bug | `code-reviewer-bug.md` | code-review | Bug patterns, null pointers, race conditions, obvious performance |
+| code-reviewer-security | `code-reviewer-security.md` | code-review | OWASP Top 10, credential leaks, XSS |
+| code-reviewer-types | `code-reviewer-types.md` | code-review | Type safety (language-aware), edge cases |
+| implementer | `implementer.md` | dev-builder | Code + compile verify + self-check |
+| feedback-observer | `feedback-observer.md` | feedback-writer | Record user feedback |
+| evolution-runner | `evolution-runner.md` | evolution-engine | Scan feedback + generate evolution proposals |
+| planner | `planner.md` | dev-planner | Architecture design + Phase splitting |
+| test-writer | `test-writer.md` | dev-builder | Generate Vitest tests for scripts/utilities |
 
 Evolution proposals from evolution-runner must be presented to the user for individual confirmation/skip.
 

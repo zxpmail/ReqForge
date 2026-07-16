@@ -57,7 +57,7 @@
 
     [Verification Phase]
         Must execute after the self-review:
-        1. Compile verification: tsc --noEmit zero errors
+        1. Compile verification: language-aware (`pnpm forge-verify` / `.forge/dev-map.md` compile command; TS/JS fallback `tsc --noEmit`)
         2. Function verification: follow reproduction steps, bug no longer appears
         3. Regression verification: related features (list specific feature names) still work normally
         4. If Playwright is available -> automate core interaction flow testing
@@ -75,7 +75,7 @@
          **Root Cause**: [one-sentence root cause explanation]
          **Fix**: [which files were modified, what changes were made]
          **Verification**:
-         - Compilation: tsc --noEmit zero errors
+         - Compilation: language-aware verify clean
          - Function: [reproduction steps] no longer trigger the bug
          - Regression: [list of related features] verified normal
 

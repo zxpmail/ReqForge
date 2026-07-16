@@ -96,6 +96,14 @@ flowchart LR
 - **`test-demo/todo-cli`**：`fileParallelism: false`，避免 vitest 并行下共享存储竞态。
 - HARD-GATE 文案在 main 上已齐；#8 的 greenkeeper skill 半边仍待 contributor rebase。
 
+#### 全仓审计清理（文档 + verify + Gate 诚实表述）
+
+- **bug-fixer / dev-builder**：code-review 交接阈值改为 **confidence_5 ≥ 4**（旧 ≥ 0.6 仍兼容）。
+- **Overstepping Gate**：CLAUDE.md 区分*程序式*落地（Step 8.5 / `files_to_modify`）与*钩子级* detector 仍 deferred。
+- **语言感知编译**：`forge-verify` 与 implementer / phase / bug-fixer 不再只硬编码 `tsc`。
+- **forge-smoke**：文档与 vitest 列表对齐为 **15** 项（旧文「12」已过时）；`package-integrity` 覆盖 `ts-node`/`bash` 脚本路径。
+- **文档**：wiki Home → v1.50.0；sub-agent 多端路径；council 加权 = risk_rank × 1.1；pre-commit / release checklist 改用可移植 `grep`；修复 code-review `docs/` 断链与 founders-playbook 坏链。
+
 ### v1.50.0 — 2026-07-11 — forge-verify LLM 层：协议自适应、诚实降级
 
 - **LLM 协议自适应层**：L2 与 C2 经统一的 `llmComplete()` 调用层，按 `ANTHROPIC_BASE_URL` 自动选协议 —— 含 `/anthropic` → Anthropic Messages（如智谱 GLM 的 `/api/anthropic` 网关，与 Claude Code 同链路），否则 → OpenAI Chat Completions（如 deepseek）。一份 `ANTHROPIC_*` env 在两类端点下都可用，无需改代码。此前所有调用硬编码走 OpenAI 且剥掉 `/anthropic`，导致 GLM 环境下每次 L2/C2 调用都拿到 HTTP 403。
@@ -321,7 +329,7 @@ flowchart LR
 
 ### v1.28.0 — 2026-05-27
 - **dev-map（开发导航地图）**：项目级语义索引 `.forge/dev-map.md`——AI 编码前先了解模块结构和已有模式。由 dev-builder 维护（谁动代码谁改地图）。`pnpm forge-install` 自动写入模板。
-- **forge-verify（事后验证）**：统一验证入口 `pnpm forge-verify`，5 项检查 + 基线对比（`--baseline save|compare|check`）。把"我觉得做完了"变成"系统确认做完了"。
+- **forge-verify（事后验证）**：统一验证入口 `pnpm forge-verify`，8 项检查 + 基线对比（`--baseline save|compare|check`）；语义内容验证走独立的 `forge-verify-content`。把"我觉得做完了"变成"系统确认做完了"。
 - **dev-builder 集成**：Loading Phase 自动保存基线；Phase 完成后自动运行 forge-verify 并对比基线、更新 dev-map。新增 Post-Verification Gate 原则。
 
 ### v1.27.0 — 2026-05-27
@@ -1042,7 +1050,7 @@ pnpm test             # 运行单元测试（40 项，含 preflight、skill-eval
 pnpm preflight        # 本地验证发布门禁（见上方「发布前门禁」）
 pnpm build            # 编译 scripts/ 到 dist/
 pnpm sync             # 将 core/ 同步到 adapters/
-pnpm forge-smoke      # 发版守门：12 项 smoke（约 15–30 秒；含 skill-fixtures、skill-bypass、test-demo 黄金路径）
+pnpm forge-smoke      # 发版守门：15 项 smoke（约 15–40 秒；含 skill-fixtures、skill-bypass、test-demo 黄金路径）
 pnpm validate-skill   # 校验 core/skills/（跨平台 .mjs，可加 --strict）
 pnpm apply-loadout full claude-code  # 将 loadout 钩子写入 adapter settings
 pnpm dep-graph build  # 构建项目依赖图 → .forge/graph.json
@@ -1051,7 +1059,7 @@ pnpm dep-graph stats  # 查看图统计
 
 | 命令 | 说明 |
 |------|------|
-| `pnpm forge-smoke` | 发版守门：12 项 smoke（#11 内含 validate-skill）；push/PR 到 `core/`、`adapters/`、`test-demo/` 时 CI 自动跑 |
+| `pnpm forge-smoke` | 发版守门：15 项 smoke（含 validate-skill / test-demo 黄金路径）；push/PR 到 `core/`、`adapters/`、`test-demo/` 时 CI 自动跑 |
 | `pnpm test:watch` | 监听模式运行测试 |
 | `pnpm validate-skill:bash` | bash 版 validate-skill.sh（需 WSL/Git Bash）；加 `--score` 为 32 分评分表 |
 | `pnpm create-skill <名称>` | 从名称脚手架生成 Skill（`--minimal` 或 `--full`） |

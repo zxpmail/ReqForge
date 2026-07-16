@@ -18,10 +18,11 @@
     - No omissions, no half-baked work
     - Output evidence: feature checklist with checkmarks
 
-    Step 3: Compilation Verification
-    - TypeScript compilation zero errors (tsc --noEmit)
+    Step 3: Compilation / Verify Gate
+    - Prefer `pnpm forge-verify` (or project equivalent); else compile/typecheck from `.forge/dev-map.md`
+    - Stack fallbacks: TS/JS → `tsc --noEmit`; Python → `python -m compileall` / project lint; Java → `mvn -q compile` / `gradle compileJava`; Go → `go build ./...`
     - No missing dependencies
-    - Output evidence: compilation command output
+    - Output evidence: exact command used + output
 
     Step 4: Functional Testing
     - Start dev server, confirm no error output

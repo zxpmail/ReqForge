@@ -1,6 +1,6 @@
 # Judgment Spectrum（code-review）
 
-(Tencent Harness mirror — see `../../docs/tencent-harness-mirror-comparison.md`)
+(Tencent Harness mirror — see `../../../docs/tencent-harness-mirror-comparison.md`)
 
 Route each finding to the right tier — do not collapse "good" into a single score:
 

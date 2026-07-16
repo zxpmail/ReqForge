@@ -49,7 +49,7 @@
 1. gate 集稳定——近期仍有 Nature Gate bypass 这类结构演进，等 ≥3 个版本无 gate 结构变更
 2. 出现一次"prose 与机器实现漂移导致用户被误导"的实际事件（smoke-assert 只能 detect 漂移并 fail CI，挡不住 prose 内容本身过时）
 
-**为什么现在不做**：③ 的廉价一半（`machine-gates-doc` smoke-assert：声明 enforced 的 gate 无 enforcing file 即 fail CI，且 Overstepping 必须标注 not-yet-enforced）已交付，drift-detection 达成。生成 prose 是更重机制（generator 脚本 + 模板维护），gate 集还在动时引入 generator = churn。Simplicity First：smoke-assert 已解核心问题。
+**为什么现在不做**：③ 的廉价一半（`machine-gates-doc` smoke-assert：声明 hook-enforced 的 gate 无 enforcing file 即 fail CI；Overstepping 必须区分 procedural vs hook-level deferred）已交付，drift-detection 达成。生成 prose 是更重机制（generator 脚本 + 模板维护），gate 集还在动时引入 generator = churn。Simplicity First：smoke-assert 已解核心问题。
 
 **当前优先级**：P3
 

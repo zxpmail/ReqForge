@@ -26,7 +26,7 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 ### PreToolUse hooks
 | Name | Trigger | Purpose |
 |------|---------|---------|
-| `hallucination-gate` | PreToolUse | **Spec-Before-Code** (`scripts/hooks/spec-before-code-gate.mjs`): app `Write`/`Edit` requires (1) `Product-Spec.md` (2) **§ Idea Stage Exit Criteria** filled (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` with **MVP Scope** (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` for implementer only; then **Hallucination** path/parent-dir + package-ref checks. (Sloppiness/Overstepping are *not* in this chain — Sloppiness is enforced stop-time via `phase-exit-guard` + `forge-verify`; Overstepping is declared-but-not-enforced, see CLAUDE.md.) |
+| `hallucination-gate` | PreToolUse | **Spec-Before-Code** (`scripts/hooks/spec-before-code-gate.mjs`): app `Write`/`Edit` requires (1) `Product-Spec.md` (2) **§ Idea Stage Exit Criteria** filled (3) `.forge/spec-confirmed.json` (4) `DEV-PLAN.md` with **MVP Scope** (5) `.forge/plan-confirmed.json` (6) `.forge/implementer-session.json` for implementer only; then **Hallucination** path/parent-dir + package-ref checks. (Sloppiness/Overstepping are *not* in this PreToolUse chain — Sloppiness is stop-time via `phase-exit-guard` + `forge-verify`; Overstepping is *procedural* via implementer `files_to_modify` + Step 8.5, with hook-level detector still deferred — see CLAUDE.md.) |
 
 ### SessionStart hooks
 | Name | Trigger | Purpose |

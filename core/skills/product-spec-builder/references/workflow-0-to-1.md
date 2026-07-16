@@ -303,7 +303,7 @@
             3. **Feasibility** — Achievable with stated tech stack and team constraints?
             4. **User lens** — Gaps from target user's job-to-be-done; missing pain points or success criteria?
 
-            Each perspective returns: findings with confidence (0.0–1.0), **blocking / needs-clarification / ok**.
+            Each perspective returns: findings with confidence (1–5 preferred; legacy 0.0–1.0 accepted), **blocking / needs-clarification / ok**.
 
             **Chairman synthesis** (main Agent):
             - Verdict: **可交付 / 待确认 / 阻塞**

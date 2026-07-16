@@ -97,6 +97,14 @@ flowchart LR
 - **`test-demo/todo-cli`**: `fileParallelism: false` to avoid shared-storage races under vitest.
 - HARD-GATE SKILL anchors were already present on main; greenkeeper skill half of #8 still waiting on contributor rebase.
 
+#### Audit cleanup (docs + verify + gates honesty)
+
+- **confidence_5 ≥ 4** for bug-fixer / dev-builder handoff from code-review (legacy ≥ 0.6 still accepted).
+- **Overstepping Gate**: CLAUDE.md distinguishes *procedural* enforcement (Step 8.5 / `files_to_modify`) vs *hook-level* deferred detector.
+- **Language-aware compile**: `forge-verify` + implementer / phase / bug-fixer no longer hardcode `tsc` only.
+- **forge-smoke**: docs + vitest list **15** smokes (was stale “12”); `package-integrity` also checks `ts-node`/`bash` script paths.
+- **Docs**: wiki Home → v1.50.0; sub-agent paths multi-adapter; council boost = risk_rank × 1.1; portable `grep` in pre-commit / release checklist; fixed code-review `docs/` links + founders-playbook dead multica link.
+
 ### v1.50.0 — 2026-07-11 — forge-verify LLM layer: protocol-adaptive, honest degradation
 
 - **LLM protocol-adaptive layer**: L2 and C2 route through a unified `llmComplete()` that picks protocol from `ANTHROPIC_BASE_URL` — containing `/anthropic` → Anthropic Messages (e.g. Zhipu GLM's `/api/anthropic` gateway, the same path Claude Code uses), otherwise → OpenAI Chat Completions (e.g. deepseek). One `ANTHROPIC_*` env works across both endpoint families with no code change. Previously every call was hardcoded to OpenAI and stripped `/anthropic`, so under a GLM env every L2/C2 call hit HTTP 403.
@@ -1090,7 +1098,7 @@ pnpm test             # Unit tests (40 cases, incl. preflight, skill-eval, proje
 pnpm preflight        # Verify release gate locally (see Preflight above)
 pnpm build            # Compile scripts/ to dist/
 pnpm sync             # Sync core/ → adapters/
-pnpm forge-smoke      # Release gate: 12 smokes (~15–30s) — skill-fixtures, skill-bypass, test-demo golden path
+pnpm forge-smoke      # Release gate: 15 smokes (~15–40s) — skill-fixtures, skill-bypass, test-demo golden path
 pnpm validate-skill   # Validate core/skills/ (cross-platform .mjs; add --strict)
 pnpm apply-loadout full claude-code  # Write loadout hooks to adapter settings
 pnpm dep-graph build  # Build dependency graph → .forge/graph.json

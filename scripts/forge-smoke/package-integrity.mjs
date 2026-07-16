@@ -29,18 +29,30 @@ r.assert(typeof pkg.license === "string", "package.json missing license");
 r.assert(typeof pkg.scripts === "object" && !Array.isArray(pkg.scripts), "package.json scripts must be an object");
 r.assert(Object.keys(pkg.scripts).length > 0, "package.json scripts is empty");
 
-// ── 2. scripts 引用真实文件（node scripts/... 模式） ──
+// ── 2. scripts 引用真实文件（node / ts-node / bash scripts/...） ──
 
 let scriptChecks = 0;
 for (const [name, script] of Object.entries(pkg.scripts)) {
-  const match = typeof script === "string" ? script.match(/^node (scripts\/\S+)/) : null;
-  if (match) {
-    const scriptPath = path.join(ROOT, match[1]);
-    r.assert(fs.existsSync(scriptPath), `script '${name}' target '${match[1]}' not found`);
+  if (typeof script !== "string") continue;
+  // Match first path-like token under scripts/ (handles && chains by scanning)
+  const re =
+    /(?:^|&&|;|\|)\s*(?:node|ts-node|bash|sh)\s+(scripts\/[^\s&|;]+)/g;
+  let m;
+  while ((m = re.exec(script)) !== null) {
+    const rel = m[1];
+    const scriptPath = path.join(ROOT, rel);
+    r.assert(fs.existsSync(scriptPath), `script '${name}' target '${rel}' not found`);
+    scriptChecks++;
+  }
+  // Also cover bare `node test-demo/...` style roots used by some scripts
+  const other = script.match(/(?:^|&&|;|\|)\s*node\s+((?:test-demo|scripts)\/[^\s&|;]+)/);
+  if (other && !other[1].startsWith("scripts/")) {
+    const rel = other[1];
+    r.assert(fs.existsSync(path.join(ROOT, rel)), `script '${name}' target '${rel}' not found`);
     scriptChecks++;
   }
 }
-// ${scriptChecks} script file references verified
+r.assert(scriptChecks >= 5, `expected several script file refs, got ${scriptChecks}`);
 
 // ── 3. forge-hooks 引用真实文件 ──
 

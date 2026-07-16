@@ -10,12 +10,12 @@
 
 **Cross-Session Audit**: Important reviews (Phase completion, security, architecture) should use a fresh sub-agent session. When `change_complexity` is "complex" or "moderate", flag isolation requirement.
 
-**Council-Style Review** (see `../../docs/llm-council-comparison.md`):
+**Council-Style Review** (see `../../../docs/llm-council-comparison.md`):
 - **Anonymous context**: Strip implementer narrative from review packet; keep file:line, Spec, diff
 - **Meta-review**: Re-evaluate suspected findings (confidence_5 == 3) after parallel agents return
 - **Chairman synthesis**: End with **综合结论** (ship / fix-first / blocked) + Must-fix / Should-fix / Insight
 
-**Risk ranking** (see `../../docs/jobs-comparison.md`): severity × impact × confidence (1–5) = **risk_rank**; sort confirmed findings by risk_rank.
+**Risk ranking** (see `../../../docs/jobs-comparison.md`): severity × impact × confidence (1–5) = **risk_rank**; sort confirmed findings by risk_rank.
 
 **Web-First**: Suspicious patterns or security concerns → WebSearch before concluding.
 

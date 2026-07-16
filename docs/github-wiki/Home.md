@@ -1,9 +1,9 @@
 # ReqForge（Forge）
 
-**当前版本：v1.48.6**（2026-06-27）  
+**当前版本：v1.50.0**（2026-07-11）  
 **主文档**：[README 中文](https://github.com/zxpmail/ReqForge/blob/main/README.zh-CN.md) · [README English](https://github.com/zxpmail/ReqForge/blob/main/README.md) · [CHANGELOG](https://github.com/zxpmail/ReqForge/blob/main/CHANGELOG.md)
 
-**v1.48.6 亮点**：mockup 验收后冻结根目录 `DESIGN.md`（[Google design.md](https://github.com/google-labs-code/design.md) 格式）；dev-builder / code-review 优先读 token，不再从 Brief 猜色值。
+**v1.50.0 亮点**：forge-verify LLM 层协议自适应（Anthropic Messages / OpenAI Chat Completions）+ C2 诚实降级；此前 v1.48.6 起 mockup 后冻结根目录 `DESIGN.md`，dev-builder / code-review 优先读 token。
 
 ---
 

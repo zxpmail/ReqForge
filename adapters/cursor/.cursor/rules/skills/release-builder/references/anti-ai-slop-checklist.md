@@ -21,8 +21,9 @@ git tag | tail -1
 # → v1.2.3
 
 # 三者不一致 → 阻塞发布，修正后再继续
-if [ "$(grep '"version"' package.json | grep -oP '\d+\.\d+\.\d+')" != \
-     "$(grep '## \[' CHANGELOG.md | head -1 | grep -oP '\d+\.\d+\.\d+')" ]; then
+PKG_VER=$(grep '"version"' package.json | sed -E 's/.*"([0-9]+\.[0-9]+\.[0-9]+)".*/\1/' | head -1)
+CHG_VER=$(grep -E '^## \[' CHANGELOG.md | head -1 | sed -E 's/.*\[([0-9]+\.[0-9]+\.[0-9]+)\].*/\1/')
+if [ "$PKG_VER" != "$CHG_VER" ]; then
   echo "❌ Version mismatch between package.json and CHANGELOG"
   exit 1
 fi

@@ -1,7 +1,7 @@
 # ReqForge 与 Founder's Playbook 对照
 
 > 参考：[The Founder's Playbook: Building an AI-Native Startup](https://cdn.prod.website-files.com/6889473510b50328dbb70ae6/69fe2a55b93bb0732b1fe33c_The-Founders-Playbook-%2005062026_v3%20(1).pdf)（Anthropic，2026-05）  
-> 与 [karpathy-skills-comparison.md](./karpathy-skills-comparison.md)、[multica-comparison.md](./multica-comparison.md)（待补）互补。
+> 与 [karpathy-skills-comparison.md](./karpathy-skills-comparison.md) 互补。（Multica 对照尚未成文，不挂坏链。）
 
 ---
 

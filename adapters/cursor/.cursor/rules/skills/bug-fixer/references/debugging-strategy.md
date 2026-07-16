@@ -76,7 +76,7 @@ No stage-skipping allowed. CoT checklist → `cot-diagnostic-checklist.md`.
 ### Generic
 
 - Single fix (one logical point at a time)
-- Compile verification (`tsc --noEmit` zero errors)
+- Compile verification (language-aware: `pnpm forge-verify` / dev-map / stack fallback)
 - Function verification (bug no longer reproduces)
 - Regression verification (related features work)
 - Fix fails → roll back, Stage 3; 3 consecutive failures → stop, re-examine architecture

@@ -17,7 +17,7 @@ requires: []
 [Invocation Context]
     bug-fixer may be called in two scenarios:
     1. User directly reports a bug -> main Agent invokes bug-fixer -> after fix, suggest user run /code-review to verify
-    2. code-review finds confirmed bug/security/type issues (confidence ≥ 0.6) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review
+    2. code-review finds confirmed bug/security/type issues (confidence_5 ≥ 4, or legacy confidence ≥ 0.6) -> main Agent invokes bug-fixer, passing the failure items from the code-review report -> after fix, main Agent re-dispatches code-review
 
     **Action filter**: bug-fixer receives **only `auto-fix` findings**. Findings with `action="ask-user"` (intent / product-behavior / dead-code decisions) are escalated to the human by dev-builder *before* reaching bug-fixer — never auto-fix them. See `../_shared/finding-actions.md`.
 

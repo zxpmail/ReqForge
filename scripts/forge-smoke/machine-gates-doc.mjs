@@ -48,10 +48,12 @@ for (const { gate, files } of enforced) {
   }
 }
 
-// Honesty: Overstepping Gate has no enforcing file — CLAUDE.md must mark it not-yet-machine-enforced.
+// Honesty: Overstepping has procedural enforcement (Step 8.5 / files_to_modify); hook-level still deferred.
+// CLAUDE.md must state both — not claim "fully hook-enforced" and not claim "nothing exists".
 r.assert(
-  /Overstepping Gate[\s\S]{0,80}?not yet machine-enforced/i.test(content),
-  "Overstepping Gate has no enforcing file — CLAUDE.md must mark it 'not yet machine-enforced' (contract must match reality)",
+  /Overstepping Gate[\s\S]{0,220}?(procedural|Step 8\.5)/i.test(content) &&
+    /Overstepping Gate[\s\S]{0,400}?(hook-level|PreToolUse)[\s\S]{0,80}?deferred/i.test(content),
+  "Overstepping Gate must distinguish procedural enforcement vs hook-level deferred (see CLAUDE.md + deferred-ideas.md)",
 );
 
 r.assert(fs.existsSync(opencodeAgents), "adapters/opencode/.opencode/AGENTS.md missing");

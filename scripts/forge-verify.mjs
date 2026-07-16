@@ -94,9 +94,49 @@ function checkSkillQuality() {
 }
 
 function checkCompile() {
-  if (!existsSync(join(ROOT, "tsconfig.json"))) return "skip (no tsconfig)";
-  execSync("npx tsc --noEmit", { cwd: ROOT, encoding: "utf-8", timeout: 120000, stdio: "pipe" });
-  return "tsc --noEmit clean";
+  const runCmd = (cmd, label) => {
+    execSync(cmd, { cwd: ROOT, encoding: "utf-8", timeout: 120000, stdio: "pipe", shell: true });
+    return `${label} clean`;
+  };
+
+  const devMapPath = join(ROOT, ".forge/dev-map.md");
+  if (existsSync(devMapPath)) {
+    const text = readFileSync(devMapPath, "utf-8");
+    const m = text.match(
+      /(?:^|\n)\s*(?:Build|Compile|Typecheck|构建|编译)\s*[:|：]\s*`?([^\n`]+)`?/i,
+    );
+    if (m) {
+      const cmd = m[1].trim();
+      if (cmd && !/^tbd/i.test(cmd) && cmd.length < 200) {
+        return runCmd(cmd, cmd);
+      }
+    }
+  }
+
+  const pkgPath = join(ROOT, "package.json");
+  if (existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
+      for (const key of ["typecheck", "tsc", "compile"]) {
+        if (pkg.scripts?.[key]) {
+          return runCmd(`pnpm run ${key}`, `pnpm run ${key}`);
+        }
+      }
+    } catch {
+      /* fall through */
+    }
+  }
+
+  if (existsSync(join(ROOT, "tsconfig.json"))) {
+    return runCmd("npx tsc --noEmit", "tsc --noEmit");
+  }
+  if (existsSync(join(ROOT, "go.mod"))) {
+    return runCmd("go build ./...", "go build ./...");
+  }
+  if (existsSync(join(ROOT, "pyproject.toml")) || existsSync(join(ROOT, "setup.py"))) {
+    return runCmd("python -m compileall -q .", "python -m compileall");
+  }
+  return "skip (no compile command detected)";
 }
 
 function checkTest() {
