@@ -14,6 +14,16 @@ function loadYamlLike(filePath) {
   const text = fs.readFileSync(filePath, "utf-8");
   const out = { expect_skill_contains: [], expect_reference_contains: [] };
   let key = null;
+  const unquote = (value) => {
+    const trimmed = value.trim();
+    if (
+      (trimmed.startsWith('"') && trimmed.endsWith('"')) ||
+      (trimmed.startsWith("'") && trimmed.endsWith("'"))
+    ) {
+      return trimmed.slice(1, -1);
+    }
+    return trimmed;
+  };
   for (const rawLine of text.split("\n")) {
     const line = rawLine.replace(/\r$/, "");
     const km = line.match(/^([a-z_]+):\s*$/);
@@ -23,19 +33,12 @@ function loadYamlLike(filePath) {
     }
     const item = line.match(/^\s+-\s+(.+)$/);
     if (item && key && Array.isArray(out[key])) {
-      let value = item[1].trim();
-      if (
-        (value.startsWith('"') && value.endsWith('"')) ||
-        (value.startsWith("'") && value.endsWith("'"))
-      ) {
-        value = value.slice(1, -1);
-      }
-      out[key].push(value);
+      out[key].push(unquote(item[1]));
       continue;
     }
     const scalar = line.match(/^([a-z_]+):\s+(.+)$/);
     if (scalar && !Array.isArray(out[scalar[1]])) {
-      out[scalar[1]] = scalar[2].trim();
+      out[scalar[1]] = unquote(scalar[2]);
     }
   }
   return out;
@@ -47,7 +50,7 @@ function collectReferenceText(skillDir) {
   return fs
     .readdirSync(refDir)
     .filter((f) => f.endsWith(".md"))
-    .map((f) => fs.readFileSync(path.join(refDir, f), "utf-8"))
+    .map((f) => `${f}\n${fs.readFileSync(path.join(refDir, f), "utf-8")}`)
     .join("\n");
 }
 
