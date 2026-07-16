@@ -1,6 +1,6 @@
 ---
 description: Gather requirements and generate/update Product-Spec.md through structured interview
-argument-hint: [product idea or feature description]
+argument-hint: "[product idea or feature description]"
 ---
 
 # Command: /product-spec-builder

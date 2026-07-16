@@ -1,6 +1,6 @@
 ---
 description: Generate or update DEV-PLAN.md with phased development plan from Product-Spec.md
-argument-hint: [scope: full|iteration]
+argument-hint: "[scope: full|iteration]"
 ---
 
 # Command: /dev-planner

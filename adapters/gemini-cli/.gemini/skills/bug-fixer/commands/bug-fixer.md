@@ -1,6 +1,6 @@
 ---
 description: Diagnose root cause and fix bugs through systematic debugging
-argument-hint: [bug description]
+argument-hint: "[bug description]"
 ---
 
 # Command: /bug-fixer
