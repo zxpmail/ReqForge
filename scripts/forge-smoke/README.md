@@ -28,7 +28,7 @@ CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 | 10 | `skill-bypass.mjs` | 带 command 的 Skill 在 `CLAUDE.md` Dispatch 可发现 |
 | 11 | `loadouts-valid.mjs` | 4 个 loadout JSON 合法、引用存在、`scenarios[]` 合法 |
 | 12 | `adapters-sync.mjs` | `core/skills` 与四端 adapter 技能目录名一致 |
-| 13 | `skills-complete.mjs` | 14 个 Skill + `validate-skill.mjs` 通过 |
+| 13 | `skills-complete.mjs` | 15 个 Skill + `validate-skill.mjs` 通过 |
 | 14 | `test-demo-golden-path.mjs` | `test-demo/` 黄金路径：Spec/Plan + todo-cli build/test/CLI 冒烟 |
 | 15 | `grovel-baseline.mjs` | Grovel Index：文件存在 + JSON valid + 基线值范围（不调 LLM） |
 

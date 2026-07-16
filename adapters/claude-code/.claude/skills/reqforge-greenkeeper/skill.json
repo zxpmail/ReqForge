@@ -1,0 +1,37 @@
+{
+  "name": "reqforge-greenkeeper",
+  "version": "1.0.0",
+  "description": "When maintaining the ReqForge repository itself and release gates fail: pnpm test, pnpm forge-smoke, pnpm sync:discover, adapter drift, skill fixture failures, or test-demo golden path failures",
+  "tier": "workflow",
+  "intent": "Restore ReqForge's own repository gates to a green, synced state through evidence-based diagnosis, minimal fixes, adapter synchronization, and full verification",
+  "author": "ReqForge",
+  "license": "MIT",
+  "triggers": {
+    "auto": true,
+    "when": [
+      "ReqForge repository tests fail",
+      "pnpm forge-smoke fails",
+      "pnpm sync:discover reports adapter drift",
+      "skill-fixtures, skills-complete, loadouts-valid, or test-demo-golden-path fails"
+    ],
+    "manual": true,
+    "command": "/reqforge-greenkeeper"
+  },
+  "prerequisites": {
+    "files": [
+      "package.json",
+      "core/skills/",
+      "adapters/",
+      "scripts/forge-smoke/"
+    ],
+    "skills": []
+  },
+  "commands": [
+    {
+      "name": "reqforge-greenkeeper",
+      "description": "Diagnose and fix ReqForge repository release gate failures"
+    }
+  ],
+  "agents": [],
+  "hooks": []
+}

@@ -51,6 +51,7 @@ A flat list obscures these differences. A three-tier taxonomy makes it immediate
 | change-manager | workflow | Propose → Apply → Verify → Archive four-phase pipeline; produces code changes under `changes/` |
 | release-builder | workflow | Build → Audit → Publish; produces deployable artifacts across channels |
 | evolution-engine | workflow | Triages feedback → proposes → auto-generates Skills; Forge's self-evolution pipeline |
+| reqforge-greenkeeper | workflow | Multi-step restore of ReqForge framework gates (discover → classify → fix → sync → verify) |
 | product-spec-builder | interactive | Guided Socratic Q&A to elicit and refine requirements; produces Product-Spec.md as structured output |
 | dev-planner | interactive | Transforms Spec → phased DEV-PLAN through analysis conversation; bridges requirements to execution |
 | design-brief-builder | interactive | Interview on visual constraints and brand context to produce Design-Brief.md |

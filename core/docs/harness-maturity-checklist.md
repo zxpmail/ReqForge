@@ -17,7 +17,7 @@
 
 | # | Component | What “good” looks like | ReqForge built-in |
 |---|-----------|------------------------|-------------------|
-| 1 | **Orchestration loop** | Clear phases: spec → plan → build → review; no random skipping | `CLAUDE.md` mission, 14 skills workflow |
+| 1 | **Orchestration loop** | Clear phases: spec → plan → build → review; no random skipping | `CLAUDE.md` mission, 15 skills workflow |
 | 2 | **Tool / path guardrails** | Agent cannot write to non-existent dirs; destructive ops gated | `hallucination-gate`, `pre-commit-check` hooks |
 | 3 | **Context management** | Long sessions compact or hand off without silent loss | `memory-guard`, `memory/` 3-tier, `context-compaction` |
 | 4 | **State persistence** | Decisions and task progress survive sessions | `memory/project-memory.md`, `task-history.md`, `decisions-log.md` |

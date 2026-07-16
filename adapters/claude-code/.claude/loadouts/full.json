@@ -22,7 +22,8 @@
     "skill-builder",
     "feedback-writer",
     "evolution-engine",
-    "request-dispatcher"
+    "request-dispatcher",
+    "reqforge-greenkeeper"
   ],
   "agents": [
     "implementer",

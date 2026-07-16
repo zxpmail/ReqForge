@@ -93,6 +93,7 @@ requires: []
     | "Zoom out / explain this module" | — | — | Yes | /dev-builder → [Zoom-Out Pass] (read-only) |
     | "Architecture health / ball of mud" | — | — | Yes | /dev-planner → architecture-health-pass |
     | "Break into GitHub issues" | Yes | — | — | /dev-planner → optional issue slices (after plan confirm) |
+    | "forge-smoke failed / adapter drift / gate red" (in ReqForge repo) | — | — | — | /reqforge-greenkeeper |
 
     **Ambiguity patterns**:
     - "Improve this" (no target specified) -> ask: "Improve functionality (bug-fixer), quality (code-review), or UI (design skills)?"

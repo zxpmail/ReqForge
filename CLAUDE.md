@@ -45,6 +45,7 @@
     /feedback-writer — Invoked by feedback-observer sub-agent only
     /evolution-engine — Auto: MUST dispatch evolution-runner on session init when feedback/ has entries (hard trigger from check-evolution hook). Manual: /evolution-engine
     /request-dispatcher — Auto: when user request is ambiguous and no single Skill clearly matches. Analyze intent + project state, recommend target Skill. Manual: /request-dispatcher
+    /reqforge-greenkeeper — Auto: maintaining the ReqForge **framework repo** and release gates fail (`pnpm test`, `pnpm forge-smoke`, `pnpm sync:discover`, adapter drift, skill fixtures). Manual: /reqforge-greenkeeper. Not for user-app bugs → /bug-fixer
 
 <!-- end: stable -->
 <!-- begin: volatile -->

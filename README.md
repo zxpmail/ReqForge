@@ -95,7 +95,7 @@ flowchart LR
 
 - **`skill-fixtures`**: shared `unquote()` for list + scalar YAML values; reference search includes filenames.
 - **`test-demo/todo-cli`**: `fileParallelism: false` to avoid shared-storage races under vitest.
-- HARD-GATE SKILL anchors were already present on main; greenkeeper skill half of #8 still waiting on contributor rebase.
+- HARD-GATE SKILL anchors were already present on main; greenkeeper skill half of #8 superseded by in-tree `/reqforge-greenkeeper`.
 
 #### Audit cleanup (docs + verify + gates honesty)
 
@@ -104,9 +104,15 @@ flowchart LR
 - **Language-aware compile**: shared `scripts/lib/compile-check.mjs` used by `forge-verify` + `forge-bug-fix`; skill checklists aligned. `pre-commit-check` stays **TS-only by design** (documented); sh/bat README order check now equivalent (exit 2).
 - **forge-verify**: **9** checks documented — #9 `content-quality` is config probe only; semantic pipeline stays `forge-verify-content`.
 - **forge-smoke**: `SMOKES` single source in `lib.mjs`; vitest checks registry only (CI executes via `run-all`); docs **15** items.
-- **loadout-scenarios**: skill counts aligned to JSON (14/13/9/9/5).
+- **loadout-scenarios**: skill counts aligned to JSON (then full +1 for greenkeeper → 15/13/9/9/5).
 - **validate-skill**: slash-command files must declare `argument-hint` (incl. `""`); `request-dispatcher` filled.
 - **Docs**: wiki Home → v1.50.0; karpathy Overstepping honesty; DEV-PLAN/CONTEXT/security-guidance wording.
+
+#### `/reqforge-greenkeeper` (replaces PR #8 skill half)
+
+- New **framework-repo** maintenance Skill: diagnose/fix `pnpm test` / `pnpm forge-smoke` / adapter drift / fixtures — not for user-app bugs.
+- Wired into `full` loadout + CLAUDE Dispatch; Skill count **15**; smoke `skills-complete` / `adapters-sync` expect 15.
+- Closes the unfinished greenkeeper half of [#8](https://github.com/zxpmail/ReqForge/pull/8) (smoke half already on main).
 
 ### v1.50.0 — 2026-07-11 — forge-verify LLM layer: protocol-adaptive, honest degradation
 
@@ -681,6 +687,7 @@ Adapters ship **4 loadout bundles** under `loadouts/` (`full`, `web-app`, `cli-t
 | Goal | Skill command (Claude Code / OpenCode / Gemini CLI style) | Output |
 |------|-----------------------------------------------------------|--------|
 | Ambiguous request routing | `/request-dispatcher` | Recommended target Skill |
+| Framework gate red (ReqForge repo) | `/reqforge-greenkeeper` | Green `sync:discover` + test + forge-smoke |
 | Domain research (optional, unfamiliar domain) | `/domain-mapper` | `domain-map.md` (+ optional competitor/social analysis) |
 | Requirements | `/product-spec-builder` | `Product-Spec.md` (includes Multi-Stakeholder Review + Critique Gate) |
 | Design brief (optional) | `/design-brief-builder` | `Design-Brief.md` |
@@ -704,7 +711,7 @@ my-app/
 ├── .claude/                    # or .cursor/ or .opencode/  ← adapter bundle
 │   ├── CLAUDE.md               # control file (OpenCode: AGENTS.md)
 │   ├── settings.json           # 10 hooks (Unix .sh); run `pnpm use-platform` on Windows
-│   ├── skills/                 # 14 Skill definitions + commands/
+│   ├── skills/                 # 15 Skill definitions + commands/
 │   ├── agents/                 # 10 Sub-agent definitions
 │   ├── hooks/                  # .sh + .bat hook scripts
 │   ├── loadouts/               # full | web-app | cli-tool | minimal
@@ -817,7 +824,7 @@ More detail: [core/docs/](core/docs/) (behavior boundaries, memory, sub-agents).
 │  ├─ test-writer        Generate tests for tools/scripts     │
 │  └─ planner            Analyze Spec, split phases, plan     │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 14 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
+│  Skills × 15 + Loadouts × 4 (Guides / Feedforward Control)  │ ← Guidance Layer
 │  Inject methodology and standards BEFORE the agent acts     │
 ├─────────────────────────────────────────────────────────────┤
 │  Hooks + Review Loop (Sensors / Feedback Control)           │ ← Inspection Layer
@@ -909,7 +916,7 @@ ReqForge 的行为层直接继承 [Andrej Karpathy 指出的 LLM 编码通病](h
 
 完整说明 + ❌→✅ 示例 → [behavior-rules.md](core/docs/behavior-rules.md)。与上游 [andrej-karpathy-skills](https://github.com/multica-ai/andrej-karpathy-skills) 的同源映射 → [karpathy-skills-comparison.md](core/docs/karpathy-skills-comparison.md)。
 
-### Guidance Layer — 14 Skills
+### Guidance Layer — 15 Skills
 
 Each Skill is an independent methodology module — composable, extensensible, pluggable. Every skill includes a `[Gotchas]` section documenting common failure points and lessons learned:
 
@@ -929,6 +936,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 | **feedback-writer**      | Records user corrections and feedback as structured files. Feeds the evolution engine with data.                                                       |
 | **evolution-engine**     | Scans accumulated feedback, identifies patterns (3+ occurrences), generates proposals to upgrade rules or optimize skills.                             |
 | **skill-builder**        | Creates new Skill definitions from scratch using project templates. Triggered by evolution proposals or manual invocation.                             |
+| **reqforge-greenkeeper** | Framework-repo maintenance. When `pnpm test` / `forge-smoke` / adapter drift / fixtures fail on **ReqForge itself** → diagnose, minimal fix, sync, verify. Not for user-app bugs. |
 
 ### Execution Layer — Sub-Agent Isolation (Context Firewall)
 
@@ -1045,7 +1053,7 @@ When design mockups exist, all UI must match the design. **Exact values** come f
 ```
 Forge/
 ├── core/                      # Shared core content
-│   ├── skills/                # 14 skill definitions, each in its own directory
+│   ├── skills/                # 15 skill definitions, each in its own directory
 │   ├── agents/                # 10 Sub-agent definitions
 │   ├── loadouts/              # Reusable skill/agent/hook bundles
 │   ├── templates/             # Document templates

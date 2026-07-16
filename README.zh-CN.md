@@ -94,7 +94,7 @@ flowchart LR
 
 - **`skill-fixtures`**：list/scalar 共用 `unquote()`；reference 搜索包含文件名。
 - **`test-demo/todo-cli`**：`fileParallelism: false`，避免 vitest 并行下共享存储竞态。
-- HARD-GATE 文案在 main 上已齐；#8 的 greenkeeper skill 半边仍待 contributor rebase。
+- HARD-GATE 文案在 main 上已齐；#8 的 greenkeeper skill 半边由本仓 `/reqforge-greenkeeper` 收口。
 
 #### 全仓审计清理（文档 + verify + Gate 诚实表述）
 
@@ -106,6 +106,12 @@ flowchart LR
 - **loadout-scenarios**：技能数与 JSON 对齐（14/13/9/9/5）。
 - **validate-skill**：有 slash command 必须带 `argument-hint`（可为 `""`）；补齐 `request-dispatcher`。
 - **文档**：wiki Home → v1.50.0；karpathy Overstepping 诚实表述；DEV-PLAN/CONTEXT/security-guidance 措辞。
+
+#### `/reqforge-greenkeeper`（替代 PR #8 的 skill 半边）
+
+- 新增**框架仓**维护 Skill：诊断/修复 `pnpm test` / `pnpm forge-smoke` / adapter 漂移 / fixtures —— 不是用户应用 bug。
+- 挂入 `full` loadout + CLAUDE Dispatch；Skill 数 **15**；smoke 期望 15。
+- 收口 [#8](https://github.com/zxpmail/ReqForge/pull/8) 未完成的 greenkeeper 半边（smoke 半边已在 main）。
 
 ### v1.50.0 — 2026-07-11 — forge-verify LLM 层：协议自适应、诚实降级
 
@@ -648,6 +654,7 @@ Copy-Item -Recurse -Force C:\path\to\ReqForge\adapters\cursor\.cursor C:\path\to
 | 目标 | Skill 命令（Claude Code / OpenCode / Gemini CLI） | 产出 |
 |------|---------------------------------------------------|------|
 | 模糊请求路由 | `/request-dispatcher` | 推荐目标 Skill |
+| 框架仓门禁红灯（ReqForge 本仓） | `/reqforge-greenkeeper` | `sync:discover` + test + forge-smoke 全绿 |
 | 领域研究（可选，陌生领域） | `/domain-mapper` | `domain-map.md`（及可选竞品/社媒分析） |
 | 需求收集 | `/product-spec-builder` | `Product-Spec.md`（含 Multi-Stakeholder Review + 批判 Gate） |
 | 设计规范（可选） | `/design-brief-builder` | `Design-Brief.md` |
@@ -671,7 +678,7 @@ my-app/
 ├── .claude/                    # 或 .cursor/ 或 .opencode/  ← 适配层
 │   ├── CLAUDE.md               # 控制文件（OpenCode 为 AGENTS.md）
 │   ├── settings.json           # 10 个钩子（Unix 用 .sh）；Windows 请复制 settings.windows.json
-│   ├── skills/                 # 14 个 Skill + commands/
+│   ├── skills/                 # 15 个 Skill + commands/
 │   ├── agents/                 # 10 个 Sub-Agent
 │   ├── hooks/                  # .sh + .bat 钩子脚本
 │   ├── loadouts/               # full | web-app | cli-tool | minimal
@@ -784,7 +791,7 @@ pnpm preflight --strict             # 警告也视为失败
 │  ├─ test-writer        为工具/脚本生成测试                   │
 │  └─ planner            分析 Spec，拆分 Phase，制定计划        │
 ├─────────────────────────────────────────────────────────────┤
-│  Skills × 14 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
+│  Skills × 15 + Loadouts × 4（引导/前馈控制）                 │ ← 引导层
 │  在 Agent 行动前注入方法论和标准                              │
 ├─────────────────────────────────────────────────────────────┤
 │  钩子 + 审查循环（传感器/反馈控制）                          │ ← 检查层
@@ -863,7 +870,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 
 分工（主 Session vs implementer）、反模式与测试分层：[session-execution-discipline.md](core/docs/session-execution-discipline.md)。人类一页速查：`.forge/quickref.md`（`pnpm forge-install` 写入）。自检清单：[harness-maturity-checklist.md](core/docs/harness-maturity-checklist.md)。
 
-### 引导层 — 14 个 Skill
+### 引导层 — 15 个 Skill
 
 每个 Skill 是独立的方法论模块——可组合、可扩展、可插拔。每个 Skill 包含 `[Gotchas]` 章节记录常见陷阱与实战教训：
 
@@ -883,6 +890,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **feedback-writer** | 记录用户纠正和反馈为结构化文件。为进化引擎提供数据。 |
 | **evolution-engine** | 扫描积累的反馈，识别模式（3 次以上出现），生成升级规则或优化技能的提案。 |
 | **skill-builder** | 使用项目模板从头创建新的 Skill 定义。由进化提案或手动调用触发。 |
+| **reqforge-greenkeeper** | 框架仓维护。当 **ReqForge 本仓** 的 `pnpm test` / `forge-smoke` / adapter 漂移 / fixtures 失败时：诊断 → 最小修复 → sync → 验证。用户应用 bug 请用 `/bug-fixer`。 |
 
 ### 执行层 — Sub-Agent 隔离（上下文防火墙）
 
@@ -999,7 +1007,7 @@ CLAUDE.md 中的每条规则必须可追溯到特定的失败或反馈。通用�
 ```
 Forge/
 ├── core/                      # 核心共享内容
-│   ├── skills/                # 14 个 Skill 定义，每个独立目录
+│   ├── skills/                # 15 个 Skill 定义，每个独立目录
 │   ├── agents/                # 10 个 Sub-Agent 定义
 │   ├── loadouts/              # 可复用的技能/Agent/钩子捆绑包
 │   ├── templates/             # 文档模板

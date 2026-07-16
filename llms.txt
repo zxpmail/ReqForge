@@ -31,7 +31,7 @@ Vibe Coding without a harness: AI writes code → direction drifts → no design
 
 ### Core Architecture
 
-- **14 Skills** — product-spec-builder, change-manager, design-brief-builder, design-maker, dev-planner, dev-builder, bug-fixer, code-review, release-builder, domain-mapper, request-dispatcher, feedback-writer, evolution-engine, skill-builder
+- **15 Skills** — product-spec-builder, change-manager, design-brief-builder, design-maker, dev-planner, dev-builder, bug-fixer, code-review, release-builder, domain-mapper, request-dispatcher, feedback-writer, evolution-engine, skill-builder, reqforge-greenkeeper
 - **10 Sub-Agents** — implementer, planner, code-reviewer + 4 specialists, feedback-observer, evolution-runner, test-writer
 - **10 default hooks** — hallucination-gate, pre-commit-check, phase-exit-guard, stop-gate, retry-gate, detect-feedback-signal, mark-review-needed, check-evolution, memory-check, memory-guard
 - **3-Tier Memory** — project-memory.md, decisions-log.md, task-history.md
