@@ -4,7 +4,7 @@
 
 ## 为什么需要 `action`
 
-ReqForge 的 review finding 已有三套轴：severity/impact/confidence/risk_rank（**多严重**）、`Must-fix/Should-fix/Insight`（**多重要**）、`Priority HIGH/MED/LOW`（**多紧急**）。但没有一个轴回答"**这条该不该被 agent 自动改**"。
+ReqForge 的 review finding 已有两套主轴：severity/impact/confidence/risk_rank（**多严重**）、`Must-fix/Should-fix/Insight`（**多重要**）。`Priority HIGH/MED/LOW` **由 bucket 派生**（有 Must-fix→HIGH；仅 Should-fix→MEDIUM；否则 LOW），禁止独立矛盾打分。但没有一个轴回答"**这条该不该被 agent 自动改**"。
 
 结果：code-review 出报告后，主 Agent 按散文把"bug/security/type"一股脑丢给 bug-fixer，bug-fixer 把喂进来的**全部**当 bug 修——包括那些触碰作者意图、本该问人的东西。
 
@@ -58,6 +58,6 @@ ReqForge 的 review finding 已有三套轴：severity/impact/confidence/risk_ra
 |----|------|------------------|
 | severity / risk_rank | 多严重？ | severity-5 的 null deref 可同时是 `auto-fix`（明显的 guard） |
 | Must/Should/Insight | 多重要？ | Must-fix 可同时是 `ask-user`（阻塞 ship 且需人决策——最坏情况，立即 escalate） |
-| Priority HIGH/MED/LOW | 多紧急？ | 排队用，独立 |
+| Priority HIGH/MED/LOW | 多紧急？（派生） | 由 Must/Should/Insight 派生，不独立打分 |
 
 判定时**先判 `action`，再读 severity/bucket/priority**，避免被"严重"误导成"可自动修"。

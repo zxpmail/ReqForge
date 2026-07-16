@@ -18,7 +18,8 @@
         - Partially implemented — what exactly is missing
         - Not implemented — Spec original text citation
 
-    [UI Consistency] (if design mockups or DESIGN.md exist)
+    [UI Consistency] (only if the product has UI — DESIGN.md, design mockups, or Design-Brief)
+        Skip entirely for no-UI / API-only / CLI-only surfaces.
         Check UI implementation against design baseline (priority: DESIGN.md > design tool MCP > Design-Brief.md):
         - If DESIGN.md exists -> compare Tailwind classes / CSS variables / inline styles against YAML `colors`, `typography`, and `components` tokens; flag ad-hoc hex/spacing not in token map
         - If design tool MCP exists -> extract design values, compare against code item by item
@@ -50,15 +51,22 @@
 
         Flag each instance with file:line + why it's over-engineering.
 
-    --- code-reviewer-bug (Bug patterns) ---
+    --- code-reviewer-bug (Bug patterns + obvious performance) ---
         Null pointer dereferences, race conditions, resource leaks, incorrect async handling, unhandled promise rejections.
+        Performance (lightweight, no separate agent): N+1 query loops, unbounded in-memory collections, sync I/O on hot paths, unnecessary full-list re-renders when identifiable from diff.
 
     --- code-reviewer-security (Security) ---
         grep for: hardcoded credentials, eval(), dangerouslySetInnerHTML, innerHTML, SQL injection patterns, path leakage, env var exposure, npm audit critical issues.
+        Also consider CSRF on state-changing endpoints when web UI + cookie auth is in scope.
 
-    --- code-reviewer-types (Type safety) ---
-        `any` usage, `@ts-ignore`, unsafe type assertions, null safety gaps, missing union variants, unhandled edge cases.
+    --- code-reviewer-types (Type safety — language-aware) ---
+        Read `.forge/dev-map.md` stack first.
+        - **TS/JS**: `any`, `@ts-ignore`/`@ts-nocheck`, unsafe assertions, null safety gaps, missing union variants
+        - **Python**: missing/incorrect type hints on public APIs, `Any` abuse, untyped dict sprawl
+        - **Java/Kotlin**: raw types, ignored nullability (`@Nullable`/`Optional`), empty catch
+        - **Go**: ignored errors, nil deref risk, overly broad interfaces
+        - **Other**: apply `.forge/code-standards/<language>.md` if present; otherwise community null/error conventions
 
     --- Aggregator (code-reviewer) ---
-        Merge all agent findings. Each finding MUST include severity, impact, confidence (1–5) and **risk_rank = S×I×C**.
-        Sort confirmed findings by risk_rank descending. Apply confidence thresholding (≥0.6 or confidence_5 ≥ 4), deduplication, cross-agent risk_rank boost, meta-review on suspected, Must-fix/Should-fix/Insight buckets. Run `tsc --noEmit`.
+        Merge all agent findings. Each finding MUST include severity, impact, confidence (each **1–5**) and **risk_rank = S×I×C**.
+        Sort confirmed findings by risk_rank descending. Apply confidence thresholding (confidence_5 ≥ 4 confirmed; == 3 suspected; ≤ 2 suppress), deduplication, cross-agent risk_rank boost, meta-review on suspected, Must-fix/Should-fix/Insight buckets. Derive Priority from buckets. Run language-aware verify gate (see `workflow.md` Step 4) — not hardcoded `tsc`.

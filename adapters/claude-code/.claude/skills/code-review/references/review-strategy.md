@@ -12,12 +12,12 @@
     3. Verify whether the behavior matches
     4. Record evidence (file_path:line_number)
 
-    **Design Value Comparison Method** (if DESIGN.md and/or design tools available)
+    **Design Value Comparison Method** (if DESIGN.md and/or design tools available; skip for no-UI)
     1. If root `DESIGN.md` exists -> parse component tokens and color/typography refs as the normative baseline
     2. Else extract precise values of each design page through the design tool API
-    2. Read the corresponding component's Tailwind class / style values in code
-    3. Compare item by item: layout, color, spacing, font size, border radius
-    4. Flag deviations
+    3. Read the corresponding component's Tailwind class / style values in code
+    4. Compare item by item: layout, color, spacing, font size, border radius
+    5. Flag deviations
 
     **Playwright Interaction Verification Method** (if Playwright available)
     Do not just check static pages; test the complete interaction flow:
@@ -36,3 +36,6 @@
     - `password.*=.*['"]` -> hardcoded password
     - `sk-ant-|sk-proj-|ANTHROPIC_API_KEY|OPENAI_API_KEY` -> hardcoded API Key
     Search the src/ directory for each pattern using the Grep tool with output_mode set to content to view matching lines.
+
+    **Verify Gate Method** (language-aware)
+    Prefer `pnpm forge-verify`. Else use `.forge/dev-map.md` compile/typecheck command. Never assume `tsc --noEmit` unless the stack is TypeScript/JavaScript.

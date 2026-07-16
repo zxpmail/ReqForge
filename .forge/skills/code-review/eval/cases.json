@@ -12,17 +12,34 @@
       "assertions": {
         "fileExists": [
           "Product-Spec.md",
-          "DEV-PLAN.md"
+          "DEV-PLAN.md",
+          "review-report.md"
         ],
         "maxBytes": [
           { "file": "Product-Spec.md", "max": 200000 },
-          { "file": "DEV-PLAN.md", "max": 100000 }
+          { "file": "DEV-PLAN.md", "max": 100000 },
+          { "file": "review-report.md", "max": 500000 }
         ],
         "regexChecks": [
           {
-            "id": "review-finds-or-approves",
+            "id": "spec-mentions-user-features",
             "file": "Product-Spec.md",
             "mustMatch": "用户|注册|登录|个人"
+          },
+          {
+            "id": "report-has-chairman-verdict",
+            "file": "review-report.md",
+            "mustMatch": "综合结论|可合并|先修再审|阻塞"
+          },
+          {
+            "id": "report-has-risk-or-buckets",
+            "file": "review-report.md",
+            "mustMatch": "risk_rank|Must-fix|Should-fix|Confirmed Issues"
+          },
+          {
+            "id": "report-uses-sic-scale",
+            "file": "review-report.md",
+            "mustMatch": "confidence|S/I/C|severity"
           }
         ]
       }
@@ -35,16 +52,28 @@
       "assertions": {
         "fileExists": [
           "Product-Spec.md",
-          "DEV-PLAN.md"
+          "DEV-PLAN.md",
+          "review-report.md"
         ],
         "maxBytes": [
-          { "file": "Product-Spec.md", "max": 200000 }
+          { "file": "Product-Spec.md", "max": 200000 },
+          { "file": "review-report.md", "max": 500000 }
         ],
         "regexChecks": [
           {
             "id": "spec-mentions-auth",
             "file": "Product-Spec.md",
             "mustMatch": "认证|auth|安全|security|登录"
+          },
+          {
+            "id": "report-covers-security",
+            "file": "review-report.md",
+            "mustMatch": "security|Security|安全|OWASP|credential|XSS"
+          },
+          {
+            "id": "report-has-priority-or-buckets",
+            "file": "review-report.md",
+            "mustMatch": "Priority|Must-fix|Should-fix|综合结论"
           }
         ]
       }

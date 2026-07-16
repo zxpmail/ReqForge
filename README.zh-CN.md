@@ -74,6 +74,15 @@ flowchart LR
 
 ## 近期更新
 
+### Unreleased — code-review skill 2.3.0（合约清理）
+
+- **主轨评分 1–5**：finding 使用 severity / impact / confidence（各 1–5）→ `risk_rank`；阈值 ≥4 确认、=3 疑似、≤2 抑制。旧 0.0–1.0 仍可通过映射兼容。
+- **Workflow 唯一源**：仅以 `references/workflow.md` Step 1–5 为准；aggregator agent 不再内嵌冲突的步骤表。simple 审查跳过 Step 2 派发，仍走 Scan → Aggregate。
+- **Mode A 文档对齐**：workflow 不再写 Cursor/Gemini 只能顺序执行；与 `multi-perspective-dispatch.md` 一致。
+- **按语言的 verify 门**：优先 `pnpm forge-verify` / `.forge/dev-map.md`，不再硬编码 `tsc --noEmit`。
+- **Priority 由 bucket 派生**（Must-fix/Should-fix/Insight）；性能轻量检查归 bug 维；types 按技术栈；无 UI 跳过 UI Consistency。
+- **Eval**：用例断言 `review-report.md`（综合结论 / risk_rank / buckets），不再只扫 Spec 文本。
+
 ### v1.50.0 — 2026-07-11 — forge-verify LLM 层：协议自适应、诚实降级
 
 - **LLM 协议自适应层**：L2 与 C2 经统一的 `llmComplete()` 调用层，按 `ANTHROPIC_BASE_URL` 自动选协议 —— 含 `/anthropic` → Anthropic Messages（如智谱 GLM 的 `/api/anthropic` 网关，与 Claude Code 同链路），否则 → OpenAI Chat Completions（如 deepseek）。一份 `ANTHROPIC_*` env 在两类端点下都可用，无需改代码。此前所有调用硬编码走 OpenAI 且剥掉 `/anthropic`，导致 GLM 环境下每次 L2/C2 调用都拿到 HTTP 403。
@@ -843,7 +852,7 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **dev-planner** | 开发计划。分析依赖关系，拆分为多个阶段，输出分阶段开发计划。 |
 | **dev-builder** | 编码实现。将工作拆分为 Task——每个 Task 走"编码 → 审查 → 修复 → 提交"闭环。 |
 | **bug-fixer** | 四阶段系统调试 + `pnpm forge-bug-fix`（diagnose --scenario / bisect / classify / trace / verify）。不要猜测：收集证据 → 分析模式 → 提出假设 → 修复。 |
-| **code-review** | 并行 Agent 审查——4 个专业 Agent（design、bug、security、types）并发执行，置信度聚合（≥0.6 确认，0.3-0.6 疑似）。 |
+| **code-review** | 并行 Agent 审查——4 个专业 Agent（design、bug+perf、security、types）并发；S/I/C（各 1–5）→ `risk_rank` 聚合（≥4 确认，=3 疑似，≤2 抑制）。Priority 由 Must-fix/Should-fix/Insight 派生。 |
 | **release-builder** | 构建与部署。内置隐私审计和冒烟测试。 |
 | **domain-mapper** | 领域映射（**独立于** spec→build 管线）。行业/技术/代码库/市场 → 结构化 `domain-map.md`；L1/L2/L3 深度。进入陌生领域写 Spec 前可选。 |
 | **request-dispatcher** | 模糊请求路由。静态 dispatch 无法唯一匹配时，分析意图 + 项目状态 → 推荐目标 Skill（非每轮必调）。 |
@@ -861,9 +870,9 @@ AI 推断一切——产品类型、目标用户、核心功能、技术栈、�
 | **implementer** | dev-builder | 编码 + 编译验证 + 自检 |
 | **code-reviewer** | code-review | 聚合并行审查结果 |
 | **code-reviewer-design** | code-review | 规格符合度、UI 一致性、漂移 |
-| **code-reviewer-bug** | code-review | Bug 模式、竞态、资源泄漏 |
+| **code-reviewer-bug** | code-review | Bug 模式、竞态、资源泄漏、明显性能问题 |
 | **code-reviewer-security** | code-review | OWASP Top 10、凭据泄漏、XSS |
-| **code-reviewer-types** | code-review | 类型安全、空值、边界情况 |
+| **code-reviewer-types** | code-review | 类型安全（按语言）、空值、边界情况 |
 | **feedback-observer** | feedback-writer | 记录失败与用户纠正 |
 | **evolution-runner** | evolution-engine | 扫描反馈 → 进化提案 |
 | **test-writer** | dev-builder | 为脚本/工具生成 Vitest 测试 |

@@ -10,7 +10,7 @@
 
 **判定一句话**：写不出「无需问作者就能落的一行 diff」→ `ask-user`；无需 diff → `no-op`；否则 `auto-fix`。
 
-**正交**：action 回答「谁来修」，不替代 severity/risk_rank（多严重）、Must/Should/Insight（多重要）、Priority（多紧急）。
+**正交**：action 回答「谁来修」，不替代 severity/risk_rank（多严重）、Must/Should/Insight（多重要）。**Priority HIGH/MED/LOW 由 bucket 派生**（有 Must-fix→HIGH；仅 Should-fix→MEDIUM；否则 LOW），禁止与 bucket 矛盾的独立打分。
 
 **向后兼容**：缺失该字段 → 路由按 `auto-fix` 处理（保持现状，fail-open）。
 

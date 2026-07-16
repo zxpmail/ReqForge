@@ -75,6 +75,15 @@ flowchart LR
 
 ## What's New
 
+### Unreleased — code-review skill 2.3.0 (contract cleanup)
+
+- **Canonical scoring 1–5**: findings use severity / impact / confidence (each 1–5) → `risk_rank`; thresholds confidence ≥4 confirmed, =3 suspected, ≤2 suppressed. Legacy 0.0–1.0 still accepted via mapping.
+- **Single workflow source**: `references/workflow.md` Steps 1–5 only; aggregator agent no longer embeds a divergent step table. Simple reviews skip Step 2 dispatch but still Scan → Aggregate.
+- **Mode A docs aligned**: workflow no longer claims Cursor/Gemini are sequential-only; matches `multi-perspective-dispatch.md`.
+- **Language-aware verify gate**: prefer `pnpm forge-verify` / `.forge/dev-map.md` — not hardcoded `tsc --noEmit`.
+- **Priority derived** from Must-fix / Should-fix / Insight; performance checks owned by bug dimension; types reviewer is stack-aware; no-UI skips UI Consistency.
+- **Eval**: review cases assert `review-report.md` (verdict / risk_rank / buckets), not only Spec text.
+
 ### v1.50.0 — 2026-07-11 — forge-verify LLM layer: protocol-adaptive, honest degradation
 
 - **LLM protocol-adaptive layer**: L2 and C2 route through a unified `llmComplete()` that picks protocol from `ANTHROPIC_BASE_URL` — containing `/anthropic` → Anthropic Messages (e.g. Zhipu GLM's `/api/anthropic` gateway, the same path Claude Code uses), otherwise → OpenAI Chat Completions (e.g. deepseek). One `ANTHROPIC_*` env works across both endpoint families with no code change. Previously every call was hardcoded to OpenAI and stripped `/anthropic`, so under a GLM env every L2/C2 call hit HTTP 403.
@@ -889,7 +898,7 @@ Each Skill is an independent methodology module — composable, extensensible, p
 | **dev-planner**          | Development planning. Analyzes dependency relationships, splits into phases, outputs phased development plan.                                          |
 | **dev-builder**          | Implementation. Breaks work into Tasks — each Task goes through "code → review → fix → commit" loop.                                                   |
 | **bug-fixer**            | Four-stage systematic debugging + `pnpm forge-bug-fix` (diagnose --scenario / bisect / classify / trace / verify). Gather evidence → analyze patterns → hypothesize → fix.   |
-| **code-review**          | Parallel agent review — 4 specialists (design, bug, security, types) with confidence-scored aggregation (≥0.6 confirmed, 0.3-0.6 suspected).               |
+| **code-review**          | Parallel agent review — 4 specialists (design, bug+perf, security, types) with S/I/C (1–5) → `risk_rank` aggregation (≥4 confirmed, =3 suspected, ≤2 suppressed). Priority derived from Must-fix/Should-fix/Insight. |
 | **release-builder**      | Build & deploy. Built-in privacy audit and smoke testing.                                                                                              |
 | **domain-mapper**        | Domain mapping (**independent** of spec→build pipeline). Industry/tech/codebase/market → structured `domain-map.md`; L1/L2/L3 depth. Optional before Spec in unfamiliar domains. |
 | **request-dispatcher**   | Ambiguous request routing. When static dispatch cannot pick one Skill, analyzes intent + project state → recommends target Skill (not for every turn). |
@@ -907,9 +916,9 @@ Every Task gets a **fresh Sub-Agent instance**. No reuse, no inherited context. 
 | **implementer** | dev-builder | Code + compile verify + self-check |
 | **code-reviewer** | code-review | Aggregate parallel review findings |
 | **code-reviewer-design** | code-review | Spec compliance, UI consistency, drift |
-| **code-reviewer-bug** | code-review | Bug patterns, races, resource leaks |
+| **code-reviewer-bug** | code-review | Bug patterns, races, resource leaks, obvious performance |
 | **code-reviewer-security** | code-review | OWASP Top 10, credential leaks, XSS |
-| **code-reviewer-types** | code-review | Type safety, nullability, edge cases |
+| **code-reviewer-types** | code-review | Type safety (language-aware), nullability, edge cases |
 | **feedback-observer** | feedback-writer | Record failures + user corrections |
 | **evolution-runner** | evolution-engine | Scan feedback → evolution proposals |
 | **test-writer** | dev-builder | Generate Vitest tests for scripts/utilities |

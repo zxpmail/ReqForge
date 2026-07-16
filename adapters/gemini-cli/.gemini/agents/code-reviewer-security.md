@@ -44,7 +44,7 @@ model: inherit
    - Insecure deserialization: `JSON.parse` on untrusted input without schema validation
    - Deprecated/known-vulnerable API usage
    - Command injection: shell command building with user input
-3. Score severity, impact, confidence (1–5); **risk_rank = S×I×C**
+3. Score severity, impact, confidence (1–5); **risk_rank = S×I×C**. Do not use critical/major/minor labels.
 4. Return findings array sorted by **risk_rank** descending (empty if none found)
 
 **Context isolation**: No inherited state from previous tasks. Fresh analysis per invocation.

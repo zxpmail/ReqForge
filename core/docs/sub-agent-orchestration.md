@@ -6,9 +6,9 @@
 |-------|------|------------|---------------|
 | code-reviewer | .claude/agents/code-reviewer.md | code-review | Aggregate parallel review findings |
 | code-reviewer-design | .claude/agents/code-reviewer-design.md | code-review | Spec compliance, architecture, drift |
-| code-reviewer-bug | .claude/agents/code-reviewer-bug.md | code-review | Bug patterns, null pointers, race conditions |
+| code-reviewer-bug | .claude/agents/code-reviewer-bug.md | code-review | Bug patterns, null pointers, race conditions, obvious performance |
 | code-reviewer-security | .claude/agents/code-reviewer-security.md | code-review | OWASP Top 10, credential leaks, XSS |
-| code-reviewer-types | .claude/agents/code-reviewer-types.md | code-review | Type safety, edge cases |
+| code-reviewer-types | .claude/agents/code-reviewer-types.md | code-review | Type safety (language-aware), edge cases |
 | implementer | .claude/agents/implementer.md | dev-builder | Code + compile verify + self-check |
 | feedback-observer | .claude/agents/feedback-observer.md | feedback-writer | Record user feedback |
 | evolution-runner | .claude/agents/evolution-runner.md | evolution-engine | Scan feedback + generate evolution proposals |
@@ -19,25 +19,28 @@ Evolution proposals from evolution-runner must be presented to the user for indi
 
 ## Parallel Code Review Pattern
 
-**Default**: If `change_complexity` is omitted, treat as **simple** — `code-reviewer` runs a quick aggregator pass only (no parallel specialists).
+**Procedure source**: `core/skills/code-review/references/workflow.md` Steps 1–5. Dispatch modes: `multi-perspective-dispatch.md` (Mode A default / Mode B fallback).
 
-For moderate/complex changes, `code-reviewer` dispatches 4 specialized agents concurrently:
+**Default**: If `change_complexity` is omitted, treat as **simple** — skip Step 2 multi-perspective dispatch; still run Step 3 Scan + Step 4 aggregator quick pass.
+
+For moderate/complex changes, `code-reviewer` dispatches 4 specialized agents (Mode A concurrent when platform supports):
 
 **Council-style packet (llm-council)**: Before dispatch, strip implementer session/task narrative from inputs. Pass Spec excerpts, checklist, diffs, and code only — see [llm-council-comparison.md](./llm-council-comparison.md).
 
 1. **code-reviewer-design** — Checks spec compliance, architecture consistency, pattern drift. Outputs `spec_gap`, `pattern_drift`, `architecture_violation`, `naming`, `duplication`, `complexity` findings.
-2. **code-reviewer-bug** — Detects bug patterns: null pointer dereferences, race conditions, resource leaks, incorrect async handling. Each finding includes severity (critical/major/minor).
+2. **code-reviewer-bug** — Detects bug patterns: null pointer dereferences, race conditions, resource leaks, incorrect async handling, obvious performance (N+1, unbounded loops). Each finding uses severity / impact / confidence (**1–5 each**).
 3. **code-reviewer-security** — Scans for OWASP Top 10: credential leaks, injection, XSS, path traversal, eval(), insecure deserialization.
-4. **code-reviewer-types** — Checks type safety: `any` usage, `@ts-ignore`, type assertions, null safety, missing union variants, unhandled cases.
+4. **code-reviewer-types** — Checks type safety language-aware: TS `any`/`@ts-ignore`; Python annotations; Java/Kotlin nullability; Go ignored errors; etc.
 
-Each agent returns structured findings with confidence score (0.0-1.0). The aggregator (`code-reviewer`) applies:
-- **Confidence >= 0.6** → confirmed finding
-- **Confidence 0.3-0.6** → suspected finding (downgraded)
-- **Confidence < 0.3** → suppressed (noise)
+Each agent returns structured findings with **confidence 1–5** (plus severity, impact, risk_rank, action). The aggregator (`code-reviewer`) applies (see skill workflow Step 4):
+- **confidence_5 >= 4** → confirmed finding
+- **confidence_5 == 3** → suspected finding → meta-review
+- **confidence_5 <= 2** → suppressed (noise; security may override)
+- Legacy 0.0–1.0 scores map via `confidence_5 = max(1, round(c × 5))`
 - Cross-agent boost: same file+line flagged by ≥2 agents at confirmed level → risk_rank × 1.1 (cap 125)
-- **Meta-review**: aggregator re-evaluates suspected (0.3–0.6 or confidence_5=3) findings
 - **Risk rank**: severity × impact × confidence (1–5 each); sort confirmed by risk_rank — see [jobs-comparison.md](./jobs-comparison.md)
-- **Chairman output**: 综合结论 + Must-fix / Should-fix / Insight buckets
+- **Chairman output**: 综合结论 + Must-fix / Should-fix / Insight; **Priority derived** from those buckets
+- **Verify gate**: language-aware (`pnpm forge-verify` or `.forge/dev-map.md` command) — not hardcoded `tsc`
 
 ## Spec Quality Council (product-spec-builder Step 7)
 

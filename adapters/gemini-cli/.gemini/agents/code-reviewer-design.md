@@ -51,7 +51,7 @@ model: inherit
    - **Naming conventions**: PascalCase components, camelCase functions, kebab-case files
    - **Duplication**: Similar code blocks that should be extracted
    - **Complexity**: Files >300 lines, deep nesting, excessive conditionals
-3. Score each finding: severity, impact, confidence (1–5) and **risk_rank = S×I×C**
+3. Score each finding: severity, impact, confidence (1–5) and **risk_rank = S×I×C**. Do not use critical/major/minor labels.
 4. Return findings array sorted by **risk_rank** descending (empty if none found)
 
 **Context isolation**: No inherited state from previous tasks. Fresh analysis per invocation.

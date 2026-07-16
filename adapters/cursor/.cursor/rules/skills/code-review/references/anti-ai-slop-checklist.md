@@ -15,7 +15,7 @@
 
 **场景**: 当 email 参数为 `undefined` 或空字符串时，`db.findUnique` 会抛 `TypeError`
 **影响**: `register` API 返回 500，不返回有意义的错误信息
-**严重度**: HIGH（影响所有注册请求）
+**严重度**: severity=4 / impact=5 / confidence=5（risk_rank=100；Must-fix）
 
 **建议**:
 - 在入口处加 zod schema 校验

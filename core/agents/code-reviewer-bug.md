@@ -1,4 +1,4 @@
-<!-- forge: code-reviewer-bug v1.1 -->
+<!-- forge: code-reviewer-bug v1.2 -->
 ---
 name: code-reviewer-bug
 description: Specialized code reviewer for bug patterns — null safety, race conditions, resource leaks, logic and error-handling defects. Returns scored findings (severity × impact × confidence).
@@ -44,7 +44,8 @@ model: inherit
    - Inadequate error handling (empty catch blocks, swallowed errors)
    - Async issues (unhandled promise rejections, missing awaits)
    - State mutation bugs (unintended side effects)
-3. Score severity, impact, confidence (1–5); **risk_rank = S×I×C**
+   - Obvious performance (from diff): N+1 query loops, unbounded in-memory growth, sync I/O on hot paths
+3. Score severity, impact, confidence (1–5); **risk_rank = S×I×C**. Do not use critical/major/minor labels.
 4. Return findings array sorted by **risk_rank** descending (empty if none found)
 
 **Context isolation**: No inherited state from previous tasks. Fresh analysis per invocation.

@@ -1,9 +1,9 @@
-<!-- forge: code-review v2.2 -->
+<!-- forge: code-review v2.3 -->
 ---
 name: code-review
 description: Used when the user wants to review code, check quality, verify feature completeness, or needs to validate code implementation against Spec, DESIGN.md, and design mockups. Outputs a structured review report with evidence for each conclusion.
-version: 2.2.1
-updated: 2026-06-27
+version: 2.3.0
+updated: 2026-07-16
 requires: []
 ---
 
@@ -96,10 +96,11 @@ requires: []
     - **Surgical Changes Audit**: every changed line traces to the original request
     - **Simplicity First Audit**: no over-engineering or speculative abstraction
     - **Security Scan**: hardcoded credentials, XSS, SQL injection, path leakage
-    - **Type Safety**: no `any`, `@ts-ignore`, unsafe casts
+    - **Type Safety**: language-aware (TS `any`/`@ts-ignore`; other stacks per `code-standards` / types agent)
+    - **Performance (lightweight)**: N+1 / unbounded loops / hot-path sync I/O when visible in diff (owned by bug dimension)
 
 [Review Dimension Checklist]
-    Moderate/complex → 4-dimension parallel review (Mode A dispatch; see `workflow.md` Step 2 + `references/multi-perspective-dispatch.md`). Simple → aggregator quick pass only.
+    Moderate/complex → 4-dimension parallel review (Mode A by default; see `workflow.md` Step 2 + `references/multi-perspective-dispatch.md`). Simple → skip Step 2, still Step 3→4 quick pass.
     **按需读取** `references/review-dimension-checklist.md`
 
 <!-- end: review-dimension-checklist -->
@@ -109,7 +110,7 @@ requires: []
     **Evidence-less conclusions**: Every finding needs file:line.
     **Confidence inflation**: Honest uncertainty beats false 100%.
     **Regression blind spot**: Use `dep-graph affected <file>` if available.
-    **Skipping compilation verification**: Run compile every time.
+    **Skipping verify gate**: Run language-aware compile/verify every time (`forge-verify` or `.forge/dev-map.md` command — not assume `tsc`).
 
 <!-- end: gotchas -->
 <!-- begin: anti-rationalization-checklist -->
@@ -136,7 +137,7 @@ requires: []
     | 6 | Security awareness | 2 | -- | 2 = Actively checks for OWASP Top 10 patterns relevant to codebase; 1 = Checks obvious security issues but misses subtle ones; 0 = No security consideration at all |
     | 7 | Performance awareness | 2 | -- | 2 = Identifies N+1 queries, unnecessary rerenders, large bundle risks; 1 = Catches obvious issues but misses systemic ones; 0 = No performance consideration |
     | 8 | Blast radius consideration | 2 | -- | 2 = Suggested changes evaluated for impact on other modules; 1 = Mentions some risks but does not fully explore impact; 0 = Suggestions made without regard for side effects |
-    | 9 | Review report structure | 2 | -- | 2 = Clear summary, severity (critical/major/minor), actionable next steps; 1 = Report has structure but missing severity or unclear next steps; 0 = Unstructured stream of observations |
+    | 9 | Review report structure | 2 | -- | 2 = Clear summary, S/I/C (1–5) + risk_rank, Must-fix/Should-fix/Insight, derived Priority, actionable next steps; 1 = Report has structure but missing scores or unclear next steps; 0 = Unstructured stream of observations |
     | 10 | Reproducibility | 2 | YES | 2 = Every finding includes reproduction steps or input that triggered it; 1 = Some findings reproducible, others not; 0 = Findings cannot be independently verified |
 
     **Scoring**: Run `pnpm validate-skill --score core/skills/code-review` to compute.
@@ -146,8 +147,8 @@ requires: []
 [Workflow]
     1. Run [Dependency Check]
     2. Read `references/first-principles.md`
-    3. **必须先 Read `references/workflow.md`** — Step 1–5（baseline → dispatch → scan → aggregate → report）
-    4. 维度与方法 → `review-dimension-checklist.md` + `review-strategy.md`
+    3. **必须先 Read `references/workflow.md`** — Step 1–5 唯一源（baseline → dispatch → scan → aggregate → report）；agents 不得另写并行步骤表
+    4. 维度与方法 → `review-dimension-checklist.md` + `review-strategy.md`；加载 `.forge/dev-map.md` + `.forge/code-standards/<lang>.md`（若有）
     5. 交付 report 前执行 `references/anti-ai-slop-checklist.md` 自检
     6. `FORGE_MODE=yolo` → `references/yolo-mode.md`
 
