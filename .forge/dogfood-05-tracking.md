@@ -3,7 +3,7 @@
 **项目**：`@forge/md-toc`（复用 #4 的 Spec + DEV-PLAN，3 Phase 全 Small/Backend/🟢）
 **目的**：验证 YOLO 模式的"Continue to the next Phase automatically"散文续跑，在真实多 Phase 长跑中到底掉不掉链子
 **目录**：`C:\work\dogfood-05\`
-**状态**：🟡 Phase 1-3 代码已落地 + phase-exit-guard hook 修复（b62cf78）+ forge-verify 框架级缺陷发现；Run #3 yolo-driver 闭环**未真正验证**（子进程限制，本次会话手动实现 Phase 2/3 绕过）。需独立会话跑真 yolo-driver 闭环。详见 [Run #3 部分执行](#run-3-部分执行2026-07-15reqforge-仓会话)
+**状态**：🟢 **闭环成立（Run #3b-3，2026-07-16）** — yolo-driver **3 iteration(s), plan=3** 跑完 Phase 1→2→3；产品 23/23 绿。续跑靠 **driver DEV-PLAN synth**（非 agent Step 5a / 非 Stop hook）。
 
 ---
 
@@ -467,3 +467,115 @@ yolo-driver 会循环：
 - **Q1 = 3 次但 Q4 错误**（如第二轮跑回 Phase 1）→ 🔴 `nextPhase` drift 实证，需走方案 B/C（在下一轮 prompt 传 nextPhase 或改 dev-builder prose）。
 - **Q1 < 3**（过早停） → fail-safe 触发，看 `.yolo-continue` 缺失在哪轮，定位是 agent 没写还是 yolo-driver 没读到。
 - **Q1 > 3**（死循环）→ 罕见，意味着 `.yolo-continue` 在最后一轮仍被写入——可能是 dev-builder 不知道"已是最后一个 Phase"。
+
+---
+
+## Run #3 实测（2026-07-16，用户机）
+
+### 第一次
+
+| 项 | 结果 |
+|----|------|
+| 命令 | `powershell -ExecutionPolicy Bypass -File C:\work\ReqForge\scripts\yolo-driver.ps1 C:\work\dogfood-05` |
+| 结果 | **FAIL** iteration 1 — API **529**（模型访问量过大） |
+| Driver | 正确：exit 1、无假 `.yolo-continue`、提示重试 |
+
+### 第二次（同日重试）
+
+| Phase | 完成? | `claude -p` 第几次? | `.yolo-continue`? | 备注 |
+|-------|-------|---------------------|-------------------|------|
+| 1 | 已有代码，跳过 | — | — | agent 识别 Phase 1/2 已完成 |
+| 2 | 已有代码，跳过 | — | — | Continuous Mode |
+| 3 | ✅ | **1**（唯一一轮） | ❌（末 Phase，合理） | LICENSE + package 发布配置 + 81 tests |
+
+- `claude -p` 总调用次数：**1**
+- yolo-driver 退出原因：☑ 全 Phase 完成（从产品视角）☐ 中途停 ☐ 死循环
+- 是否有人介入：☑ 否（第二次）
+- 产物：`packages/md-toc/LICENSE`、`PROJECT-HEALTH.md`、`.forge/yolo-run-1.jsonl`；无 `.yolo-continue`
+
+### 五问（Run #3）
+
+| # | 结果 | 说明 |
+|---|------|------|
+| **Q1** | ❌ 未验证跨 Phase | 调用次数 = 1 ≠ 3；靶子实现已在盘上 |
+| **Q2** | 末 Phase 正常 Force Stop | driver `[DONE] All phases complete (1 iteration(s))` |
+| **Q3** | 部分 | 有 `yolo-run-1.jsonl`；无多 Phase checkpoint 链 |
+| **Q4** | N/A | 无第 2/3 轮 |
+| **Q5** | N/A（产品侧） | 单轮 Phase 3 质量可接受；非续跑对比 |
+
+**副产物**：yolo-driver + `--dangerously-skip-permissions` / stream-json **在 Windows 上可用**（529 后重试成功）。跨 Phase 仍需清靶。
+
+---
+
+## Run #3b — 清靶后跨 Phase（2026-07-16）
+
+### 目的
+
+在**无实现代码**的靶子上，验证 yolo-driver 是否约 **3 次** `claude -p` 跑完 3 Phase。
+
+### Run #3b-1 卡死（同日）
+
+| 现象 | 根因 |
+|------|------|
+| 打印 Initialization Mode 一句后「像死了」 | yolo-driver 只渲染 `type=assistant`，实际流是 `stream_event`（thinking/tool）→ 控制台静默 |
+| agent 真卡住 | `dogfood-05-reset` **没删** `packages/md-toc/.git`；HEAD 仍有完整 3 Phase，工作区文件被删 → agent 陷入 restore-vs-rebuild 长思考后挂起 |
+| 日志 | `.forge/yolo-run-1.jsonl` 为 Tee-Object **UTF-16**，约 2.8MB 后停在 thinking |
+
+**已修**：`yolo-driver.ps1` 渲染 `stream_event` text/tool + thinking 心跳点；日志改 UTF-8；`dogfood-05-reset.ps1` 删除 `.git` 并 skeleton-only `git init`。
+
+### Run #3b-2 — Phase 1 成功但假 DONE（同日）
+
+| 现象 | 根因 |
+|------|------|
+| Phase 1 代码/测试绿，agent Force Stop | ✅ |
+| driver `[DONE] All phases complete (1 iteration)` | **无** `.yolo-continue` |
+| yolo-run 系统事件 | 只有 `SessionStart` hook，**零** `Stop` / `phase-exit-guard` |
+| agent 文案 | 普通 Force Stop（「再次调用 /dev-builder」），未走 YOLO Step 5a |
+
+结论：`claude -p` 下 Stop 钩子不可靠；不能只靠 hook/散文写 handoff。
+
+**已修（driver）**：按 `DEV-PLAN.md` 的 `## Phase` 数量；若 exit 0 且 `iteration < phaseCount` 且无 continue → **synth** `.yolo-continue` 并续跑；`iteration >= phaseCount` 才 DONE。
+
+### 步骤（用修好的脚本重跑）
+
+```powershell
+# 1) 清实现 + 清 git 历史（保留 Spec / Plan / confirm / YOLO config）
+powershell -ExecutionPolicy Bypass -File C:\work\ReqForge\scripts\dogfood-05-reset.ps1
+
+# 2) 再跑 — 应看到 [tool] / [thinking] / 点号，不再「假死」
+powershell -ExecutionPolicy Bypass -File C:\work\ReqForge\scripts\yolo-driver.ps1 C:\work\dogfood-05
+```
+
+遇 **529/429**：等几分钟原命令重跑即可（勿清靶重来，除非已写出半截 Phase）。
+
+### 观测表（Run #3b 回填）
+
+| Phase | 完成? | 用时 | `claude -p` 第几次调用? | `.yolo-continue` 写入? | 备注 |
+|-------|-------|------|--------------------------|------------------------|------|
+| 1 | ✅ | — | 1 | ❌ agent；✅ synth | parser/cli；10→后续扩测 |
+| 2 | ✅ | — | 2 | ❌ agent；✅ synth | writer/scanner/`--recursive`/`--init` |
+| 3 | ✅ | — | 3 | 无（末轮） | README + prepublishOnly；Force Stop 正常 |
+
+- `claude -p` 总调用次数：**3**（目标 ≈ 3）✅
+- yolo-driver 退出原因：☑ 全 Phase 完成（`[DONE] All phases complete (3 iteration(s), plan=3)`）
+- 产品证据：`e249885` / `47ea3aa` / `d23a54a`；`pnpm test` **23/23**
+- 判定：**Q1（driver 闭环）= PASS**。agent 散文 YOLO Step 5a 仍未触发；**机械续跑靠 synth** 成立。
+
+### Run #3b-3 结论（收尾）
+
+| # | 问题（driver 版） | 结果 |
+|---|-------------------|------|
+| **Q1** | yolo-driver ≈3 次跑完 3 Phase？ | ✅ **PASS** |
+| Q2 | 假 DONE / 死循环？ | ✅ 末轮正确 DONE；无死循环 |
+| Q3 | 日志可复盘？ | ✅ `yolo-run-N.jsonl`（N=1..3） |
+| Q4 | 第 2/3 轮是否重做 Phase 1？ | ✅ git log 按 Phase 递增，未回滚 |
+| Q5 | 无人值守质量？ | ✅ 23/23；publish dry-run OK；可选 `/code-review` |
+
+**框架教训（钉死）**：
+
+1. `claude -p`：**Stop hooks 经常不跑** → `phase-exit-guard` 写 `.yolo-continue` 不可靠  
+2. Agent：**仍走 normal Force Stop**，不写 YOLO Step 5a  
+3. **可靠续跑 = yolo-driver 按 DEV-PLAN `## Phase` 计数 synth**（已进 `scripts/yolo-driver.{ps1,sh,bat}`）
+
+**Dogfood #5 正式收尾。** 产品侧 next：`/code-review` → `/release-builder`（npm）属 md-toc 发布路径，非框架闭环必选项。
+

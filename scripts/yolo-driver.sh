@@ -45,23 +45,34 @@ if ! command -v claude >/dev/null 2>&1; then
   exit 1
 fi
 
+# Count "## Phase" in DEV-PLAN — fallback when .yolo-continue missing
+# (claude -p often skips Stop hooks → phase-exit-guard never writes the file)
+PHASE_COUNT=$(grep -cE '^## Phase\b' DEV-PLAN.md 2>/dev/null || echo 0)
+[ "$PHASE_COUNT" -lt 1 ] && PHASE_COUNT=1
+MAX_ITER=$((PHASE_COUNT + 2))
+
 echo ""
 echo "═══════════════════════════════════════════"
 echo "  YOLO Driver — multi-Phase /dev-builder"
 echo "  Project: $PROJECT"
+echo "  Phases:  $PHASE_COUNT (from DEV-PLAN.md)"
 echo "═══════════════════════════════════════════"
 echo ""
 
 ITERATION=0
 while true; do
   ITERATION=$((ITERATION + 1))
+  if [ "$ITERATION" -gt "$MAX_ITER" ]; then
+    echo "❌ Exceeded max iterations ($MAX_ITER). Aborting."
+    exit 1
+  fi
 
   # Show current Phase from scope
   if [ -f ".forge/active-scope.json" ]; then
     CURRENT=$(cat ".forge/active-scope.json" 2>/dev/null)
     echo "▶ [$ITERATION] $(echo "$CURRENT" | head -c 120)"
   else
-    echo "▶ [$ITERATION] Starting Phase 1"
+    echo "▶ [$ITERATION] Starting Phase (iteration $ITERATION / ~$PHASE_COUNT)"
   fi
 
   # Run dev-builder in non-interactive YOLO mode.
@@ -93,24 +104,33 @@ while true; do
     echo "⚠️  claude exited with non-zero status ($EXIT_CODE) at iteration $ITERATION"
   fi
 
-  # Check handoff signal
+  # Check handoff signal (or synth from DEV-PLAN phase count)
+  if [ ! -f ".forge/.yolo-continue" ] && [ "$EXIT_CODE" -eq 0 ] && [ "$ITERATION" -lt "$PHASE_COUNT" ]; then
+    printf '{"yolo":true,"source":"yolo-driver-synth","completedIter":%s,"expectedPhases":%s}\n' \
+      "$ITERATION" "$PHASE_COUNT" > ".forge/.yolo-continue"
+    echo "→ ⚠ synth: no .yolo-continue after iteration $ITERATION/$PHASE_COUNT (Stop hook likely skipped in -p mode). Continuing..."
+  fi
+
   if [ -f ".forge/.yolo-continue" ]; then
-    echo "→ ✓ Phase complete: $(cat ".forge/.yolo-continue" | head -c 200)"
+    echo "→ ✓ Phase handoff: $(cat ".forge/.yolo-continue" | head -c 200)"
     rm -f ".forge/.yolo-continue"
 
-    # Each `claude -p` is a fresh session (no --resume/--continue), so context
-    # is already clean — no explicit clear needed.
+    if [ "$ITERATION" -ge "$PHASE_COUNT" ]; then
+      echo ""
+      echo "═══════════════════════════════════════════"
+      echo "  ✅ Reached planned phase count ($ITERATION/$PHASE_COUNT)"
+      echo "═══════════════════════════════════════════"
+      break
+    fi
     echo "→ Continuing to next Phase..."
     echo ""
   elif [ "$EXIT_CODE" -eq 0 ]; then
-    # Clean exit + no handoff = genuine completion (last Phase done)
     echo ""
     echo "═══════════════════════════════════════════"
-    echo "  ✅ All phases complete ($ITERATION iteration(s))"
+    echo "  ✅ All phases complete ($ITERATION iteration(s), plan=$PHASE_COUNT)"
     echo "═══════════════════════════════════════════"
     break
   else
-    # Non-zero exit + no handoff = claude errored (API limit, auth, etc.)
     echo ""
     echo "═══════════════════════════════════════════"
     echo "  ❌ claude errored at iteration $ITERATION (exit $EXIT_CODE)"
