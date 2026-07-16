@@ -20,6 +20,7 @@ import { existsSync, readFileSync, writeFileSync, mkdirSync, readdirSync, statSy
 import { join, dirname, extname } from "path";
 import { fileURLToPath } from "url";
 import { execSync } from "child_process";
+import { tryCompile } from "./lib/compile-check.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -54,19 +55,9 @@ function run(cmd, opts = {}) {
   }
 }
 
-/** Run tsc --noEmit; return combined stdout/stderr (cross-platform, no shell `|| true`). */
-function runTscNoEmit() {
-  try {
-    return execSync("npx tsc --noEmit", {
-      cwd: ROOT,
-      encoding: "utf-8",
-      timeout: 120000,
-      stdio: "pipe",
-    }).trim();
-  } catch (e) {
-    const out = [e.stdout, e.stderr].filter(Boolean).join("\n").trim();
-    return out || String(e.message ?? e);
-  }
+/** Language-aware compile probe (shared with forge-verify). */
+function runCompileProbe() {
+  return tryCompile(ROOT);
 }
 
 /** Best-effort command; swallow failure (replaces shell `cmd || true`). */
@@ -148,13 +139,16 @@ function cmdDiagnose() {
   }
   console.log(`[Tests] ${testResult}`);
 
-  // 3. Check TypeScript compilation
-  if (existsSync(join(ROOT, "tsconfig.json"))) {
-    const tscResult = runTscNoEmit();
-    const hasErrors = tscResult.includes("error");
-    console.log(`[TSC]   ${hasErrors ? `Errors found (${tscResult.split("error").length - 1})` : "Clean compilation"}`);
-    if (hasErrors) {
-      const lines = tscResult.split("\n").filter(l => l.includes("error")).slice(0, 5);
+  // 3. Language-aware compile
+  {
+    const probe = runCompileProbe();
+    if (probe.skipped) {
+      console.log(`[Compile] ${probe.detail}`);
+    } else if (probe.ok) {
+      console.log(`[Compile] ${probe.detail}`);
+    } else {
+      console.log(`[Compile] failed`);
+      const lines = probe.output.split("\n").filter(Boolean).slice(0, 5);
       for (const l of lines) console.log(`  ${l.trim()}`);
     }
   }
@@ -212,20 +206,19 @@ function compile() {
     console.log("  ❌ Invalid JSON in tsconfig.json");
   }
 
-  // 2. TypeScript compilation
-  console.log("\n[2/4] TypeScript compilation (tsc --noEmit)...");
-  if (existsSync(join(ROOT, "node_modules", ".bin", "tsc"))) {
-    const tscOut = runTscNoEmit();
-    if (tscOut.includes("error")) {
-      const errCount = tscOut.split("error").length - 1;
-      console.log(`  ❌ ${errCount} error(s) found`);
-      const lines = tscOut.split("\n").filter(l => l.includes("error")).slice(0, 8);
-      for (const l of lines) console.log(`     ${l.trim()}`);
+  // 2. Language-aware compilation
+  console.log("\n[2/4] Compile (language-aware)...");
+  {
+    const probe = runCompileProbe();
+    if (probe.skipped) {
+      console.log(`  ⚠️  ${probe.detail}`);
+    } else if (probe.ok) {
+      console.log(`  ✅ ${probe.detail}`);
     } else {
-      console.log("  ✅ Clean compilation");
+      console.log("  ❌ compile failed");
+      const lines = probe.output.split("\n").filter(Boolean).slice(0, 8);
+      for (const l of lines) console.log(`     ${l.trim()}`);
     }
-  } else {
-    console.log("  ⚠️  tsc not found in node_modules — install deps first");
   }
 
   // 3. Import resolution scan
@@ -635,11 +628,11 @@ function cmdClassify(traceName) {
       }
     }
 
-    // Append tsc output if available
-    if (existsSync(join(ROOT, "tsconfig.json"))) {
-      const tscOut = runTscNoEmit();
-      if (tscOut.includes("error")) {
-        input += "\n" + tscOut;
+    // Append compile probe output if failed
+    {
+      const probe = runCompileProbe();
+      if (!probe.ok && !probe.skipped && probe.output) {
+        input += "\n" + probe.output;
       }
     }
   }
@@ -689,15 +682,17 @@ function cmdVerify() {
   const testCmd = findTestCommand();
   let allPass = true;
 
-  // 1. TypeScript compile check
-  if (existsSync(join(ROOT, "tsconfig.json"))) {
-    console.log("[1/3] TypeScript compilation...");
-    try {
-      execSync("npx tsc --noEmit", { cwd: ROOT, encoding: "utf-8", timeout: 30000 });
-      console.log("  ✅ TypeScript compilation passed");
-    } catch (e) {
-      console.log("  ❌ TypeScript compilation failed");
-      const lines = (e.stdout || "").split("\n").filter(l => l.includes("error")).slice(0, 5);
+  // 1. Language-aware compile check
+  console.log("[1/3] Compile (language-aware)...");
+  {
+    const probe = runCompileProbe();
+    if (probe.skipped) {
+      console.log(`  ⚠️  ${probe.detail}`);
+    } else if (probe.ok) {
+      console.log(`  ✅ ${probe.detail}`);
+    } else {
+      console.log("  ❌ compile failed");
+      const lines = probe.output.split("\n").filter(Boolean).slice(0, 5);
       for (const l of lines) console.log(`     ${l.trim()}`);
       allPass = false;
     }

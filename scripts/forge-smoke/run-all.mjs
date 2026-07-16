@@ -3,38 +3,20 @@
  * run-all.mjs — ReqForge 框架仓库静态 smoke 测试总入口
  *
  * 性质：本仓库测试套件（非 Harness 架构、非用户项目 TDD）
- * 分工：pnpm test = Vitest 单元测试；pnpm forge-smoke = 结构/同步/文档/CI 守门
+ * 分工：pnpm test = Vitest（含 smoke registry）；pnpm forge-smoke = 实际执行守门
  *
  * 用法: node scripts/forge-smoke/run-all.mjs
  *       pnpm forge-smoke
  *
  * 详表: scripts/forge-smoke/README.md
- * 每项 smoke 在独立子进程运行，互不污染。（共 15 项，含 test-demo 黄金路径）
+ * SMOKES 单源: scripts/forge-smoke/lib.mjs
  */
 import { spawnSync } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import { SMOKES } from "./lib.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-/** 由轻至重排列 */
-const SMOKES = [
-  "workflows-compliance",
-  "platform-compliance-doc",
-  "machine-gates-doc",
-  "package-integrity",
-  "templates-present",
-  "agents-complete",
-  "hooks-wired",
-  "stop-gate-wired",
-  "skill-fixtures",
-  "skill-bypass",
-  "loadouts-valid",
-  "adapters-sync",
-  "skills-complete",
-  "test-demo-golden-path",
-  "grovel-baseline",
-];
 
 let failed = 0;
 

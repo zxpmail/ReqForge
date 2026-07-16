@@ -21,7 +21,7 @@
     [Fix Rules]
         - Change only one file / one logical point at a time
         - Assess impact scope before changing: if dep-graph is available, run `pnpm dep-graph affected <file>` and `pnpm dep-graph risk <file>` for data-driven impact assessment
-        - Compile-verify after change (tsc --noEmit)
+        - Compile-verify after change (language-aware: `pnpm forge-verify` / `.forge/dev-map.md` / stack fallback; TS/JS → `tsc --noEmit`)
         - Function-verify after change (reproduction steps no longer trigger the bug)
         - Regression-verify after change (related existing functionality still works normally)
 

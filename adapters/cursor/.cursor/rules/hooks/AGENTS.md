@@ -23,6 +23,9 @@ Hook scripts are the Inspection Layer — they fire automatically at critical no
 - Return actionable messages — "Compilation failed: src/utils.ts:12 — Type 'string' is not assignable to 'number'" not just "failed"
 - Prefer composite hooks (`memory-guard`) in loadouts when multiple scripts share the same trigger — delegate to legacy scripts inside the composite
 
+### Layering note
+- **`pre-commit-check`**: light commit gate — TypeScript `tsc` only (skip if no tsconfig) + README `### vX.Y.Z` newest-first. Not a substitute for Phase `pnpm forge-verify` (language-aware compile / tests / placeholders).
+
 ### PreToolUse hooks
 | Name | Trigger | Purpose |
 |------|---------|---------|

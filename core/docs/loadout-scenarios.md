@@ -31,10 +31,10 @@ Full scenario tables below.
 
 | Loadout | Skills | Hooks | Best for |
 |---------|--------|-------|----------|
-| **`full`** | 12 (all) | 10 | Complete toolchain · brownfield · skill-builder · evolution |
-| **`web-app`** | 11 (no skill-builder) | 10 | Web products with design + Context7/Figma/Playwright MCP hints |
-| **`lite`** | 8 | 8 | Spec→Plan→Build→Review · change-manager · **no design/release/evolution/skill-builder** |
-| **`cli-tool`** | 8 (no design*, no change-manager) | 10 | CLIs, libraries, backend tools |
+| **`full`** | 14 (all) | 10 | Complete toolchain · brownfield · skill-builder · evolution |
+| **`web-app`** | 13 (no skill-builder) | 10 | Web products with design + Context7/Figma/Playwright MCP hints |
+| **`lite`** | 9 | 8 | Spec→Plan→Build→Review · change-manager · **no design/release/evolution/skill-builder** |
+| **`cli-tool`** | 9 (no design*, no change-manager) | 10 | CLIs, libraries, backend tools |
 | **`minimal`** | 5 | 7 | Spikes, scripts, learning Forge |
 
 \*Design skills omitted in `cli-tool`; add `design-brief-builder` manually if needed.

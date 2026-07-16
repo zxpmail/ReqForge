@@ -11,6 +11,28 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 /** ReqForge 仓库根目录 */
 export const ROOT = path.resolve(__dirname, "..", "..");
 
+/**
+ * Single source of truth for forge-smoke suite order (light → heavy).
+ * Keep scripts/forge-smoke/README.md table in sync when changing this list.
+ */
+export const SMOKES = [
+  "workflows-compliance",
+  "platform-compliance-doc",
+  "machine-gates-doc",
+  "package-integrity",
+  "templates-present",
+  "agents-complete",
+  "hooks-wired",
+  "stop-gate-wired",
+  "skill-fixtures",
+  "skill-bypass",
+  "loadouts-valid",
+  "adapters-sync",
+  "skills-complete",
+  "test-demo-golden-path",
+  "grovel-baseline",
+];
+
 /** 创建 smoke 运行器 */
 export function createRunner(name) {
   const failures = [];

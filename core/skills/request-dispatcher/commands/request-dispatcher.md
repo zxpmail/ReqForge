@@ -1,5 +1,6 @@
 ---
 description: Route ambiguous user requests to the correct Forge Skill
+argument-hint: ""
 ---
 
 # Command: /request-dispatcher

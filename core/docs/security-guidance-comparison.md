@@ -23,7 +23,7 @@
 |----------|---------------|------|
 | 编辑文件时扫危险模式 | `forge-verify` → `security-patterns`（Phase 后 grep） | ✅ 轻量、可关 |
 | 一轮输出后 review diff | `dev-builder` Task 微循环 → `code-reviewer-security` | ✅ Task 级 |
-| commit 时上下文校验 | `pre-commit-check`、`forge-verify` | ✅ 部分（编译/测试/占位符） |
+| commit 时上下文校验 | `pre-commit-check`（轻量：TS `tsc` + README 版本序）、`forge-verify`（Phase：编译/测试/占位符等） | ✅ 分层（commit ≠ 全量 verify） |
 | 组织规则 `claude-security-guidance.md` | **`.forge/security-guidance.md`**（`forge-install`） | ✅ v1.29+ |
 
 Forge **刻意不做** PreToolUse 每次 Write 实时拦（误杀与维护成本高）；团队可先写清 `security-guidance.md`，再按需加 hook。

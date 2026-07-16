@@ -14,19 +14,16 @@ pnpm forge-verify --baseline check          # 与基线对比，有新增失败�
 | # | 名称 | 说明 | 适用 |
 |---|------|------|------|
 | 1 | skill-quality | `pnpm validate-skill` | 仅 ReqForge 框架仓 |
-| 2 | compile | 语言感知：dev-map Build/Compile → `package.json` typecheck/tsc/compile → TS/`go build`/`compileall` 回退 | 能检测到编译命令的项目 |
-| 3 | test | vitest / jest / 项目 test script | 有测试配置的项目 |
+| 2 | compile | 语言感知（`scripts/lib/compile-check.mjs`）：dev-map → `package.json` typecheck/tsc/compile → TS/`go build`/`compileall` | 能检测到编译命令的项目 |
+| 3 | test | 仅当存在 `vitest.config.*` 或 `jest.config.*` 时跑对应 runner（**不**读 `package.json` scripts.test） | 有上述配置的项目 |
 | 4 | no-placeholders | grep TBD/FIXME in src/ | 所有项目 |
 | 5 | dev-map-fresh | `.forge/dev-map.md` 存在且已填充 | 所有项目 |
 | 6 | security-patterns | `eval` / `new Function` 轻量扫描（需 security-guidance.md） | 有 src/ 的项目 |
 | 7 | trace-fresh | `.forge/trace/` 存在且有内容 | 使用 forge-trace 的项目 |
 | 8 | scope-check | `git diff` 是否超出声明作用域 | 有 scope 声明的项目 |
+| 9 | content-quality | **配置探测**：`.forge/content-verify.json` 是否就绪（不跑语义管道） | 可选 |
 
-可选语义验证（**独立入口** `pnpm forge-verify-content`，非上述 8 项之一）：
-
-| 名称 | 说明 | 适用 |
-|------|------|------|
-| content-quality | 分层结构化内容验证（L0 → L0e → L1 → L2/EG→C1→C2 → L3） | 已配置 `.forge/content-verify.json` 的项目 |
+语义四层验证（L0→L0e→L1→L2/EG→C1→C2→L3）走**独立入口** `pnpm forge-verify-content`，不是第 9 项的替代实现——第 9 项只回答「有没有配好」。
 
 ## 基线对比流程
 

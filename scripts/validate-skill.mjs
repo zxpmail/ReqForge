@@ -163,9 +163,8 @@ function validateSkill(dir) {
     if (strict && lines > 600) error("Strict: SKILL.md exceeds 600 lines");
   } else ok();
 
-  /* commands/*.md: argument-hint must be a YAML string, not a bare flow sequence.
-   * Bare `argument-hint: [foo]` parses as an array; Copilot CLI ≥1.0.65 rejects the skill.
-   * Require quotes: argument-hint: "[foo]"  (see issue #10 / PR #11). */
+  /* commands/*.md: argument-hint required (string). Bare `[foo]` is YAML array — Copilot CLI drops skill.
+   * Use argument-hint: "[foo]" or argument-hint: "" when no args (see issue #10 / PR #11). */
   const cmdDir = path.join(dir, "commands");
   if (fs.existsSync(cmdDir)) {
     for (const name of fs.readdirSync(cmdDir).filter((f) => f.endsWith(".md"))) {
@@ -176,7 +175,11 @@ function validateSkill(dir) {
         error(
           `commands/${name}: bare argument-hint: [...] is YAML array — quote it as argument-hint: "[...]" (Copilot CLI str validation)`,
         );
-      } else if (/^argument-hint:/m.test(cmd)) {
+      } else if (!/^argument-hint:/m.test(cmd)) {
+        error(
+          `commands/${name}: missing argument-hint (required for slash commands; use argument-hint: "" if none)`,
+        );
+      } else {
         ok();
       }
     }

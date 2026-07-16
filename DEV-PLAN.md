@@ -29,7 +29,7 @@
 
 **架构验证**：`pnpm install` → `pnpm test`（Vitest 单元测试）→ `pnpm build` → `pnpm sync` → `pnpm preflight`（可选自检）→ `pnpm skill-eval <name>`（用户自定义 Skill）
 
-**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（12 项 smoke，含 test-demo 黄金路径，见附录 A）
+**框架仓库发版测试（非架构）**：`pnpm forge-smoke`（15 项 smoke，含 test-demo 黄金路径，见附录 A）
 
 ### 路线图（未排期 · 非 v1.23.0 欠账）
 
@@ -43,7 +43,7 @@
 | Skill 进化 P1/P2 | feedback 归因、skill-bypass 清单 | **刻意暂缓**（P0 文档已完成） |
 | 2.5 层设计哲学 | anti-slop 改革、难点标记、放下骨架、善刀而藏之 | ✅ 已发布（`docs/2.5-layer-manifesto.md`） |
 | Anti-slop benchmark | 9 条规则 vs 3 个锚点的实际对比 | ✅ 已完成（`benchmark/RESULTS.md`） |
-| test-demo 黄金路径 | Spec/Plan → todo-cli 守门 | **✅ 已接入**（`pnpm test-demo-golden-path`、forge-smoke #12） |
+| test-demo 黄金路径 | Spec/Plan → todo-cli 守门 | **✅ 已接入**（`pnpm test-demo-golden-path`、forge-smoke `test-demo-golden-path`） |
 
 **框架仓库本身不需要**：根目录 `Design-Brief.md`、`memory/`、`changes/`（活跃变更）——这些属于**用户业务项目**的常见工件，空着是正常的。
 
@@ -59,8 +59,8 @@
 | `pnpm test` | `sync.ts`、`install.ts`、`dependency-graph.ts`、`preflight.ts`、`skill-eval.ts` 等**逻辑**单元测试（39 项） |
 | `pnpm preflight` | 发布门禁（用户项目 + 框架仓自检）；配置 `.forge/preflight.json` |
 | `pnpm skill-eval` | 用户项目自定义 Skill 评估包（触发用例结构 + `eval-output/` 产物断言） |
-| `pnpm forge-smoke` | **结构/一致性**静态检查（12 项 smoke；#11 含 validate-skill；#12 为 test-demo 黄金路径） |
-| `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke #12） |
+| `pnpm forge-smoke` | **结构/一致性**静态检查（15 项 smoke；含 validate-skill、test-demo 黄金路径、grovel-baseline） |
+| `pnpm test-demo-golden-path` | 仅跑 test-demo 守门（CI 中已含于 forge-smoke） |
 
 发版前建议：`pnpm test` → `pnpm forge-smoke` → `pnpm sync`（若改过 core）。
 

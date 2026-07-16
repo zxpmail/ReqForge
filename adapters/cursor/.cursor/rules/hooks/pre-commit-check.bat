@@ -1,6 +1,9 @@
 @echo off
 REM Hook: PreToolUse before git commit
-REM Run tsc --noEmit before commit, block if compilation fails
+REM Light commit gate — intentionally narrower than forge-verify:
+REM   - Compile: TypeScript only (tsconfig → tsc --noEmit). No tsconfig → skip.
+REM     Full language-aware compile = pnpm forge-verify / Phase completion.
+REM   - README: ### vX.Y.Z newest-first (same logic as .sh; exit 2 blocks).
 REM YOLO mode: write build error log instead of blocking
 REM   Priority: project .forge/config > global ~/.forge/config > env var FORGE_MODE
 
@@ -21,24 +24,24 @@ for /r "%CLAUDE_PROJECT_DIR%" %%f in (tsconfig.json) do (
 )
 :found
 
-if "%TSCONFIG%"=="" exit /b 0
+if not "%TSCONFIG%"=="" (
+    for %%i in ("%TSCONFIG%") do set PROJECT_CODE=%%~dpi
+    cd /d "%PROJECT_CODE%"
 
-for %%i in ("%TSCONFIG%") do set PROJECT_CODE=%%~dpi
-cd /d "%PROJECT_CODE%"
+    set TSC_PASS=1
+    for /f "usebackq delims=" %%o in (`npx tsc --noEmit 2^>^&1`) do set TSC_PASS=0
 
-set TSC_PASS=1
-for /f "usebackq delims=" %%o in (`npx tsc --noEmit 2^>^&1`) do set TSC_PASS=0
-
-if !TSC_PASS! equ 0 (
-    if !YOLO_ACTIVE! equ 1 (
-        if not exist "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending" mkdir "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending"
-        npx tsc --noEmit > "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending\build-error.log" 2>&1
-        echo [yolo] Build errors logged to .claude\.yolo-pending\build-error.log >&2
-        exit /b 0
+    if !TSC_PASS! equ 0 (
+        if !YOLO_ACTIVE! equ 1 (
+            if not exist "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending" mkdir "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending"
+            npx tsc --noEmit > "%CLAUDE_PROJECT_DIR%\.claude\.yolo-pending\build-error.log" 2>&1
+            echo [yolo] Build errors logged to .claude\.yolo-pending\build-error.log >&2
+        ) else (
+            echo TypeScript compilation failed. Commit blocked.>&2
+            npx tsc --noEmit>&2
+            exit /b 2
+        )
     )
-    echo TypeScript compilation failed. Commit blocked.>&2
-    npx tsc --noEmit>&2
-    exit /b 2
 )
 
 REM Karpathy violation check (advisory, non-blocking)
@@ -46,23 +49,19 @@ if exist "%CLAUDE_PROJECT_DIR%\scripts\check-karpathy-violations.bat" (
     call "%CLAUDE_PROJECT_DIR%\scripts\check-karpathy-violations.bat"
 )
 
-REM README version order check — verify first version listed matches package.json
-for /f "tokens=2 delims=: " %%v in ('findstr /r "version" "%CLAUDE_PROJECT_DIR%\package.json" 2^>nul') do set PKG_VER=%%v
-set PKG_VER=!PKG_VER:"=!
-for %%R in ("%CLAUDE_PROJECT_DIR%\README.md" "%CLAUDE_PROJECT_DIR%\README.zh-CN.md") do (
-    if exist %%R (
-        for /f "tokens=3 delims=v " %%v in ('findstr /r "^### v" %%R 2^>nul') do (
-            set FIRST_VER=%%v
-            goto :readme_check_%%~nxR
+REM README version order — prefer shared script; PowerShell fallback matches .sh semantics
+if exist "%CLAUDE_PROJECT_DIR%\scripts\hooks\readme-version-order.mjs" (
+    node "%CLAUDE_PROJECT_DIR%\scripts\hooks\readme-version-order.mjs"
+    if errorlevel 1 exit /b 2
+) else (
+    set README_ORDER_FAIL=0
+    for %%R in ("%CLAUDE_PROJECT_DIR%\README.md" "%CLAUDE_PROJECT_DIR%\README.zh-CN.md") do (
+        if exist %%R (
+            powershell -NoProfile -Command "$p='%%~fR'; $vs=@(); Get-Content -LiteralPath $p | ForEach-Object { if ($_ -match '^### v(\d+\.\d+\.\d+)') { $vs += $Matches[1] } }; $vs=$vs | Select-Object -First 10; $prev=$null; foreach($v in $vs){ if($prev -and ([version]$v -gt [version]$prev)){ Write-Error ('ERROR: README version order wrong in {0}: {1} comes before {2} (should be newest first)' -f (Split-Path $p -Leaf), $v, $prev); exit 2 }; $prev=$v }; exit 0"
+            if errorlevel 1 set README_ORDER_FAIL=1
         )
-        :readme_check_%%~nxR
-        if not "!FIRST_VER!"=="" if not "!PKG_VER!"=="" (
-            if not "!FIRST_VER!"=="!PKG_VER!" (
-                echo WARNING: %%~nxR first version !FIRST_VER! does not match package.json !PKG_VER! >&2
-            )
-        )
-        set FIRST_VER=
     )
+    if !README_ORDER_FAIL! neq 0 exit /b 2
 )
 
 exit /b 0

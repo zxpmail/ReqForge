@@ -100,9 +100,12 @@ flowchart LR
 
 - **bug-fixer / dev-builder**：code-review 交接阈值改为 **confidence_5 ≥ 4**（旧 ≥ 0.6 仍兼容）。
 - **Overstepping Gate**：CLAUDE.md 区分*程序式*落地（Step 8.5 / `files_to_modify`）与*钩子级* detector 仍 deferred。
-- **语言感知编译**：`forge-verify` 与 implementer / phase / bug-fixer 不再只硬编码 `tsc`。
-- **forge-smoke**：文档与 vitest 列表对齐为 **15** 项（旧文「12」已过时）；`package-integrity` 覆盖 `ts-node`/`bash` 脚本路径。
-- **文档**：wiki Home → v1.50.0；sub-agent 多端路径；council 加权 = risk_rank × 1.1；pre-commit / release checklist 改用可移植 `grep`；修复 code-review `docs/` 断链与 founders-playbook 坏链。
+- **语言感知编译**：共享 `scripts/lib/compile-check.mjs`（`forge-verify` + `forge-bug-fix`）；`pre-commit-check` **故意仅 TS**（已文档化），sh/bat README 序检查等价阻断。
+- **forge-verify**：**9** 项口径统一——第 9 项 `content-quality` 只做配置探测；语义管道仍走 `forge-verify-content`。
+- **forge-smoke**：`SMOKES` 单源 `lib.mjs`；vitest 只查 registry（CI 用 `run-all` 执行）；文档 **15** 项。
+- **loadout-scenarios**：技能数与 JSON 对齐（14/13/9/9/5）。
+- **validate-skill**：有 slash command 必须带 `argument-hint`（可为 `""`）；补齐 `request-dispatcher`。
+- **文档**：wiki Home → v1.50.0；karpathy Overstepping 诚实表述；DEV-PLAN/CONTEXT/security-guidance 措辞。
 
 ### v1.50.0 — 2026-07-11 — forge-verify LLM 层：协议自适应、诚实降级
 
@@ -329,7 +332,7 @@ flowchart LR
 
 ### v1.28.0 — 2026-05-27
 - **dev-map（开发导航地图）**：项目级语义索引 `.forge/dev-map.md`——AI 编码前先了解模块结构和已有模式。由 dev-builder 维护（谁动代码谁改地图）。`pnpm forge-install` 自动写入模板。
-- **forge-verify（事后验证）**：统一验证入口 `pnpm forge-verify`，8 项检查 + 基线对比（`--baseline save|compare|check`）；语义内容验证走独立的 `forge-verify-content`。把"我觉得做完了"变成"系统确认做完了"。
+- **forge-verify（事后验证）**：统一验证入口 `pnpm forge-verify`，9 项检查（含 content-quality 配置探测）+ 基线对比（`--baseline save|compare|check`）；语义内容验证走独立的 `forge-verify-content`。把"我觉得做完了"变成"系统确认做完了"。
 - **dev-builder 集成**：Loading Phase 自动保存基线；Phase 完成后自动运行 forge-verify 并对比基线、更新 dev-map。新增 Post-Verification Gate 原则。
 
 ### v1.27.0 — 2026-05-27

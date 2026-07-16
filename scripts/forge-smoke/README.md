@@ -41,8 +41,9 @@ CI：`.github/workflows/forge-smoke.yml`（push/PR，无 cron）。
 | 场景 | 命令 |
 |------|------|
 | 改 `core/`、`adapters/`、loadout、forge-smoke 后 | `pnpm sync` → `pnpm forge-smoke` |
-| 发版 / 合并 PR 前 | `pnpm test` + `pnpm forge-smoke` |
+| 发版 / 合并 PR 前 | `pnpm test`（含 smoke **registry**）+ `pnpm forge-smoke`（执行 15 项） |
 | 新增 GitHub workflow | 确保无 cron；跑 smoke 验证 |
+| 增减 smoke 脚本 | 只改 `scripts/forge-smoke/lib.mjs` 的 `SMOKES`，并更新本表 |
 
 ## 不算什么的
 

@@ -5,15 +5,17 @@
  * 用法：
  *   pnpm forge-verify [--baseline <save|compare|check>] [--root <path>]
  *
- * 验证项：
- *   1. skill-quality   — pnpm validate-skill（仅 ReqForge 框架仓）
- *   2. compile         — 项目编译检查
- *   3. test            — 测试通过检查
- *   4. no-placeholders — grep TBD/FIXME in committed code
- *   5. dev-map-fresh   — dev-map.md 是否存在
+ * 验证项（9）：
+ *   1. skill-quality     — pnpm validate-skill（仅 ReqForge 框架仓）
+ *   2. compile           — 语言感知编译（dev-map / package scripts / 栈回退）
+ *   3. test              — vitest.config.* / jest.config.* 存在时跑对应 runner
+ *   4. no-placeholders   — grep TBD/FIXME in committed code
+ *   5. dev-map-fresh     — dev-map.md 是否存在
  *   6. security-patterns — 轻量危险模式扫描（eval / new Function）
- *   7. trace-fresh     — .forge/trace/ 是否存在且有内容
- *   8. scope-check     — 检查文件改动是否超出声明的作用域
+ *   7. trace-fresh       — .forge/trace/ 是否存在且有内容
+ *   8. scope-check       — 检查文件改动是否超出声明的作用域
+ *   9. content-quality   — 仅探测 .forge/content-verify.json 配置存在性
+ *                          （语义四层管道走独立入口 pnpm forge-verify-content）
  *
  * --baseline save    : 运行验证并保存结果到 .forge/verify-baseline.json
  * --baseline compare : 运行验证并与基线对比，输出增量
@@ -29,6 +31,7 @@ import { existsSync, readFileSync, readdirSync, statSync, writeFileSync, unlinkS
 import { join, dirname, relative, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadBaseline, saveBaseline, compareBaseline } from "./forge-verify/baseline.mjs";
+import { checkCompile as runLanguageAwareCompile } from "./lib/compile-check.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REQFORGE_ROOT = join(__dirname, "..");
@@ -94,49 +97,7 @@ function checkSkillQuality() {
 }
 
 function checkCompile() {
-  const runCmd = (cmd, label) => {
-    execSync(cmd, { cwd: ROOT, encoding: "utf-8", timeout: 120000, stdio: "pipe", shell: true });
-    return `${label} clean`;
-  };
-
-  const devMapPath = join(ROOT, ".forge/dev-map.md");
-  if (existsSync(devMapPath)) {
-    const text = readFileSync(devMapPath, "utf-8");
-    const m = text.match(
-      /(?:^|\n)\s*(?:Build|Compile|Typecheck|构建|编译)\s*[:|：]\s*`?([^\n`]+)`?/i,
-    );
-    if (m) {
-      const cmd = m[1].trim();
-      if (cmd && !/^tbd/i.test(cmd) && cmd.length < 200) {
-        return runCmd(cmd, cmd);
-      }
-    }
-  }
-
-  const pkgPath = join(ROOT, "package.json");
-  if (existsSync(pkgPath)) {
-    try {
-      const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
-      for (const key of ["typecheck", "tsc", "compile"]) {
-        if (pkg.scripts?.[key]) {
-          return runCmd(`pnpm run ${key}`, `pnpm run ${key}`);
-        }
-      }
-    } catch {
-      /* fall through */
-    }
-  }
-
-  if (existsSync(join(ROOT, "tsconfig.json"))) {
-    return runCmd("npx tsc --noEmit", "tsc --noEmit");
-  }
-  if (existsSync(join(ROOT, "go.mod"))) {
-    return runCmd("go build ./...", "go build ./...");
-  }
-  if (existsSync(join(ROOT, "pyproject.toml")) || existsSync(join(ROOT, "setup.py"))) {
-    return runCmd("python -m compileall -q .", "python -m compileall");
-  }
-  return "skip (no compile command detected)";
+  return runLanguageAwareCompile(ROOT);
 }
 
 function checkTest() {

@@ -101,9 +101,12 @@ flowchart LR
 
 - **confidence_5 ≥ 4** for bug-fixer / dev-builder handoff from code-review (legacy ≥ 0.6 still accepted).
 - **Overstepping Gate**: CLAUDE.md distinguishes *procedural* enforcement (Step 8.5 / `files_to_modify`) vs *hook-level* deferred detector.
-- **Language-aware compile**: `forge-verify` + implementer / phase / bug-fixer no longer hardcode `tsc` only.
-- **forge-smoke**: docs + vitest list **15** smokes (was stale “12”); `package-integrity` also checks `ts-node`/`bash` script paths.
-- **Docs**: wiki Home → v1.50.0; sub-agent paths multi-adapter; council boost = risk_rank × 1.1; portable `grep` in pre-commit / release checklist; fixed code-review `docs/` links + founders-playbook dead multica link.
+- **Language-aware compile**: shared `scripts/lib/compile-check.mjs` used by `forge-verify` + `forge-bug-fix`; skill checklists aligned. `pre-commit-check` stays **TS-only by design** (documented); sh/bat README order check now equivalent (exit 2).
+- **forge-verify**: **9** checks documented — #9 `content-quality` is config probe only; semantic pipeline stays `forge-verify-content`.
+- **forge-smoke**: `SMOKES` single source in `lib.mjs`; vitest checks registry only (CI executes via `run-all`); docs **15** items.
+- **loadout-scenarios**: skill counts aligned to JSON (14/13/9/9/5).
+- **validate-skill**: slash-command files must declare `argument-hint` (incl. `""`); `request-dispatcher` filled.
+- **Docs**: wiki Home → v1.50.0; karpathy Overstepping honesty; DEV-PLAN/CONTEXT/security-guidance wording.
 
 ### v1.50.0 — 2026-07-11 — forge-verify LLM layer: protocol-adaptive, honest degradation
 

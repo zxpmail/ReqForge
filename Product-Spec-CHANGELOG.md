@@ -11,7 +11,7 @@
 ## [v1.28.0] - 2026-05-27
 ### 新增
 - **dev-map 开发导航地图**：`.forge/dev-map.md` 项目级语义索引，dev-builder 维护，`forge-install` 写入模板
-- **forge-verify 事后验证**：统一入口 `pnpm forge-verify`，5 项检查 + 基线对比（save/compare/check）
+- **forge-verify 事后验证**：统一入口 `pnpm forge-verify`，9 项检查（含 content-quality 配置探测；语义管道走 `forge-verify-content`）+ 基线对比（save/compare/check）
 - **request-dispatcher**：补全 skill.json 元数据和 commands/ 命令文件
 
 ### 变更

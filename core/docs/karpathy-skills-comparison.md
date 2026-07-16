@@ -59,7 +59,7 @@ andrej-karpathy-skills (4 principles)
 | **Surgical Changes Audit** | code-review skill 硬性检查每行改动是否追溯到需求 |
 | **Simplicity First Audit** | code-review skill 检查过度工程 |
 | **违反信号脚本化** | pre-commit 可检查 diff 格式变更、commit msg 「顺便」模式 |
-| **Machine Gates 强制** | Sloppiness/Overstepping/Hallucination gate 在 agent 试图违规时硬拦截 |
+| **Machine Gates 强制** | Hallucination + Spec-Before-Code = PreToolUse 硬拦截；Sloppiness = stop-time（forge-verify → phase-exit-guard）；Overstepping = 程序式（Step 8.5 / files_to_modify），钩子级 detector 仍 deferred |
 | **多 adapter 覆盖** | Claude Code + Cursor + OpenCode 三平台 |
 | **进化机制** | feedback → evolution-engine → 原则升级：犯错不重复 |
 
