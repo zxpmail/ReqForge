@@ -75,7 +75,9 @@ flowchart LR
 
 ## What's New
 
-### Unreleased — code-review skill 2.3.0 (contract cleanup)
+### Unreleased
+
+#### code-review skill 2.3.0 (contract cleanup)
 
 - **Canonical scoring 1–5**: findings use severity / impact / confidence (each 1–5) → `risk_rank`; thresholds confidence ≥4 confirmed, =3 suspected, ≤2 suppressed. Legacy 0.0–1.0 still accepted via mapping.
 - **Single workflow source**: `references/workflow.md` Steps 1–5 only; aggregator agent no longer embeds a divergent step table. Simple reviews skip Step 2 dispatch but still Scan → Aggregate.
@@ -83,6 +85,17 @@ flowchart LR
 - **Language-aware verify gate**: prefer `pnpm forge-verify` / `.forge/dev-map.md` — not hardcoded `tsc --noEmit`.
 - **Priority derived** from Must-fix / Should-fix / Insight; performance checks owned by bug dimension; types reviewer is stack-aware; no-UI skips UI Consistency.
 - **Eval**: review cases assert `review-report.md` (verdict / risk_rank / buckets), not only Spec text.
+
+#### Quote `argument-hint` for Copilot CLI ([#11](https://github.com/zxpmail/ReqForge/pull/11), closes [#10](https://github.com/zxpmail/ReqForge/issues/10))
+
+- **Bare `argument-hint: [foo]` is a YAML array** — Copilot CLI ≥1.0.65 validates it as `str` and silently drops the skill. Wrap as `argument-hint: "[foo]"` (thanks [@thejesh23](https://github.com/thejesh23)).
+- **Follow-up**: quote `domain-mapper` as well; `validate-skill` now **errors** on bare `argument-hint: [` so this cannot regress.
+
+#### Smoke gate hardening from [#8](https://github.com/zxpmail/ReqForge/pull/8) (option A only)
+
+- **`skill-fixtures`**: shared `unquote()` for list + scalar YAML values; reference search includes filenames.
+- **`test-demo/todo-cli`**: `fileParallelism: false` to avoid shared-storage races under vitest.
+- HARD-GATE SKILL anchors were already present on main; greenkeeper skill half of #8 still waiting on contributor rebase.
 
 ### v1.50.0 — 2026-07-11 — forge-verify LLM layer: protocol-adaptive, honest degradation
 

@@ -74,7 +74,9 @@ flowchart LR
 
 ## 近期更新
 
-### Unreleased — code-review skill 2.3.0（合约清理）
+### Unreleased
+
+#### code-review skill 2.3.0（合约清理）
 
 - **主轨评分 1–5**：finding 使用 severity / impact / confidence（各 1–5）→ `risk_rank`；阈值 ≥4 确认、=3 疑似、≤2 抑制。旧 0.0–1.0 仍可通过映射兼容。
 - **Workflow 唯一源**：仅以 `references/workflow.md` Step 1–5 为准；aggregator agent 不再内嵌冲突的步骤表。simple 审查跳过 Step 2 派发，仍走 Scan → Aggregate。
@@ -82,6 +84,17 @@ flowchart LR
 - **按语言的 verify 门**：优先 `pnpm forge-verify` / `.forge/dev-map.md`，不再硬编码 `tsc --noEmit`。
 - **Priority 由 bucket 派生**（Must-fix/Should-fix/Insight）；性能轻量检查归 bug 维；types 按技术栈；无 UI 跳过 UI Consistency。
 - **Eval**：用例断言 `review-report.md`（综合结论 / risk_rank / buckets），不再只扫 Spec 文本。
+
+#### 为 Copilot CLI 给 `argument-hint` 加引号（[#11](https://github.com/zxpmail/ReqForge/pull/11)，关闭 [#10](https://github.com/zxpmail/ReqForge/issues/10)）
+
+- **裸写 `argument-hint: [foo]` 会被 YAML 解析成数组** — Copilot CLI ≥1.0.65 按 `str` 校验会静默丢弃该 skill。应写成 `argument-hint: "[foo]"`（感谢 [@thejesh23](https://github.com/thejesh23)）。
+- **跟进**：`domain-mapper` 一并加引号；`validate-skill` 对裸 `argument-hint: [` **报错**，防止回归。
+
+#### 来自 [#8](https://github.com/zxpmail/ReqForge/pull/8) 的 smoke 门禁加固（仅 option A）
+
+- **`skill-fixtures`**：list/scalar 共用 `unquote()`；reference 搜索包含文件名。
+- **`test-demo/todo-cli`**：`fileParallelism: false`，避免 vitest 并行下共享存储竞态。
+- HARD-GATE 文案在 main 上已齐；#8 的 greenkeeper skill 半边仍待 contributor rebase。
 
 ### v1.50.0 — 2026-07-11 — forge-verify LLM 层：协议自适应、诚实降级
 
