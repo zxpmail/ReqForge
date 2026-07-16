@@ -1,6 +1,6 @@
 ---
 description: Research and map a domain/industry/technology into a structured Markdown database
-argument-hint: [domain name or "研究一下 X"]
+argument-hint: "[domain name or 研究一下 X]"
 ---
 
 # Command: /domain-mapper

@@ -162,6 +162,25 @@ function validateSkill(dir) {
     warning(`SKILL.md is ${lines} lines (recommended: under 500)`);
     if (strict && lines > 600) error("Strict: SKILL.md exceeds 600 lines");
   } else ok();
+
+  /* commands/*.md: argument-hint must be a YAML string, not a bare flow sequence.
+   * Bare `argument-hint: [foo]` parses as an array; Copilot CLI ≥1.0.65 rejects the skill.
+   * Require quotes: argument-hint: "[foo]"  (see issue #10 / PR #11). */
+  const cmdDir = path.join(dir, "commands");
+  if (fs.existsSync(cmdDir)) {
+    for (const name of fs.readdirSync(cmdDir).filter((f) => f.endsWith(".md"))) {
+      const cmdPath = path.join(cmdDir, name);
+      const cmd = fs.readFileSync(cmdPath, "utf-8");
+      const bare = cmd.match(/^argument-hint:\s*\[/m);
+      if (bare) {
+        error(
+          `commands/${name}: bare argument-hint: [...] is YAML array — quote it as argument-hint: "[...]" (Copilot CLI str validation)`,
+        );
+      } else if (/^argument-hint:/m.test(cmd)) {
+        ok();
+      }
+    }
+  }
 }
 
 function applyFix(dir) {
