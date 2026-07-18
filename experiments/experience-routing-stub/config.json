@@ -1,0 +1,29 @@
+{
+  "seed": 42,
+  "nTrajectories": 400,
+  "heldOutFrac": 0.25,
+  "deepReadCostPerToken": 1.0,
+  "fingerprintCostPerToken": 0.02,
+  "armA": {
+    "deepReadFrac": 0.95,
+    "admitAllNonFiltered": true
+  },
+  "armB": {
+    "warmDeepReadTopFrac": 0.15,
+    "admitFromWarmTopFrac": 0.08,
+    "hazardEntropyMin": 0.72,
+    "hazardFlagThreshold": 0.55,
+    "warmEntropyMin": 0.35,
+    "warmEntropyMax": 0.72
+  },
+  "failure": {
+    "warmMassMax": 0.55,
+    "deepReadImproveMin": 0.08,
+    "signalCorrMin": 0.15,
+    "randomGainMin": 0.02
+  },
+  "modes": {
+    "default": "correlated",
+    "note": "correlated=廉价信号与可学习性相关；decorrelated=故意打乱以触发失败条件5"
+  }
+}

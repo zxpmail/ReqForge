@@ -1,0 +1,110 @@
+{
+  "meta": {
+    "disclaimer": "DeepSeek 仅用于冻结 worker rollout；本地 prompt 策略 θ 被更新。不得表述为「微调了 DeepSeek」。非大规模 agentic RL 实证。",
+    "mode": "mock",
+    "cred_desc": "mock",
+    "model": "deepseek-v4-flash",
+    "paperRef": "docs/drafts/experience-routing-position-paper-zh.md §7",
+    "seeds": [
+      7
+    ]
+  },
+  "config": {
+    "model": "deepseek-v4-flash",
+    "base_url": "https://api.deepseek.com",
+    "api_format": "openai",
+    "cc_switch_provider_name": "DeepSeek",
+    "seeds": [
+      7
+    ],
+    "budget": {
+      "max_api_calls": 80,
+      "max_tokens": 60000,
+      "max_spend_usd": 1.0,
+      "usd_per_1k_tokens": 0.0014
+    },
+    "collect": {
+      "n_train": 10,
+      "n_eval": 5,
+      "max_steps": 6,
+      "hazard_frac": 0.3,
+      "temperature": 0.3
+    },
+    "armA": {
+      "admit_frac": 1.0
+    },
+    "armB": {
+      "hazard_threshold": 0.55,
+      "min_route_score": 0.28,
+      "admit_top_frac_of_safe": 0.75
+    },
+    "train": {
+      "epochs": 50,
+      "lr": 0.12
+    },
+    "failure": {
+      "deep_read_improve_min": 0.05,
+      "perf_drop_max": 0.08,
+      "signal_corr_min": 0.05
+    }
+  },
+  "seeds": [
+    {
+      "seed": 7,
+      "armA": {
+        "success": 1.0,
+        "prompt_id": 2,
+        "n": 5,
+        "dangerous_uses": 0,
+        "mean_reward": 1.0
+      },
+      "armB": {
+        "success": 1.0,
+        "prompt_id": 0,
+        "n": 5,
+        "dangerous_uses": 0,
+        "mean_reward": 1.0
+      },
+      "armA_sel": {
+        "arm": "A",
+        "admit_count": 10,
+        "deep_read_count": 10,
+        "quarantined_count": 0,
+        "deep_read_ratio": 1.0,
+        "admit_token_ratio": 1.0,
+        "hazard_in_adm_count": 5,
+        "bins": null
+      },
+      "armB_sel": {
+        "arm": "B",
+        "admit_count": 3,
+        "deep_read_count": 5,
+        "quarantined_count": 5,
+        "deep_read_ratio": 0.6164280331574982,
+        "admit_token_ratio": 0.3707611152976639,
+        "hazard_in_adm_count": 0,
+        "bins": {
+          "safe": 5,
+          "quarantined": 5,
+          "admitted": 3
+        }
+      },
+      "delta_success": 0.0,
+      "deep_read_improve": 0.3836,
+      "signal_spearman": 1.0,
+      "corpus_n": 10,
+      "mock": true
+    }
+  ],
+  "judgment": {
+    "failures": [],
+    "verdict": "weak_success_agentic",
+    "meanSuccessA": 1.0,
+    "meanSuccessB": 1.0,
+    "meanDeepReadImprove": 0.3836,
+    "totalHazardInAdmA": 5,
+    "totalHazardInAdmB": 0,
+    "meanSignalSpearman": 1.0
+  },
+  "budget": {}
+}

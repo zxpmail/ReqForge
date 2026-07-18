@@ -1,0 +1,214 @@
+{
+  "meta": {
+    "task": "5×5 GridWorld 导航（干净评测；语料含回报污染 hazard）",
+    "optimizer": "REINFORCE + baseline（表格 softmax；A/B 相同）",
+    "paperRef": "docs/drafts/experience-routing-position-paper-zh.md §7",
+    "disclaimer": "小任务真训：真实参数更新与 held-out 成功率。非 LLM agentic RL，不得外推为大规模智能体结论。",
+    "seeds": [
+      11,
+      22,
+      33,
+      44,
+      55
+    ],
+    "generatedAt": "2026-07-18T05:23:46.628Z",
+    "sensorAccuracy": 1,
+    "tag": "whitebox"
+  },
+  "config": {
+    "seeds": [
+      11,
+      22,
+      33,
+      44,
+      55
+    ],
+    "grid": {
+      "w": 5,
+      "h": 5,
+      "maxSteps": 28
+    },
+    "collect": {
+      "nTrajectories": 320,
+      "epsilon": 0.35,
+      "hazardFrac": 0.28,
+      "hazardSensorAccuracy": 1,
+      "teacherEpochs": 25
+    },
+    "train": {
+      "epochs": 60,
+      "lr": 0.08,
+      "baseline": true
+    },
+    "eval": {
+      "episodes": 120,
+      "epsilon": 0.02
+    },
+    "armA": {
+      "admitFrac": 1
+    },
+    "armB": {
+      "hazardThreshold": 0.55,
+      "minRouteScore": 0.28,
+      "maxAdmitFracOfSafe": 0.75
+    },
+    "failure": {
+      "deepReadImproveMin": 0.08,
+      "perfDropMax": 0.05,
+      "signalCorrMin": 0.1
+    }
+  },
+  "seeds": [
+    {
+      "seed": 11,
+      "armA": {
+        "arm": "A",
+        "deepReadRatio": 1,
+        "admitCount": 320,
+        "quarantinedCount": 0,
+        "hazardInAdmCount": 89,
+        "bins": null,
+        "success": 0.7583
+      },
+      "armB": {
+        "arm": "B",
+        "deepReadRatio": 0.4707697304319584,
+        "admitCount": 173,
+        "quarantinedCount": 89,
+        "hazardInAdmCount": 0,
+        "bins": {
+          "safe": 231,
+          "quarantined": 89,
+          "admitted": 173
+        },
+        "success": 1
+      },
+      "signalSpearman": 0.8563,
+      "deltaSuccess": 0.2417,
+      "deepReadImprove": 0.5292
+    },
+    {
+      "seed": 22,
+      "armA": {
+        "arm": "A",
+        "deepReadRatio": 1,
+        "admitCount": 320,
+        "quarantinedCount": 0,
+        "hazardInAdmCount": 89,
+        "bins": null,
+        "success": 0.125
+      },
+      "armB": {
+        "arm": "B",
+        "deepReadRatio": 0.47013030969707226,
+        "admitCount": 173,
+        "quarantinedCount": 89,
+        "hazardInAdmCount": 0,
+        "bins": {
+          "safe": 231,
+          "quarantined": 89,
+          "admitted": 173
+        },
+        "success": 1
+      },
+      "signalSpearman": 0.8527,
+      "deltaSuccess": 0.875,
+      "deepReadImprove": 0.5299
+    },
+    {
+      "seed": 33,
+      "armA": {
+        "arm": "A",
+        "deepReadRatio": 1,
+        "admitCount": 320,
+        "quarantinedCount": 0,
+        "hazardInAdmCount": 89,
+        "bins": null,
+        "success": 0.9917
+      },
+      "armB": {
+        "arm": "B",
+        "deepReadRatio": 0.47865906341800585,
+        "admitCount": 173,
+        "quarantinedCount": 89,
+        "hazardInAdmCount": 0,
+        "bins": {
+          "safe": 231,
+          "quarantined": 89,
+          "admitted": 173
+        },
+        "success": 1
+      },
+      "signalSpearman": 0.784,
+      "deltaSuccess": 0.0083,
+      "deepReadImprove": 0.5213
+    },
+    {
+      "seed": 44,
+      "armA": {
+        "arm": "A",
+        "deepReadRatio": 1,
+        "admitCount": 320,
+        "quarantinedCount": 0,
+        "hazardInAdmCount": 89,
+        "bins": null,
+        "success": 0.9167
+      },
+      "armB": {
+        "arm": "B",
+        "deepReadRatio": 0.47816054062963576,
+        "admitCount": 173,
+        "quarantinedCount": 89,
+        "hazardInAdmCount": 0,
+        "bins": {
+          "safe": 231,
+          "quarantined": 89,
+          "admitted": 173
+        },
+        "success": 1
+      },
+      "signalSpearman": 0.8439,
+      "deltaSuccess": 0.0833,
+      "deepReadImprove": 0.5218
+    },
+    {
+      "seed": 55,
+      "armA": {
+        "arm": "A",
+        "deepReadRatio": 1,
+        "admitCount": 320,
+        "quarantinedCount": 0,
+        "hazardInAdmCount": 89,
+        "bins": null,
+        "success": 1
+      },
+      "armB": {
+        "arm": "B",
+        "deepReadRatio": 0.46854920527561716,
+        "admitCount": 173,
+        "quarantinedCount": 89,
+        "hazardInAdmCount": 0,
+        "bins": {
+          "safe": 231,
+          "quarantined": 89,
+          "admitted": 173
+        },
+        "success": 0.9917
+      },
+      "signalSpearman": 0.8486,
+      "deltaSuccess": -0.0083,
+      "deepReadImprove": 0.5315
+    }
+  ],
+  "judgment": {
+    "failures": [],
+    "verdict": "weak_success_small_task",
+    "meanSuccessA": 0.7583,
+    "meanSuccessB": 0.9983,
+    "meanDeepReadImprove": 0.5267,
+    "totalHazardInAdmA": 445,
+    "totalHazardInAdmB": 0,
+    "meanSignalSpearman": 0.8371,
+    "seedsWhereBNotWorse": 4
+  }
+}

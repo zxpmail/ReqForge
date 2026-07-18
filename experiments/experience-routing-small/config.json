@@ -1,0 +1,33 @@
+{
+  "seeds": [11, 22, 33, 44, 55],
+  "grid": { "w": 5, "h": 5, "maxSteps": 28 },
+  "collect": {
+    "nTrajectories": 320,
+    "epsilon": 0.35,
+    "hazardFrac": 0.28,
+    "hazardSensorAccuracy": 1.0,
+    "teacherEpochs": 25
+  },
+  "train": {
+    "epochs": 60,
+    "lr": 0.08,
+    "baseline": true
+  },
+  "eval": {
+    "episodes": 120,
+    "epsilon": 0.02
+  },
+  "armA": {
+    "admitFrac": 1.0
+  },
+  "armB": {
+    "hazardThreshold": 0.55,
+    "minRouteScore": 0.28,
+    "maxAdmitFracOfSafe": 0.75
+  },
+  "failure": {
+    "deepReadImproveMin": 0.08,
+    "perfDropMax": 0.05,
+    "signalCorrMin": 0.1
+  }
+}

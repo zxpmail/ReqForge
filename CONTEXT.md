@@ -1,14 +1,11 @@
 # CONTEXT
 
-## 当前版本
-- **v1.51.0** — 吸收 agents-cli：skill-eval 飞轮 + 借口表 + 阶段重读
+## 当前正在做什么
+- 立场文 v0.3.2：主文论证不依赖附录
 
 ## 上次停在哪个位置
-- 已发版提交准备：`package.json` / CHANGELOG / README 徽章与 What's New 已对齐 v1.51.0
+- 贡献三项已锁定；§7.6 / §8.6 / 结论去掉“附录当半证据”
+- 附录 C 仍保留供复现，明确不计入贡献、不构成辩护
 
 ## 近期关键决定
-- 只吸飞轮 + 借口表 + 重读 + 三类证据；不抄 GCP/Always-active workflow/GEPA
-
-## 测试
-- `pnpm exec vitest run scripts/__tests__/skill-eval.test.ts` — 15 通过
-- `pnpm sync` — 完成
+- 严苛保留意见：只改“贡献暧昧 + 主文用附录撑场”；附录本身保留

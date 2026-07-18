@@ -1,0 +1,32 @@
+{
+  "device": "cuda",
+  "seeds": [3, 7, 11],
+  "env": {
+    "n_train": 200,
+    "n_eval": 80,
+    "hazard_frac": 0.25,
+    "max_steps": 8
+  },
+  "model": {
+    "hidden": 128,
+    "layers": 2
+  },
+  "train": {
+    "epochs": 120,
+    "lr": 0.005,
+    "batch_size": 32
+  },
+  "armB": {
+    "hazard_threshold": 0.55,
+    "admit_top_frac": 0.7
+  },
+  "per": {
+    "alpha": 0.6,
+    "admit_frac": 0.7
+  },
+  "failure": {
+    "deep_read_improve_min": 0.05,
+    "perf_drop_max": 0.05,
+    "signal_corr_min": 0.05
+  }
+}

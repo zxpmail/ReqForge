@@ -1,0 +1,4002 @@
+[
+  {
+    "id": "τ-0000",
+    "kind": "warm",
+    "tokens": 492,
+    "entropy": 0.6484,
+    "hazard": 0.2344,
+    "novelty": 0.3699,
+    "routeScore": 0.5254,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0001",
+    "kind": "cold",
+    "tokens": 654,
+    "entropy": 0.2923,
+    "hazard": 0.0945,
+    "novelty": 0.0875,
+    "routeScore": 0.3747,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0002",
+    "kind": "warm",
+    "tokens": 362,
+    "entropy": 0.419,
+    "hazard": 0.1753,
+    "novelty": 0.5746,
+    "routeScore": 0.5349,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0003",
+    "kind": "cold",
+    "tokens": 513,
+    "entropy": 0.2845,
+    "hazard": 0.0102,
+    "novelty": 0.2073,
+    "routeScore": 0.4582,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0004",
+    "kind": "cold",
+    "tokens": 136,
+    "entropy": 0.102,
+    "hazard": 0.1567,
+    "novelty": 0.1856,
+    "routeScore": 0.2959,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0005",
+    "kind": "cold",
+    "tokens": 855,
+    "entropy": 0.1866,
+    "hazard": 0.1618,
+    "novelty": 0.1118,
+    "routeScore": 0.3025,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0006",
+    "kind": "cold",
+    "tokens": 127,
+    "entropy": 0.2058,
+    "hazard": 0.1193,
+    "novelty": 0.0858,
+    "routeScore": 0.326,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0007",
+    "kind": "cold",
+    "tokens": 359,
+    "entropy": 0.2568,
+    "hazard": 0.1717,
+    "novelty": 0.1778,
+    "routeScore": 0.3456,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0008",
+    "kind": "cold",
+    "tokens": 349,
+    "entropy": 0.0709,
+    "hazard": 0.132,
+    "novelty": 0.2383,
+    "routeScore": 0.3147,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0009",
+    "kind": "hot-hazard",
+    "tokens": 160,
+    "entropy": 0.9559,
+    "hazard": 0.744,
+    "novelty": 0.8711,
+    "routeScore": 0.5161,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0010",
+    "kind": "cold",
+    "tokens": 94,
+    "entropy": 0.1509,
+    "hazard": 0.0963,
+    "novelty": 0.2142,
+    "routeScore": 0.3588,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0011",
+    "kind": "cold",
+    "tokens": 742,
+    "entropy": 0.3118,
+    "hazard": 0.0557,
+    "novelty": 0.2473,
+    "routeScore": 0.4559,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0012",
+    "kind": "warm",
+    "tokens": 836,
+    "entropy": 0.3922,
+    "hazard": 0.3485,
+    "novelty": 0.5251,
+    "routeScore": 0.4095,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0013",
+    "kind": "cold",
+    "tokens": 612,
+    "entropy": 0.1443,
+    "hazard": 0.1192,
+    "novelty": 0.113,
+    "routeScore": 0.3106,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0014",
+    "kind": "cold",
+    "tokens": 493,
+    "entropy": 0.2861,
+    "hazard": 0.139,
+    "novelty": 0.3479,
+    "routeScore": 0.4305,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0015",
+    "kind": "cold",
+    "tokens": 581,
+    "entropy": 0.1329,
+    "hazard": 0.0202,
+    "novelty": 0.2439,
+    "routeScore": 0.4048,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0016",
+    "kind": "hot-promising",
+    "tokens": 912,
+    "entropy": 0.5828,
+    "hazard": 0.1664,
+    "novelty": 0.8788,
+    "routeScore": 0.702,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0017",
+    "kind": "hot-hazard",
+    "tokens": 244,
+    "entropy": 0.8974,
+    "hazard": 0.8649,
+    "novelty": 0.5116,
+    "routeScore": 0.3085,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0018",
+    "kind": "cold",
+    "tokens": 682,
+    "entropy": 0.1441,
+    "hazard": 0.0414,
+    "novelty": 0.2201,
+    "routeScore": 0.3894,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0019",
+    "kind": "cold",
+    "tokens": 809,
+    "entropy": 0.16,
+    "hazard": 0.0263,
+    "novelty": 0.3023,
+    "routeScore": 0.4307,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0020",
+    "kind": "cold",
+    "tokens": 758,
+    "entropy": 0.2279,
+    "hazard": 0.1752,
+    "novelty": 0.3179,
+    "routeScore": 0.3773,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0021",
+    "kind": "warm",
+    "tokens": 530,
+    "entropy": 0.4144,
+    "hazard": 0.0166,
+    "novelty": 0.5822,
+    "routeScore": 0.6262,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0022",
+    "kind": "cold",
+    "tokens": 333,
+    "entropy": 0.1442,
+    "hazard": 0.0058,
+    "novelty": 0.0773,
+    "routeScore": 0.3639,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0023",
+    "kind": "warm",
+    "tokens": 989,
+    "entropy": 0.4074,
+    "hazard": 0.0598,
+    "novelty": 0.5244,
+    "routeScore": 0.5801,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0024",
+    "kind": "cold",
+    "tokens": 479,
+    "entropy": 0.1671,
+    "hazard": 0.1372,
+    "novelty": 0.1395,
+    "routeScore": 0.3178,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0025",
+    "kind": "hot-promising",
+    "tokens": 381,
+    "entropy": 0.7233,
+    "hazard": 0.2138,
+    "novelty": 0.7685,
+    "routeScore": 0.6947,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0026",
+    "kind": "cold",
+    "tokens": 379,
+    "entropy": 0.1337,
+    "hazard": 0.0641,
+    "novelty": 0.2343,
+    "routeScore": 0.3769,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0027",
+    "kind": "cold",
+    "tokens": 719,
+    "entropy": 0.138,
+    "hazard": 0.025,
+    "novelty": 0.1098,
+    "routeScore": 0.3609,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0028",
+    "kind": "warm",
+    "tokens": 271,
+    "entropy": 0.5185,
+    "hazard": 0.133,
+    "novelty": 0.5848,
+    "routeScore": 0.6014,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0029",
+    "kind": "hot-promising",
+    "tokens": 484,
+    "entropy": 0.6039,
+    "hazard": 0.3037,
+    "novelty": 0.7603,
+    "routeScore": 0.5938,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0030",
+    "kind": "hot-promising",
+    "tokens": 494,
+    "entropy": 0.6013,
+    "hazard": 0.2166,
+    "novelty": 0.873,
+    "routeScore": 0.6788,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0031",
+    "kind": "cold",
+    "tokens": 582,
+    "entropy": 0.3257,
+    "hazard": 0.0984,
+    "novelty": 0.3008,
+    "routeScore": 0.4541,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0032",
+    "kind": "warm",
+    "tokens": 129,
+    "entropy": 0.3743,
+    "hazard": 0.0593,
+    "novelty": 0.5026,
+    "routeScore": 0.5604,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0033",
+    "kind": "hot-promising",
+    "tokens": 992,
+    "entropy": 0.8356,
+    "hazard": 0.2211,
+    "novelty": 0.8848,
+    "routeScore": 0.7721,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0034",
+    "kind": "warm",
+    "tokens": 402,
+    "entropy": 0.5064,
+    "hazard": 0.3074,
+    "novelty": 0.5724,
+    "routeScore": 0.493,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0035",
+    "kind": "hot-hazard",
+    "tokens": 655,
+    "entropy": 0.8023,
+    "hazard": 0.9301,
+    "novelty": 0.4758,
+    "routeScore": 0.2224,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0036",
+    "kind": "cold",
+    "tokens": 158,
+    "entropy": 0.2313,
+    "hazard": 0.1453,
+    "novelty": 0.3346,
+    "routeScore": 0.4011,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0037",
+    "kind": "warm",
+    "tokens": 730,
+    "entropy": 0.4008,
+    "hazard": 0.0956,
+    "novelty": 0.3557,
+    "routeScore": 0.5029,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0038",
+    "kind": "cold",
+    "tokens": 485,
+    "entropy": 0.2093,
+    "hazard": 0.1433,
+    "novelty": 0.2778,
+    "routeScore": 0.3753,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0039",
+    "kind": "cold",
+    "tokens": 693,
+    "entropy": 0.195,
+    "hazard": 0.0887,
+    "novelty": 0.1642,
+    "routeScore": 0.3644,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0040",
+    "kind": "cold",
+    "tokens": 385,
+    "entropy": 0.1361,
+    "hazard": 0.0295,
+    "novelty": 0.1766,
+    "routeScore": 0.3791,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0041",
+    "kind": "warm",
+    "tokens": 584,
+    "entropy": 0.5766,
+    "hazard": 0.153,
+    "novelty": 0.3539,
+    "routeScore": 0.5386,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0042",
+    "kind": "cold",
+    "tokens": 947,
+    "entropy": 0.0694,
+    "hazard": 0.1741,
+    "novelty": 0.1506,
+    "routeScore": 0.2619,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0043",
+    "kind": "cold",
+    "tokens": 835,
+    "entropy": 0.0659,
+    "hazard": 0.0741,
+    "novelty": 0.0804,
+    "routeScore": 0.2951,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0044",
+    "kind": "warm",
+    "tokens": 167,
+    "entropy": 0.6882,
+    "hazard": 0.2625,
+    "novelty": 0.5645,
+    "routeScore": 0.5875,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0045",
+    "kind": "warm",
+    "tokens": 820,
+    "entropy": 0.5345,
+    "hazard": 0.0619,
+    "novelty": 0.3312,
+    "routeScore": 0.5668,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0046",
+    "kind": "cold",
+    "tokens": 321,
+    "entropy": 0.2382,
+    "hazard": 0.1337,
+    "novelty": 0.1964,
+    "routeScore": 0.366,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0047",
+    "kind": "cold",
+    "tokens": 445,
+    "entropy": 0.1446,
+    "hazard": 0.0568,
+    "novelty": 0.2916,
+    "routeScore": 0.4038,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0048",
+    "kind": "cold",
+    "tokens": 948,
+    "entropy": 0.3166,
+    "hazard": 0.0533,
+    "novelty": 0.1814,
+    "routeScore": 0.438,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0049",
+    "kind": "hot-hazard",
+    "tokens": 710,
+    "entropy": 0.8621,
+    "hazard": 0.9145,
+    "novelty": 0.556,
+    "routeScore": 0.2806,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0050",
+    "kind": "hot-promising",
+    "tokens": 585,
+    "entropy": 0.7905,
+    "hazard": 0.194,
+    "novelty": 0.7684,
+    "routeScore": 0.7324,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0051",
+    "kind": "hot-hazard",
+    "tokens": 785,
+    "entropy": 0.7972,
+    "hazard": 0.8342,
+    "novelty": 0.734,
+    "routeScore": 0.3581,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0052",
+    "kind": "cold",
+    "tokens": 887,
+    "entropy": 0.1387,
+    "hazard": 0.176,
+    "novelty": 0.1446,
+    "routeScore": 0.2862,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0053",
+    "kind": "warm",
+    "tokens": 849,
+    "entropy": 0.5663,
+    "hazard": 0.3037,
+    "novelty": 0.5766,
+    "routeScore": 0.52,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0054",
+    "kind": "cold",
+    "tokens": 964,
+    "entropy": 0.1863,
+    "hazard": 0.055,
+    "novelty": 0.2208,
+    "routeScore": 0.3984,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0055",
+    "kind": "warm",
+    "tokens": 737,
+    "entropy": 0.4151,
+    "hazard": 0.2964,
+    "novelty": 0.661,
+    "routeScore": 0.4919,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0056",
+    "kind": "warm",
+    "tokens": 146,
+    "entropy": 0.525,
+    "hazard": 0.3126,
+    "novelty": 0.5701,
+    "routeScore": 0.4966,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0057",
+    "kind": "cold",
+    "tokens": 646,
+    "entropy": 0.2508,
+    "hazard": 0.1036,
+    "novelty": 0.0152,
+    "routeScore": 0.3299,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0058",
+    "kind": "cold",
+    "tokens": 191,
+    "entropy": 0.1551,
+    "hazard": 0.1656,
+    "novelty": 0.2932,
+    "routeScore": 0.3463,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0059",
+    "kind": "cold",
+    "tokens": 110,
+    "entropy": 0.1257,
+    "hazard": 0.14,
+    "novelty": 0.0944,
+    "routeScore": 0.2854,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0060",
+    "kind": "warm",
+    "tokens": 916,
+    "entropy": 0.6608,
+    "hazard": 0.1208,
+    "novelty": 0.3399,
+    "routeScore": 0.5856,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0061",
+    "kind": "cold",
+    "tokens": 521,
+    "entropy": 0.128,
+    "hazard": 0.052,
+    "novelty": 0.2522,
+    "routeScore": 0.3873,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0062",
+    "kind": "warm",
+    "tokens": 624,
+    "entropy": 0.3882,
+    "hazard": 0.2737,
+    "novelty": 0.5756,
+    "routeScore": 0.4669,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0063",
+    "kind": "cold",
+    "tokens": 134,
+    "entropy": 0.0593,
+    "hazard": 0.0681,
+    "novelty": 0.0841,
+    "routeScore": 0.2971,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0064",
+    "kind": "hot-hazard",
+    "tokens": 614,
+    "entropy": 0.93,
+    "hazard": 0.7037,
+    "novelty": 0.7246,
+    "routeScore": 0.4818,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0065",
+    "kind": "warm",
+    "tokens": 814,
+    "entropy": 0.4816,
+    "hazard": 0.0716,
+    "novelty": 0.6142,
+    "routeScore": 0.6314,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0066",
+    "kind": "cold",
+    "tokens": 155,
+    "entropy": 0.2663,
+    "hazard": 0.0863,
+    "novelty": 0.3046,
+    "routeScore": 0.4389,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0067",
+    "kind": "warm",
+    "tokens": 955,
+    "entropy": 0.4114,
+    "hazard": 0.0509,
+    "novelty": 0.5208,
+    "routeScore": 0.5856,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0068",
+    "kind": "cold",
+    "tokens": 788,
+    "entropy": 0.1176,
+    "hazard": 0.027,
+    "novelty": 0.231,
+    "routeScore": 0.3907,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0069",
+    "kind": "warm",
+    "tokens": 268,
+    "entropy": 0.6727,
+    "hazard": 0.1826,
+    "novelty": 0.598,
+    "routeScore": 0.6379,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0070",
+    "kind": "hot-hazard",
+    "tokens": 613,
+    "entropy": 0.791,
+    "hazard": 0.5712,
+    "novelty": 0.5631,
+    "routeScore": 0.4511,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0071",
+    "kind": "hot-promising",
+    "tokens": 310,
+    "entropy": 0.852,
+    "hazard": 0.1595,
+    "novelty": 0.6231,
+    "routeScore": 0.7295,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0072",
+    "kind": "warm",
+    "tokens": 253,
+    "entropy": 0.6484,
+    "hazard": 0.0306,
+    "novelty": 0.3545,
+    "routeScore": 0.6369,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0073",
+    "kind": "cold",
+    "tokens": 513,
+    "entropy": 0.1924,
+    "hazard": 0.1239,
+    "novelty": 0.1696,
+    "routeScore": 0.345,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0074",
+    "kind": "cold",
+    "tokens": 980,
+    "entropy": 0.2822,
+    "hazard": 0.0693,
+    "novelty": 0.0717,
+    "routeScore": 0.38,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0075",
+    "kind": "hot-promising",
+    "tokens": 490,
+    "entropy": 0.7198,
+    "hazard": 0.0883,
+    "novelty": 0.7497,
+    "routeScore": 0.759,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0076",
+    "kind": "hot-promising",
+    "tokens": 414,
+    "entropy": 0.6991,
+    "hazard": 0.088,
+    "novelty": 0.7516,
+    "routeScore": 0.7516,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0077",
+    "kind": "warm",
+    "tokens": 139,
+    "entropy": 0.6654,
+    "hazard": 0.2671,
+    "novelty": 0.5632,
+    "routeScore": 0.5755,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0078",
+    "kind": "cold",
+    "tokens": 619,
+    "entropy": 0.2037,
+    "hazard": 0.0963,
+    "novelty": 0.1794,
+    "routeScore": 0.3683,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0079",
+    "kind": "warm",
+    "tokens": 611,
+    "entropy": 0.3557,
+    "hazard": 0.2479,
+    "novelty": 0.3015,
+    "routeScore": 0.3807,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0080",
+    "kind": "cold",
+    "tokens": 419,
+    "entropy": 0.2532,
+    "hazard": 0.1862,
+    "novelty": 0.0977,
+    "routeScore": 0.3102,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0081",
+    "kind": "hot-hazard",
+    "tokens": 505,
+    "entropy": 0.7314,
+    "hazard": 0.8053,
+    "novelty": 0.6475,
+    "routeScore": 0.321,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0082",
+    "kind": "warm",
+    "tokens": 773,
+    "entropy": 0.3925,
+    "hazard": 0.2502,
+    "novelty": 0.538,
+    "routeScore": 0.4699,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0083",
+    "kind": "hot-promising",
+    "tokens": 520,
+    "entropy": 0.5529,
+    "hazard": 0.3187,
+    "novelty": 0.5749,
+    "routeScore": 0.5056,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0084",
+    "kind": "warm",
+    "tokens": 707,
+    "entropy": 0.5443,
+    "hazard": 0.2135,
+    "novelty": 0.6408,
+    "routeScore": 0.5835,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0085",
+    "kind": "hot-hazard",
+    "tokens": 981,
+    "entropy": 0.9618,
+    "hazard": 0.9152,
+    "novelty": 0.8787,
+    "routeScore": 0.423,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0086",
+    "kind": "cold",
+    "tokens": 162,
+    "entropy": 0.328,
+    "hazard": 0.007,
+    "novelty": 0.1719,
+    "routeScore": 0.4659,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0087",
+    "kind": "warm",
+    "tokens": 794,
+    "entropy": 0.4647,
+    "hazard": 0.2942,
+    "novelty": 0.4815,
+    "routeScore": 0.4549,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0088",
+    "kind": "warm",
+    "tokens": 310,
+    "entropy": 0.4046,
+    "hazard": 0.1311,
+    "novelty": 0.5898,
+    "routeScore": 0.5594,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0089",
+    "kind": "cold",
+    "tokens": 300,
+    "entropy": 0.2238,
+    "hazard": 0.0749,
+    "novelty": 0.2224,
+    "routeScore": 0.4024,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0090",
+    "kind": "cold",
+    "tokens": 809,
+    "entropy": 0.2571,
+    "hazard": 0.0032,
+    "novelty": 0.2394,
+    "routeScore": 0.4618,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0091",
+    "kind": "cold",
+    "tokens": 625,
+    "entropy": 0.3018,
+    "hazard": 0.0934,
+    "novelty": 0.1335,
+    "routeScore": 0.3938,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0092",
+    "kind": "warm",
+    "tokens": 369,
+    "entropy": 0.5126,
+    "hazard": 0.1853,
+    "novelty": 0.6983,
+    "routeScore": 0.6057,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0093",
+    "kind": "warm",
+    "tokens": 148,
+    "entropy": 0.5754,
+    "hazard": 0.2784,
+    "novelty": 0.4735,
+    "routeScore": 0.5049,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0094",
+    "kind": "hot-promising",
+    "tokens": 440,
+    "entropy": 0.7561,
+    "hazard": 0.0592,
+    "novelty": 0.9406,
+    "routeScore": 0.8513,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0095",
+    "kind": "warm",
+    "tokens": 731,
+    "entropy": 0.5484,
+    "hazard": 0.1913,
+    "novelty": 0.5521,
+    "routeScore": 0.5693,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0096",
+    "kind": "hot-promising",
+    "tokens": 80,
+    "entropy": 0.5711,
+    "hazard": 0.0334,
+    "novelty": 0.9138,
+    "routeScore": 0.7847,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0097",
+    "kind": "cold",
+    "tokens": 562,
+    "entropy": 0.0661,
+    "hazard": 0.149,
+    "novelty": 0.2219,
+    "routeScore": 0.2979,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0098",
+    "kind": "cold",
+    "tokens": 839,
+    "entropy": 0.1468,
+    "hazard": 0.0397,
+    "novelty": 0.2599,
+    "routeScore": 0.4043,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0099",
+    "kind": "cold",
+    "tokens": 656,
+    "entropy": 0.2151,
+    "hazard": 0.1702,
+    "novelty": 0.203,
+    "routeScore": 0.3382,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0100",
+    "kind": "warm",
+    "tokens": 458,
+    "entropy": 0.5566,
+    "hazard": 0.0681,
+    "novelty": 0.3541,
+    "routeScore": 0.5793,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0101",
+    "kind": "warm",
+    "tokens": 339,
+    "entropy": 0.6732,
+    "hazard": 0.3302,
+    "novelty": 0.4724,
+    "routeScore": 0.5134,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0102",
+    "kind": "cold",
+    "tokens": 692,
+    "entropy": 0.3241,
+    "hazard": 0.1782,
+    "novelty": 0.2426,
+    "routeScore": 0.3892,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0103",
+    "kind": "hot-hazard",
+    "tokens": 547,
+    "entropy": 0.9494,
+    "hazard": 0.655,
+    "novelty": 0.4754,
+    "routeScore": 0.4372,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0104",
+    "kind": "hot-hazard",
+    "tokens": 545,
+    "entropy": 0.964,
+    "hazard": 0.5596,
+    "novelty": 0.7259,
+    "routeScore": 0.578,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0105",
+    "kind": "hot-hazard",
+    "tokens": 310,
+    "entropy": 0.9608,
+    "hazard": 0.6507,
+    "novelty": 0.8729,
+    "routeScore": 0.5719,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0106",
+    "kind": "warm",
+    "tokens": 438,
+    "entropy": 0.4259,
+    "hazard": 0.1007,
+    "novelty": 0.6777,
+    "routeScore": 0.6133,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0107",
+    "kind": "cold",
+    "tokens": 549,
+    "entropy": 0.1521,
+    "hazard": 0.0892,
+    "novelty": 0.0617,
+    "routeScore": 0.3143,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0108",
+    "kind": "hot-promising",
+    "tokens": 686,
+    "entropy": 0.7392,
+    "hazard": 0.311,
+    "novelty": 0.7849,
+    "routeScore": 0.6507,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0109",
+    "kind": "cold",
+    "tokens": 660,
+    "entropy": 0.1774,
+    "hazard": 0.1176,
+    "novelty": 0.2311,
+    "routeScore": 0.3625,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0110",
+    "kind": "cold",
+    "tokens": 239,
+    "entropy": 0.0515,
+    "hazard": 0.142,
+    "novelty": 0.1337,
+    "routeScore": 0.2678,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0111",
+    "kind": "cold",
+    "tokens": 195,
+    "entropy": 0.2317,
+    "hazard": 0.0562,
+    "novelty": 0.0151,
+    "routeScore": 0.3495,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0112",
+    "kind": "warm",
+    "tokens": 205,
+    "entropy": 0.5979,
+    "hazard": 0.0753,
+    "novelty": 0.4115,
+    "routeScore": 0.6099,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0113",
+    "kind": "cold",
+    "tokens": 401,
+    "entropy": 0.2225,
+    "hazard": 0.0936,
+    "novelty": 0.2856,
+    "routeScore": 0.4114,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0114",
+    "kind": "cold",
+    "tokens": 398,
+    "entropy": 0.2977,
+    "hazard": 0.1717,
+    "novelty": 0.3335,
+    "routeScore": 0.4118,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0115",
+    "kind": "cold",
+    "tokens": 688,
+    "entropy": 0.2214,
+    "hazard": 0.1504,
+    "novelty": 0.3291,
+    "routeScore": 0.3925,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0116",
+    "kind": "cold",
+    "tokens": 229,
+    "entropy": 0.3025,
+    "hazard": 0.1147,
+    "novelty": 0.0608,
+    "routeScore": 0.3586,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0117",
+    "kind": "hot-promising",
+    "tokens": 167,
+    "entropy": 0.7371,
+    "hazard": 0.183,
+    "novelty": 0.7892,
+    "routeScore": 0.7244,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0118",
+    "kind": "warm",
+    "tokens": 701,
+    "entropy": 0.5335,
+    "hazard": 0.3153,
+    "novelty": 0.6537,
+    "routeScore": 0.5253,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0119",
+    "kind": "cold",
+    "tokens": 926,
+    "entropy": 0.1586,
+    "hazard": 0.1407,
+    "novelty": 0.1877,
+    "routeScore": 0.328,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0120",
+    "kind": "cold",
+    "tokens": 422,
+    "entropy": 0.1441,
+    "hazard": 0.129,
+    "novelty": 0.3051,
+    "routeScore": 0.3667,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0121",
+    "kind": "cold",
+    "tokens": 622,
+    "entropy": 0.1879,
+    "hazard": 0.1033,
+    "novelty": 0.2551,
+    "routeScore": 0.3825,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0122",
+    "kind": "cold",
+    "tokens": 997,
+    "entropy": 0.1121,
+    "hazard": 0.0858,
+    "novelty": 0.0148,
+    "routeScore": 0.2855,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0123",
+    "kind": "cold",
+    "tokens": 191,
+    "entropy": 0.1449,
+    "hazard": 0.1531,
+    "novelty": 0.1844,
+    "routeScore": 0.3144,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0124",
+    "kind": "cold",
+    "tokens": 997,
+    "entropy": 0.2533,
+    "hazard": 0.0877,
+    "novelty": 0.122,
+    "routeScore": 0.3743,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0125",
+    "kind": "cold",
+    "tokens": 617,
+    "entropy": 0.1239,
+    "hazard": 0.0226,
+    "novelty": 0.2955,
+    "routeScore": 0.4165,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0126",
+    "kind": "cold",
+    "tokens": 952,
+    "entropy": 0.0622,
+    "hazard": 0.1505,
+    "novelty": 0.2013,
+    "routeScore": 0.2889,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0127",
+    "kind": "warm",
+    "tokens": 885,
+    "entropy": 0.4164,
+    "hazard": 0.295,
+    "novelty": 0.3878,
+    "routeScore": 0.4054,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0128",
+    "kind": "warm",
+    "tokens": 464,
+    "entropy": 0.3573,
+    "hazard": 0.1382,
+    "novelty": 0.321,
+    "routeScore": 0.4503,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0129",
+    "kind": "warm",
+    "tokens": 448,
+    "entropy": 0.3557,
+    "hazard": 0.3368,
+    "novelty": 0.6063,
+    "routeScore": 0.4279,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0130",
+    "kind": "cold",
+    "tokens": 254,
+    "entropy": 0.243,
+    "hazard": 0.1586,
+    "novelty": 0.3416,
+    "routeScore": 0.4003,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0131",
+    "kind": "hot-promising",
+    "tokens": 306,
+    "entropy": 0.7973,
+    "hazard": 0.1782,
+    "novelty": 0.8791,
+    "routeScore": 0.7797,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0132",
+    "kind": "cold",
+    "tokens": 854,
+    "entropy": 0.3043,
+    "hazard": 0.1864,
+    "novelty": 0.0793,
+    "routeScore": 0.3242,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0133",
+    "kind": "cold",
+    "tokens": 957,
+    "entropy": 0.238,
+    "hazard": 0.1266,
+    "novelty": 0.0318,
+    "routeScore": 0.3171,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0134",
+    "kind": "warm",
+    "tokens": 810,
+    "entropy": 0.3552,
+    "hazard": 0.2966,
+    "novelty": 0.3905,
+    "routeScore": 0.3813,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0135",
+    "kind": "cold",
+    "tokens": 151,
+    "entropy": 0.1268,
+    "hazard": 0.18,
+    "novelty": 0.3472,
+    "routeScore": 0.3442,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0136",
+    "kind": "cold",
+    "tokens": 110,
+    "entropy": 0.2769,
+    "hazard": 0.0079,
+    "novelty": 0.3242,
+    "routeScore": 0.4942,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0137",
+    "kind": "hot-hazard",
+    "tokens": 953,
+    "entropy": 0.9121,
+    "hazard": 0.6163,
+    "novelty": 0.5802,
+    "routeScore": 0.4783,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0138",
+    "kind": "cold",
+    "tokens": 666,
+    "entropy": 0.2023,
+    "hazard": 0.1201,
+    "novelty": 0.2303,
+    "routeScore": 0.3706,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0139",
+    "kind": "cold",
+    "tokens": 891,
+    "entropy": 0.2417,
+    "hazard": 0.1248,
+    "novelty": 0.1461,
+    "routeScore": 0.3563,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0140",
+    "kind": "cold",
+    "tokens": 471,
+    "entropy": 0.0787,
+    "hazard": 0.1877,
+    "novelty": 0.0697,
+    "routeScore": 0.2318,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0141",
+    "kind": "warm",
+    "tokens": 640,
+    "entropy": 0.5455,
+    "hazard": 0.1493,
+    "novelty": 0.4621,
+    "routeScore": 0.5632,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0142",
+    "kind": "cold",
+    "tokens": 746,
+    "entropy": 0.0726,
+    "hazard": 0.1245,
+    "novelty": 0.2274,
+    "routeScore": 0.3162,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0143",
+    "kind": "hot-promising",
+    "tokens": 866,
+    "entropy": 0.72,
+    "hazard": 0.2724,
+    "novelty": 0.6087,
+    "routeScore": 0.6086,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0144",
+    "kind": "warm",
+    "tokens": 448,
+    "entropy": 0.4181,
+    "hazard": 0.3426,
+    "novelty": 0.6688,
+    "routeScore": 0.4692,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0145",
+    "kind": "hot-hazard",
+    "tokens": 913,
+    "entropy": 0.7442,
+    "hazard": 0.7735,
+    "novelty": 0.8328,
+    "routeScore": 0.4038,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0146",
+    "kind": "warm",
+    "tokens": 814,
+    "entropy": 0.4704,
+    "hazard": 0.2533,
+    "novelty": 0.4421,
+    "routeScore": 0.4679,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0147",
+    "kind": "cold",
+    "tokens": 952,
+    "entropy": 0.2574,
+    "hazard": 0.092,
+    "novelty": 0.1039,
+    "routeScore": 0.3677,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0148",
+    "kind": "cold",
+    "tokens": 328,
+    "entropy": 0.108,
+    "hazard": 0.0059,
+    "novelty": 0.2482,
+    "routeScore": 0.4045,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0149",
+    "kind": "cold",
+    "tokens": 115,
+    "entropy": 0.2733,
+    "hazard": 0.0179,
+    "novelty": 0.2567,
+    "routeScore": 0.4654,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0150",
+    "kind": "warm",
+    "tokens": 388,
+    "entropy": 0.575,
+    "hazard": 0.2069,
+    "novelty": 0.4203,
+    "routeScore": 0.5284,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0151",
+    "kind": "hot-promising",
+    "tokens": 760,
+    "entropy": 0.7831,
+    "hazard": 0.1685,
+    "novelty": 0.697,
+    "routeScore": 0.7211,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0152",
+    "kind": "hot-hazard",
+    "tokens": 354,
+    "entropy": 0.8228,
+    "hazard": 0.735,
+    "novelty": 0.546,
+    "routeScore": 0.3644,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0153",
+    "kind": "cold",
+    "tokens": 254,
+    "entropy": 0.2305,
+    "hazard": 0.1582,
+    "novelty": 0.1962,
+    "routeScore": 0.3489,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0154",
+    "kind": "hot-promising",
+    "tokens": 913,
+    "entropy": 0.7582,
+    "hazard": 0.1779,
+    "novelty": 0.7054,
+    "routeScore": 0.7086,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0155",
+    "kind": "cold",
+    "tokens": 135,
+    "entropy": 0.2197,
+    "hazard": 0.0038,
+    "novelty": 0.0454,
+    "routeScore": 0.3845,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0156",
+    "kind": "cold",
+    "tokens": 299,
+    "entropy": 0.0984,
+    "hazard": 0.0766,
+    "novelty": 0.3391,
+    "routeScore": 0.3896,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0157",
+    "kind": "warm",
+    "tokens": 869,
+    "entropy": 0.6337,
+    "hazard": 0.0931,
+    "novelty": 0.6299,
+    "routeScore": 0.6839,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0158",
+    "kind": "cold",
+    "tokens": 133,
+    "entropy": 0.2524,
+    "hazard": 0.1505,
+    "novelty": 0.3118,
+    "routeScore": 0.3991,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0159",
+    "kind": "cold",
+    "tokens": 646,
+    "entropy": 0.228,
+    "hazard": 0.055,
+    "novelty": 0.3124,
+    "routeScore": 0.4443,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0160",
+    "kind": "warm",
+    "tokens": 656,
+    "entropy": 0.5293,
+    "hazard": 0.3195,
+    "novelty": 0.4629,
+    "routeScore": 0.4599,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0161",
+    "kind": "hot-promising",
+    "tokens": 159,
+    "entropy": 0.8565,
+    "hazard": 0.2515,
+    "novelty": 0.884,
+    "routeScore": 0.7626,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0162",
+    "kind": "cold",
+    "tokens": 851,
+    "entropy": 0.1598,
+    "hazard": 0.1133,
+    "novelty": 0.3031,
+    "routeScore": 0.3812,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0163",
+    "kind": "cold",
+    "tokens": 571,
+    "entropy": 0.0624,
+    "hazard": 0.0576,
+    "novelty": 0.3382,
+    "routeScore": 0.3861,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0164",
+    "kind": "warm",
+    "tokens": 568,
+    "entropy": 0.4187,
+    "hazard": 0.0301,
+    "novelty": 0.6511,
+    "routeScore": 0.6423,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0165",
+    "kind": "cold",
+    "tokens": 996,
+    "entropy": 0.2352,
+    "hazard": 0.0494,
+    "novelty": 0.1066,
+    "routeScore": 0.3841,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0166",
+    "kind": "cold",
+    "tokens": 903,
+    "entropy": 0.3267,
+    "hazard": 0.1285,
+    "novelty": 0.1353,
+    "routeScore": 0.3841,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0167",
+    "kind": "cold",
+    "tokens": 610,
+    "entropy": 0.179,
+    "hazard": 0.1186,
+    "novelty": 0.1238,
+    "routeScore": 0.3281,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0168",
+    "kind": "warm",
+    "tokens": 530,
+    "entropy": 0.581,
+    "hazard": 0.076,
+    "novelty": 0.5735,
+    "routeScore": 0.6549,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0169",
+    "kind": "warm",
+    "tokens": 205,
+    "entropy": 0.4657,
+    "hazard": 0.061,
+    "novelty": 0.6494,
+    "routeScore": 0.6426,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0170",
+    "kind": "warm",
+    "tokens": 775,
+    "entropy": 0.4475,
+    "hazard": 0.0102,
+    "novelty": 0.4996,
+    "routeScore": 0.6162,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0171",
+    "kind": "hot-promising",
+    "tokens": 518,
+    "entropy": 0.6325,
+    "hazard": 0.2169,
+    "novelty": 0.7741,
+    "routeScore": 0.6591,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0172",
+    "kind": "hot-promising",
+    "tokens": 980,
+    "entropy": 0.6097,
+    "hazard": 0.0008,
+    "novelty": 0.8803,
+    "routeScore": 0.8078,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0173",
+    "kind": "warm",
+    "tokens": 154,
+    "entropy": 0.4453,
+    "hazard": 0.0831,
+    "novelty": 0.6226,
+    "routeScore": 0.6133,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0174",
+    "kind": "cold",
+    "tokens": 343,
+    "entropy": 0.2245,
+    "hazard": 0.146,
+    "novelty": 0.2567,
+    "routeScore": 0.373,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0175",
+    "kind": "warm",
+    "tokens": 869,
+    "entropy": 0.6692,
+    "hazard": 0.2462,
+    "novelty": 0.6418,
+    "routeScore": 0.6142,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0176",
+    "kind": "cold",
+    "tokens": 134,
+    "entropy": 0.1918,
+    "hazard": 0.1244,
+    "novelty": 0.0972,
+    "routeScore": 0.3212,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0177",
+    "kind": "hot-hazard",
+    "tokens": 745,
+    "entropy": 0.9644,
+    "hazard": 0.6592,
+    "novelty": 0.7977,
+    "routeScore": 0.5443,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0178",
+    "kind": "cold",
+    "tokens": 554,
+    "entropy": 0.2278,
+    "hazard": 0.2,
+    "novelty": 0.2662,
+    "routeScore": 0.3465,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0179",
+    "kind": "hot-promising",
+    "tokens": 994,
+    "entropy": 0.8312,
+    "hazard": 0.3007,
+    "novelty": 0.7903,
+    "routeScore": 0.6945,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0180",
+    "kind": "cold",
+    "tokens": 592,
+    "entropy": 0.0617,
+    "hazard": 0.0737,
+    "novelty": 0.07,
+    "routeScore": 0.2904,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0181",
+    "kind": "cold",
+    "tokens": 702,
+    "entropy": 0.112,
+    "hazard": 0.1558,
+    "novelty": 0.1041,
+    "routeScore": 0.2741,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0182",
+    "kind": "cold",
+    "tokens": 254,
+    "entropy": 0.3141,
+    "hazard": 0.1939,
+    "novelty": 0.1202,
+    "routeScore": 0.3369,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0183",
+    "kind": "hot-promising",
+    "tokens": 764,
+    "entropy": 0.6289,
+    "hazard": 0.1162,
+    "novelty": 0.6181,
+    "routeScore": 0.6651,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0184",
+    "kind": "hot-promising",
+    "tokens": 725,
+    "entropy": 0.8308,
+    "hazard": 0.2932,
+    "novelty": 0.8282,
+    "routeScore": 0.7107,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0185",
+    "kind": "cold",
+    "tokens": 319,
+    "entropy": 0.1653,
+    "hazard": 0.0454,
+    "novelty": 0.3359,
+    "routeScore": 0.4327,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0186",
+    "kind": "warm",
+    "tokens": 836,
+    "entropy": 0.468,
+    "hazard": 0.3177,
+    "novelty": 0.6788,
+    "routeScore": 0.5062,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0187",
+    "kind": "cold",
+    "tokens": 262,
+    "entropy": 0.1923,
+    "hazard": 0.1774,
+    "novelty": 0.1401,
+    "routeScore": 0.3049,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0188",
+    "kind": "cold",
+    "tokens": 116,
+    "entropy": 0.2225,
+    "hazard": 0.0773,
+    "novelty": 0.0456,
+    "routeScore": 0.3436,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0189",
+    "kind": "hot-promising",
+    "tokens": 264,
+    "entropy": 0.5768,
+    "hazard": 0.012,
+    "novelty": 0.6276,
+    "routeScore": 0.7072,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0190",
+    "kind": "hot-hazard",
+    "tokens": 907,
+    "entropy": 0.8191,
+    "hazard": 0.7738,
+    "novelty": 0.5665,
+    "routeScore": 0.3474,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0191",
+    "kind": "cold",
+    "tokens": 321,
+    "entropy": 0.2427,
+    "hazard": 0.0945,
+    "novelty": 0.1683,
+    "routeScore": 0.3812,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0192",
+    "kind": "warm",
+    "tokens": 137,
+    "entropy": 0.6632,
+    "hazard": 0.1788,
+    "novelty": 0.5607,
+    "routeScore": 0.6243,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0193",
+    "kind": "cold",
+    "tokens": 585,
+    "entropy": 0.3234,
+    "hazard": 0.0653,
+    "novelty": 0.0815,
+    "routeScore": 0.4017,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0194",
+    "kind": "warm",
+    "tokens": 451,
+    "entropy": 0.4689,
+    "hazard": 0.1831,
+    "novelty": 0.4791,
+    "routeScore": 0.5193,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0195",
+    "kind": "warm",
+    "tokens": 763,
+    "entropy": 0.3966,
+    "hazard": 0.0084,
+    "novelty": 0.4128,
+    "routeScore": 0.5694,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0196",
+    "kind": "cold",
+    "tokens": 926,
+    "entropy": 0.2958,
+    "hazard": 0.126,
+    "novelty": 0.1458,
+    "routeScore": 0.3768,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0197",
+    "kind": "cold",
+    "tokens": 923,
+    "entropy": 0.1056,
+    "hazard": 0.1394,
+    "novelty": 0.2887,
+    "routeScore": 0.3404,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0198",
+    "kind": "warm",
+    "tokens": 395,
+    "entropy": 0.5798,
+    "hazard": 0.1998,
+    "novelty": 0.4014,
+    "routeScore": 0.5283,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0199",
+    "kind": "cold",
+    "tokens": 421,
+    "entropy": 0.1789,
+    "hazard": 0.0271,
+    "novelty": 0.1735,
+    "routeScore": 0.3963,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0200",
+    "kind": "cold",
+    "tokens": 415,
+    "entropy": 0.1396,
+    "hazard": 0.0486,
+    "novelty": 0.2734,
+    "routeScore": 0.4007,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0201",
+    "kind": "cold",
+    "tokens": 838,
+    "entropy": 0.2354,
+    "hazard": 0.0915,
+    "novelty": 0.0309,
+    "routeScore": 0.3358,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0202",
+    "kind": "cold",
+    "tokens": 250,
+    "entropy": 0.2814,
+    "hazard": 0.0447,
+    "novelty": 0.1964,
+    "routeScore": 0.4339,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0203",
+    "kind": "hot-promising",
+    "tokens": 605,
+    "entropy": 0.723,
+    "hazard": 0.2886,
+    "novelty": 0.7988,
+    "routeScore": 0.6616,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0204",
+    "kind": "cold",
+    "tokens": 712,
+    "entropy": 0.31,
+    "hazard": 0.1868,
+    "novelty": 0.2693,
+    "routeScore": 0.3873,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0205",
+    "kind": "warm",
+    "tokens": 252,
+    "entropy": 0.4145,
+    "hazard": 0.0427,
+    "novelty": 0.6647,
+    "routeScore": 0.6378,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0206",
+    "kind": "warm",
+    "tokens": 584,
+    "entropy": 0.4515,
+    "hazard": 0.2118,
+    "novelty": 0.6495,
+    "routeScore": 0.5508,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0207",
+    "kind": "cold",
+    "tokens": 995,
+    "entropy": 0.2952,
+    "hazard": 0.1467,
+    "novelty": 0.0044,
+    "routeScore": 0.3192,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0208",
+    "kind": "hot-hazard",
+    "tokens": 295,
+    "entropy": 0.7467,
+    "hazard": 0.5744,
+    "novelty": 0.613,
+    "routeScore": 0.4478,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0209",
+    "kind": "hot-promising",
+    "tokens": 867,
+    "entropy": 0.7616,
+    "hazard": 0.0197,
+    "novelty": 0.9236,
+    "routeScore": 0.8706,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0210",
+    "kind": "warm",
+    "tokens": 385,
+    "entropy": 0.5189,
+    "hazard": 0.2784,
+    "novelty": 0.5927,
+    "routeScore": 0.521,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0211",
+    "kind": "cold",
+    "tokens": 245,
+    "entropy": 0.0787,
+    "hazard": 0.0986,
+    "novelty": 0.0752,
+    "routeScore": 0.2844,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0212",
+    "kind": "warm",
+    "tokens": 633,
+    "entropy": 0.6749,
+    "hazard": 0.2217,
+    "novelty": 0.5957,
+    "routeScore": 0.6156,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0213",
+    "kind": "cold",
+    "tokens": 129,
+    "entropy": 0.0558,
+    "hazard": 0.1545,
+    "novelty": 0.0221,
+    "routeScore": 0.2264,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0214",
+    "kind": "cold",
+    "tokens": 344,
+    "entropy": 0.1872,
+    "hazard": 0.0902,
+    "novelty": 0.034,
+    "routeScore": 0.3186,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0215",
+    "kind": "hot-hazard",
+    "tokens": 521,
+    "entropy": 0.838,
+    "hazard": 0.7192,
+    "novelty": 0.4427,
+    "routeScore": 0.3463,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0216",
+    "kind": "warm",
+    "tokens": 157,
+    "entropy": 0.4063,
+    "hazard": 0.0279,
+    "novelty": 0.3139,
+    "routeScore": 0.5303,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0217",
+    "kind": "warm",
+    "tokens": 739,
+    "entropy": 0.4841,
+    "hazard": 0.0735,
+    "novelty": 0.4621,
+    "routeScore": 0.5824,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0218",
+    "kind": "cold",
+    "tokens": 231,
+    "entropy": 0.1742,
+    "hazard": 0.1892,
+    "novelty": 0.1416,
+    "routeScore": 0.2916,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0219",
+    "kind": "cold",
+    "tokens": 969,
+    "entropy": 0.2132,
+    "hazard": 0.1999,
+    "novelty": 0.1618,
+    "routeScore": 0.3073,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0220",
+    "kind": "cold",
+    "tokens": 174,
+    "entropy": 0.2731,
+    "hazard": 0.134,
+    "novelty": 0.0629,
+    "routeScore": 0.3366,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0221",
+    "kind": "hot-hazard",
+    "tokens": 639,
+    "entropy": 0.8273,
+    "hazard": 0.6749,
+    "novelty": 0.7496,
+    "routeScore": 0.466,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0222",
+    "kind": "cold",
+    "tokens": 690,
+    "entropy": 0.3096,
+    "hazard": 0.076,
+    "novelty": 0.3288,
+    "routeScore": 0.4696,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0223",
+    "kind": "hot-hazard",
+    "tokens": 412,
+    "entropy": 0.8197,
+    "hazard": 0.7293,
+    "novelty": 0.5814,
+    "routeScore": 0.3779,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0224",
+    "kind": "hot-hazard",
+    "tokens": 782,
+    "entropy": 0.8332,
+    "hazard": 0.5697,
+    "novelty": 0.4756,
+    "routeScore": 0.4404,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0225",
+    "kind": "hot-promising",
+    "tokens": 552,
+    "entropy": 0.5603,
+    "hazard": 0.2674,
+    "novelty": 0.8487,
+    "routeScore": 0.6258,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0226",
+    "kind": "warm",
+    "tokens": 680,
+    "entropy": 0.6058,
+    "hazard": 0.3084,
+    "novelty": 0.3692,
+    "routeScore": 0.4662,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0227",
+    "kind": "cold",
+    "tokens": 550,
+    "entropy": 0.3212,
+    "hazard": 0.1568,
+    "novelty": 0.197,
+    "routeScore": 0.3857,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0228",
+    "kind": "warm",
+    "tokens": 225,
+    "entropy": 0.6593,
+    "hazard": 0.3347,
+    "novelty": 0.5273,
+    "routeScore": 0.523,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0229",
+    "kind": "cold",
+    "tokens": 240,
+    "entropy": 0.2523,
+    "hazard": 0.112,
+    "novelty": 0.0347,
+    "routeScore": 0.332,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0230",
+    "kind": "warm",
+    "tokens": 214,
+    "entropy": 0.6983,
+    "hazard": 0.3368,
+    "novelty": 0.5135,
+    "routeScore": 0.5327,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0231",
+    "kind": "warm",
+    "tokens": 495,
+    "entropy": 0.4377,
+    "hazard": 0.0983,
+    "novelty": 0.4182,
+    "routeScore": 0.5359,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0232",
+    "kind": "hot-hazard",
+    "tokens": 204,
+    "entropy": 0.8377,
+    "hazard": 0.5824,
+    "novelty": 0.4839,
+    "routeScore": 0.4375,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0233",
+    "kind": "cold",
+    "tokens": 573,
+    "entropy": 0.2351,
+    "hazard": 0.1875,
+    "novelty": 0.1421,
+    "routeScore": 0.3166,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0234",
+    "kind": "warm",
+    "tokens": 487,
+    "entropy": 0.3673,
+    "hazard": 0.104,
+    "novelty": 0.3471,
+    "routeScore": 0.4821,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0235",
+    "kind": "hot-promising",
+    "tokens": 781,
+    "entropy": 0.7277,
+    "hazard": 0.0932,
+    "novelty": 0.6723,
+    "routeScore": 0.7344,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0236",
+    "kind": "warm",
+    "tokens": 250,
+    "entropy": 0.6801,
+    "hazard": 0.3269,
+    "novelty": 0.3186,
+    "routeScore": 0.4685,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0237",
+    "kind": "hot-promising",
+    "tokens": 577,
+    "entropy": 0.6296,
+    "hazard": 0.0111,
+    "novelty": 0.8743,
+    "routeScore": 0.8077,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0238",
+    "kind": "hot-promising",
+    "tokens": 250,
+    "entropy": 0.6563,
+    "hazard": 0.1125,
+    "novelty": 0.6338,
+    "routeScore": 0.683,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0239",
+    "kind": "hot-hazard",
+    "tokens": 167,
+    "entropy": 0.8117,
+    "hazard": 0.6085,
+    "novelty": 0.4938,
+    "routeScore": 0.4156,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0240",
+    "kind": "cold",
+    "tokens": 969,
+    "entropy": 0.1226,
+    "hazard": 0.0641,
+    "novelty": 0.2545,
+    "routeScore": 0.379,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0241",
+    "kind": "hot-promising",
+    "tokens": 564,
+    "entropy": 0.7939,
+    "hazard": 0.0461,
+    "novelty": 0.9066,
+    "routeScore": 0.8627,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0242",
+    "kind": "cold",
+    "tokens": 809,
+    "entropy": 0.2329,
+    "hazard": 0.0148,
+    "novelty": 0.0299,
+    "routeScore": 0.3783,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0243",
+    "kind": "hot-hazard",
+    "tokens": 718,
+    "entropy": 0.8129,
+    "hazard": 0.8869,
+    "novelty": 0.4848,
+    "routeScore": 0.2541,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0244",
+    "kind": "cold",
+    "tokens": 847,
+    "entropy": 0.14,
+    "hazard": 0.0608,
+    "novelty": 0.2437,
+    "routeScore": 0.3843,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0245",
+    "kind": "cold",
+    "tokens": 201,
+    "entropy": 0.2242,
+    "hazard": 0.1205,
+    "novelty": 0.2489,
+    "routeScore": 0.385,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0246",
+    "kind": "cold",
+    "tokens": 375,
+    "entropy": 0.184,
+    "hazard": 0.1385,
+    "novelty": 0.0323,
+    "routeScore": 0.2892,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0247",
+    "kind": "warm",
+    "tokens": 790,
+    "entropy": 0.5584,
+    "hazard": 0.1887,
+    "novelty": 0.6774,
+    "routeScore": 0.615,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0248",
+    "kind": "cold",
+    "tokens": 751,
+    "entropy": 0.0816,
+    "hazard": 0.1975,
+    "novelty": 0.3007,
+    "routeScore": 0.3016,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0249",
+    "kind": "cold",
+    "tokens": 904,
+    "entropy": 0.2899,
+    "hazard": 0.0406,
+    "novelty": 0.0259,
+    "routeScore": 0.3847,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0250",
+    "kind": "cold",
+    "tokens": 222,
+    "entropy": 0.2361,
+    "hazard": 0.0782,
+    "novelty": 0.118,
+    "routeScore": 0.3717,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0251",
+    "kind": "hot-hazard",
+    "tokens": 905,
+    "entropy": 0.7287,
+    "hazard": 0.9464,
+    "novelty": 0.5748,
+    "routeScore": 0.2159,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0252",
+    "kind": "hot-promising",
+    "tokens": 940,
+    "entropy": 0.7256,
+    "hazard": 0.3227,
+    "novelty": 0.6202,
+    "routeScore": 0.5857,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0253",
+    "kind": "hot-hazard",
+    "tokens": 746,
+    "entropy": 0.7789,
+    "hazard": 0.9152,
+    "novelty": 0.8451,
+    "routeScore": 0.3403,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0254",
+    "kind": "warm",
+    "tokens": 349,
+    "entropy": 0.3834,
+    "hazard": 0.2926,
+    "novelty": 0.6857,
+    "routeScore": 0.4895,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0255",
+    "kind": "warm",
+    "tokens": 645,
+    "entropy": 0.5302,
+    "hazard": 0.2375,
+    "novelty": 0.3558,
+    "routeScore": 0.4726,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0256",
+    "kind": "cold",
+    "tokens": 666,
+    "entropy": 0.0975,
+    "hazard": 0.021,
+    "novelty": 0.0298,
+    "routeScore": 0.3216,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0257",
+    "kind": "cold",
+    "tokens": 401,
+    "entropy": 0.2768,
+    "hazard": 0.0234,
+    "novelty": 0.2235,
+    "routeScore": 0.4529,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0258",
+    "kind": "cold",
+    "tokens": 933,
+    "entropy": 0.0623,
+    "hazard": 0.1571,
+    "novelty": 0.0841,
+    "routeScore": 0.2474,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0259",
+    "kind": "cold",
+    "tokens": 588,
+    "entropy": 0.2039,
+    "hazard": 0.1975,
+    "novelty": 0.2346,
+    "routeScore": 0.3284,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0260",
+    "kind": "cold",
+    "tokens": 650,
+    "entropy": 0.1813,
+    "hazard": 0.0154,
+    "novelty": 0.2207,
+    "routeScore": 0.4191,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0261",
+    "kind": "cold",
+    "tokens": 125,
+    "entropy": 0.3074,
+    "hazard": 0.1612,
+    "novelty": 0.0814,
+    "routeScore": 0.3406,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0262",
+    "kind": "warm",
+    "tokens": 694,
+    "entropy": 0.5203,
+    "hazard": 0.2753,
+    "novelty": 0.3272,
+    "routeScore": 0.438,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0263",
+    "kind": "cold",
+    "tokens": 205,
+    "entropy": 0.3142,
+    "hazard": 0.1983,
+    "novelty": 0.2387,
+    "routeScore": 0.3725,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0264",
+    "kind": "warm",
+    "tokens": 465,
+    "entropy": 0.3592,
+    "hazard": 0.0986,
+    "novelty": 0.6246,
+    "routeScore": 0.5713,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0265",
+    "kind": "warm",
+    "tokens": 747,
+    "entropy": 0.5825,
+    "hazard": 0.0577,
+    "novelty": 0.6573,
+    "routeScore": 0.6928,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0266",
+    "kind": "hot-promising",
+    "tokens": 778,
+    "entropy": 0.6352,
+    "hazard": 0.3049,
+    "novelty": 0.7818,
+    "routeScore": 0.6123,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0267",
+    "kind": "cold",
+    "tokens": 666,
+    "entropy": 0.3019,
+    "hazard": 0.0538,
+    "novelty": 0.195,
+    "routeScore": 0.4362,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0268",
+    "kind": "warm",
+    "tokens": 144,
+    "entropy": 0.4473,
+    "hazard": 0.1869,
+    "novelty": 0.3387,
+    "routeScore": 0.4635,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0269",
+    "kind": "cold",
+    "tokens": 845,
+    "entropy": 0.0944,
+    "hazard": 0.0343,
+    "novelty": 0.2616,
+    "routeScore": 0.3873,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0270",
+    "kind": "cold",
+    "tokens": 132,
+    "entropy": 0.2186,
+    "hazard": 0.1327,
+    "novelty": 0.2527,
+    "routeScore": 0.377,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0271",
+    "kind": "warm",
+    "tokens": 822,
+    "entropy": 0.3968,
+    "hazard": 0.2773,
+    "novelty": 0.3186,
+    "routeScore": 0.3856,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0272",
+    "kind": "cold",
+    "tokens": 632,
+    "entropy": 0.139,
+    "hazard": 0.013,
+    "novelty": 0.1692,
+    "routeScore": 0.3873,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0273",
+    "kind": "warm",
+    "tokens": 514,
+    "entropy": 0.6951,
+    "hazard": 0.2107,
+    "novelty": 0.6174,
+    "routeScore": 0.6369,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0274",
+    "kind": "hot-hazard",
+    "tokens": 657,
+    "entropy": 0.7577,
+    "hazard": 0.947,
+    "novelty": 0.8518,
+    "routeScore": 0.316,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0275",
+    "kind": "cold",
+    "tokens": 949,
+    "entropy": 0.1728,
+    "hazard": 0.1093,
+    "novelty": 0.1587,
+    "routeScore": 0.3422,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0276",
+    "kind": "warm",
+    "tokens": 393,
+    "entropy": 0.6648,
+    "hazard": 0.0964,
+    "novelty": 0.4056,
+    "routeScore": 0.6222,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0277",
+    "kind": "warm",
+    "tokens": 252,
+    "entropy": 0.6,
+    "hazard": 0.1139,
+    "novelty": 0.5697,
+    "routeScore": 0.6395,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0278",
+    "kind": "hot-hazard",
+    "tokens": 462,
+    "entropy": 0.7723,
+    "hazard": 0.7144,
+    "novelty": 0.5593,
+    "routeScore": 0.3607,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0279",
+    "kind": "hot-promising",
+    "tokens": 532,
+    "entropy": 0.8572,
+    "hazard": 0.0892,
+    "novelty": 0.5675,
+    "routeScore": 0.7539,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0280",
+    "kind": "hot-hazard",
+    "tokens": 564,
+    "entropy": 0.886,
+    "hazard": 0.9193,
+    "novelty": 0.7262,
+    "routeScore": 0.3419,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0281",
+    "kind": "warm",
+    "tokens": 437,
+    "entropy": 0.444,
+    "hazard": 0.3022,
+    "novelty": 0.3459,
+    "routeScore": 0.3987,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0282",
+    "kind": "warm",
+    "tokens": 125,
+    "entropy": 0.6135,
+    "hazard": 0.2345,
+    "novelty": 0.4623,
+    "routeScore": 0.5413,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0283",
+    "kind": "cold",
+    "tokens": 446,
+    "entropy": 0.1409,
+    "hazard": 0.187,
+    "novelty": 0.3475,
+    "routeScore": 0.3459,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0284",
+    "kind": "hot-promising",
+    "tokens": 117,
+    "entropy": 0.8626,
+    "hazard": 0.2541,
+    "novelty": 0.808,
+    "routeScore": 0.7391,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0285",
+    "kind": "hot-hazard",
+    "tokens": 242,
+    "entropy": 0.735,
+    "hazard": 0.6268,
+    "novelty": 0.5017,
+    "routeScore": 0.3775,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0286",
+    "kind": "hot-promising",
+    "tokens": 310,
+    "entropy": 0.5669,
+    "hazard": 0.0057,
+    "novelty": 0.9466,
+    "routeScore": 0.8094,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0287",
+    "kind": "hot-promising",
+    "tokens": 946,
+    "entropy": 0.6836,
+    "hazard": 0.3032,
+    "novelty": 0.931,
+    "routeScore": 0.6802,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0288",
+    "kind": "cold",
+    "tokens": 801,
+    "entropy": 0.0691,
+    "hazard": 0.1111,
+    "novelty": 0.1936,
+    "routeScore": 0.3116,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0289",
+    "kind": "warm",
+    "tokens": 321,
+    "entropy": 0.494,
+    "hazard": 0.0594,
+    "novelty": 0.5962,
+    "routeScore": 0.6375,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0290",
+    "kind": "warm",
+    "tokens": 706,
+    "entropy": 0.534,
+    "hazard": 0.2189,
+    "novelty": 0.5221,
+    "routeScore": 0.5383,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0291",
+    "kind": "cold",
+    "tokens": 270,
+    "entropy": 0.0847,
+    "hazard": 0.0634,
+    "novelty": 0.0615,
+    "routeScore": 0.3025,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0292",
+    "kind": "cold",
+    "tokens": 907,
+    "entropy": 0.1613,
+    "hazard": 0.1331,
+    "novelty": 0.2429,
+    "routeScore": 0.3511,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0293",
+    "kind": "hot-promising",
+    "tokens": 881,
+    "entropy": 0.5899,
+    "hazard": 0.3293,
+    "novelty": 0.9284,
+    "routeScore": 0.6277,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0294",
+    "kind": "cold",
+    "tokens": 529,
+    "entropy": 0.1432,
+    "hazard": 0.0983,
+    "novelty": 0.2333,
+    "routeScore": 0.3608,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0295",
+    "kind": "cold",
+    "tokens": 694,
+    "entropy": 0.1584,
+    "hazard": 0.0897,
+    "novelty": 0.0476,
+    "routeScore": 0.312,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0296",
+    "kind": "cold",
+    "tokens": 485,
+    "entropy": 0.083,
+    "hazard": 0.1948,
+    "novelty": 0.1148,
+    "routeScore": 0.2439,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0297",
+    "kind": "warm",
+    "tokens": 125,
+    "entropy": 0.5836,
+    "hazard": 0.0514,
+    "novelty": 0.3522,
+    "routeScore": 0.5988,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0298",
+    "kind": "warm",
+    "tokens": 681,
+    "entropy": 0.6918,
+    "hazard": 0.1247,
+    "novelty": 0.4438,
+    "routeScore": 0.6289,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0299",
+    "kind": "cold",
+    "tokens": 836,
+    "entropy": 0.1143,
+    "hazard": 0.0207,
+    "novelty": 0.0445,
+    "routeScore": 0.3331,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0300",
+    "kind": "cold",
+    "tokens": 602,
+    "entropy": 0.2505,
+    "hazard": 0.0448,
+    "novelty": 0.0789,
+    "routeScore": 0.3839,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0301",
+    "kind": "cold",
+    "tokens": 917,
+    "entropy": 0.153,
+    "hazard": 0.0364,
+    "novelty": 0.0635,
+    "routeScore": 0.3454,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0302",
+    "kind": "hot-promising",
+    "tokens": 357,
+    "entropy": 0.8959,
+    "hazard": 0.0626,
+    "novelty": 0.7261,
+    "routeScore": 0.8353,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0303",
+    "kind": "warm",
+    "tokens": 661,
+    "entropy": 0.5,
+    "hazard": 0.3152,
+    "novelty": 0.3123,
+    "routeScore": 0.4024,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0304",
+    "kind": "warm",
+    "tokens": 715,
+    "entropy": 0.6955,
+    "hazard": 0.3165,
+    "novelty": 0.6616,
+    "routeScore": 0.5907,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0305",
+    "kind": "hot-hazard",
+    "tokens": 391,
+    "entropy": 0.7898,
+    "hazard": 0.6533,
+    "novelty": 0.441,
+    "routeScore": 0.3644,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0306",
+    "kind": "warm",
+    "tokens": 204,
+    "entropy": 0.591,
+    "hazard": 0.1572,
+    "novelty": 0.3813,
+    "routeScore": 0.5507,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0307",
+    "kind": "warm",
+    "tokens": 249,
+    "entropy": 0.6384,
+    "hazard": 0.3074,
+    "novelty": 0.4923,
+    "routeScore": 0.5191,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0308",
+    "kind": "cold",
+    "tokens": 223,
+    "entropy": 0.0939,
+    "hazard": 0.0912,
+    "novelty": 0.0298,
+    "routeScore": 0.2801,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0309",
+    "kind": "warm",
+    "tokens": 100,
+    "entropy": 0.589,
+    "hazard": 0.1105,
+    "novelty": 0.35,
+    "routeScore": 0.5665,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0310",
+    "kind": "cold",
+    "tokens": 297,
+    "entropy": 0.0861,
+    "hazard": 0.0535,
+    "novelty": 0.2709,
+    "routeScore": 0.376,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0311",
+    "kind": "warm",
+    "tokens": 938,
+    "entropy": 0.6835,
+    "hazard": 0.1988,
+    "novelty": 0.3861,
+    "routeScore": 0.5648,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0312",
+    "kind": "cold",
+    "tokens": 586,
+    "entropy": 0.0534,
+    "hazard": 0.0492,
+    "novelty": 0.1408,
+    "routeScore": 0.3239,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0313",
+    "kind": "hot-hazard",
+    "tokens": 123,
+    "entropy": 0.8768,
+    "hazard": 0.6149,
+    "novelty": 0.4494,
+    "routeScore": 0.4233,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0314",
+    "kind": "cold",
+    "tokens": 589,
+    "entropy": 0.0515,
+    "hazard": 0.1408,
+    "novelty": 0.1615,
+    "routeScore": 0.2774,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0315",
+    "kind": "hot-hazard",
+    "tokens": 976,
+    "entropy": 0.9094,
+    "hazard": 0.8009,
+    "novelty": 0.4948,
+    "routeScore": 0.3444,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0316",
+    "kind": "hot-promising",
+    "tokens": 444,
+    "entropy": 0.7886,
+    "hazard": 0.1929,
+    "novelty": 0.6772,
+    "routeScore": 0.7029,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0317",
+    "kind": "warm",
+    "tokens": 990,
+    "entropy": 0.6937,
+    "hazard": 0.1691,
+    "novelty": 0.5151,
+    "routeScore": 0.6272,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0318",
+    "kind": "cold",
+    "tokens": 164,
+    "entropy": 0.0575,
+    "hazard": 0.0288,
+    "novelty": 0.3066,
+    "routeScore": 0.3904,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0319",
+    "kind": "hot-promising",
+    "tokens": 434,
+    "entropy": 0.6298,
+    "hazard": 0.2709,
+    "novelty": 0.5554,
+    "routeScore": 0.5569,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0320",
+    "kind": "cold",
+    "tokens": 824,
+    "entropy": 0.1836,
+    "hazard": 0.0043,
+    "novelty": 0.2209,
+    "routeScore": 0.4264,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0321",
+    "kind": "cold",
+    "tokens": 203,
+    "entropy": 0.2775,
+    "hazard": 0.1053,
+    "novelty": 0.2427,
+    "routeScore": 0.4126,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0322",
+    "kind": "cold",
+    "tokens": 842,
+    "entropy": 0.0524,
+    "hazard": 0.1492,
+    "novelty": 0.023,
+    "routeScore": 0.2285,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0323",
+    "kind": "cold",
+    "tokens": 221,
+    "entropy": 0.2637,
+    "hazard": 0.1109,
+    "novelty": 0.1139,
+    "routeScore": 0.3625,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0324",
+    "kind": "hot-hazard",
+    "tokens": 627,
+    "entropy": 0.9148,
+    "hazard": 0.783,
+    "novelty": 0.7161,
+    "routeScore": 0.4278,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0325",
+    "kind": "cold",
+    "tokens": 512,
+    "entropy": 0.1382,
+    "hazard": 0.0156,
+    "novelty": 0.238,
+    "routeScore": 0.4076,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0326",
+    "kind": "cold",
+    "tokens": 289,
+    "entropy": 0.2642,
+    "hazard": 0.0279,
+    "novelty": 0.3256,
+    "routeScore": 0.4782,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0327",
+    "kind": "cold",
+    "tokens": 308,
+    "entropy": 0.3247,
+    "hazard": 0.0754,
+    "novelty": 0.344,
+    "routeScore": 0.4807,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0328",
+    "kind": "cold",
+    "tokens": 249,
+    "entropy": 0.2212,
+    "hazard": 0.008,
+    "novelty": 0.3094,
+    "routeScore": 0.4675,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0329",
+    "kind": "warm",
+    "tokens": 390,
+    "entropy": 0.576,
+    "hazard": 0.1889,
+    "novelty": 0.65,
+    "routeScore": 0.613,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0330",
+    "kind": "warm",
+    "tokens": 519,
+    "entropy": 0.49,
+    "hazard": 0.0252,
+    "novelty": 0.4936,
+    "routeScore": 0.6225,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0331",
+    "kind": "warm",
+    "tokens": 974,
+    "entropy": 0.6446,
+    "hazard": 0.1918,
+    "novelty": 0.6626,
+    "routeScore": 0.6423,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0332",
+    "kind": "hot-promising",
+    "tokens": 140,
+    "entropy": 0.6394,
+    "hazard": 0.229,
+    "novelty": 0.7646,
+    "routeScore": 0.6518,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0333",
+    "kind": "warm",
+    "tokens": 866,
+    "entropy": 0.5083,
+    "hazard": 0.0661,
+    "novelty": 0.4743,
+    "routeScore": 0.6001,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0334",
+    "kind": "hot-hazard",
+    "tokens": 120,
+    "entropy": 0.8785,
+    "hazard": 0.8569,
+    "novelty": 0.7431,
+    "routeScore": 0.38,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0335",
+    "kind": "warm",
+    "tokens": 343,
+    "entropy": 0.4229,
+    "hazard": 0.0206,
+    "novelty": 0.5162,
+    "routeScore": 0.606,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0336",
+    "kind": "cold",
+    "tokens": 867,
+    "entropy": 0.221,
+    "hazard": 0.0738,
+    "novelty": 0.1663,
+    "routeScore": 0.3838,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0337",
+    "kind": "cold",
+    "tokens": 661,
+    "entropy": 0.0832,
+    "hazard": 0.0304,
+    "novelty": 0.012,
+    "routeScore": 0.3049,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0338",
+    "kind": "cold",
+    "tokens": 220,
+    "entropy": 0.2534,
+    "hazard": 0.007,
+    "novelty": 0.3011,
+    "routeScore": 0.478,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0339",
+    "kind": "hot-promising",
+    "tokens": 163,
+    "entropy": 0.5586,
+    "hazard": 0.1961,
+    "novelty": 0.7187,
+    "routeScore": 0.6241,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0340",
+    "kind": "cold",
+    "tokens": 880,
+    "entropy": 0.2992,
+    "hazard": 0.0459,
+    "novelty": 0.0152,
+    "routeScore": 0.3819,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0341",
+    "kind": "cold",
+    "tokens": 984,
+    "entropy": 0.0666,
+    "hazard": 0.0556,
+    "novelty": 0.2093,
+    "routeScore": 0.3474,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0342",
+    "kind": "hot-promising",
+    "tokens": 985,
+    "entropy": 0.6613,
+    "hazard": 0.1881,
+    "novelty": 0.5668,
+    "routeScore": 0.6202,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0343",
+    "kind": "cold",
+    "tokens": 716,
+    "entropy": 0.272,
+    "hazard": 0.1204,
+    "novelty": 0.3301,
+    "routeScore": 0.4299,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0344",
+    "kind": "cold",
+    "tokens": 831,
+    "entropy": 0.211,
+    "hazard": 0.0117,
+    "novelty": 0.0529,
+    "routeScore": 0.3789,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0345",
+    "kind": "cold",
+    "tokens": 431,
+    "entropy": 0.1886,
+    "hazard": 0.1288,
+    "novelty": 0.0718,
+    "routeScore": 0.3093,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0346",
+    "kind": "cold",
+    "tokens": 367,
+    "entropy": 0.2917,
+    "hazard": 0.0908,
+    "novelty": 0.2621,
+    "routeScore": 0.4327,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0347",
+    "kind": "hot-promising",
+    "tokens": 510,
+    "entropy": 0.7706,
+    "hazard": 0.0699,
+    "novelty": 0.7832,
+    "routeScore": 0.8002,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0348",
+    "kind": "cold",
+    "tokens": 841,
+    "entropy": 0.1493,
+    "hazard": 0.1222,
+    "novelty": 0.21,
+    "routeScore": 0.342,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0349",
+    "kind": "warm",
+    "tokens": 86,
+    "entropy": 0.6762,
+    "hazard": 0.3035,
+    "novelty": 0.5267,
+    "routeScore": 0.5473,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0350",
+    "kind": "cold",
+    "tokens": 597,
+    "entropy": 0.2018,
+    "hazard": 0.04,
+    "novelty": 0.3194,
+    "routeScore": 0.4448,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0351",
+    "kind": "hot-hazard",
+    "tokens": 899,
+    "entropy": 0.9177,
+    "hazard": 0.9853,
+    "novelty": 0.4352,
+    "routeScore": 0.2231,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0352",
+    "kind": "cold",
+    "tokens": 818,
+    "entropy": 0.2719,
+    "hazard": 0.0579,
+    "novelty": 0.2889,
+    "routeScore": 0.4523,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0353",
+    "kind": "warm",
+    "tokens": 415,
+    "entropy": 0.599,
+    "hazard": 0.3259,
+    "novelty": 0.6427,
+    "routeScore": 0.5414,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0354",
+    "kind": "warm",
+    "tokens": 692,
+    "entropy": 0.4214,
+    "hazard": 0.227,
+    "novelty": 0.5743,
+    "routeScore": 0.5061,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0355",
+    "kind": "cold",
+    "tokens": 359,
+    "entropy": 0.2442,
+    "hazard": 0.1305,
+    "novelty": 0.1362,
+    "routeScore": 0.3509,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0356",
+    "kind": "hot-promising",
+    "tokens": 138,
+    "entropy": 0.676,
+    "hazard": 0.3463,
+    "novelty": 0.675,
+    "routeScore": 0.5704,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0357",
+    "kind": "cold",
+    "tokens": 721,
+    "entropy": 0.3057,
+    "hazard": 0.1064,
+    "novelty": 0.1227,
+    "routeScore": 0.3844,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0358",
+    "kind": "cold",
+    "tokens": 701,
+    "entropy": 0.2453,
+    "hazard": 0.1728,
+    "novelty": 0.3401,
+    "routeScore": 0.3927,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0359",
+    "kind": "warm",
+    "tokens": 197,
+    "entropy": 0.5455,
+    "hazard": 0.2824,
+    "novelty": 0.4654,
+    "routeScore": 0.4883,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0360",
+    "kind": "hot-promising",
+    "tokens": 418,
+    "entropy": 0.7184,
+    "hazard": 0.0905,
+    "novelty": 0.8302,
+    "routeScore": 0.7831,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0361",
+    "kind": "cold",
+    "tokens": 714,
+    "entropy": 0.2168,
+    "hazard": 0.0794,
+    "novelty": 0.0056,
+    "routeScore": 0.3273,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0362",
+    "kind": "warm",
+    "tokens": 681,
+    "entropy": 0.5939,
+    "hazard": 0.1122,
+    "novelty": 0.4013,
+    "routeScore": 0.5839,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0363",
+    "kind": "cold",
+    "tokens": 848,
+    "entropy": 0.193,
+    "hazard": 0.0256,
+    "novelty": 0.3438,
+    "routeScore": 0.4574,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0364",
+    "kind": "cold",
+    "tokens": 399,
+    "entropy": 0.0741,
+    "hazard": 0.0803,
+    "novelty": 0.0533,
+    "routeScore": 0.2861,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0365",
+    "kind": "cold",
+    "tokens": 808,
+    "entropy": 0.0736,
+    "hazard": 0.1893,
+    "novelty": 0.311,
+    "routeScore": 0.3064,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0366",
+    "kind": "cold",
+    "tokens": 108,
+    "entropy": 0.1321,
+    "hazard": 0.1699,
+    "novelty": 0.2613,
+    "routeScore": 0.3245,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0367",
+    "kind": "cold",
+    "tokens": 628,
+    "entropy": 0.2504,
+    "hazard": 0.1142,
+    "novelty": 0.293,
+    "routeScore": 0.413,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0368",
+    "kind": "warm",
+    "tokens": 367,
+    "entropy": 0.6956,
+    "hazard": 0.237,
+    "novelty": 0.6621,
+    "routeScore": 0.6363,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0369",
+    "kind": "hot-hazard",
+    "tokens": 165,
+    "entropy": 0.7273,
+    "hazard": 0.8256,
+    "novelty": 0.8818,
+    "routeScore": 0.3831,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0370",
+    "kind": "warm",
+    "tokens": 216,
+    "entropy": 0.687,
+    "hazard": 0.2423,
+    "novelty": 0.4687,
+    "routeScore": 0.5678,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0371",
+    "kind": "warm",
+    "tokens": 875,
+    "entropy": 0.5193,
+    "hazard": 0.3307,
+    "novelty": 0.3486,
+    "routeScore": 0.4128,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0372",
+    "kind": "cold",
+    "tokens": 810,
+    "entropy": 0.1911,
+    "hazard": 0.1501,
+    "novelty": 0.2357,
+    "routeScore": 0.3508,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0373",
+    "kind": "hot-promising",
+    "tokens": 860,
+    "entropy": 0.775,
+    "hazard": 0.318,
+    "novelty": 0.5973,
+    "routeScore": 0.6004,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0374",
+    "kind": "cold",
+    "tokens": 674,
+    "entropy": 0.0985,
+    "hazard": 0.0965,
+    "novelty": 0.0273,
+    "routeScore": 0.2781,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0375",
+    "kind": "warm",
+    "tokens": 739,
+    "entropy": 0.4489,
+    "hazard": 0.0023,
+    "novelty": 0.6457,
+    "routeScore": 0.6683,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0376",
+    "kind": "cold",
+    "tokens": 112,
+    "entropy": 0.0703,
+    "hazard": 0.1719,
+    "novelty": 0.2323,
+    "routeScore": 0.2898,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0377",
+    "kind": "cold",
+    "tokens": 357,
+    "entropy": 0.1667,
+    "hazard": 0.1166,
+    "novelty": 0.0627,
+    "routeScore": 0.3048,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0378",
+    "kind": "cold",
+    "tokens": 196,
+    "entropy": 0.1164,
+    "hazard": 0.059,
+    "novelty": 0.0648,
+    "routeScore": 0.3186,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0379",
+    "kind": "hot-promising",
+    "tokens": 240,
+    "entropy": 0.6823,
+    "hazard": 0.1002,
+    "novelty": 0.6723,
+    "routeScore": 0.7126,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0380",
+    "kind": "cold",
+    "tokens": 835,
+    "entropy": 0.1034,
+    "hazard": 0.0959,
+    "novelty": 0.0883,
+    "routeScore": 0.2999,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0381",
+    "kind": "warm",
+    "tokens": 468,
+    "entropy": 0.638,
+    "hazard": 0.2062,
+    "novelty": 0.6536,
+    "routeScore": 0.6286,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0382",
+    "kind": "cold",
+    "tokens": 826,
+    "entropy": 0.2488,
+    "hazard": 0.1435,
+    "novelty": 0.0737,
+    "routeScore": 0.3251,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0383",
+    "kind": "hot-promising",
+    "tokens": 452,
+    "entropy": 0.8529,
+    "hazard": 0.1014,
+    "novelty": 0.6231,
+    "routeScore": 0.7631,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0384",
+    "kind": "warm",
+    "tokens": 138,
+    "entropy": 0.4585,
+    "hazard": 0.3018,
+    "novelty": 0.6205,
+    "routeScore": 0.4929,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0385",
+    "kind": "warm",
+    "tokens": 957,
+    "entropy": 0.4799,
+    "hazard": 0.1629,
+    "novelty": 0.5012,
+    "routeScore": 0.5423,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0386",
+    "kind": "hot-promising",
+    "tokens": 813,
+    "entropy": 0.8324,
+    "hazard": 0.0298,
+    "novelty": 0.5693,
+    "routeScore": 0.7787,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0387",
+    "kind": "hot-promising",
+    "tokens": 985,
+    "entropy": 0.7607,
+    "hazard": 0.0564,
+    "novelty": 0.6425,
+    "routeScore": 0.7588,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0388",
+    "kind": "cold",
+    "tokens": 736,
+    "entropy": 0.0812,
+    "hazard": 0.0777,
+    "novelty": 0.1674,
+    "routeScore": 0.327,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0389",
+    "kind": "cold",
+    "tokens": 740,
+    "entropy": 0.163,
+    "hazard": 0.1317,
+    "novelty": 0.0189,
+    "routeScore": 0.2806,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0390",
+    "kind": "cold",
+    "tokens": 600,
+    "entropy": 0.075,
+    "hazard": 0.1016,
+    "novelty": 0.0847,
+    "routeScore": 0.2844,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0391",
+    "kind": "warm",
+    "tokens": 188,
+    "entropy": 0.6097,
+    "hazard": 0.1119,
+    "novelty": 0.4742,
+    "routeScore": 0.6137,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0392",
+    "kind": "cold",
+    "tokens": 409,
+    "entropy": 0.2315,
+    "hazard": 0.0111,
+    "novelty": 0.3172,
+    "routeScore": 0.4723,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0393",
+    "kind": "cold",
+    "tokens": 290,
+    "entropy": 0.3202,
+    "hazard": 0.0258,
+    "novelty": 0.0805,
+    "routeScore": 0.4227,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0394",
+    "kind": "cold",
+    "tokens": 695,
+    "entropy": 0.1192,
+    "hazard": 0.1409,
+    "novelty": 0.1571,
+    "routeScore": 0.3025,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0395",
+    "kind": "cold",
+    "tokens": 832,
+    "entropy": 0.2506,
+    "hazard": 0.1722,
+    "novelty": 0.349,
+    "routeScore": 0.3979,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0396",
+    "kind": "cold",
+    "tokens": 340,
+    "entropy": 0.1984,
+    "hazard": 0.1039,
+    "novelty": 0.0648,
+    "routeScore": 0.3251,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0397",
+    "kind": "warm",
+    "tokens": 845,
+    "entropy": 0.5501,
+    "hazard": 0.3478,
+    "novelty": 0.3511,
+    "routeScore": 0.416,
+    "learnability": 0
+  },
+  {
+    "id": "τ-0398",
+    "kind": "warm",
+    "tokens": 230,
+    "entropy": 0.4843,
+    "hazard": 0.1097,
+    "novelty": 0.4167,
+    "routeScore": 0.5473,
+    "learnability": 1
+  },
+  {
+    "id": "τ-0399",
+    "kind": "warm",
+    "tokens": 235,
+    "entropy": 0.6956,
+    "hazard": 0.1196,
+    "novelty": 0.4197,
+    "routeScore": 0.6255,
+    "learnability": 1
+  }
+]

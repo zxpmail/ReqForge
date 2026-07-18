@@ -1,0 +1,84 @@
+{
+  "meta": {
+    "title": "Experience Routing Stub A/B",
+    "paperRef": "docs/drafts/experience-routing-position-paper-zh.md §7",
+    "disclaimer": "合成轨迹 Stub：验证协议可执行性，不构成对 C2 的经验证实。不得转述为真实算力/回报结论。",
+    "mode": "decorrelated",
+    "seed": 42,
+    "corpusHash": "19339a8a185a8862",
+    "nTrain": 300,
+    "nHeldOut": 100,
+    "generatedAt": "2026-07-18T05:18:12.563Z"
+  },
+  "armA": {
+    "arm": "A",
+    "n": 300,
+    "deepReadCount": 285,
+    "deepReadRatio": 0.9902923841442275,
+    "admitCount": 300,
+    "quarantinedCount": 0,
+    "hazardInAdmCount": 26,
+    "proxyReturn": 0.51,
+    "cost": 166099.14,
+    "hazardInAdmIds": [
+      "τ-0270",
+      "τ-0073",
+      "τ-0261",
+      "τ-0213",
+      "τ-0303",
+      "τ-0245",
+      "τ-0280",
+      "τ-0111"
+    ]
+  },
+  "armB": {
+    "arm": "B",
+    "n": 300,
+    "deepReadCount": 17,
+    "deepReadRatio": 0.057205593435802615,
+    "admitCount": 9,
+    "quarantinedCount": 49,
+    "hazardInAdmCount": 0,
+    "proxyReturn": 0.5556,
+    "cost": 12693.14,
+    "bins": {
+      "cold": 137,
+      "warm": 114,
+      "hotPromising": 23,
+      "hotHazard": 26
+    },
+    "warmMass": 0.3612559075951754,
+    "hazardInAdmIds": []
+  },
+  "signal": {
+    "spearman": 0.0527,
+    "routeTopHitRate": 0.4667,
+    "randomTopHitRate": 0.6,
+    "routeGainOverRandom": -0.1333,
+    "k": 15
+  },
+  "judgment": {
+    "failures": [
+      {
+        "id": 5,
+        "name": "廉价信号与可学习性失相关",
+        "detail": "spearman=0.0527, gain=-0.1333"
+      }
+    ],
+    "fail3": {
+      "id": 3,
+      "name": "受限更新集回撤",
+      "status": "n/a",
+      "detail": "需真实训练，Stub 跳过"
+    },
+    "hardFail": true,
+    "verdict": "reject_strong_form",
+    "deepReadImprove": 0.9331
+  },
+  "preregistered": {
+    "warmMassMax": 0.55,
+    "deepReadImproveMin": 0.08,
+    "signalCorrMin": 0.15,
+    "randomGainMin": 0.02
+  }
+}

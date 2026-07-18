@@ -40,3 +40,11 @@ eval-output/**/.next/
 .forge/wiki-clone/
 .forge/verify-uncertain.json
 .forge/verify-pattern-suggestions.json
+
+# Python
+__pycache__/
+*.pyc
+
+# 本机实验运行时（Python 3.12+CUDA / 安装包缓存）
+experiments/.py312/
+experiments/.cache/
