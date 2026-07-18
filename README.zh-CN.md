@@ -74,6 +74,13 @@ flowchart LR
 
 ## 近期更新
 
+### v1.51.0 — 2026-07-18 — agents-cli 飞轮：skill-eval compare/analyze + 借口表
+
+- **质量飞轮**：`pnpm skill-eval compare|analyze`（可加 `--judge`）；每次 run 写入 `run-history.json`。吸收 [google/agents-cli](https://github.com/google/agents-cli)。
+- **借口表 + 三类证据**：`core/skills/_shared/shortcuts-to-resist.md` — 代码测试 ≠ skill-eval ≠ forge-verify。
+- **Iron Law 10**：阶段入口重读 Skill（防上下文压缩丢规则）。
+- **对照文档**：[agents-cli-comparison.md](core/docs/agents-cli-comparison.md)。
+
 ### Unreleased
 
 #### code-review skill 2.3.0（合约清理）

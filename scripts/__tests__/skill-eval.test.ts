@@ -9,6 +9,15 @@ import {
   runSkillEval,
   validateTriggers,
 } from "../skill-eval";
+import {
+  analyzeRunFailures,
+  categoryOfCheckId,
+  compareJudgeReports,
+  compareRunSnapshots,
+  recordEvalRunSnapshot,
+  type EvalRunSnapshot,
+} from "../skill-eval-flywheel";
+import type { JudgeReport } from "../skill-eval";
 
 describe("validateTriggers", () => {
   it("requires min should / should-not cases", () => {
@@ -148,5 +157,97 @@ describe("refLintSkillMd", () => {
     const md = "四个维度很重要。\n\n一些其他文本。";
     const checks = refLintSkillMd(md);
     expect(checks.length).toBe(0);
+  });
+});
+
+describe("skill-eval flywheel", () => {
+  it("compareRunSnapshots detects newly failing and passing", () => {
+    const earlier: EvalRunSnapshot = {
+      version: 1,
+      skill: "demo",
+      recorded_at: "2026-01-01T00:00:00.000Z",
+      passed: false,
+      errorCount: 2,
+      warnCount: 0,
+      failed: [
+        { id: "triggers-a", severity: "error", message: "a" },
+        { id: "cases-b", severity: "error", message: "b" },
+      ],
+    };
+    const later: EvalRunSnapshot = {
+      ...earlier,
+      recorded_at: "2026-01-02T00:00:00.000Z",
+      errorCount: 1,
+      failed: [
+        { id: "cases-b", severity: "error", message: "b" },
+        { id: "ref-lint-L1", severity: "warn", message: "c" },
+      ],
+    };
+    const diff = compareRunSnapshots(earlier, later);
+    expect(diff.newlyPassing).toContain("triggers-a");
+    expect(diff.newlyFailing).toContain("ref-lint-L1");
+    expect(diff.stillFailing).toContain("cases-b");
+  });
+
+  it("compareJudgeReports tracks score delta", () => {
+    const mk = (total: number, scores: { dimension_id: string; score: number }[]): JudgeReport => ({
+      version: 1,
+      skill: "demo",
+      judged_at: "t",
+      judge_id: "j",
+      scores: scores.map((s) => ({ ...s, evidence: "e" })),
+      total_score: total,
+      summary: "s",
+      test_prompt_results: [],
+    });
+    const diff = compareJudgeReports(
+      mk(60, [
+        { dimension_id: "structure", score: 6 },
+        { dimension_id: "workflow", score: 5 },
+      ]),
+      mk(70, [
+        { dimension_id: "structure", score: 8 },
+        { dimension_id: "workflow", score: 5 },
+      ]),
+    );
+    expect(diff.scoreDelta).toBe(10);
+    expect(diff.newlyPassing).toContain("structure");
+  });
+
+  it("analyzeRunFailures clusters by category", () => {
+    expect(categoryOfCheckId("triggers-should-count")).toBe("triggers");
+    expect(categoryOfCheckId("ref-lint-L12")).toBe("ref-lint");
+    const result = analyzeRunFailures({
+      version: 1,
+      skill: "demo",
+      recorded_at: "t",
+      passed: false,
+      errorCount: 2,
+      warnCount: 0,
+      failed: [
+        { id: "triggers-a", severity: "error", message: "a" },
+        { id: "triggers-b", severity: "error", message: "b" },
+        { id: "cases-c", severity: "error", message: "c" },
+      ],
+    });
+    expect(result.clusters[0].category).toBe("triggers");
+    expect(result.clusters[0].count).toBe(2);
+  });
+
+  it("recordEvalRunSnapshot appends run-history", () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "reqforge-flywheel-"));
+    const evalDir = path.join(tmp, "eval");
+    fs.mkdirSync(evalDir, { recursive: true });
+    const hist = recordEvalRunSnapshot(evalDir, "demo", {
+      passed: false,
+      errorCount: 1,
+      warnCount: 0,
+      checks: [{ id: "x", severity: "error", ok: false, message: "fail" }],
+    });
+    expect(fs.existsSync(hist)).toBe(true);
+    const arr = JSON.parse(fs.readFileSync(hist, "utf-8"));
+    expect(arr).toHaveLength(1);
+    expect(arr[0].failed[0].id).toBe("x");
+    fs.rmSync(tmp, { recursive: true, force: true });
   });
 });

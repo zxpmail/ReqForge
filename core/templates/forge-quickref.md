@@ -223,11 +223,25 @@ pnpm preflight --build-dir dist    # 构建后扫描产物
 
 ---
 
+## 三类证据（勿混用）
+
+| 层 | 验什么 | 命令 |
+|----|--------|------|
+| 代码契约 | 类型 / 单测 / lint | 项目 `test` / `tsc` |
+| Skill 产出 | 触发 / 产物 / judge | `pnpm skill-eval`（+ compare / analyze） |
+| 门禁交付 | Spec·Plan·Phase·发布 | `pnpm forge-verify` · preflight |
+
+借口表 → `core/skills/_shared/shortcuts-to-resist.md`。阶段入口重读 Skill → bootstrap Iron Law 10。
+
 ## 自定义 Skill 评估（skill-eval）
 
 ```bash
 pnpm skill-eval init my-skill           # → .forge/skills/my-skill/eval/
-pnpm skill-eval my-skill                # 静态检查 + 对 eval-output/ 断言
+pnpm skill-eval my-skill                # 静态检查 + 对 eval-output/ 断言（写 run-history）
+pnpm skill-eval compare my-skill        # 对比最近两次 run（回归 exit 1）
+pnpm skill-eval analyze my-skill        # 失败归类
+pnpm skill-eval compare my-skill --judge
+pnpm skill-eval analyze my-skill --judge
 pnpm skill-eval trigger my-skill           # 触发准确率模拟评估（20 条查询）
 pnpm skill-eval judge-prep my-skill     # 初始化 judge 配置（rubric 定义）
 pnpm skill-eval judge my-skill          # 打印 judge briefing（给 AI agent 用）
@@ -236,6 +250,7 @@ pnpm skill-eval judge-record my-skill --report judge-report.json  # 记录结果
 
 - 模板：`.forge/skills/_template/eval/`（`forge-install` 写入）
 - 详解：`core/docs/skill-eval.md`（触发准确率需在客户端人工对照；judge 效果评估需 AI agent spawn 独立 sub-agent）
+- **飞轮**：`run → analyze → 改 → run → compare`（吸收 agents-cli Quality Flywheel）
 - **ref-lint**：`skill-eval run` 自动扫描 SKILL.md 中数字引用与列表长度不一致（如"四个维度"但列表只有 3 项）
 - **6 维 Rubric**: 结构完整性(10%) · 可执行具体性(20%) · 失败模式编码(15%) · 反例完备性(10%) · **工作流质量与可重复性(30%)** · 实测效果与基线对比(15%)
 - Skill 编写模式：`core/docs/skill-authoring-patterns.md`（工作流设计 + 失败模式编码 + 反例黑名单 + rubric 自查）

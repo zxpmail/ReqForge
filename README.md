@@ -75,6 +75,13 @@ flowchart LR
 
 ## What's New
 
+### v1.51.0 — 2026-07-18 — agents-cli flywheel: skill-eval compare/analyze + shortcuts
+
+- **Quality Flywheel**: `pnpm skill-eval compare|analyze` (+ `--judge`); each run appends `run-history.json`. Inspired by [google/agents-cli](https://github.com/google/agents-cli).
+- **Shortcuts to Resist + 三类证据**: `core/skills/_shared/shortcuts-to-resist.md` — code tests ≠ skill-eval ≠ forge-verify.
+- **Iron Law 10**: Re-read Skill at phase entry (context compaction). Bootstrap + quickref updated.
+- **Docs**: [agents-cli-comparison.md](core/docs/agents-cli-comparison.md).
+
 ### Unreleased
 
 #### code-review skill 2.3.0 (contract cleanup)

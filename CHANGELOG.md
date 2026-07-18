@@ -2,7 +2,14 @@
 
 All notable changes to Forge are documented here.
 
-## [v1.51.0] - Unreleased
+## [v1.51.0] - 2026-07-18
+
+### Added
+- **agents-cli Quality Flywheel (local).** `pnpm skill-eval compare|analyze` (+ `--judge`) on `run-history.json` / `judge-history.json`; each run appends a snapshot. (`scripts/skill-eval-flywheel.ts`, `scripts/skill-eval.ts`)
+- **Global Shortcuts to Resist + 三类证据.** `core/skills/_shared/shortcuts-to-resist.md`; bootstrap Iron Law 10 (re-read Skill at phase entry); quickref / skill-eval docs. Comparison: `core/docs/agents-cli-comparison.md`.
+
+### Changed
+- **Adapter sync catch-up:** evolution-engine editable-surface / model-staleness prose, `dev-planner` `generate-contracts.md`, `check-evolution.bat` surface hint — aligned to core via `pnpm sync`.
 
 ### Fixed
 - **Removed invalid `claude --clear` call from yolo-driver.** `claude` CLI has no `--clear` flag (verified via `claude --help`); the call in `scripts/yolo-driver.sh:78` and `yolo-driver.bat:90` silently failed (`2>/dev/null || true` / `2>nul`). Each `claude -p` invocation is already a fresh session (no `--resume`/`--continue`), so context is naturally clean — the call was redundant and misleading. Comments updated to explain why no explicit clear is needed.

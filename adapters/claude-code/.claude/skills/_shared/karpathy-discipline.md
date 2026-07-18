@@ -10,3 +10,5 @@
 | Goal-Driven Execution | 可验证标准；完成须附验证输出 |
 
 **可简化场景**（typo、纯文档、lint 修复等）→ 见 behavior-rules.md §何时可简化。
+
+**借口表 / 三类证据** → [`shortcuts-to-resist.md`](./shortcuts-to-resist.md)。阶段入口重读 Skill → `forge-bootstrap` Iron Law 10。

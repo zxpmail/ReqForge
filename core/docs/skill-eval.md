@@ -2,7 +2,17 @@
 
 > 框架内置 Skill 用 `tests/skill-fixtures/` + `pnpm forge-smoke`（静态 TDD）。**用户自建 Skill** 用本页的 `pnpm skill-eval`（触发用例结构 + 输出断言）。
 
-参考：[如何评估 SKILL.md 质量](https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg)（Zen Trading）· [LangChain evaluating skills](https://blog.langchain.com/evaluating-skills/) · [OpenAI eval-skills](https://developers.openai.com/blog/eval-skills)
+参考：[如何评估 SKILL.md 质量](https://mp.weixin.qq.com/s/JWz6EscFlcDeHhTjsDybgg)（Zen Trading）· [LangChain evaluating skills](https://blog.langchain.com/evaluating-skills/) · [OpenAI eval-skills](https://developers.openai.com/blog/eval-skills) · 飞轮对照 [agents-cli](https://github.com/google/agents-cli)（见 [agents-cli-comparison.md](./agents-cli-comparison.md)）
+
+## 三类证据（勿混用）
+
+| 层 | 验什么 | 本页关系 |
+|----|--------|----------|
+| **代码契约** | tsc / 单元测试 / lint | 不在 skill-eval 范围内 |
+| **Skill 产出** | 触发、产物断言、judge | **本页** |
+| **门禁 / 交付** | forge-verify / preflight / Phase 四步 | 不在 skill-eval 范围内 |
+
+单测绿 ≠ Skill 行为对；skill-eval 绿 ≠ 产品可发布。借口表 → `core/skills/_shared/shortcuts-to-resist.md`。
 
 ## 三层分工
 
@@ -10,7 +20,7 @@
 |----|-----|--------|
 | **Skill** | `SKILL.md` | 判断与流程 |
 | **Eval 包** | `.forge/skills/<name>/eval/` | 触发用例 + 输出断言 |
-| **脚本** | `pnpm skill-eval` | 静态校验；对 `eval-output/` 跑断言 |
+| **脚本** | `pnpm skill-eval` | 静态校验；对 `eval-output/` 跑断言；飞轮 compare/analyze |
 
 与 **preflight** 不同：preflight = 发布前；skill-eval = **开发/迭代 Skill 时**。
 
@@ -245,6 +255,27 @@ Judge 评估需要 AI agent 来 spawn 独立 sub-agent，CLI 只负责生成 bri
 
 失败 3 次同类问题 → `feedback-observer` → 改 `SKILL.md` 或 eval 用例（进化闭环）。
 
+## 质量飞轮（compare / analyze）
+
+每次 `pnpm skill-eval <name>` 会把结果追加快照到 `.forge/skills/<name>/eval/run-history.json`。Judge 仍写入 `judge-history.json`。
+
+```bash
+# 改 Skill → 再跑 → 对比上次（回归则 exit 1）
+pnpm skill-eval my-skill
+pnpm skill-eval compare my-skill
+
+# 失败归类（按 triggers / cases / assertions / ref-lint…）
+pnpm skill-eval analyze my-skill
+
+# Judge 维度对比 / 低分聚类
+pnpm skill-eval compare my-skill --judge
+pnpm skill-eval analyze my-skill --judge
+```
+
+推荐循环：`run → analyze → 改 Skill → run → compare`。预期多轮迭代；`compare` 显示 newly failing 时禁止宣称「改进完成」。
+
+**禁止**：调低断言凑绿、删除不稳定用例、只改 expected 不改 Skill（见 shortcuts-to-resist）。
+
 ## 常见陷阱（来自 Eval 方法论）
 
 - 用例太简单 → 用带路径、文件名、业务细节的 prompt
@@ -254,6 +285,7 @@ Judge 评估需要 AI agent 来 spawn 独立 sub-agent，CLI 只负责生成 bri
 
 ## 相关
 
+- [agents-cli-comparison.md](./agents-cli-comparison.md) — 吸收点与不抄清单
 - [skillopt-comparison.md](./skillopt-comparison.md) — SkillOpt 五步 ↔ Forge
 - [skill-builder SKILL](../skills/skill-builder/SKILL.md)
 - [tests/skill-fixtures/README.md](../../tests/skill-fixtures/README.md) — 框架内置 Skill 静态探针

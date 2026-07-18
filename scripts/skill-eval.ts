@@ -4,10 +4,21 @@
  * Usage:
  *   pnpm skill-eval init <skill-name>
  *   pnpm skill-eval <skill-name> [--cwd <dir>] [--eval-dir <path>]
+ *   pnpm skill-eval compare <skill-name> [--judge]
+ *   pnpm skill-eval analyze <skill-name> [--judge]
  */
 
 import * as fs from "fs";
 import * as path from "path";
+import {
+  analyzeLatestJudge,
+  analyzeLatestRun,
+  compareLatestJudges,
+  compareLatestRuns,
+  formatAnalyzeResult,
+  formatCompareResult,
+  recordEvalRunSnapshot,
+} from "./skill-eval-flywheel";
 
 export type Severity = "error" | "warn";
 
@@ -1175,37 +1186,64 @@ function printHelp(): void {
   pnpm skill-eval judge-prep <skill-name> [--force]
   pnpm skill-eval judge <skill-name> [--cwd <dir>] [--eval-dir <path>]
   pnpm skill-eval judge-record <skill-name> --report <file> [--cwd <dir>] [--eval-dir <path>]
+  pnpm skill-eval compare <skill-name> [--judge] [--cwd <dir>] [--eval-dir <path>]
+  pnpm skill-eval analyze <skill-name> [--judge] [--cwd <dir>] [--eval-dir <path>]
 
 Static checks: triggers.json + cases.json schema and assertions.
-Judge: independent sub-agent evaluation of Skill quality (5-dim rubric).
+Judge: independent sub-agent evaluation of Skill quality (rubric).
   judge-prep        Init judge-config.json
   judge             Print structured judge briefing for AI agent
   judge-record      Validate and record completed judge report
 Trigger: test description accuracy with auto-generated queries.
   trigger           Generate 20 test queries, test description matching, report rate
+Flywheel (agents-cli inspired):
+  compare           Diff last two run-history (or --judge → judge-history) snapshots
+  analyze           Cluster failures from latest run (or --judge → low rubric dims)
 
 Docs: core/docs/skill-eval.md
 `);
 }
 
 export function parseSkillEvalArgs(argv: string[]): {
-  command: "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "judge-all" | "help";
+  command:
+    | "init"
+    | "run"
+    | "judge-prep"
+    | "judge"
+    | "judge-record"
+    | "trigger"
+    | "judge-all"
+    | "compare"
+    | "analyze"
+    | "help";
   skillName: string | null;
   cwd: string;
   evalDir?: string;
   reportPath?: string;
   strict: boolean;
   force: boolean;
+  judgeMode: boolean;
   judgeAllSkills?: string[] | null;
 } {
   const out = {
-    command: "help" as "init" | "run" | "judge-prep" | "judge" | "judge-record" | "trigger" | "judge-all" | "help",
+    command: "help" as
+      | "init"
+      | "run"
+      | "judge-prep"
+      | "judge"
+      | "judge-record"
+      | "trigger"
+      | "judge-all"
+      | "compare"
+      | "analyze"
+      | "help",
     skillName: null as string | null,
     cwd: process.cwd(),
     evalDir: undefined as string | undefined,
     reportPath: undefined as string | undefined,
     strict: false,
     force: false,
+    judgeMode: false,
     judgeAllSkills: null as string[] | null,
   };
 
@@ -1235,8 +1273,23 @@ export function parseSkillEvalArgs(argv: string[]): {
       out.reportPath = argv[++i];
       continue;
     }
+    if (a === "--judge") {
+      out.judgeMode = true;
+      continue;
+    }
     rest.push(a);
   }
+
+  const reserved = [
+    "init",
+    "judge-prep",
+    "judge",
+    "judge-record",
+    "trigger",
+    "judge-all",
+    "compare",
+    "analyze",
+  ];
 
   if (rest[0] === "init" && rest[1]) {
     out.command = "init";
@@ -1253,13 +1306,19 @@ export function parseSkillEvalArgs(argv: string[]): {
   } else if (rest[0] === "trigger" && rest[1]) {
     out.command = "trigger";
     out.skillName = rest[1];
+  } else if (rest[0] === "compare" && rest[1]) {
+    out.command = "compare";
+    out.skillName = rest[1];
+  } else if (rest[0] === "analyze" && rest[1]) {
+    out.command = "analyze";
+    out.skillName = rest[1];
   } else if (rest[0] === "judge-all") {
     out.command = "judge-all";
     out.skillName = "all";
     if (rest[1] === "--skills") {
-      out.judgeAllSkills = rest.slice(2).filter(s => !s.startsWith("-"));
+      out.judgeAllSkills = rest.slice(2).filter((s) => !s.startsWith("-"));
     }
-  } else if (rest[0] && rest[0] !== "init" && !["judge-prep", "judge", "judge-record", "trigger", "judge-all"].includes(rest[0])) {
+  } else if (rest[0] && !reserved.includes(rest[0])) {
     out.command = "run";
     out.skillName = rest[0];
   }
@@ -1379,6 +1438,41 @@ function main(): void {
     process.exit(result.passed ? 0 : 1);
   }
 
+  if (args.command === "compare") {
+    const evalDir = resolveEvalDir(args.cwd, args.skillName, args.evalDir);
+    try {
+      const result = args.judgeMode
+        ? compareLatestJudges(evalDir)
+        : compareLatestRuns(evalDir);
+      console.log(formatCompareResult(result));
+      const regressed =
+        (result.kind === "run" && result.newlyFailing.length > 0) ||
+        (result.kind === "judge" && (result.scoreDelta ?? 0) < 0);
+      process.exit(regressed ? 1 : 0);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error(`Error: ${msg}`);
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (args.command === "analyze") {
+    const evalDir = resolveEvalDir(args.cwd, args.skillName, args.evalDir);
+    try {
+      const result = args.judgeMode
+        ? analyzeLatestJudge(evalDir)
+        : analyzeLatestRun(evalDir);
+      console.log(formatAnalyzeResult(result));
+      process.exit(result.clusters.length > 0 ? 1 : 0);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error(`Error: ${msg}`);
+      process.exit(1);
+    }
+    return;
+  }
+
   const result = runSkillEval({
     cwd: args.cwd,
     skillName: args.skillName,
@@ -1386,6 +1480,16 @@ function main(): void {
     strict: args.strict,
   });
   console.log(formatSkillEvalReport(result));
+  // 飞轮：每次 run 追加快照，供 compare / analyze
+  try {
+    const evalDir = resolveEvalDir(args.cwd, args.skillName, args.evalDir);
+    if (fs.existsSync(evalDir)) {
+      const hist = recordEvalRunSnapshot(evalDir, args.skillName, result);
+      console.log(`\nFlywheel: snapshot → ${hist}`);
+    }
+  } catch {
+    /* 快照失败不阻断主结果 */
+  }
   process.exit(result.passed ? 0 : 1);
 }
 

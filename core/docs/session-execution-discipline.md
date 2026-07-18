@@ -46,7 +46,9 @@
 | 计划外问题未经批准就修 | 范围蔓延 | 6 |
 | 无先例仍自行发明需求 | 违反 Think Before Coding | 4 |
 
-Agent 借口对照 → `dev-builder/references/anti-rationalization.md`
+Agent 借口对照 → `core/skills/_shared/shortcuts-to-resist.md`（全局）+ `dev-builder/references/anti-rationalization.md`（构建专属）
+
+**三类证据**：代码契约（test/tsc）≠ Skill 产出（skill-eval）≠ 门禁交付（forge-verify）。不可互相替代。
 
 **可选（用户项目）**：Stop Hook 对照 `git diff` 审查分层 `CLAUDE.md` 是否过时 → [claude-md-stop-hook-comparison.md](./claude-md-stop-hook-comparison.md)（不替代本纪律或 `stop-gate`）。
 

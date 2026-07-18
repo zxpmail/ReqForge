@@ -16,6 +16,7 @@ Hook block messages are **hard stops** — do not negotiate around them.
 7. **Hooks are law** — PreToolUse chain + phase-exit/stop/retry/pre-commit. Blocking output = stop.
 8. **Phase boundary** — One Phase per `/dev-builder`; user re-invokes for next Phase.
 9. **CoT when judging** — Architecture/root cause/scope trade-offs: brief bullets → **bold conclusion** before code. Simple lookups skip long CoT.
+10. **Re-read Skill at phase entry** — Before each Skill phase / DEV-PLAN Phase / major workflow step: re-open that Skill's `SKILL.md` (or `forge-skill-retrieve` mustRead). Context compaction drops earlier loads; session memory is not a substitute.
 
 ## Task execution discipline
 
@@ -50,5 +51,6 @@ If the script fails (non-zero exit), read the full SKILL.md instead.
 
 ## Rationalization references
 
+- **Global shortcuts**: `_shared/shortcuts-to-resist.md`（三类证据 + 跨 Skill 借口表）
 - Spec/plan gates: `product-spec-builder/references/hard-gate-rationalization.md`
 - Build/verify: `dev-builder/references/anti-rationalization.md`
