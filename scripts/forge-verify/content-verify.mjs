@@ -763,7 +763,7 @@ export async function perRequirementLlmCheck(evidenceDir, requirements, model, n
 //   exit 0 → PASS（side effect 观察到）   exit 1 → REJECT（side effect 缺失，skill-defect）
 //   其他 → exec/setup 错误，归为 fail（不静默放行）
 //
-// series Part 13 的 argument-space 层：判定维度是观察到的 side effect（在 claim 命名指称
+// series Part 10 的 argument-space 层：判定维度是观察到的 side effect（在 claim 命名指称
 // 上），在 producer 的词汇/文本操纵可达范围之外 → 同义词免疫、确定性。与 C1/C2
 // （word-space）正交：C3 不读 evidence 文本，只运行代码。
 //

@@ -2,7 +2,7 @@
 
 **状态**: Proposal (2026-07-12, 待评审)
 **作者**: Forge
-**承接**: `experiments/contract-strawman-test/`、series Part 13 (argument-space)、`scripts/forge-verify/content-verify.mjs`
+**承接**: `experiments/contract-strawman-test/`、series Part 10 (argument-space)、`scripts/forge-verify/content-verify.mjs`
 
 ---
 
@@ -173,7 +173,7 @@ self-critique 是**非对抗场景下的便宜 recall 源**,不是安全防线�
 **引用**
 - [[argument-space-experiment]] — C2 word-space bound,C3 同义词免疫
 - [[channel-contract-experiments]] — Pipeline 三层架构
-- series Part 13 — argument-space 压轴
+- series Part 10 — argument-space 压轴
 - `scripts/forge-verify/content-verify.mjs` — 现有 pipeline
 - `experiments/contract-strawman-test/` — scope-matches-claim 缺口 + negative contract
 
