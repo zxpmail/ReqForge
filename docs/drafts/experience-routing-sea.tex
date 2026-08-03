@@ -1,0 +1,123 @@
+\documentclass{article}
+
+% Double-blind workshop submission for NeurIPS 2026 SEA Workshop
+% Source of truth: experience-routing-workshop-sea-en.md v0.14 (aligned to ZH v0.19)
+\usepackage[dblblindworkshop,nonatbib]{neurips_2026}
+
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{microtype}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\setlist{nosep,leftmargin=*}
+
+\title{Experience Admission for White-Box Agentic RL:\\
+A Position on Dataflow between Exploration and the Base Policy}
+
+\workshoptitle{Scaling Environments for Agents (SEA)}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+In \textbf{white-box instrumented-worker} multi-worker RL, a layer is often missing between optimizers and collaboration surfaces: after trajectories are produced, \textbf{who may materialize, at what depth, and when may \(\theta\) update}. Black-box APIs are out of strong-form claim.
+
+We call this layer \textbf{experience admission}. Novelty is \textbf{P1--P4} (a \emph{proposed admission policy}) plus preregistered failure conditions---not a new score or proven discovery. Hypothesis-level claim: the bottleneck is often how experience enters the base update path in a layered, isolated, low-frequency way.
+
+\textbf{Layered test:} fix \(\mathcal{A}\); vary only the data plane (A/B/P). If failures~4--5 do not fire, materialization cost falls vs.\ A, and the task is not in persistent regression, meet the \textbf{scale-up gate} only (allows larger runs; \(\neq\) validation; does \textbf{not} alone entail ``must ship as a first-class module''). After scale-up still passes, \emph{then} recommend a first-class pipeline module; else withdraw that configuration's strong form.
+\end{abstract}
+
+\section{Motivation (scoped)}
+\label{sec:motivation}
+
+As agent environments scale---more workers, longer horizons, denser trajectory streams---three layers are often mixed: \textbf{optimizer} (when/how to update; e.g., group-relative methods~\citep{shao2024deepseekmath}; single-rollout async optimization~\citep{hou2026single}), \textbf{collaboration} (shared context at interaction time), and \textbf{admission} (who may \emph{materialize}, how deeply, when \(\theta\) may be touched). Stability \(\neq\) admission: the former asks whether updates diverge on a visible set; the latter asks which trajectories may enter that set and whether/how they are materialized first. IMPALA~\citep{espeholt2018impala} can still treat ``delivered \(\Rightarrow\) learnable.'' Shielding~\citep{alshiekh2018safe} constrains actions; CQL~\citep{kumar2020conservative} constrains offline values---not online materialization/update budgets. Scaling the environment without an admission layer can amplify unbudgeted exposure of noise and hazard into the base policy.
+
+\textbf{Minimal counterexample.} With ordinary learnable \(\tau^+\) and high-TD-error hazard \(\tau^\ddagger\) in one buffer, PER~\citep{schaul2016prioritized} \emph{allows} \(\tau^\ddagger\) into the learner above uniform rate when high-priority (power-law sampling: high quantile does not guarantee a draw, but the mechanism does not exclude hazard uplift). Action shields do not remove it from the train-visible set; delete filters discard analysis value. Gap triad: \textbf{P1 budget semantics absent} (pool-default learnable; no default-off materialization), plus P2$\cdot$P4 / P3 violations. If hazard has \emph{low} TD-error, PER may ignore it---that is ``unnoticed,'' not policy-level quarantine-with-retention (P2). Sampling weights \(\neq\) admission policy.
+
+\textbf{Scope.} Strong form assumes workers expose hidden representations, local action distributions, or uncertainty signals. Fingerprints and thresholds are knobs, not results. Black-box APIs degrade to post-hoc text filtering and must not be conflated with the strong form.
+
+\section{Proposed admission policy (not ``irreducible discovery'')}
+\label{sec:policy}
+
+\textbf{Terms.} \emph{Materialization} = persist a trajectory from a streaming state into an inspectable object; \emph{deep read} = costly analysis on (usually) materialized trajectories. They often share an admission-cost budget but are logically separable. For brevity we say \emph{materialization cost} in budget/metrics. \(D_{\mathrm{read}}\) is eligible for materialize/deep-read, not admit-to-update.
+
+Use the name only if all four are \emph{enforced}; else revert terms. P1--P4 are a \textbf{proposed admission policy}, not an established scientific finding.
+
+\begin{table}[t]
+\centering
+\caption{Proposed constraints P1--P4 vs.\ typical PER / delete-style filters.}
+\label{tab:p14}
+\small
+\begin{tabular}{@{}p{1.6cm}p{4.2cm}p{5.2cm}@{}}
+\toprule
+\textbf{} & \textbf{Meaning} & \textbf{vs PER / delete-filter} \\
+\midrule
+\textbf{P1} & Full materialization off by default (explicit quota) & Usually absent \\
+\textbf{P2} & Quarantine \(\neq\) delete & Usually absent \\
+\textbf{P3} & Full materialization \(\neq\) admission & Sampled \(\Rightarrow\) learned \\
+\textbf{P4} & \(D_{\mathrm{adm}}\subsetneq D_{\mathrm{all}}\) when hot nonempty & Reweight-all / action-only \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Logical interdependence (design-level, not ablation).}
+ Drop P1 \(\rightarrow\) materialization budget vanishes; warm/hot become post-hoc labels \(\approx\) unbudgeted PER\,+\,tags. Drop P2 \(\rightarrow\) delete-or-learn (no analysis track). Drop P3 \(\rightarrow\) \(D_{\mathrm{read}}\equiv D_{\mathrm{adm}}\) \(\approx\) PER/passive pool. Drop P4 \(\rightarrow\) P1--P3 may remain, but when hot is nonempty \(D_{\mathrm{adm}}\subsetneq D_{\mathrm{all}}\) is no longer forced: a hybrid cache still distinct from PER, yet incomplete as a \emph{visible-set} policy. Together they block four distinct collapses; \textbf{joint proposal} is warranted. This does \textbf{not} replace causal ablations (\S\ref{sec:limits}).
+
+LLM curation (filtering / RLAIF / RAFT~\citep{hu2024preference,lee2023rlaif,dong2023raft}) optimizes pre-batch quality; kept \(\Rightarrow\) update \(\theta\). High reward \(\neq\) low risk. Multi-phase exploration (e.g., First Return, Then Explore~\citep{ecoffet2021first}) targets exploration schedules and coverage---orthogonal to materialization budgets, quarantine tracks, or enforced \(D_{\mathrm{adm}}\subsetneq D_{\mathrm{all}}\).
+
+\textbf{Honest empirical gap:} no causal ablation of which constraint drives gains vs.\ PER. \textbf{H3} (measurable quarantine \emph{utility}) is \textbf{exploratory} for the scale-up gate; P2 \emph{execution integrity} (nonempty quarantine must be read/used) is enforced by failure~4(b).
+
+\textbf{H\(\leftrightarrow\)P:} H1\(\rightarrow\)P1 (primary); H2\(\rightarrow\)P2+P4 (primary); H3\(\rightarrow\)P2 value magnitude (exploratory); H4 (contact frequency / visible-set size, not SGD step size)\(\rightarrow\)P3+P4 (primary).
+
+\section{Interface, predicate, contract}
+\label{sec:interface}
+
+Not a full formal system---an interface plus minimal predicates. Dataflow (pool \(\mathcal{P}\), not batch \(B_t\)):
+\[
+\tau \xrightarrow{\phi} x \xrightarrow{r} \mathcal{P} \xrightarrow{\mathrm{adm}} D_{\mathrm{adm}} \xrightarrow{\mathcal{A}} \theta.
+\]
+\[
+\tau \in D_{\mathrm{adm}} \iff \mathrm{Validated}(\tau) \land \lnot\mathrm{HotHazard}(\tau) \land \mathrm{InBudget}(\tau),
+\]
+with \(\mathrm{HotHazard} \iff (r{=}\mathrm{hot}\land \ell{=}\texttt{hazard})\). \textbf{Operational floor for \(\mathrm{Validated}\):} promotion must pass a check independent of the routing score that proposed promotion (held-out probe, second scorer, or human/audit gate---fixed in the experimental plan). Hazard labels must not be dictated solely by the same routing score. Interaction: every optimizer batch \(B_t\subseteq D_{\mathrm{adm}}\). \(B_t\not\subseteq D_{\mathrm{adm}}\) is a \textbf{contract breach}; if the batch contains hot-hazard, failure~4 also fires.
+
+\textbf{Contract:} (1)~no hot-hazard in update batches; (2)~materialization \(\neq\) write \(\theta\); (3)~promotion validated independently of routing score; (4)~archive closed by default; warm budgeted; (5)~optional curator cannot enlarge allowed sets. Strong form forbids admit-without-materialization as default.
+
+\section{Preregistered falsification}
+\label{sec:falsification}
+
+\textbf{Arms:} A~passive (default materializable / replay); B~admission (P1--P4+\S\ref{sec:interface}); P~optional PER (weights \(\neq\) admission).
+
+\textbf{Metrics:} materialization ratio; wall-clock/FLOPs; return; hazard penetration; \textbf{materialization gain} = probe return lift or loss drop after materialization (pick one; fixed in plan)---subset mean/median or preregistered smoothing allowed; Spearman \(\rho\) vs.\ (aggregated) gain for failure-5 labels only.
+
+\textbf{Failures} (\(K\geq 3\) segments; any one rejects the setting):
+\begin{enumerate}[label=\arabic*.]
+\item \textbf{Warm-mass collapse}---warm mass (routing count) \(\geq 90\%\) (or archive+hot \(<10\%\)) \textbf{and} materialization improvement vs.\ A \(<5\%\) (conjunction; high mass with clear cost drop does \textbf{not} fire).
+\item \textbf{No budget gain}---materialization improvement \(<10\%\) \textbf{and} wall-clock/FLOPs improvement \(<5\%\) (default AND). Grey zone: mat.\ gain in \([5\%,10\%)\) with wall-clock \(\geq 5\%\) fires neither 1--2 nor meets the scale-up gate---no scale-up claim; alternative joint criteria require preregistration.
+\item Persistent regression vs.\ A (preregistered \(\alpha\)/MID).
+\item \textbf{Hard (P2 integrity):} (a)~any hot-hazard enters \(D_{\mathrm{adm}}\) and updates \(\theta\); \textbf{or} (b)~quarantine/hot nonempty in-window but never read/deep-read and unused for any preregistered peripheral analysis (``quarantine-to-forget''). (b)~N/A if hot empty.
+\item \textbf{Hard proxy--gain test} (three clauses; current proxy family only; \textbf{any clause firing fails}---run all three):
+\begin{itemize}
+\item \textbf{Correlation:} one-sided Spearman of \(\rho>0\) at preregistered \(\alpha\) (e.g.\ \(0.05\)); nonsignificant \(\rightarrow\) fires.
+\item \textbf{Random baseline:} archive F1/accuracy within preregistered \(\delta\) of a matched-marginal i.i.d.\ random archive labeling \(\rightarrow\) fires.
+\item \textbf{Family boundary:} ``new family'' = architectural score change (e.g.\ entropy\(\rightarrow\)prediction error); retuning thresholds/windows inside the same function = same instance (must retest). After fail: at most weak post-hoc filtering; no strong-form mix; new family requires fresh preregistration.
+\end{itemize}
+\end{enumerate}
+
+\textbf{Scale-up gate (\(\neq\) validation):} materialization \(\downarrow\geq 10\%\) vs.\ A; failure~3 unmet; failures~4--5 unmet (incl.\ 4(b)). Allows larger experiments only---does \textbf{not} alone entail a first-class module. After scale-up still passes: \emph{then} recommend first-class pipeline module. H3 value magnitude remains exploratory.
+
+\section{Limitations}
+\label{sec:limits}
+
+No theory; no causal minimality claim; no black-box strong form; no LoRA/GRPO main results; no appendix-as-proof. Condition~5 is intentionally strict: under small \(N\) or high label noise, nonsignificance is likely and should be read as ``this proxy family is unsupported,'' not ``the admission question is void.'' Materialization-gain labels are measured on trajectories selected for materialization, so selection bias is intrinsic; the random-baseline clause partially disciplines it but does not remove it. \textbf{Scope boundary:} long-horizon, costly materialization/deep-read, heterogeneous workers; short trajectories / single worker / negligible cost may favor passive pool or PER---even after a pass, designers may decline to ship. Future: ablations; open-weight multi-seed; learnable routers; H3 value metrics beyond 4(b); separate paper for black-box weak form~\citep{shen2024alignment,pathak2017curiosity,burda2019exploration}.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Deliverables: name the (white-box) layer; propose \textbf{P1--P4} with logical interdependence; give a falsifiable protocol. Scale-up gate \(\neq\) validation and \(\neq\) must-ship; after scale-up still passes, \emph{then} recommend a first-class pipeline module. Whether the hypothesis holds at scale remains open---outside any ``already proven'' claim.
+
+\bibliographystyle{unsrtnat}
+\bibliography{experience-routing-sea}
+
+\end{document}

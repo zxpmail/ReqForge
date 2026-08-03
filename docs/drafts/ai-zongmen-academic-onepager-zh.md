@@ -1,8 +1,10 @@
-# 一页摘要｜经验准入控制（立场预印本 v0.3.2）
+# 一页摘要｜经验准入控制（Workshop A · SEA）
 
-**全文：** `experience-routing-position-paper-zh.md`  
-**体裁：** Technical Position · 建议 arXiv `cs.LG`  
-**身份：** 提出可检验问题；主文贡献三项；附录 C **不参与论证**
+**英文短稿：** `experience-routing-workshop-sea-en.md`（v0.14）  
+**中文底座：** `experience-routing-position-paper-zh.md`（v0.19）  
+**LaTeX/PDF：** `experience-routing-sea.tex` → `experience-routing-sea.pdf`（已与 v0.14 对齐）  
+**体裁：** Position short paper · **不挂 arXiv**  
+**主目标：** NeurIPS 2026 **SEA** Workshop（明确收 position，≤4 页，截止约 8/29）
 
 ---
 
@@ -10,20 +12,19 @@
 
 瓶颈往往不在让更多模型互相看见，而在让经验**分层、隔离、低频**抵达基座——假说级，可否掉。
 
-## 锚点文献
+## 三项交付
 
-- **[1] SAO** — 异步单 rollout 稳定训练（最近邻）  
-- **[2] GRPO** — 同步组采样对照  
+问题命名 · P1–P4 · 预注册失败条件（含条件 5）  
+玩具实验 = 可选补充，**不计入贡献**
 
 ## P1–P4
 
-默认无深读权 · 隔离≠删除 · 深读≠准入 · \(D_{adm}\subsetneq D_{all}\)
+默认不物化（配额） · 隔离≠删除 · 物化≠准入 · hot 非空时 \(D_{adm}\subsetneq D_{all}\)
 
-## 主文交付（三项）
+## 页数（2026-08-03 编译）
 
-问题抽离 · P1–P4 · 预注册失败条件（§7）  
-附录 C = 执行记录（**不计入贡献**）· 第 9 节 = 因果分解等未来工作
+总 **4** 页；References 始于第 4 页前部 → **正文 < 4 页**（满足 ≤4 excl. refs）
 
-## arXiv Comments
+## 下一步
 
-*Technical position; appendix has toy-scale protocol runs only. Not an empirical LLM-RL method paper.*
+OpenReview 账号 → 盲审确认（匿名） → SEA 提交
