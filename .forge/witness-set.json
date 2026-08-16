@@ -1,0 +1,7 @@
+{
+  "n": 4,
+  "q": 3,
+  "f": 1,
+  "witnesses": ["W1", "W2", "W3", "W4"],
+  "note": "DEV membership for smoke gate. Production keys/rotation must use the same append-only / anti-rollback treatment as minimum-version."
+}

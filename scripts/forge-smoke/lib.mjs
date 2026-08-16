@@ -20,6 +20,7 @@ export const SMOKES = [
   "platform-compliance-doc",
   "machine-gates-doc",
   "package-integrity",
+  "policy-witness-quorum",
   "templates-present",
   "agents-complete",
   "hooks-wired",

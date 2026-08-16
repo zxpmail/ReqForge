@@ -1,0 +1,10 @@
+{
+  "dev_only": true,
+  "warning": "HMAC secrets committed for CI reproducibility. NOT production witness keys. Replace before any real trust claim.",
+  "keys": {
+    "W1": "reqforge-dev-witness-key-W1-not-for-prod",
+    "W2": "reqforge-dev-witness-key-W2-not-for-prod",
+    "W3": "reqforge-dev-witness-key-W3-not-for-prod",
+    "W4": "reqforge-dev-witness-key-W4-not-for-prod"
+  }
+}

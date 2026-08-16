@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "minimum": 2,
+  "tree_size": 2,
+  "artifact_digest": "7c8d9e0f1a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5",
+  "root": "08328d2e9f6d2999740312428566f07e86ff636806a20456709de34e29aaa6ae",
+  "note": "Governed policy head for forge-smoke 3-of-4 witness quorum. Update only via governed process — not ordinary PR edits."
+}

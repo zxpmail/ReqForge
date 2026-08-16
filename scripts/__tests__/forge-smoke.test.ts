@@ -16,7 +16,7 @@ describe("forge-smoke registry", () => {
       .filter((f) => f.endsWith(".mjs") && f !== "run-all.mjs" && f !== "lib.mjs")
       .sort();
     const expected = [...SMOKES].map((s) => `${s}.mjs`).sort();
-    expect(SMOKES).toHaveLength(15);
+    expect(SMOKES).toHaveLength(16);
     expect(files).toEqual(expected);
   });
 });
