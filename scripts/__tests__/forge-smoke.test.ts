@@ -13,7 +13,13 @@ const SMOKE_DIR = join(ROOT, "scripts", "forge-smoke");
 describe("forge-smoke registry", () => {
   it("SMOKES list matches scripts on disk (no orphans, no missing)", () => {
     const files = readdirSync(SMOKE_DIR)
-      .filter((f) => f.endsWith(".mjs") && f !== "run-all.mjs" && f !== "lib.mjs")
+      .filter(
+        (f) =>
+          f.endsWith(".mjs") &&
+          f !== "run-all.mjs" &&
+          f !== "lib.mjs" &&
+          !f.endsWith("-lib.mjs")
+      )
       .sort();
     const expected = [...SMOKES].map((s) => `${s}.mjs`).sort();
     expect(SMOKES).toHaveLength(16);
