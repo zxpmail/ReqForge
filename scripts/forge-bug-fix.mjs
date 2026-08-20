@@ -132,9 +132,10 @@ function cmdDiagnose() {
       const match = out.match(/(\d+) passed.*?(\d+) failed/);
       testResult = match ? `${match[1]} passed, ${match[2]} failed` : "All tests passed";
     } catch (e) {
-      const out = e.stdout || "";
+      // Weld: keep stderr so a failed test run carries its real reason.
+      const out = `${e.stdout || ""}\n${e.stderr || ""}`;
       const match = out.match(/(\d+) passed.*?(\d+) failed/);
-      testResult = match ? `${match[1]} passed, ${match[2]} failed` : "Tests failed";
+      testResult = match ? `${match[1]} passed, ${match[2]} failed` : `Tests failed: ${(e.stderr || e.message || "no output").trim().split("\n")[0]}`;
     }
   }
   console.log(`[Tests] ${testResult}`);
@@ -624,7 +625,8 @@ function cmdClassify(traceName) {
       try {
         input = execSync(testCmd, { cwd: ROOT, encoding: "utf-8", timeout: 60000 });
       } catch (e) {
-        input = e.stdout || e.message || "";
+        // Weld: keep stderr — a failing run's reason lives there.
+        input = `${e.stdout || ""}\n${e.stderr || ""}`.trim() || e.message || "no output";
       }
     }
 
@@ -710,7 +712,8 @@ function cmdVerify() {
         console.log("  ✅ All tests passed");
       }
     } catch (e) {
-      const out = e.stdout || "";
+      // Weld: keep stderr — a failed run's real reason is on stderr.
+      const out = `${e.stdout || ""}\n${e.stderr || ""}`;
       const match = out.match(/(\d+) passed.*?(\d+) failed/);
       if (match) {
         console.log(`  ❌ Tests: ${match[0]}`);

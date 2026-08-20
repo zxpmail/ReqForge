@@ -7,7 +7,9 @@ if [ -z "$CLAUDE_PROJECT_DIR" ]; then
 fi
 
 INPUT=$(cat)
-FILE_PATH=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.file_path||'')}catch(e){console.log('')}})" 2>/dev/null)
+# On JSON failure, print the parse error to stderr (visible) but emit '' so the
+# hook fail-opens with a surfaced reason instead of a silent one.
+FILE_PATH=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.file_path||'')}catch(e){console.error('mark-review-needed: could not parse payload: '+e.message);console.log('')}})")
 
 if [ -z "$FILE_PATH" ]; then
   exit 0

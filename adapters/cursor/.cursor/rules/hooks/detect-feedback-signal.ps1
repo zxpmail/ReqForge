@@ -15,7 +15,11 @@ if ($c) {
                 $matched = $true
             }
         }
-    } catch {}
+    } catch {
+        # Weld: surface the parse error to stderr (visible in the hook log) but
+        # keep the always-valid-JSON stdout contract — fail-open with a reason.
+        [Console]::Error.WriteLine("detect-feedback-signal: could not parse payload: $($_.Exception.Message)")
+    }
 }
 if (-not $matched) {
     [Console]::Out.WriteLine('{"continue":true}')

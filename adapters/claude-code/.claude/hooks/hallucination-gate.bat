@@ -14,7 +14,8 @@ for %%I in ("%ROOT%") do set "ROOT=%%~fI"
 set "PRETMP=%TEMP%\forge-pretool-%RANDOM%.json"
 > "%PRETMP%" echo !INPUT!
 
-node "%ROOT%\scripts\hooks\spec-before-code-gate.mjs" < "%PRETMP%" > "%TEMP%\forge-spec-gate-out.txt" 2>nul
+REM Weld: no 2>nul on the spec gate — its stderr stays visible to the hook log / decision-maker.
+node "%ROOT%\scripts\hooks\spec-before-code-gate.mjs" < "%PRETMP%" > "%TEMP%\forge-spec-gate-out.txt"
 for %%A in ("%TEMP%\forge-spec-gate-out.txt") do if %%~zA gtr 0 (
   type "%TEMP%\forge-spec-gate-out.txt"
   del "%PRETMP%" 2>nul

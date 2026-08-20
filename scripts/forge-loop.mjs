@@ -193,8 +193,20 @@ function checkPlan() {
     const r = JSON.parse(out);
     return { ok: r.omitted.length === 0, omitted: r.omitted, completed: r.completed, totalItems: r.totalItems };
   } catch (e) {
-    try { const r = JSON.parse(e.stdout || "{}"); return { ok: r.omitted?.length === 0, omitted: r.omitted || [], completed: r.completed || [], totalItems: r.totalItems || 0 }; }
-    catch { return { ok: true, omitted: [], completed: [], totalItems: 0 }; }
+    // Weld: a crashed checker is not an empty checklist. Parse the partial
+    // output only if the runner actually produced it; otherwise surface the
+    // real error instead of reporting the phase delivered.
+    const stdout = (e.stdout || "").trim();
+    const stderr = (e.stderr || "").trim();
+    if (stdout) {
+      try {
+        const r = JSON.parse(stdout);
+        return { ok: r.omitted?.length === 0, omitted: r.omitted || [], completed: r.completed || [], totalItems: r.totalItems || 0 };
+      } catch {
+        return { ok: false, omitted: [], completed: [], totalItems: 0, error: `forge-phase-check unparseable: ${stderr || stdout.slice(0, 300)}` };
+      }
+    }
+    return { ok: false, omitted: [], completed: [], totalItems: 0, error: `forge-phase-check crashed: ${stderr || e.message || "non-zero exit"}` };
   }
 }
 

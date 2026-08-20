@@ -6,14 +6,17 @@
 ROOT="$(CDPATH= cd "$(dirname "$0")/../.." && pwd)"
 INPUT=$(cat)
 
-BLOCK=$(echo "$INPUT" | node "$ROOT/scripts/hooks/spec-before-code-gate.mjs" 2>/dev/null)
+# Parse helper: on JSON failure, the node one-liners print the parse error to
+# stderr (visible to the decision-maker / hook log) but emit '' on stdout, so
+# the gate fail-opens with a surfaced reason instead of a silent one.
+BLOCK=$(echo "$INPUT" | node "$ROOT/scripts/hooks/spec-before-code-gate.mjs")
 if [ -n "$BLOCK" ]; then
   echo "$BLOCK"
   exit 0
 fi
 
-TOOL_NAME=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_name||j.tool||'')}catch(e){console.log('')}})" 2>/dev/null)
-FILE_PATH=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.file_path||j.tool_input?.path||'')}catch(e){console.log('')}})" 2>/dev/null)
+TOOL_NAME=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_name||j.tool||'')}catch(e){console.error('hallucination-gate: could not parse tool payload: '+e.message);console.log('')}})")
+FILE_PATH=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.file_path||j.tool_input?.path||'')}catch(e){console.error('hallucination-gate: could not parse tool payload: '+e.message);console.log('')}})")
 
 case "$TOOL_NAME" in
   "Write"|"Edit")
@@ -32,7 +35,7 @@ case "$TOOL_NAME" in
     fi
     ;;
   "Bash")
-    COMMAND=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.command||'')}catch(e){console.log('')}})" 2>/dev/null)
+    COMMAND=$(echo "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);console.log(j.tool_input?.command||'')}catch(e){console.error('hallucination-gate: could not parse tool payload: '+e.message);console.log('')}})")
     if echo "$COMMAND" | grep -qE "pnpm (add|install)\s+\S+" 2>/dev/null; then
       PACKAGE=$(echo "$COMMAND" | sed 's/.*pnpm add //' | sed 's/ .*//' 2>/dev/null)
       if [ -n "$PACKAGE" ] && [ -f "package.json" ] && ! grep -q "\"$PACKAGE\"" package.json 2>/dev/null; then

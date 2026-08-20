@@ -83,12 +83,17 @@ function checkSkillQuality() {
       stdio: ["pipe", "pipe", "pipe"],
     });
   } catch (e) {
-    out = e.stdout || "";
-    // If validate-skill exits non-zero but output says all PASS, treat as pass
-    if (!out.includes("FAIL") || out.includes("0 FAIL")) {
+    // Weld: don't green a crash. If the runner exited non-zero and stdout
+    // carries no "all PASS" evidence, surface the real error instead of
+    // treating empty output as a pass.
+    const stderr = (e.stderr || "").trim();
+    const stdout = (e.stdout || "").trim();
+    if (stdout.includes("PASS") && !stdout.includes("FAIL")) {
       return "all skills PASS";
     }
-    throw new Error("Some skills failed validation");
+    throw new Error(
+      `Some skills failed validation: ${stderr || stdout || e.message || "non-zero exit"}`
+    );
   }
   if (out.includes("FAIL") && !out.includes("0 FAIL")) {
     throw new Error("Some skills failed validation");

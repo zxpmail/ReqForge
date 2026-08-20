@@ -168,7 +168,8 @@ function runDetection() {
       cwd: ROOT, encoding: "utf-8", timeout: 120000, stdio: ["pipe", "pipe", "pipe"],
     }).trim();
   } catch (e) {
-    output = (e.stdout || "").trim();
+    // Weld: keep stderr — a failed baseline check's real reason is there.
+    output = `${e.stdout || ""}\n${e.stderr || ""}`.trim();
   }
 
   const checks = {};

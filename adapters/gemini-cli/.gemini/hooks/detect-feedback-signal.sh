@@ -9,7 +9,10 @@
 INPUT=$(cat 2>/dev/null || true)
 PROMPT=""
 if [ -n "$INPUT" ]; then
-  PROMPT=$(printf '%s' "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(j.prompt||'')}catch(e){process.stdout.write('')}})" 2>/dev/null || true)
+  # On JSON failure, print the parse error to stderr (visible in the hook log /
+  # to the decision-maker) while still emitting '' so the always-valid-JSON
+  # stdout contract holds. The hook then fail-opens with a surfaced reason.
+  PROMPT=$(printf '%s' "$INPUT" | node -e "let d='';process.stdin.on('data',c=>d+=c);process.stdin.on('end',()=>{try{const j=JSON.parse(d);process.stdout.write(j.prompt||'')}catch(e){console.error('detect-feedback-signal: could not parse payload: '+e.message);process.stdout.write('')}})") || true
 fi
 
 if [ -z "$PROMPT" ]; then
