@@ -1,14 +1,13 @@
 # CONTEXT
 
 ## 当前正在做什么
-- SEA 投稿包装：英文 v0.14 → LaTeX 已重排并对齐中文 v0.19
-- **投稿目标待定**：SEA 2026 大概率未入选 NeurIPS 2026（2026-08-04 核实）
+- **经验准入文稿已迁出公开仓** → 私有 `notes/reqforge/`（本机 `C:\work\notes\reqforge`）
+- arXiv / SEA：**搁置**（新人门槛过不了）；禁止「已投/将投」「已挂/将挂」口径
+- 公开仓 `docs/drafts/README-experience-routing.md` 仅指针；玩具实验仍在 `experiments/experience-routing-*`
 
 ## 上次停在哪个位置
-- `docs/drafts/experience-routing-sea.tex` 已按 EN v0.14 重写（P1–P4）
-- `docs/drafts/experience-routing-sea.pdf` 已重编译：**总 4 页**，References 在第 4 页，正文 <4 页
-- 一页摘要已改正文版本号与 P1–P4 口径
-- 下一步：**先确认 SEA 2026 是否举办**（OpenReview group 404；官方页仍指 2025）；再 OpenReview 建号 → 盲审确认 → 提交
+- 文稿包（ZH v0.19.1 / EN v0.14 / PDF / 一页摘要 / endorsement 草稿）已移至 notes（2026-09-24）
+- 下一步：在 `notes/reqforge` 维护正文；公开仓不再改立场文
 
 ## SEA 2026 状态核实（2026-08-04，代理恢复后 browse+curl 双通道确认）
 - OpenReview `NeurIPS.cc/2026/Workshop/SEA` → **Group Not Found**（web UI 实测）
