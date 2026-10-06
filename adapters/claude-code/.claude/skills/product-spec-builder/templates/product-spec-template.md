@@ -130,6 +130,8 @@ This template is used to generate a structurally complete Product Spec document.
 |-------------|------|------------------|---------------|
 | … | S0 / S1 / S2 | … | … |
 
+S0/S1 rows: **Source** must be a real path or an explicit `[GAP: what's missing]`. Gaps may stay in the spec, but the corresponding acceptance cannot be marked verified until the gap is closed. Never invent a plausible value.
+
 If none apply, state **"No S0/S1 in v1"** and proceed.
 
 ## UI Layout
@@ -325,6 +327,7 @@ Two-column layout: left input area at 40%, right output area at 60%.
    - Separate into "Core Features" and "Supplementary Features"
    - Format for each item: user does what -> system does what -> what is achieved
    - Specify the trigger method (which button to click)
+   - Write known quantities concretely (limits, counts, formats). If a needed value is unknown, write `[GAP: what]` — do not invent a plausible number (see `_shared/acceptance-evidence.md` 原则一)
 
 4. **UI Layout**:
    - Start with the overall layout (number of columns, proportions)

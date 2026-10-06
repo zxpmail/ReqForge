@@ -14,11 +14,12 @@
  *     "task": "当前 Phase 的任务描述",
  *     "files": ["src/api/register.ts"],
  *     "requirements": [
- *       { "id": "REQ-1", "desc": "IP 级别限流", "evidence_file": "test-output.txt" },
- *       { "id": "REQ-2", "desc": "Coverage ≥ 85%", "evidence_file": "coverage.txt" },
+ *       { "id": "REQ-1", "desc": "IP 级别限流", "evidence_file": "test-output.txt", "strength": "L3" },
+ *       { "id": "REQ-2", "desc": "Coverage ≥ 85%", "evidence_file": "coverage.txt", "strength": "L2" },
  *       { "id": "REQ-3", "desc": "不得使用 TTL 替代 write-invalidation", "evidence_file": "diff-review.md" }
  *     ]
  *   }
+ *   strength（可选 L1-L4）：透传到输出；全 L1 配置会被 content-verify 的 L1_only_acceptance 检查拒绝。
  *
  * 输出（stdout）：可直接写入 .forge/content-verify.json 的 JSON
  *
@@ -392,14 +393,16 @@ function generate(input) {
   for (const req of requirements) {
     // 如果已有显式 pattern 或 patterns，保留原样
     if (req.pattern || (req.patterns && req.patterns.length > 0)) {
-      generated.evidence_gates.requirements.push({
+      const entry = {
         id: req.id,
         desc: req.desc || "",
         evidence_file: req.evidence_file || "evidence.txt",
         pattern: req.pattern,
         patterns: req.patterns,
         type: req.type || (isNegativeDesc(req.desc || "") ? "negative" : "regex"),
-      });
+      };
+      if (req.strength) entry.strength = req.strength;
+      generated.evidence_gates.requirements.push(entry);
       continue;
     }
 
@@ -407,6 +410,7 @@ function generate(input) {
     if (req.desc) {
       const gen = generatePatterns(req);
       if (gen) {
+        if (req.strength) gen.strength = req.strength;
         generated.evidence_gates.requirements.push(gen);
         generatedCount++;
         continue;

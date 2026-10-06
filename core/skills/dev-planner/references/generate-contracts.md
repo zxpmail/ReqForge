@@ -23,23 +23,27 @@ node scripts/forge-verify/generate-contracts.mjs --in .forge/phase-requirements.
     {
       "id": "REQ-1",
       "desc": "IP 级别限流",
-      "evidence_file": "test-output.txt"
+      "evidence_file": "test-output.txt",
+      "strength": "L3"
     },
     {
       "id": "REQ-2",
       "desc": "Coverage ≥ 85%",
-      "evidence_file": "coverage.txt"
+      "evidence_file": "coverage.txt",
+      "strength": "L2"
     }
   ]
 }
 ```
+
+`strength`（可选，`L1`–`L4`，定义见 `_shared/acceptance-evidence.md`）：标注验收断言强度。透传到 `.forge/content-verify.json`；当配置中所有 requirement 都带 strength 且全为 `L1` 时，Strength 层判 `L1_only_acceptance` 拒绝（存在性断言冒充验收）。字段缺省则该检查不生效。
 
 ## 从 DEV-PLAN 自动构造 requirements 的规则
 
 从每个 Phase 构造 requirements：
 
 1. **id**: `PHASE-<N>-<M>`（Phase N 的第 M 个需求）
-2. **desc**: 从 Phase 的 Acceptance Criteria 或 Deliverables 提取。优先用验收标准中最具体的可验证描述
+2. **desc**: 从 Phase 的 Acceptance Criteria 或 Deliverables 提取。优先用验收标准中最具体的可验证描述；AC 带 `[L1]`–`[L4]` 标签时同步提取为 `strength` 字段
 3. **evidence_file**: 根据 Phase Nature 决定
    - Backend → `test-output.txt`（测试输出）
    - UI → `storybook-output.txt` 或 `lint-output.txt`

@@ -39,6 +39,7 @@ requires: []
 <!-- begin: shared-discipline -->
 [Shared Discipline]
     Karpathy 四原则 → `../_shared/karpathy-discipline.md`
+    验收判据三原则（期望值溯源 / 强度 L1–L4 / 独立读回）→ `../_shared/acceptance-evidence.md`
 
 <!-- end: shared-discipline -->
 <!-- begin: hard-gate -->

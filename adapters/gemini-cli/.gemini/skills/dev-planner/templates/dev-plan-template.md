@@ -56,7 +56,8 @@ This template is used to generate a phased development plan. dev-builder reads t
 - `src/path/to/file3.ts` — [Purpose description]
 
 **Acceptance Criteria**:
-- [Compiles, starts, XX effect can be seen]
+- [L1] Compiles, starts
+- [L2] [XX effect can be seen — assert exact expected value] (source: Primary metric)
 
 **Primary metric** (one falsifiable line — unchanged for this Phase; autoresearch-style decision anchor):
 - [e.g. `pnpm test` exit 0 for modules touched; or API p95 < 200ms on fixture X]
@@ -138,9 +139,9 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 - `src/app/globals.css` — Color variable definitions
 
 **Acceptance Criteria**:
-- TypeScript compiles with no errors
-- Electron window starts, displaying three-area layout
-- Theme switching works correctly
+- [L1] TypeScript compiles with no errors
+- [L1] Electron window starts, displaying three-area layout
+- [L2] Theme toggle switches `data-theme` attribute and persisted value survives reload (source: theme-provider spec)
 
 ---
 
@@ -165,8 +166,9 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 - `src/components/views/chat-view.tsx` — Chat view
 
 **Acceptance Criteria**:
-- Can create sessions, send messages, receive Claude streaming replies
-- Sessions and messages persist after page refresh
+- [L2] Send a message -> assistant reply streams into the chat view and is stored in `messages` (read back via sessions API, not the send call's return value)
+- [L2] Sessions and messages persist after page refresh
+- [L3] API rejects a message with an empty session id (bad input → rejected)
 
 ---
 
@@ -221,6 +223,9 @@ Below is a DEV-PLAN fragment for the "Forge — Local AI Desktop Agent" project 
 4. **Acceptance Criteria**:
    - Minimum requirement: compiles + starts + new features work
    - Recommended: existing features are not broken
+   - Strength tags `[L1]`–`[L4]` (optional; format in `../_shared/acceptance-evidence.md`): L1 = existence (precondition only), L2 = exact expected value (every Phase needs ≥1), L3 = negative case (required for S1 irreversible actions: bad input → rejected, reason verbatim), L4 = invariant
+   - Numeric expectations must cite a source (Spec literal, Primary metric, or evidence content); if unobtainable write `[GAP: what]` — never invent a plausible number
+   - A Phase whose criteria are all L1 counts as incomplete
 5. **Primary metric**:
    - Exactly **one** quantifiable line per Phase (e.g. test command exit 0, latency bound, coverage on new files)
    - dev-builder uses it as the keep/discard anchor for the Phase; do not change mid-Phase without user-approved replan

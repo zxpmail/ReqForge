@@ -18,6 +18,19 @@
         - Partially implemented — what exactly is missing
         - Not implemented — Spec original text citation
 
+    [Test & Evidence Validity] (mandatory — six bans, definitions in `../_shared/acceptance-evidence.md`)
+        For each acceptance claim (test, verify output, evidence file):
+        - Where does the expected value come from? (Spec literal / Primary metric / evidence content — a number with no source = invented)
+        - Is the result read back via an independent path (re-run, re-read, query), or only via the write call's own return value / the agent's self-report?
+        Ban list — each hit invalidates the acceptance:
+        1. Existence-only assertion posing as acceptance (compiles/200/file-exists as the only check)
+        2. Mocking the domain under test
+        3. Assertion mirroring the implementation instead of the Spec (expectations written after reading the code)
+        4. Write-then-self-verify (no independent read-back)
+        5. Expected value edited to fit the implementation (correct: red-line → fix implementation; same semantics different form → fix Spec; true gap → ask user)
+        6. Irreversible action (S1) with no negative case (bad input → rejected, reason verbatim)
+        Flag each hit as "Invalid Acceptance" with file:line — Must-fix.
+
     [UI Consistency] (only if the product has UI — DESIGN.md, design mockups, or Design-Brief)
         Skip entirely for no-UI / API-only / CLI-only surfaces.
         Check UI implementation against design baseline (priority: DESIGN.md > design tool MCP > Design-Brief.md):

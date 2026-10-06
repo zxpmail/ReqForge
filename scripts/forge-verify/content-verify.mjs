@@ -62,7 +62,8 @@
  *           "desc": "IP 级别限流",
  *           "evidence_file": "test-output.txt",
  *           "pattern": "(?i)(RateLimiter.*IP|isRateLimited.*IP)",  // C1 正则
- *           "type": "regex"                        // "regex"|"negative"|"llm"|"argument-space"
+ *           "type": "regex",                       // "regex"|"negative"|"llm"|"argument-space"
+ *           "strength": "L3"                       // 可选 L1-L4（全部标注且全为 L1 → REJECT L1_only_acceptance）
  *         }
  *       ]
  *     },
@@ -515,6 +516,29 @@ export function evidenceGateCheck(evidenceDir, requirements) {
            reason: `${requirements.length} 个证据文件全部存在且非空` };
 }
 
+// ====== Strength — L1-only 验收拒绝（确定性，opt-in）======
+// 吸收自 SDD 标准库强度分级（_shared/acceptance-evidence.md）：存在性断言（L1）只能当前置，
+// 禁当唯一验收。仅当配置里所有 requirement 都显式带 strength 且全为 L1 时拒绝——
+// 字段缺省 = 检查不生效（向后兼容，存量 content-verify.json 零影响）。
+export function strengthL1OnlyCheck(requirements) {
+  if (!requirements || requirements.length === 0) {
+    return { verdict: "PASS", layer: "Strength", check: "S_no_reqs", reason: "" };
+  }
+  const annotated = requirements.filter(r => typeof r.strength === "string" && r.strength.length > 0);
+  if (annotated.length !== requirements.length) {
+    return { verdict: "PASS", layer: "Strength", check: "S_skip_unannotated",
+             reason: `${requirements.length - annotated.length} 条未标 strength，检查不生效` };
+  }
+  const l1Count = annotated.filter(r => r.strength.toUpperCase() === "L1").length;
+  if (l1Count === annotated.length) {
+    return { verdict: "REJECT", layer: "Strength", check: "L1_only_acceptance",
+             failure_class: "skill-defect",
+             reason: `全部 ${annotated.length} 条验收都是 L1 存在性断言 — 存在性冒充验收（L1 只能当前置，每 Phase 需 ≥1 条 L2）` };
+  }
+  return { verdict: "PASS", layer: "Strength", check: "S_pass",
+           reason: `${annotated.length} 条标注中 L1=${l1Count}，存在 L2+ 判定句` };
+}
+
 // ====== C1 — 合约正则检查 ======
 // 对每个需求读对应证据文件内容，regex 匹配。无模型，零成本。
 // 对应实验 Phase 2 C1：逐需求正则匹配
@@ -900,6 +924,16 @@ export async function layeredVerify(filePath, task, model, nRuns, divergenceThre
       const efPath = join(evidenceDir, req.evidence_file);
       try { const s = statSync(efPath); preReadEvidence[req.evidence_file] = { mtime: s.mtimeMs };
       } catch { preReadEvidence[req.evidence_file] = { mtime: 0 }; }
+    }
+
+    // Strength — L1-only 验收拒绝（确定性，opt-in：全带 strength 且全 L1 才拒）
+    const sCheck = strengthL1OnlyCheck(evidenceGates.requirements);
+    stages.push({ layer: "Strength", verdict: sCheck.verdict, check: sCheck.check, reason: sCheck.reason,
+                  failure_class: sCheck.failure_class || null, evidence: "" });
+    if (sCheck.verdict === "REJECT") {
+      return { file: filePath, verdict: "REJECT", layer: "Strength", check: sCheck.check,
+               failure_class: sCheck.failure_class,
+               reason: sCheck.reason, stages, trace };
     }
 
     // Evidence Gate — 文件存在性检查

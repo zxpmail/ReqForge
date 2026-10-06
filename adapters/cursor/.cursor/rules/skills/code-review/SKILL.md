@@ -93,6 +93,7 @@ requires: []
 
     Must-have dimensions:
     - **Functional Completeness**: every Spec requirement has a code implementation
+    - **Test & Evidence Validity**: six bans — expected values sourced, independent read-back, no self-report (`../_shared/acceptance-evidence.md`)
     - **Surgical Changes Audit**: every changed line traces to the original request
     - **Simplicity First Audit**: no over-engineering or speculative abstraction
     - **Security Scan**: hardcoded credentials, XSS, SQL injection, path leakage

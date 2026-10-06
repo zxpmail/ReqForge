@@ -7,6 +7,8 @@
 
     **Four-Step Verification** (all must pass to confirm Phase completion):
 
+    Acceptance evidence must satisfy the three principles in `../_shared/acceptance-evidence.md` (expected value sourced, strength L1–L4, independent read-back). A Phase whose acceptance items are all L1 existence checks — or whose expected values cite no source — is not done.
+
     Step 1: Code Review
     - Cross-reference the DEV-PLAN.md Phase delivery checklist, confirm each item is implemented item by item
     - Check code quality: naming conventions, type safety, no `any`, no circular dependencies
