@@ -26,6 +26,7 @@
 
     **Level 2: Rule Graduation**
     Feedback repeats 3+ times -> evolution-runner proposes promoting to formal rules in SKILL.md or the **main control file** (CLAUDE.md / AGENTS.md / reqforge.mdc).
+    Exception — escaped defects graduate immediately: a defect found past its catching gate (feedback tagged `escape`) becomes a PERMANENT check item on first occurrence, no 3-occurrence wait. Machine-checkable checks must be mechanized (hook / pattern / test); the check library is append-only.
 
     **Level 3: Skill Optimization**
     Feedback scores from a particular Skill remain consistently low -> evolution-runner proposes adjusting that Skill.

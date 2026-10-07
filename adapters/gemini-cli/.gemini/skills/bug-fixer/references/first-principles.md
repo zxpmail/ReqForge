@@ -10,7 +10,7 @@
 
 **Web-First**: Unfamiliar error messages should be WebSearched before judging. Third-party library bugs should be searched for known issues before rolling your own investigation.
 
-**Stop on Repeated Failure**: If the same bug has been fixed multiple times without success, stop and re-examine — architectural, environmental, or comprehension problem. Check `.forge/.retry-counter.json`; if `retries >= max_retries` (default 3), set `state="escalated"` and present options. Hook `retry-gate` enforces at gate level.
+**Stop on Repeated Failure**: Two tiers. **2nd failed fix for the same symptom -> mandatory spec re-review BEFORE a 3rd attempt** — a bug that survives two fixes probably lives in the requirements (wrong/ambiguous spec), not the code; see workflow.md Recurrence Check. **3rd failure -> hard stop**: check `.forge/.retry-counter.json`; if `retries >= max_retries` (default 3), set `state="escalated"` and present options. Hook `retry-gate` enforces at gate level.
 
 **⚠️ 当前 Task 行动摘要（放在最后是因为注意力集中于此）**:
 1. 确认可复现 → 否则阻塞

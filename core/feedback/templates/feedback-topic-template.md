@@ -7,6 +7,7 @@ occurrences: 1
 graduated: false
 source_skill: [skill-name or N/A]
 failure_class: [skill-defect | execution-lapse | unset]   # Required when recording — routes evolution (see feedback-writer)
+escape: "[where it surfaced] (gate that should have caught it: [skill/gate])"   # Optional — set when a defect escaped past its catching gate (found by user / later Phase / production). Exempts this entry from the 3-occurrence evolution threshold; see evolution-engine Escape Routing
 scores:                        # Optional — only fill after Skill execution
   accuracy: [1-5]
   coverage: [1-5]

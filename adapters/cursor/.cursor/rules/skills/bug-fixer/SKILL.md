@@ -89,7 +89,7 @@ requires: []
 [Gotchas]
     **Environmental contamination**: Kill stale port processes before blaming code changes.
     **Over-narrowing**: Trace data flow; don't fix only where the error lands.
-    **Three-strikes stall**: Same bug fixed 3× still fails → wrong problem level; check retry-gate.
+    **Three-strikes stall**: Same symptom fails 2nd fix → re-read spec before 3rd attempt (workflow.md Recurrence Check — likely requirements-layer bug); 3rd → escalated, check retry-gate.
 
 <!-- end: gotchas -->
 <!-- begin: output-artifacts -->

@@ -9,10 +9,11 @@ requires: []
 
 <!-- begin: task -->
 [Task]
-    Scan the accumulated data in ../../feedback/ and identify three types of evolution signals:
+    Scan the accumulated data in ../../feedback/ and identify four types of evolution signals:
     1. Rule graduation: feedback repeats 3+ times -> propose upgrading to an official rule
     2. Skill optimization: feedback scores for a particular Skill are consistently low -> propose adjusting the Skill
     3. New Skill proposal: an operation pattern keeps recurring but no Skill covers it -> propose creating a new Skill
+    4. Check graduation (escaped defect): a feedback entry has `escape` set (defect found past the gate that should have caught it) -> propose a PERMANENT check item. **No 3-occurrence threshold** — one escape is proof; waiting for 3 repeats means paying for 2 more escapes.
 
     Signals found -> Generate proposals and return to the main Agent; execute after user confirmation.
     No signals -> Return "no evolution suggestions".
@@ -46,7 +47,7 @@ requires: []
 <!-- end: dependency-check -->
 <!-- begin: first-principles -->
 [First Principles]
-    **Data-Driven Evolution**: No change without data. A single feedback entry is an anecdote, not a signal. Wait for the 3-occurrence threshold before proposing rule graduation. Let the data speak, not your intuition.
+    **Data-Driven Evolution**: No change without data. A single feedback entry is an anecdote, not a signal. Wait for the 3-occurrence threshold before proposing rule graduation. Let the data speak, not your intuition. Sole exception: escape-tagged entries (defect escaped past its catching gate) graduate immediately — the escape itself is expensive data, not an anecdote.
     **Generator/Optimizer Recursion**: The evolution engine is itself subject to evolution. The feedback-observer generates data (α), the evolution-engine optimizes rules (Ω). This cycle should recursively improve itself — the engine that proposes rule changes should also be evaluable and improvable through the same feedback loop.
     **Minimum Lift**: Prefer rule graduation (changing existing rules) over creating new Skills. A 3-line rule addition to an existing SKILL.md is faster to deploy and easier to maintain than a new Skill directory. Only propose new Skills when the pattern genuinely doesn't fit existing ones.
     **Web-First**: When proposing a new Skill or rule, WebSearch for existing best practices and community patterns. Don't invent from scratch what already has a well-known solution.
@@ -195,6 +196,7 @@ requires: []
         Read ../../feedback/FEEDBACK-INDEX.md to locate all feedback files
         Read the frontmatter of each file
         Filter: occurrences >= 3 and graduated == false and skipped != true
+        Escape override: entries with `escape` set are graduation candidates regardless of occurrence count (threshold exemption — see [Task] signal 4 and [Escape Routing])
         Determine graduation target:
         - source_skill is clear -> graduate to the corresponding SKILL.md
         - Involves multiple Skills or is global -> graduate to the main control file [General Rules]
@@ -274,7 +276,15 @@ requires: []
         GREEN change: [create skill via skill-builder — outline]
         Predicted effect: [...]
         Verify by: [...]
-        -- Confirm Create / Skip"
+        -- Confirm Create / Skip
+
+     **Permanent Check** (X items)
+     1. [escaped defect]: surfaced at [where], escaped [gate that should have caught it] (escape root cause: [gate missing / pattern miss / adversarial miss])
+        RED observation: [...]
+        GREEN change: [land per Escape Routing — machine check (hook / content-verify pattern / test) or checklist item, exact target file]
+        Predicted effect: [...]
+        Verify by: [...]
+        -- Confirm / Skip"
 
 <!-- end: proposal-format -->
 <!-- begin: bounded-skill-edits -->
@@ -303,12 +313,27 @@ requires: []
     Mixed tags on one topic → split into two proposals if fixes differ (Skill vs hook).
 
 <!-- end: failure-class-routing -->
+<!-- begin: escape-routing -->
+[Escape Routing]
+    For escape-tagged entries ([Task] signal 4), classify the escape root cause to choose the landing form of the permanent check:
+
+    | Escape root cause | Permanent check lands as |
+    |-----|--------------------------|
+    | Gate missing entirely — no check covered this | New check item in the owning gate's checklist / SKILL.md (prose) |
+    | Gate existed, wording/pattern missed it | **Machine check**: content-verify pattern, grep hook, or test case |
+    | Check existed, adversarial case not covered | New negative test case / adversarial checklist question |
+
+    **Machine-first mandate**: anything expressible as grep/regex/test/hook MUST land as a machine check — pure prose is a last resort, not the default.
+    **Append-only**: permanent checks are only added, never silently removed or loosened. Retiring one goes through the Model Staleness path (deactivate, not delete) with an explicit proposal.
+
+<!-- end: escape-routing -->
 <!-- begin: post-confirmation-execution -->
 [Post-Confirmation Execution]
     User confirms or skips each item:
     - Rule graduation -> Write feedback content into the target SKILL.md or main control file, mark graduated: true
     - Skill optimization -> Modify the corresponding SKILL.md
     - New Skill -> Invoke skill-builder to create
+    - Permanent check -> Land per [Escape Routing] (machine check: hook script + hook registry row, content-verify pattern, or test file; prose: checklist entry), mark graduated: true
     - Skip -> Mark skipped: true, do not propose again
 
     After apply: run the proposal's **Verify by** step and note pass/fail in the feedback topic or `memory/decisions-log.md`.

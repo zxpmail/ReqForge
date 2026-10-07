@@ -63,6 +63,13 @@
         4. If Playwright is available -> automate core interaction flow testing
         Output evidence (compilation output, verification screenshots/results)
 
+        **Recurrence Check** (before reporting fixed or starting another fix round):
+        If this is the 2nd failed fix for the SAME symptom (count your own fix rounds this session + `.forge/.retry-counter.json` — use its `task` field as the symptom identity, `history[]` for rounds), do NOT start a 3rd fix attempt. The bug is probably in the requirements layer, not the code. Instead:
+        1. Re-read the Product-Spec.md section covering this feature and ask: is the spec's expected behavior itself wrong, ambiguous, or missing a case? (conflict arbitration per `../_shared/acceptance-evidence.md` 原则五)
+        2. Dispatch feedback-observer with `trigger_reason="recurrence_escalation"` and the diagnosed failure_class
+        3. Present the user: A) Spec is wrong -> amend the spec first (Known Difficult Spots), then re-fix against the corrected spec; B) Spec is right -> architectural/environmental problem, escalate with all evidence from both attempts; C) Defer
+        A 3rd failure -> existing retry-gate escalation (state="escalated", hard stop) applies unchanged.
+
     [Completion Phase]
         Update memory files:
         - Append to memory/task-history.md: date, phase, type=fix, description, changed files, root cause as notes

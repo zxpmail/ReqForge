@@ -56,6 +56,8 @@ requires: []
 
     **Skill TDD input for evolution**: In the body, include a short **RED** line: "Without rule Y, Agent did Z" — feeds evolution-engine RED observation field.
 
+    **Escape field** (`escape` in frontmatter, optional): set it when the defect **escaped past its catching gate** — it surfaced somewhere later than the layer that should have caught it: reported by the user after forge-verify passed, exposed in a later Phase, or found in code-review when forge-verify/spec-review should have caught it. Record where it surfaced + which gate should have blocked it. An escape-tagged entry is **exempt from the 3-occurrence evolution threshold** — one escape already paid real cost; evolution-engine will propose a permanent check item (see evolution-engine [Escape Routing]).
+
 <!-- end: failure-classification -->
 <!-- begin: observation-dimension-checklist -->
 [Observation Dimension Checklist]

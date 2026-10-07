@@ -17,3 +17,5 @@ Example:
 - Symptom: session.id undefined when session deleted
 - Design Flaw: useSession holds stale reference — no cleanup on delete
 - Principle Violation: "One at a Time" — delete didn't clean dependents first
+
+**Escape check**: if the diagnosis reveals the defect should have been caught by an upstream gate (spec review, forge-verify, code-review) but wasn't, record it in the feedback entry's `escape` field (where it surfaced + which gate should have blocked it). Evolution-engine will propose a permanent check so the gap cannot recur.
