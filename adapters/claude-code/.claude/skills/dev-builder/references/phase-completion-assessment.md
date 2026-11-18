@@ -74,6 +74,7 @@
     - Record structured trace: capture key decisions (tradeoffs, chosen approach, abandoned alternatives), dead ends (approaches tried but failed, lessons learned), and evidence-file bindings for each claim. Append to `.forge/trace/phase-<N>.json`:
       - `node scripts/forge-trace.mjs decision <N> --q "<question>" --c "<chosen>" -r "<reason>" -a "<abandoned>"` (if exists)
     - **Scope compliance (巽 — Filter)**: Run `node scripts/forge-scope.mjs check` to verify no files outside the declared scope were modified. If violations found, must revert or update scope declaration before proceeding. (Skip if script doesn't exist.)
+    - **Non-Negotiable Layer**: Run `node scripts/forge-acceptance-readonly.mjs check` and `node scripts/forge-sot-check.mjs check` (skip if the config / registry doesn't exist). Violations are NOT waivable inside the Loop: acceptance-assertion edits must be reverted (a criteria change is committed by the human), SoT duplicates must reuse the canonical implementation or carry a human-approved `.forge/sot-exceptions.json` entry. Also enforced by `forge-verify` and the forge-loop non-negotiable check.
     - **Evolution proposals (兌 — Exchange)**: After all checks pass, run evolution-engine to scan feedback data for actionable patterns. If proposals found, present to user as Y/N choices:
       - "I noticed [pattern] from the last Phase. Suggest [change]. Apply? (Y/N)"
       - Only proceed after user responds; if user says no, log to `.forge/evolution-proposals.md` for later review.

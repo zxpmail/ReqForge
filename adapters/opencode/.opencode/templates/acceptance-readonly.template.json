@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "owner": "human",
+  "description": "验收断言只读区（Non-Negotiable Layer，dev-builder + forge-verify + forge-loop 使用）。复制为 .forge/acceptance-readonly.json，把 paths 改成项目实际的验收/契约测试路径。[example paths below] 这些路径下的断言由人类拥有：模型只能实现到满足断言，不得修改断言本身；改判定标准 = 人类批准的变更（change-manager / PR），由人类提交后生效。",
+  "paths": [
+    "tests/acceptance/",
+    "tests/contract/"
+  ]
+}

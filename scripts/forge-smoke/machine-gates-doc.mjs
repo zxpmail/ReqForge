@@ -24,6 +24,8 @@ const gateNames = [
   "Hallucination Gate",
   "Sloppiness Gate",
   "Overstepping Gate",
+  "Acceptance-Readonly Gate",
+  "SoT Gate",
   "spec-confirmed",
   "plan-confirmed",
   "implementer-session",
@@ -38,6 +40,10 @@ const enforced = [
   { gate: "Spec-Before-Code Gate", files: ["scripts/hooks/spec-before-code-gate.mjs"] },
   { gate: "Hallucination Gate", files: ["core/hooks/hallucination-gate.sh"] },
   { gate: "Sloppiness Gate", files: ["scripts/forge-verify.mjs", "core/hooks/phase-exit-guard.sh"] },
+  // Non-Negotiable Layer — verify/loop-enforced (not hook), so both the
+  // checker modules and the wiring in forge-verify must exist.
+  { gate: "Acceptance-Readonly Gate", files: ["scripts/forge-acceptance-readonly.mjs", "scripts/forge-verify.mjs", "scripts/forge-loop.mjs"] },
+  { gate: "SoT Gate", files: ["scripts/forge-sot-check.mjs", "scripts/forge-verify.mjs", "scripts/forge-loop.mjs"] },
 ];
 for (const { gate, files } of enforced) {
   for (const f of files) {

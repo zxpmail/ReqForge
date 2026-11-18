@@ -12,6 +12,12 @@ Project memory is version-controlled markdown in the `memory/` directory, shared
 - `decisions-log.md` — Append when a significant technical decision was made during the Task
 - `project-memory.md` — Update when architecture facts, constraints, or pitfalls change
 
+## Non-Negotiable Layer (human-owned, model read-only)
+- `memory/sot-registry.md` — SoT registry: authoritative implementation (`canonical`) + semantic contract (`contract`) + fingerprint (`signal`) per business concept. Force-loaded at every forge-loop start; query it before writing any new function — reuse the canonical implementation or write down "why it doesn't satisfy" for the human. Entries change only via human-approved PR (the model may only propose). Validated by `pnpm forge-sot-check`: entry shape, canonical existence, 180-day staleness, duplicate-implementation scan (human-approved exceptions live in `.forge/sot-exceptions.json` with `approvedBy`). Template: `core/templates/memory/sot-registry-template.md`.
+- `.forge/acceptance-readonly.json` (project root, not memory/) — paths of human-owned acceptance/contract assertions. The model implements to satisfy them and never edits them; `forge-verify acceptance-readonly` + the forge-loop non-negotiable check enforce it. Template: `core/templates/acceptance-readonly.template.json`.
+
+Both are independent of any single Spec revision or Loop iteration: they outlive iterations, and only a human changes them.
+
 ## Initialization
 When `memory/` directory does not exist, create it from templates during first `/dev-builder` invocation. Fill `project-memory.md` from Product-Spec.md and DEV-PLAN.md tech stack info. Record initial setup as ADR-000 in `decisions-log.md`.
 

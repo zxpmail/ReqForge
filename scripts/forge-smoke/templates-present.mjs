@@ -41,6 +41,14 @@ const REQUIRED = [
     rel: "core/templates/security-rules-template.md",
     markers: ["禁止硬编码任何密钥", "强制所有外部输入做验证", "敏感操作必须有审计日志"],
   },
+  {
+    rel: "core/templates/acceptance-readonly.template.json",
+    markers: ['"owner": "human"', '"paths"', "acceptance"],
+  },
+  {
+    rel: "core/templates/memory/sot-registry-template.md",
+    markers: ["SoT 注册表", "canonical", "signal", "lastVerified", "approvedBy"],
+  },
 ];
 
 for (const { rel, markers } of REQUIRED) {

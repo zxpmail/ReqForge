@@ -2,6 +2,15 @@
 
 All notable changes to Forge are documented here.
 
+## [v1.52.0] - 2026-11-18
+
+### Added
+- **Non-Negotiable Layer (pilot 1+2 of 4).** A human-owned layer, force-loaded at every `forge-loop` start and read-only to the model, independent of Spec revisions and Loop iterations. Shipped: (1) **SoT Gate** — `memory/sot-registry.md` registry (`canonical` + `contract` + `signal` per business concept), checked by `pnpm forge-sot-check` (entry shape, canonical existence, 180-day staleness, duplicate-implementation scan; human-approved exceptions in `.forge/sot-exceptions.json` require `approvedBy`), force-loaded as a list at loop start, queried by dev-builder Step 2 before writing any new function; (2) **Acceptance-Readonly Gate** — `.forge/acceptance-readonly.json` paths are human-owned contract/acceptance assertions, enforced by `forge-verify acceptance-readonly` + a forge-loop non-negotiable check that blocks Phase completion and appends a revert/approve section to the fix brief (config self-protected: uncommitted edits to it fail, human edits activate on commit). Templates: `core/templates/acceptance-readonly.template.json`, `core/templates/memory/sot-registry-template.md`. Design rationale and the remaining two entries (locked ADRs, domain invariants) are intentionally deferred until the pilot proves the layer cannot be routed around. (`scripts/forge-sot-check.mjs`, `scripts/forge-acceptance-readonly.mjs`, `scripts/__tests__/forge-sot-check.test.ts`, `scripts/__tests__/forge-acceptance-readonly.test.ts`)
+- **Machine Gates contract extended.** CLAUDE.md declares Acceptance-Readonly Gate + SoT Gate; `machine-gates-doc` smoke asserts both have real enforcing files (checker modules + wiring in `forge-verify`/`forge-loop`); `templates-present` smoke asserts both templates exist with required markers.
+
+### Fixed
+- **`forge-verify skill-quality` always FAIL.** It invoked `validate-skill.mjs` with no target, but the validator requires `<skill-dir-or-parent>` (usage → exit 1). Now calls `validate-skill.mjs core/skills/`, matching what the `skills-complete` smoke already does.
+
 ## [v1.51.0] - 2026-07-18
 
 ### Added

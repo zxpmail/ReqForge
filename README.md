@@ -75,6 +75,13 @@ flowchart LR
 
 ## What's New
 
+### v1.52.0 — 2026-11-18 — Non-Negotiable Layer: SoT registry + acceptance-readonly (pilot)
+
+- **Non-Negotiable Layer (pilot)**: a human-owned layer force-loaded at every `forge-loop` start, model read-only — independent of any Spec revision and of Loop iterations. Two of four planned entries shipped: SoT registry and test-intent independence.
+- **SoT Gate**: `memory/sot-registry.md` registers the authoritative implementation (`canonical`), semantic contract (`contract`) and fingerprint (`signal`) per business concept. `pnpm forge-sot-check` enforces entry shape / canonical existence / 180-day staleness / duplicate-implementation scan; human-approved exceptions live in `.forge/sot-exceptions.json` (require `approvedBy`). dev-builder queries it before writing any new function — reuse, or write down "why the existing implementation doesn't satisfy".
+- **Acceptance-Readonly Gate**: paths in `.forge/acceptance-readonly.json` are human-owned contract/acceptance assertions — the model implements to satisfy them and never edits them. Enforced by `forge-verify acceptance-readonly` + the forge-loop non-negotiable check (blocks Phase completion); the config file itself is self-protected (human edits activate on commit).
+- **Fixed**: `forge-verify skill-quality` invoked `validate-skill.mjs` without its required target → always FAIL.
+
 ### v1.51.0 — 2026-07-18 — agents-cli flywheel: skill-eval compare/analyze + shortcuts
 
 - **Quality Flywheel**: `pnpm skill-eval compare|analyze` (+ `--judge`); each run appends `run-history.json`. Inspired by [google/agents-cli](https://github.com/google/agents-cli).

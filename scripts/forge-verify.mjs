@@ -5,7 +5,7 @@
  * 用法：
  *   pnpm forge-verify [--baseline <save|compare|check>] [--root <path>]
  *
- * 验证项（9）：
+ * 验证项（11）：
  *   1. skill-quality     — pnpm validate-skill（仅 ReqForge 框架仓）
  *   2. compile           — 语言感知编译（dev-map / package scripts / 栈回退）
  *   3. test              — vitest.config.* / jest.config.* 存在时跑对应 runner
@@ -16,6 +16,9 @@
  *   8. scope-check       — 检查文件改动是否超出声明的作用域
  *   9. content-quality   — 仅探测 .forge/content-verify.json 配置存在性
  *                          （语义四层管道走独立入口 pnpm forge-verify-content）
+ *   10. acceptance-readonly — 人类拥有的验收断言未被改动（.forge/acceptance-readonly.json）
+ *   11. sot-check        — SoT 注册表：条目形状/canonical 存在/陈旧/重复实现
+ *                          （memory/sot-registry.md；Non-Negotiable Layer）
  *
  * --baseline save    : 运行验证并保存结果到 .forge/verify-baseline.json
  * --baseline compare : 运行验证并与基线对比，输出增量
@@ -32,6 +35,8 @@ import { join, dirname, relative, resolve } from "path";
 import { fileURLToPath } from "url";
 import { loadBaseline, saveBaseline, compareBaseline } from "./forge-verify/baseline.mjs";
 import { checkCompile as runLanguageAwareCompile } from "./lib/compile-check.mjs";
+import { check as checkAcceptanceReadonly } from "./forge-acceptance-readonly.mjs";
+import { check as checkSotRegistry } from "./forge-sot-check.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REQFORGE_ROOT = join(__dirname, "..");
@@ -78,7 +83,7 @@ function checkSkillQuality() {
   if (!existsSync(join(ROOT, "core/skills"))) return "skip (not framework repo)";
   let out;
   try {
-    out = execSync("node scripts/validate-skill.mjs", {
+    out = execSync("node scripts/validate-skill.mjs core/skills/", {
       cwd: ROOT, encoding: "utf-8", timeout: 60000,
       stdio: ["pipe", "pipe", "pipe"],
     });
@@ -270,6 +275,8 @@ const checks = [
   run("security-patterns", checkSecurityPatterns),
   run("trace-fresh", checkTraceFresh),
   run("scope-check", checkScope),
+  run("acceptance-readonly", () => checkAcceptanceReadonly(ROOT)),
+  run("sot-check", () => checkSotRegistry(ROOT)),
   run("content-quality", checkContentQuality),
 ];
 

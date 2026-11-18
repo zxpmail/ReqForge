@@ -27,6 +27,8 @@
 | `.forge/trace/` | 探索图（Phase 决策/死胡同/证据绑定） |
 | `.forge/tests/` | Playwright E2E 测试模板（config + auth + Phase 验证） |
 | `.forge/active-scope.json` | 当前 Phase 文件作用域（巽 — 越界检查） |
+| `.forge/acceptance-readonly.json` | 人类拥有的验收断言路径（不可协商层 — 模型只读） |
+| `memory/sot-registry.md` | SoT 注册表：权威实现 + 语义契约（不可协商层 — 生成新函数前必查） |
 | `.forge/evidence/` | FDE 模式交付证据报告（测试通过率 + 清单完成度 + 文件变更） |
 | `.forge/ops/` | 运营监控报告（健康检查 + 回归检测 + 自动修复） |
 | `memory/handoff.md` | 跨 session / 跨客户端接力摘要（Phase 完成或上下文将满时生成） |
@@ -421,6 +423,21 @@ node scripts/forge-scope.mjs init <N> --modify "src/" --readonly "src/lib/"  # �
 node scripts/forge-scope.mjs check                                            # 检查是否越界
 node scripts/forge-scope.mjs show                                             # 查看当前作用域
 ```
+
+---
+
+## 不可协商层（Non-Negotiable Layer — 模型只读）
+
+独立于规格、独立于 Loop 迭代；每次 `forge-loop` 启动强制加载，`forge-verify` 事后拦截。
+
+```bash
+pnpm forge-sot-check              # SoT 注册表：条目形状 / canonical 存在 / 180 天陈旧 / 重复实现
+pnpm forge-sot-check list         # 打印注册表（forge-loop 启动时自动做同样的事）
+pnpm forge-acceptance-readonly    # 验收断言只读区：改动人类拥有的断言 → FAIL
+```
+
+- 重复实现的例外 → `.forge/sot-exceptions.json`，必须带 `approvedBy`（人类批准）。
+- 改验收断言 / 改 SoT 条目 = 人类批准的变更（change-manager / PR），由人类提交。
 
 ---
 

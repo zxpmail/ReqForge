@@ -1,6 +1,6 @@
 {
   "name": "reqforge",
-  "version": "1.51.0",
+  "version": "1.52.0",
   "description": "ReqForge — From requirements to shippable products. Agent Harness for Claude Code, Cursor, OpenCode, and Gemini CLI.",
   "repository": {
     "type": "git",
@@ -21,6 +21,8 @@
     "forge-verify": "node scripts/forge-verify.mjs",
     "forge-trace": "node scripts/forge-trace.mjs",
     "forge-scope": "node scripts/forge-scope.mjs",
+    "forge-sot-check": "node scripts/forge-sot-check.mjs",
+    "forge-acceptance-readonly": "node scripts/forge-acceptance-readonly.mjs",
     "forge-phase-check": "node scripts/forge-phase-check.mjs",
     "forge-phase-loop": "node scripts/forge-phase-loop.mjs",
     "forge-loop": "node scripts/forge-loop.mjs",

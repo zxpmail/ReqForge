@@ -140,6 +140,12 @@
             If the script/forge-scope.mjs doesn't exist in the project, skip this step.
             Scope is enforced by `forge-verify scope-check` after Phase completion.
 
+            Note (Non-Negotiable Layer): paths in `.forge/acceptance-readonly.json` (human-owned
+            acceptance/contract assertions) are readonly INDEPENDENT of this declaration — never list
+            them in --modify. `forge-verify acceptance-readonly` + the forge-loop non-negotiable check
+            fail on any edit to them. Changing acceptance criteria = human-approved change
+            (change-manager / PR), committed by the human — not an in-Loop edit.
+
         **Loading Phase 结束，进入执行前最后一件事**（注意力放在结尾）:
         - 当前 Phase 编号 + 难度等级（🔴🟡🟢）已确认
         - 交付清单、Primary metric 已加载
@@ -214,6 +220,8 @@
             3b. If DESIGN.md exists, read matching component tokens and color/typography refs for this Task (overrides Brief for pixel values)
             4. If design tool MCP is connected, find the design page corresponding to this Task through the design tool, read the exact values for that page and its components. Re-read for each Task, don't rely on memory
             5. Clarify the delivery goal for this Task: what functionality to implement, what visual result to achieve
+            5b. **SoT query (Non-Negotiable Layer)**: if `memory/sot-registry.md` exists, read it BEFORE writing any new function. Canonical implementation exists → reuse it. Believe it doesn't satisfy → write "why the existing implementation doesn't satisfy" in the Task and hand it to the human; NEVER silently rewrite. New/changed registry entries = human-approved PR (the model may only propose).
+            5c. **Acceptance assertions are read-only**: tests under `.forge/acceptance-readonly.json` paths are human-owned — implement to satisfy them, never edit them (including expected values). The model owns unit tests and edge-case additions only; redefining "what counts as correct" is a human change.
 
             *(If Nature Gate skipped implementer, skip steps 6–9 below and write directly)*
 

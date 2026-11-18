@@ -28,6 +28,8 @@ import { join, dirname, basename } from "path";
 import { fileURLToPath } from "url";
 import { computeFileHash, verifyBrief, applyBrief } from "./forge-hashline.mjs";
 import { recordStep, processPhase, startSession, endSession, recordDecision } from "./forge-step-capture.mjs";
+import { runCheck as runAcceptanceCheck } from "./forge-acceptance-readonly.mjs";
+import { runCheck as runSotCheck, summarize as summarizeSot } from "./forge-sot-check.mjs";
 import { sendConsole } from "./forge-ops/alerts.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -328,7 +330,7 @@ function autoCreateFiles(items) {
 }
 
 // === Generate linear pipeline report (--linear / --strict) ===
-function generateLinearReport(planResult, uiResult, testResult) {
+function generateLinearReport(planResult, uiResult, testResult, nn = { ok: true, detail: "" }) {
   ensureDir(STATE_DIR);
   const lines = [];
   lines.push(`# Pipeline Report — Phase ${phaseNum}`);
@@ -341,6 +343,7 @@ function generateLinearReport(planResult, uiResult, testResult) {
   lines.push(`| Checklist | ${planResult.ok ? "✅" : "❌"} | ${planResult.totalItems} items, ${planResult.omitted.length} omissions |`);
   lines.push(`| UI | ${uiResult.ok ? "✅" : "❌"} | ${uiResult.ok ? "OK" : "Issues found"} |`);
   lines.push(`| Tests | ${testResult.ok ? "✅" : "❌"} | ${testResult.ok ? "All passed" : "Failed"} |`);
+  lines.push(`| Non-negotiable | ${nn.ok ? "✅" : "❌"} | ${nn.ok ? "OK" : (nn.detail || "violations")} |`);
   lines.push(``);
 
   if (planResult.omitted.length > 0) {
@@ -359,7 +362,7 @@ function generateLinearReport(planResult, uiResult, testResult) {
     lines.push(``);
   }
 
-  const verdict = planResult.ok && testResult.ok && uiResult.ok ? "SHIP" : "NEEDS WORK";
+  const verdict = planResult.ok && testResult.ok && uiResult.ok && nn.ok ? "SHIP" : "NEEDS WORK";
   lines.push(`## Verdict`);
   lines.push(``);
   lines.push(`**VERDICT: ${verdict}**`);
@@ -369,6 +372,7 @@ function generateLinearReport(planResult, uiResult, testResult) {
     if (!planResult.ok) lines.push(`- Complete ${planResult.omitted.length} omitted checklist item(s)`);
     if (!testResult.ok) lines.push(`- Fix test failures`);
     if (!uiResult.ok) lines.push(`- Fix UI issues`);
+    if (!nn.ok) lines.push(`- Resolve non-negotiable layer violations: ${nn.detail || ""}`);
   }
   lines.push(``);
   lines.push(`---`);
@@ -380,10 +384,21 @@ function generateLinearReport(planResult, uiResult, testResult) {
 }
 
 // === Generate fix brief ===
-function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iteration, coverageData) {
+function generateFixBrief(planOmitted, autoCreated, testResult, uiResult, iteration, coverageData, nn = null) {
   const brief = [];
   brief.push(`# Phase ${phaseNum} 修复指令 — Iteration ${iteration}/${maxIterations}`);
   brief.push("");
+
+  if (nn && nn.failures.length > 0) {
+    brief.push(`## ⛔ 不可协商层违规（阻断 Phase 完成）`);
+    brief.push(`本层对模型只读，Loop 内不可自行放行：`);
+    for (const f of nn.failures) brief.push(`  · ${f}`);
+    brief.push("");
+    brief.push(`**处置**：`);
+    brief.push(`- 验收断言被改动 → revert；要改判定标准 = 人类批准的变更（change-manager / PR），由人类提交。`);
+    brief.push(`- 重复实现 → 复用 SoT canonical 实现；确实不满足 → 提出「为什么不满足」，人类批准后登记到 .forge/sot-exceptions.json。`);
+    brief.push("");
+  }
 
   if (autoCreated.length > 0) {
     brief.push(`## 自动修复 (${autoCreated.length}项)`);
@@ -492,7 +507,7 @@ function gatherFdeContext() {
 }
 
 // === FDE: Generate evidence report ===
-function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, autoCreated, finalStatus, isFde) {
+function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, autoCreated, finalStatus, isFde, nn = null) {
   const evidenceDir = join(ROOT, ".forge", "evidence");
   ensureDir(evidenceDir);
   const report = {
@@ -504,6 +519,7 @@ function generateEvidenceReport(phaseNum, planResult, uiResult, testResult, auto
       checklist: { ok: planResult.ok, passed: planResult.completed?.length || 0, omitted: planResult.omitted?.length || 0, total: planResult.totalItems || 0 },
       ui: { ok: uiResult.ok },
       test: { ok: testResult.ok },
+      nonNegotiable: nn ? { ok: nn.ok, acceptance: nn.acceptance, sot: nn.sot } : null,
     },
     autoCreated: autoCreated,
     filesChanged: [],
@@ -635,6 +651,33 @@ if (state.status === "building" && hasPhaseStarted()) {
   writeState(state);
 }
 
+// ── 不可协商层（Non-Negotiable Layer）：每次 Loop 启动强制加载 ──
+// 模型对本层只读：验收断言由人类拥有（改判定标准 → 人类批准，不是 Loop 内改）；
+// SoT 注册表在生成新函数前必须查询（复用，或显式提出「为什么不满足」）。
+console.log(`▸ 加载不可协商层（Non-Negotiable Layer）...`);
+const acceptanceResult = runAcceptanceCheck(ROOT);
+const sotResult = runSotCheck(ROOT);
+if (acceptanceResult.paths.length > 0) {
+  console.log(`  🔒 验收断言只读（owner: human）: ${acceptanceResult.paths.join(", ")}`);
+}
+if (sotResult.entries.length > 0) {
+  console.log(`  📚 SoT 注册表（生成新函数前必须查询）:`);
+  for (const line of summarizeSot(sotResult.entries)) console.log(line);
+}
+const nnFailures = [];
+if (acceptanceResult.status === "fail") nnFailures.push(`acceptance-readonly: ${acceptanceResult.detail}`);
+if (sotResult.status === "fail") nnFailures.push(`sot-check: ${sotResult.detail}`);
+const nnOk = nnFailures.length === 0;
+if (nnFailures.length > 0) {
+  console.log(`  ✗ 不可协商层违规（阻断 Phase 完成）:`);
+  for (const f of nnFailures) console.log(`    · ${f}`);
+} else if (acceptanceResult.status === "skip" && sotResult.status === "skip") {
+  console.log(`  – 未配置（.forge/acceptance-readonly.json / memory/sot-registry.md 不存在，本层未激活）`);
+} else {
+  console.log(`  ✓ 不可协商层通过`);
+}
+console.log(``);
+
 // Phase not started → tell Claude to run dev-builder first
 if (!hasPhaseStarted()) {
   console.log(`⏳ Phase ${phaseNum} 尚未启动。`);
@@ -708,6 +751,18 @@ if (state.status === "in-progress" && existsSync(briefPath)) {
 // Start forge-loop session for trajectory tracking
 const loopSessionId = startSession(phaseNum, { maxIterations, mode: allMode ? "--all" : "single" }).sessionId;
 
+// 不可协商层结果入轨迹（fail → 阻断 complete，见 allOk）
+const nnStepStatus = nnFailures.length > 0 ? "fail"
+  : (acceptanceResult.status === "pass" || sotResult.status === "pass") ? "pass" : "skip";
+recordStep({
+  phase: phaseNum, iteration: state.iteration, maxIterations, sessionId: loopSessionId,
+  step: "non-negotiable", status: nnStepStatus, durationMs: 0,
+  context: { acceptance: acceptanceResult.status, sot: sotResult.status },
+  failure: nnStepStatus === "fail"
+    ? { type: "non_negotiable_violation", detail: nnFailures.join("; "), omittedItems: [], filesChanged: [] }
+    : null,
+});
+
 console.log(`\n═══════════════════════════════════════`);
 console.log(`  Phase ${phaseNum} — Iteration ${state.iteration + 1}/${maxIterations}`);
 console.log(`═══════════════════════════════════════\n`);
@@ -738,13 +793,13 @@ console.log(`  ${testResult.ok ? "✅ 通过" : "❌ 失败"}`);
 recordStep({ phase: phaseNum, iteration: state.iteration, maxIterations, sessionId: loopSessionId, step: "test", status: testResult.ok ? "pass" : "fail", durationMs: Date.now() - testStart, context: { command: "pnpm test" }, failure: testResult.ok ? null : { type: "test_failure", detail: (testResult.error || testResult.output || "").slice(0, 300), omittedItems: [], filesChanged: [] } });
 
 // ---- Linear / Strict mode: one pass, report, no iteration ----
-if (linearMode || (strictMode && !testResult.ok)) {
-  const report = generateLinearReport(planResult, uiResult, testResult);
+if (linearMode || (strictMode && (!testResult.ok || !nnOk))) {
+  const report = generateLinearReport(planResult, uiResult, testResult, { ok: nnOk, detail: nnFailures.join("; ") });
   console.log(`\n📋 Pipeline Report → ${report.reportPath}`);
   if (linearMode) console.log(`--linear: one-pass complete. Review report above.`);
-  else console.log(`--strict: test failure blocked pipeline. Review report above.`);
+  else console.log(`--strict: test failure or non-negotiable violation blocked pipeline. Review report above.`);
   stopServer();
-  process.exit(testResult.ok ? 0 : 1);
+  process.exit(testResult.ok && nnOk ? 0 : 1);
 }
 
 // ---- 3. Fix: auto-create missing keyfiles ----
@@ -785,14 +840,14 @@ const planOk = planAfterFix.ok || (
   planAfterFix.omitted.every(o => o.item?.section === "acceptance") &&
   testResult.ok
 );
-const allOk = planOk && testResult.ok && uiResult.ok;
+const allOk = planOk && testResult.ok && uiResult.ok && nnOk;
 
 if (allOk) {
   state.status = "complete";
   writeState(state);
   try { endSession(loopSessionId); } catch (e) { /* best-effort */ }
   try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
-  const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "passed", fdeMode);
+  const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "passed", fdeMode, { ok: nnOk, acceptance: acceptanceResult.status, sot: sotResult.status });
   console.log(`\n📊 Evidence → ${evidencePaths.summaryPath}`);
   sendConsole(`Phase ${phaseNum} 全部通过`, "success");
   if (coverageData) {
@@ -816,7 +871,7 @@ if (state.iteration >= maxIterations) {
   writeState(state);
   try { endSession(loopSessionId); } catch (e) { /* best-effort */ }
   try { processPhase(phaseNum, 3, false); } catch (e) { /* best-effort */ }
-  const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "max-reached", fdeMode);
+  const evidencePaths = generateEvidenceReport(phaseNum, planAfterFix, uiResult, testResult, autoCreated, "max-reached", fdeMode, { ok: nnOk, acceptance: acceptanceResult.status, sot: sotResult.status });
   console.log(`\n📊 Evidence → ${evidencePaths.summaryPath}`);
   sendConsole(`Phase ${phaseNum} 已达最大迭代次数 ${maxIterations}`, "warn");
   if (coverageData) {
@@ -838,7 +893,7 @@ state.status = "in-progress";
 state.autoFixed = (state.autoFixed || []).concat(autoCreated);
 writeState(state);
 
-const brief = generateFixBrief(planAfterFix.omitted, autoCreated, testResult, uiResult, state.iteration, coverageData);
+const brief = generateFixBrief(planAfterFix.omitted, autoCreated, testResult, uiResult, state.iteration, coverageData, { ok: nnOk, failures: nnFailures });
 ensureDir(STATE_DIR);
 writeFileSync(join(STATE_DIR, "fix-brief.md"), brief);
 

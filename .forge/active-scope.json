@@ -6,9 +6,14 @@
     "core/templates",
     "core/skills",
     "core/hooks",
+    "core/docs",
     "adapters",
     "package.json",
-    ".forge"
+    ".forge",
+    "CHANGELOG.md",
+    "CLAUDE.md",
+    "README.md",
+    "README.zh-CN.md"
   ],
   "readonly": [],
   "outOfScope": []

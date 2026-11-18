@@ -74,6 +74,13 @@ flowchart LR
 
 ## 近期更新
 
+### v1.52.0 — 2026-11-18 — 不可协商层：SoT 注册表 + 验收断言只读（试点）
+
+- **不可协商层（试点）**：人类拥有、每次 `forge-loop` 启动强制加载、模型只读 — 独立于规格修订、独立于 Loop 迭代。四类条目先落地两类：SoT 注册表 + 测试意图独立。
+- **SoT Gate**：`memory/sot-registry.md` 登记每个业务概念的权威实现（`canonical`）、语义契约（`contract`）与实现指纹（`signal`）。`pnpm forge-sot-check` 校验条目形状 / canonical 必须真实存在 / 180 天陈旧 / 重复实现扫描；人类批准的例外放 `.forge/sot-exceptions.json`（必须带 `approvedBy`）。dev-builder 写任何新函数前先查表 — 复用，或写清「为什么现有实现不满足」交人类。
+- **验收断言只读 Gate**：`.forge/acceptance-readonly.json` 下的路径是人类拥有的契约/验收断言 — 模型实现到满足，绝不修改断言。`forge-verify acceptance-readonly` + forge-loop 不可协商检查强制执行（阻断 Phase 完成）；配置文件自身受保护（人类改动提交后生效）。
+- **修复**：`forge-verify skill-quality` 调用 `validate-skill.mjs` 未传必需的目标参数 → 恒 FAIL。
+
 ### v1.51.0 — 2026-07-18 — agents-cli 飞轮：skill-eval compare/analyze + 借口表
 
 - **质量飞轮**：`pnpm skill-eval compare|analyze`（可加 `--judge`）；每次 run 写入 `run-history.json`。吸收 [google/agents-cli](https://github.com/google/agents-cli)。
