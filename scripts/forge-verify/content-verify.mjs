@@ -1390,7 +1390,8 @@ async function main() {
   const hasErrors = rejected > 0 || uncertain > 0;
   console.log(`  判定: ${hasErrors ? "❌ 存在未通过的检查" : "✅ 全部通过"}`);
 
-  process.exit(rejected > 0 ? 1 : 0);
+  // 退出码与上面打印的判定一致：FILE_NOT_FOUND / UNCLEAR 也是"未通过"，不能 exit 0 冒充全绿
+  process.exit(hasErrors ? 1 : 0);
 }
 
 // 仅在直接运行时启动 CLI；被测试 import 时不触发 main
